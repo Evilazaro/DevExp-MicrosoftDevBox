@@ -131,8 +131,10 @@ The script is a structured way to automate several Azure operations related to i
 ## Next Steps and Additional Resources
 
 ### Microsoft Build
-<iframe width="560" height="315" src="https://www.youtube.com/embed/mD225hXs63s" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
+[![Watch the video](https://img.youtube.com/vi/mD225hXs63s/maxresdefault.jpg)](https://youtu.be/mD225hXs63s)
+
+### Microsoft Docs
 
 - **Microsoft DevBox**: Check out [Microsoft Docs](https://learn.microsoft.com/en-us/azure/dev-box/)
 - **DevBox Quick Starts**: Read [Configure Microsoft DevBox](https://learn.microsoft.com/en-us/azure/dev-box/quickstart-configure-dev-box-service?tabs=AzureADJoin).
