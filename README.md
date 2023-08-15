@@ -37,7 +37,7 @@ Before diving into the demos, ensure you have the required tools and dependencie
 
 ## Contribution Guidelines
 
-We welcome contributions! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to contribute and the process for submitting pull requests to us.
+We welcome contributions! Please read [CONTRIBUTING.md](./CONTRIBUTING.MD) for details on how to contribute and the process for submitting pull requests to us.
 
 ## Feedback and Issues
 
