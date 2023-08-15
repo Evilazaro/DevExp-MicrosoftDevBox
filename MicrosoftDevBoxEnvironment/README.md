@@ -2,142 +2,121 @@
 
 ## Introduction
 
-This demo walks you through the process of setting up a Microsoft DevBox environment. By the end of this tutorial, you'll have a fully functional DevBox environment ready for development and testing.
+This demo guides you through the setup process of a Microsoft DevBox environment. By the end of this tutorial, you'll have a fully operational DevBox environment, primed for development and testing.
 
 ## Prerequisites
 
 - A Microsoft account.
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) installed.
-- Basic knowledge of Azure services.
+- Familiarity with Azure services.
 
 ## Table of Contents
 
-1. [Setting Up Azure Resources](#setting-up-azure-resources)
-2. [Understanding the deploy.sh Bash Script](#understanding-the-deploysh-bash-script)
-5. [Next Steps and Additional Resources](#next-steps-and-additional-resources)
+- [Setting Up Azure Resources](#setting-up-azure-resources)
+- [Understanding the deploy.sh Bash Script](#understanding-the-deploysh-bash-script)
+- [Next Steps and Additional Resources](#next-steps-and-additional-resources)
 
 ## Setting Up Azure Resources
 
-Before installing DevBox, ensure that you have the necessary resources set up in Azure:
+Before deploying DevBox, ensure Azure resources are properly configured:
 
 1. **Navigate to the Deploy folder**:
     ```bash
     cd Deploy\
     ```
 
-2. **Run the deploy.sh bash script and inform the Azure Subscription Name as a parameter**:
+2. **Execute the deploy.sh bash script, providing the Azure Subscription Name as an argument**:
     ```bash
     ./deploy.sh <subscription-name>
     ```
 
-# Understanding the deploy.sh Bash Script 
+## Understanding the deploy.sh Bash Script
 
-This Bash script is designed to perform a series of operations related to setting up resource groups and creating images on Microsoft's Azure cloud platform. Let's break it down step by step.
+The Bash script streamlines operations associated with resource group setups and image creations on Azure. Here's a detailed breakdown:
 
-## Overview
+### Overview
 
-The script:
+- Authenticate into Azure.
+- Establish an Azure resource group.
+- Generate images via templates for front-end and back-end engineering configurations.
+- Deploy a Microsoft DevBox.
 
-1. Logs into Azure.
-2. Sets up an Azure resource group.
-3. Creates images using given templates for both front-end and back-end engineer setups.
-4. Deploys a Microsoft DevBox.
+### Breakdown
 
-## Breakdown
+1. **Azure Login**
 
-### 1. Azure Login
+    ```bash
+    echo "Logging into Azure..."
+    ./login.sh $1
+    ```
 
-```bash
-# Initiating the Azure login process.
-echo "Logging into Azure..."
-./login.sh $1 `
+    This segment starts by printing "Logging into Azure..." and then launches the `login.sh` script, providing the `$1` argument.
 
-```
+2. **Initialize Variables**
 
-Here, the script starts by printing "Logging into Azure..." and then runs another script named `login.sh`, passing an argument `$1`. This `login.sh` script is presumably used to authenticate to Azure.
+    Variables are initialized for the process. These variables include the resource group's name, the Azure deployment region, the identity associated with the image builder, and the Azure subscription ID.
 
-### 2. Setting Initial Variables
+3. **Resource Group Creation**
 
-Setting up initial variables for the process.
+    ```bash
+    az group create -n $imageResourceGroup -l $location
+    ```
 
-This section initializes some variables:
+    The Azure CLI `az group create` command establishes a new resource group.
 
--   imageResourceGroup: The name of the resource group to be created.
--   location: Azure region where resources will be deployed.
--   identityName: Name for the identity associated with the image builder.
--   subscriptionID: Fetches the current user's Azure subscription ID.
+4. **Managed Identity Creation**
 
-### 3. Resource Group Creation
+    ```bash
+    az identity create --resource-group $imageResourceGroup -n $identityName
+    ```
 
-Creating the resource group in the defined location.
-```bash
-az group create -n $imageResourceGroup -l $location`
-```
+    This step crafts a managed identity inside the previously generated resource group.
 
-This uses Azure CLI's `az group create` command to create a new resource group with the specified name and location.
+5. **Register Azure Features**
 
-### 4. Managed Identity Creation
+    ```bash
+    ./Register-Features.sh
+    ```
 
-Creating a new managed identity within the resource group.
-```bash
-az identity create --resource-group $imageResourceGroup -n $identityName`
-```
+    The `Register-Features.sh` script handles the Azure features registration essential for image creation.
 
-This step creates a managed identity within the previously created resource group. Managed identities provide Azure services with an automatically managed identity in Azure AD. You can use this identity to authenticate to any service that supports Azure AD authentication.
+6. **User-Assigned Managed Identity Creation**
 
-### 5. Register Azure Features
+    ```bash
+    ./CreateUserAssignedManagedIdentity.sh $imageResourceGroup $subscriptionID $identityId
+    ```
 
+    A script is launched to shape a user-assigned managed identity.
 
-```bash
-Registering necessary Azure features.
-./Register-Features.sh`
-```
+7. **Front-end and Back-end Image Creation**
 
-This line runs another script, `Register-Features.sh`, which probably handles the registration of certain Azure features required for the image building process.
+    The image creation process is prepped and initiated for both engineering configurations.
 
-### 6. User-Assigned Managed Identity Creation
+8. **VM Images Creation and Build**
 
-Creating a user-assigned managed identity.
+    ```bash
+    ./Deploy-DevBox.sh $subscriptionID $imageResourceGroup $location $imageName $identityName
+    ```
 
-```bash
-./CreateUserAssignedManagedIdentity.sh $imageResourceGroup $subscriptionID $identityId`
-```
+    Lastly, the Microsoft DevBox is deployed using the `Deploy-DevBox.sh` script.
 
-This section runs a script to create a user-assigned managed identity, providing necessary details like resource group, subscription ID, and identity ID.
+## Conclusion
 
-### 7. Front-end and Back-end Image Creation
-
-These sections prepare and initiate the image creation process for both front-end and back-end engineers. For each, the steps are:
-
--   Set the image name.
--   Define the URL where the image template JSON file is located.
--   Specify the output file for the image creation process.
--   Call the `CreateImage.sh` script with the necessary parameters to initiate the image creation.
-
-### 8. Create and build the VM images
-
-```bash
-# Create and build the VM images
-./Deploy-DevBox.sh $subscriptionID $imageResourceGroup $location $imageName $identityName`
-```
-
-Lastly, the script deploys a Microsoft DevBox using the `Deploy-DevBox.sh` script. A DevBox is presumably a development environment, and the script sets it up using the provided parameters.
-
-Conclusion
-----------
-
-The script is a structured way to automate several Azure operations related to image creation and deployment. By using such a script, a user can ensure a consistent setup process, save time on manual steps, and reduce the risk of errors in deployment.
+Using the script automates several Azure-related tasks, ensuring a consistent setup, time-saving, and minimized deployment errors.
 
 ## Next Steps and Additional Resources
 
 ### Microsoft Build
 
-[![Watch the video](https://img.youtube.com/vi/mD225hXs63s/maxresdefault.jpg)](https://youtu.be/mD225hXs63s)
+- **Develop in the cloud with Microsoft Dev Box | BRK251H**
+
+    [![Watch the video](https://img.youtube.com/vi/mD225hXs63s/maxresdefault.jpg)](https://youtu.be/mD225hXs63s)
 
 ### Microsoft Docs
 
-- **Microsoft DevBox**: Check out [Microsoft Docs](https://learn.microsoft.com/en-us/azure/dev-box/)
-- **DevBox Quick Starts**: Read [Configure Microsoft DevBox](https://learn.microsoft.com/en-us/azure/dev-box/quickstart-configure-dev-box-service?tabs=AzureADJoin).
+- [What is Microsoft Dev Box?](https://learn.microsoft.com/en-us/azure/dev-box/overview-what-is-microsoft-dev-box)
+- Dive deeper into [Microsoft Docs](https://learn.microsoft.com/en-us/azure/dev-box/)
+- Quick Starts: [Configure Microsoft DevBox](https://learn.microsoft.com/en-us/azure/dev-box/quickstart-configure-dev-box-service?tabs=AzureADJoin).
 
 ---
 
