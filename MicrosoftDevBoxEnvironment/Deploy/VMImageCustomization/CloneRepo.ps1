@@ -1,0 +1,1 @@
+git clone https://github.com/Evilazaro/eShopOnContainers.git c:\\eShopOnContainers

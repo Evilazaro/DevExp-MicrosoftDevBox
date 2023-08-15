@@ -1,0 +1,39 @@
+{
+    "apiVersion": "2022-02-14",
+    "type": "Microsoft.VirtualMachineImages/imageTemplates",
+    "dependsOn": [],
+    "name": "<imageName>",
+    "location": "<region>",
+    "properties": {
+        "vmProfile": {
+            "vmSize": "Standard_D8s_v3",
+            "osDiskSizeGB": 128
+        },
+        "source": {
+            "type": "PlatformImage",
+            "publisher": "microsoftvisualstudio",
+            "offer": "visualstudioplustools",
+            "sku": "vs-2022-ent-general-win11-m365-gen2",
+            "version": "latest"
+        },
+        "distribute": [
+            {
+                "type": "ManagedImage",
+                "imageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/images/<imageName>",
+                "location": "westus3",
+                "runOutputName": "runOutputManagedImage"
+            }
+        ]
+    },
+    "tags": {
+        "division": "IT",
+        "Environment": "Dev-Workstation",
+        "Role": "Back-End-Engineer"
+    },
+    "identity": {
+        "type": "UserAssigned",
+        "userAssignedIdentities": {
+            "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>": {}
+        }
+    }
+}

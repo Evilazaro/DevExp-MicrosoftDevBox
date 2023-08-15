@@ -1,0 +1,12 @@
+code --install-extension ms-azuretools.vscode-docker
+code --install-extension ms-dotnettools.csharp
+code --install-extension ms-vscode-remote.remote-containers
+code --install-extension ms-vscode.azure-account
+code --install-extension ms-vscode.azurecli
+code --install-extension ms-vscode.powershell
+code --install-extension ms-vscode.vscode-node-azure-pack
+code --install-extension ms-vscode.vscode-typescript-tslint-plugin
+code --install-extension ms-vsliveshare.vsliveshare
+code --install-extension ms-vsliveshare.vsliveshare-audio
+code --install-extension ms-vsliveshare.vsliveshare-pack
+code --install-extension ms-vsliveshare.vsliveshare-pack
