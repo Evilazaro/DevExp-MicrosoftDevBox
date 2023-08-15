@@ -55,7 +55,7 @@ echo "Creating user-assigned managed identity..."
 echo "-----------------"
 imageName='Win11EntBaseImageFrontEndEngineers'
 echo "Creating Image: $imageName"
-imageTemplateFile=https://raw.githubusercontent.com/Evilazaro/DigitalAppInnovation-Demos/main/DevOps/Continuous-Operations/DevBox/Deploy/Win11-Ent-Base-Image-FrontEnd-Template.json
+imageTemplateFile=https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/MicrosoftDevBoxEnvironment/Deploy/Win11-Ent-Base-Image-FrontEnd-Template.json
 outputFile='./DownloadedFiles/Win11-Ent-Base-Image-FrontEnd-Template-Output.json'
 echo "imageTemplateFile: $imageTemplateFile"
 echo "outputFile: $outputFile"
@@ -68,7 +68,7 @@ echo "outputFile: $outputFile"
 echo "-----------------"
 imageName='Win11EntBaseImageBackEndEngineers'
 echo "Creating Image: $imageName"
-imageTemplateFile=https://raw.githubusercontent.com/Evilazaro/DigitalAppInnovation-Demos/main/DevOps/Continuous-Operations/DevBox/Deploy/Win11-Ent-Base-Image-BackEnd-Template.json
+imageTemplateFile=https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/MicrosoftDevBoxEnvironment/Deploy/Win11-Ent-Base-Image-BackEnd-Template.json
 outputFile='./DownloadedFiles/Win11-Ent-Base-Image-BackEnd-Template-Output.json'
 echo "imageTemplateFile: $imageTemplateFile"
 echo "outputFile: $outputFile"
