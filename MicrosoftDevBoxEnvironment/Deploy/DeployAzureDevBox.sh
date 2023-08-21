@@ -45,3 +45,17 @@ echo "Setting up Network Connection for Azure Development Center..."
 echo "-----------------------------------------"
 echo "Azure Resource Creation Completed!"
 echo "-----------------------------------------"
+
+#!/bin/bash
+
+# This script initializes a process to create an Azure Compute Gallery using the CreateComputeGallery.sh script.
+
+# Notify the user about the operation being started
+echo "Starting the process to create Azure Compute Gallery in resource group: $resourceGroupName and location: $location..."
+
+# Call the CreateComputeGallery.sh script with the provided arguments
+./CreateComputeGallery.sh $resourceGroupName $location
+
+# Notify the user that the operation has been completed (assuming successful execution of CreateComputeGallery.sh)
+echo "Operation completed!"
+
