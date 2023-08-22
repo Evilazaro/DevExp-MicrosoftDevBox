@@ -2,17 +2,20 @@
 
 # This script automates various Azure tasks like resource group creation, image creation, and deployment.
 
-# Start: Logging into Azure.
-echo "========================"
-echo "Logging into Azure..."
-echo "========================"
+# Function to display headers in a consistent format
+display_header() {
+    echo
+    echo "========================"
+    echo "$1"
+    echo "========================"
+}
+
+# Logging into Azure.
+display_header "Logging into Azure"
 ./login.sh "$1"
 
 # Setting up initial variables for the process.
-echo
-echo "========================"
-echo "Setting Up Variables..."
-echo "========================"
+display_header "Setting Up Variables"
 
 # Defining the resource group name.
 imageResourceGroup='Contoso-Base-Images-Engineers-rg'
@@ -27,7 +30,6 @@ identityName='contosoIdentityIBuilderUserDevBox'
 subscriptionID=$(az account show --query id --output tsv)
 
 # Creating the resource group in the defined location.
-echo
 echo "Creating resource group: $imageResourceGroup in location: $location..."
 az group create -n "$imageResourceGroup" -l "$location"
 
@@ -39,10 +41,7 @@ az identity create --resource-group "$imageResourceGroup" -n "$identityName"
 identityId=$(az identity show --resource-group "$imageResourceGroup" -n "$identityName" --query principalId --output tsv)
 
 # Displaying the set variables for user confirmation.
-echo
-echo "=========================="
-echo "Configuration Summary:"
-echo "=========================="
+display_header "Configuration Summary"
 echo "Image Resource Group: $imageResourceGroup"
 echo "Location: $location"
 echo "Subscription ID: $subscriptionID"
@@ -64,10 +63,7 @@ create_image() {
     local imageTemplateURL=$2
     local outputFilePath=$3
 
-    echo
-    echo "==============================="
-    echo "Creating Image: $imageName"
-    echo "==============================="
+    display_header "Creating Image: $imageName"
     echo "Image Template URL: $imageTemplateURL"
     echo "Output File: $outputFilePath"
     echo
@@ -79,6 +75,6 @@ create_image() {
 create_image 'Win11EntBaseImageFrontEndEngineers' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/MicrosoftDevBoxEnvironment/Deploy/Win11-Ent-Base-Image-FrontEnd-Template.json' './DownloadedFiles/Win11-Ent-Base-Image-FrontEnd-Template-Output.json'
 create_image 'Win11EntBaseImageBackEndEngineers' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/MicrosoftDevBoxEnvironment/Deploy/Win11-Ent-Base-Image-BackEnd-Template.json' './DownloadedFiles/Win11-Ent-Base-Image-BackEnd-Template-Output.json'
 
-# Deploy Microsoft DevBox
-echo "Deploying Microsoft DevBox..."
+# Deploying Microsoft DevBox
+display_header "Deploying Microsoft DevBox"
 ./DeployAzureDevBox.sh "$subscriptionID" "$imageResourceGroup" "$location" 'Win11EntBaseImageFrontEndEngineers' 'Win11EntBaseImageBackEndEngineers'
