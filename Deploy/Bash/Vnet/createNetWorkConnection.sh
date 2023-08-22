@@ -23,6 +23,12 @@ outputFilePath='././DownloadedTempTemplates/Network-Connection-Template-Output.j
 # (Optional) You can add a step to download the ARM template from the URL to the specified file path.
 wget $templateUrl -O $outputFilePath
 
+sed -i -e "s%<location>%$location%g" "$outputFilePath"
+sed -i -e "s%<subscriptionId>%$subscriptionId%g" "$outputFilePath"
+sed -i -e "s%<resourceGroupName>%$resourceGroupName%g" "$outputFilePath"
+sed -i -e "s%<vnetName>%$vnetName%g" "$outputFilePath"
+sed -i -e "s%<subNetName>%$subNetName%g" "$outputFilePath"
+
 # Provide feedback to the user about the deployment initiation.
 echo "Initiating deployment using the ARM Template..."
 
@@ -30,13 +36,7 @@ echo "Initiating deployment using the ARM Template..."
 az deployment group create \
     --name Network-Connection-Template \
     --template-file $outputFilePath \
-    --resource-group $resourceGroupName \
-    --parameters \
-        location=$location \
-        subscriptionId=$subscriptionId \
-        resourceGroupName=$resourceGroupName \
-        vnetName=$vnetName \
-        subNetName=$subNetName
+    --resource-group $resourceGroupName 
 
 # Check the exit status of the last command to determine if the deployment was successful.
 if [ $? -eq 0 ]; then
