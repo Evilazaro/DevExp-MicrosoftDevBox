@@ -16,7 +16,7 @@ imageGalleryName="$3"
 
 # Define the template file URL and the output file name for clarity
 galleryTemplateURL="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Compute-Gallery-Template.json"
-outputFilePath="././DownloadedTempTemplates/Create-Gallery-Template-Output.json"
+outputFilePath="././DownloadedTempTemplates/Compute-Gallery-Template-Output.json"
 
 # Notify the user that the template is being downloaded
 echo "Downloading template file from: $galleryTemplateURL"

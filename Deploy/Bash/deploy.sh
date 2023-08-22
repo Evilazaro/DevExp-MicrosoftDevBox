@@ -68,7 +68,7 @@ build_image() {
     echo "Output File: $outputFilePath"
     echo
 
-    #./VMImages/buildVMImage.sh "$outputFilePath" "$subscriptionID" "$imageResourceGroup" "$location" "$imageName" "$identityName" "$imageTemplateURL"
+    ./VMImages/buildVMImage.sh "$outputFilePath" "$subscriptionID" "$imageResourceGroup" "$location" "$imageName" "$identityName" "$imageTemplateURL"
 }
 
 # Creating images for both front-end and back-end engineers.
