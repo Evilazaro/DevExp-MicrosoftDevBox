@@ -6,7 +6,7 @@ location=$2
 
 # Define the template file URL and the output file name
 galleryTemplateFile=https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/MicrosoftDevBoxEnvironment/Deploy/Compute-Gallery-Template.json
-outputFile=Create-Gallery-Template-Output.json
+outputFile=./DownloadedFiles/Create-Gallery-Template-Output.json
 
 # Notify the user that the template is being downloaded
 echo "Downloading template file from: $galleryTemplateFile"
