@@ -15,14 +15,14 @@ location="$2"
 imageGalleryName="$3"
 
 # Define the template file URL and the output file name for clarity
-galleryTemplateURL="https://github.com/Evilazaro/MicrosoftDevBox/blob/main/Deploy/ARMTemplates/Compute-Gallery-Template.json"
-outputFilePath="././DownloadedFiles/Create-Gallery-Template-Output.json"
+galleryTemplateURL="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Compute-Gallery-Template.json"
+outputFilePath="./././DownloadedTempTemplates/Create-Gallery-Template-Output.json"
 
 # Notify the user that the template is being downloaded
 echo "Downloading template file from: $galleryTemplateURL"
 
-# Download the template file using curl
-curl "$galleryTemplateURL" -o "$outputFilePath"
+# Download the template file using wget
+wget $galleryTemplateURL -O $outputFilePath
 
 # Check if curl command succeeded
 if [ $? -ne 0 ]; then

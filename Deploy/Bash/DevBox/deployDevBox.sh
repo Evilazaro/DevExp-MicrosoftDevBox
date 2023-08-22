@@ -45,15 +45,15 @@ echo "Creating Virtual Network: $vnetName and Subnet: $subnetName..."
 
 # Set up a network connection for Azure Development Center
 echo "Setting up Network Connection for Azure Development Center..."
-././Vnet/createNetWorkConnection.sh
+././Vnet/createNetWorkConnection.sh $location $subscriptionId $devBoxResourceGroupName $vnetName $subnetName
 
 echo "-----------------------------------------"
 echo "Azure Resource Creation Completed!"
 echo "-----------------------------------------"
 
 # # Initialize a process to create an Azure Compute Gallery
-# echo "Starting the process to create Azure Compute Gallery in resource group: $devBoxResourceGroupName and location: $location..."
-# ././ComputeGallery/deployComputeGallery.sh $devBoxResourceGroupName $location $imageGalleryName
+echo "Starting the process to create Azure Compute Gallery in resource group: $devBoxResourceGroupName and location: $location..."
+././ComputeGallery/deployComputeGallery.sh $devBoxResourceGroupName $location $imageGalleryName
 
 # echo "Azure Compute Gallery Creation Completed!"
 

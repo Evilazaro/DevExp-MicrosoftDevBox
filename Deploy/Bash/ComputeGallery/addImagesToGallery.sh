@@ -19,7 +19,7 @@ imageResourceGroupName=$6
 subscriptionId=$7
 
 # Define URLs and paths
-galleryTemplateFile="https://github.com/Evilazaro/MicrosoftDevBox/blob/main/Deploy/ARMTemplates/Add-Images-To-Gallery-Template.json"
+galleryTemplateFile="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Add-Images-To-Gallery-Template.json"
 outputFile="./DownloadedFiles/Add-Images-To-Gallery-Template-Output.json"
 
 echo "Starting deployment to add image to gallery..."

@@ -14,8 +14,8 @@ imageTemplateFile="$7"
 echo "Starting the process..."
 echo "Attempting to download image template from ${imageTemplateFile}..."
 
-# Use 'curl' to fetch the image template and save it to the specified location
-curl "$imageTemplateFile" -o "$outputFile"
+# Use 'weget' to fetch the image template and save it to the specified location
+wget $imageTemplateFile -O $outputFile
 
 # Indicate the file download completion to the user
 echo "Successfully downloaded the image template. Saved to ${outputFile}."

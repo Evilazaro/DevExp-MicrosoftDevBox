@@ -17,11 +17,11 @@ vnetName=$4
 subNetName=$5
 
 # Specify the URL for the ARM Template and the file path to store the template.
-templateUrl='https://github.com/Evilazaro/MicrosoftDevBox/blob/main/Deploy/ARMTemplates/Network-Connection-Template.json' 
-outputFilePath='./DownloadedFiles/Network-Connection-Template-Output.json'
+templateUrl='https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Network-Connection-Template.json' 
+outputFilePath='././DownloadedTempTemplates/Network-Connection-Template-Output.json'
 
 # (Optional) You can add a step to download the ARM template from the URL to the specified file path.
-# wget $templateUrl -O $outputFilePath
+wget $templateUrl -O $outputFilePath
 
 # Provide feedback to the user about the deployment initiation.
 echo "Initiating deployment using the ARM Template..."
@@ -30,12 +30,13 @@ echo "Initiating deployment using the ARM Template..."
 az deployment group create \
     --name Network-Connection-Template \
     --template-file $outputFilePath \
+    --resource-group $resourceGroupName \
     --parameters \
-        '<location>'=$location \
-        '<subscriptionId>'=$subscriptionId \
-        '<resourceGroupName>'=$resourceGroupName \
-        '<vnetName>'=$vnetName \
-        '<subNetName>'=$subNetName
+        location=$location \
+        subscriptionId=$subscriptionId \
+        resourceGroupName=$resourceGroupName \
+        vnetName=$vnetName \
+        subNetName=$subNetName
 
 # Check the exit status of the last command to determine if the deployment was successful.
 if [ $? -eq 0 ]; then
