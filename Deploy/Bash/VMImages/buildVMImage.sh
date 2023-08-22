@@ -15,7 +15,7 @@ echo "Starting the process..."
 echo "Attempting to download image template from ${imageTemplateFile}..."
 
 # Use 'weget' to fetch the image template and save it to the specified location
-wget $imageTemplateFile -O $outputFile
+wget --header="Cache-Control: no-cache" --header="Pragma: no-cache"  $imageTemplateFile -O $outputFile
 
 # Indicate the file download completion to the user
 echo "Successfully downloaded the image template. Saved to ${outputFile}."

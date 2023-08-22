@@ -21,7 +21,7 @@ templateUrl='https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/De
 outputFilePath='././DownloadedTempTemplates/Network-Connection-Template-Output.json'
 
 # (Optional) You can add a step to download the ARM template from the URL to the specified file path.
-wget $templateUrl -O $outputFilePath
+wget --header="Cache-Control: no-cache" --header="Pragma: no-cache"  $templateUrl -O $outputFilePath
 
 sed -i -e "s%<location>%$location%g" "$outputFilePath"
 sed -i -e "s%<subscriptionId>%$subscriptionId%g" "$outputFilePath"

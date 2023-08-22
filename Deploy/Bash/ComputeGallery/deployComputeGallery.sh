@@ -21,8 +21,11 @@ outputFilePath="./././DownloadedTempTemplates/Create-Gallery-Template-Output.jso
 # Notify the user that the template is being downloaded
 echo "Downloading template file from: $galleryTemplateURL"
 
-# Download the template file using wget
-wget $galleryTemplateURL -O $outputFilePath
+# Download the template file using wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" 
+wget --header="Cache-Control: no-cache" --header="Pragma: no-cache"  $galleryTemplateURL -O $outputFilePath
+
+sed -i -e "s%<resourceGroup>%$galleryResourceGroup%g" "$outputFilePath"
+sed -i -e "s%<location>%$location%g" "$outputFilePath"
 
 # Check if curl command succeeded
 if [ $? -ne 0 ]; then
@@ -36,10 +39,7 @@ echo "Creating resource in Azure with the provided details..."
 az deployment group create \
     --name $imageGalleryName \
     --template-file "$outputFilePath" \
-    --resource-group "$galleryResourceGroup" \
-    --parameters \
-        '<imageGalleryName>'="$imageGalleryName" \
-        '<location>'="$location"
+    --resource-group "$galleryResourceGroup" 
 
 # Check if the Azure CLI command succeeded
 if [ $? -ne 0 ]; then
