@@ -1,47 +1,54 @@
 #!/bin/bash
 
-# This script logs into Azure, sets up resource groups, and creates images using given templates.
+# This script automates various Azure tasks like resource group creation, image creation, and deployment.
 
-# Initiating the Azure login process.
+# Start: Logging into Azure.
+echo "========================"
 echo "Logging into Azure..."
-./login.sh $1
+echo "========================"
+./login.sh "$1"
 
 # Setting up initial variables for the process.
-echo "-----------------"
-echo "Setting Variables"
-echo "-----------------"
+echo
+echo "========================"
+echo "Setting Up Variables..."
+echo "========================"
 
-# Define the resource group name.
+# Defining the resource group name.
 imageResourceGroup='Contoso-Base-Images-Engineers-rg'
 
-# Define the Azure region where resources will be deployed.
+# Defining the Azure region where resources will be deployed.
 location='WestUS3'
 
-# Define the identity name for the image builder.
-identityName=contosoIdentityIBuilderUserDevBox
+# Defining the identity name for the image builder.
+identityName='contosoIdentityIBuilderUserDevBox'
 
 # Fetching the subscription ID for the logged-in account.
 subscriptionID=$(az account show --query id --output tsv)
 
 # Creating the resource group in the defined location.
+echo
 echo "Creating resource group: $imageResourceGroup in location: $location..."
-az group create -n $imageResourceGroup -l $location
+az group create -n "$imageResourceGroup" -l "$location"
 
 # Creating a new managed identity within the resource group.
 echo "Creating managed identity: $identityName..."
-az identity create --resource-group $imageResourceGroup -n $identityName
+az identity create --resource-group "$imageResourceGroup" -n "$identityName"
 
 # Fetching the principal ID of the newly created managed identity.
-identityId=$(az identity show --resource-group $imageResourceGroup -n $identityName --query principalId --output tsv)
+identityId=$(az identity show --resource-group "$imageResourceGroup" -n "$identityName" --query principalId --output tsv)
 
-# Displaying the set variables for the user.
-echo "-----------------"
-echo "imageResourceGroup: $imageResourceGroup"
-echo "location: $location"
+# Displaying the set variables for user confirmation.
+echo
+echo "=========================="
+echo "Configuration Summary:"
+echo "=========================="
+echo "Image Resource Group: $imageResourceGroup"
+echo "Location: $location"
 echo "Subscription ID: $subscriptionID"
 echo "Identity Name: $identityName"
 echo "Identity ID: $identityId"
-echo "-----------------"
+echo "=========================="
 
 # Registering necessary Azure features.
 echo "Registering necessary features..."
@@ -49,32 +56,29 @@ echo "Registering necessary features..."
 
 # Creating a user-assigned managed identity.
 echo "Creating user-assigned managed identity..."
-./CreateUserAssignedManagedIdentity.sh $imageResourceGroup $subscriptionID $identityId
+./CreateUserAssignedManagedIdentity.sh "$imageResourceGroup" "$subscriptionID" "$identityId"
 
-# Preparing for the front-end image creation.
-echo "-----------------"
-frontEndEngineersImageName='Win11EntBaseImageFrontEndEngineers'
-echo "Creating Image: $imageName"
-imageTemplateFile=https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/MicrosoftDevBoxEnvironment/Deploy/Win11-Ent-Base-Image-FrontEnd-Template.json
-outputFile='./DownloadedFiles/Win11-Ent-Base-Image-FrontEnd-Template-Output.json'
-echo "imageTemplateFile: $imageTemplateFile"
-echo "outputFile: $outputFile"
+# Function for creating images - to reduce redundancy.
+create_image() {
+    local imageName=$1
+    local imageTemplateURL=$2
+    local outputFilePath=$3
 
-# Initiating the image creation process.
-./CreateImage.sh $outputFile $subscriptionID $imageResourceGroup $location $frontEndEngineersImageName $identityName $imageTemplateFile
+    echo
+    echo "==============================="
+    echo "Creating Image: $imageName"
+    echo "==============================="
+    echo "Image Template URL: $imageTemplateURL"
+    echo "Output File: $outputFilePath"
+    echo
 
+    ./CreateImage.sh "$outputFilePath" "$subscriptionID" "$imageResourceGroup" "$location" "$imageName" "$identityName" "$imageTemplateURL"
+}
 
-# Preparing for the back-end image creation.
-echo "-----------------"
-backEndEngineersImageName='Win11EntBaseImageBackEndEngineers'
-echo "Creating Image: $imageName"
-imageTemplateFile=https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/MicrosoftDevBoxEnvironment/Deploy/Win11-Ent-Base-Image-BackEnd-Template.json
-outputFile='./DownloadedFiles/Win11-Ent-Base-Image-BackEnd-Template-Output.json'
-echo "imageTemplateFile: $imageTemplateFile"
-echo "outputFile: $outputFile"
-
-# Initiating the back-end image creation process.
-./CreateImage.sh $outputFile $subscriptionID $imageResourceGroup $location $backEndEngineersImageName $identityName $imageTemplateFile
+# Creating images for both front-end and back-end engineers.
+create_image 'Win11EntBaseImageFrontEndEngineers' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/MicrosoftDevBoxEnvironment/Deploy/Win11-Ent-Base-Image-FrontEnd-Template.json' './DownloadedFiles/Win11-Ent-Base-Image-FrontEnd-Template-Output.json'
+create_image 'Win11EntBaseImageBackEndEngineers' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/MicrosoftDevBoxEnvironment/Deploy/Win11-Ent-Base-Image-BackEnd-Template.json' './DownloadedFiles/Win11-Ent-Base-Image-BackEnd-Template-Output.json'
 
 # Deploy Microsoft DevBox
-./DeployAzureDevBox.sh $subscriptionID $imageResourceGroup $location $frontEndEngineersImageName $backEndEngineersImageName
+echo "Deploying Microsoft DevBox..."
+./DeployAzureDevBox.sh "$subscriptionID" "$imageResourceGroup" "$location" 'Win11EntBaseImageFrontEndEngineers' 'Win11EntBaseImageBackEndEngineers'

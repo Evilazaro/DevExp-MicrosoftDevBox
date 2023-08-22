@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Ensure the script stops on any error
+set -e
+
+# Check if the necessary number of arguments are provided
+if [ "$#" -ne 7 ]; then
+    echo "Usage: $0 <imageGalleryName> <imageName> <location> <sku> <devBoxResourceGroupName> <imageResourceGroupName> <subscriptionId>"
+    exit 1
+fi
+
+# Capture input arguments
 imageGalleryName=$1
 imageName=$2
 location=$3
@@ -8,10 +18,19 @@ devBoxResourceGroupName=$5
 imageResourceGroupName=$6
 subscriptionId=$7
 
-galleryTemplateFile=https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/MicrosoftDevBoxEnvironment/Deploy/Add-Images-To-Gallery-Template.json
-outputFile=./DownloadedFiles/Add-Images-To-Gallery-Template-Output.json
+# Define URLs and paths
+galleryTemplateFile="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/MicrosoftDevBoxEnvironment/Deploy/Add-Images-To-Gallery-Template.json"
+outputFile="./DownloadedFiles/Add-Images-To-Gallery-Template-Output.json"
 
-az deployment group create --resource-group $resourceGroup --template-file $outputFile  \
+echo "Starting deployment to add image to gallery..."
+
+# Download the template file (if necessary)
+echo "Checking and downloading the template file..."
+[ -f "$outputFile" ] || curl -L $galleryTemplateFile -o $outputFile
+
+# Create deployment with Azure CLI
+echo "Deploying the image to the gallery..."
+az deployment group create --resource-group $devBoxResourceGroupName --template-file $outputFile \
     --parameters \
         imageGalleryName=$imageGalleryName \
         imageName=$imageName \
@@ -20,4 +39,5 @@ az deployment group create --resource-group $resourceGroup --template-file $outp
         imageResourceGroupName=$imageResourceGroupName \
         subscriptionId=$subscriptionId
 
+# Inform user of successful execution
 echo "Image added to gallery successfully!"

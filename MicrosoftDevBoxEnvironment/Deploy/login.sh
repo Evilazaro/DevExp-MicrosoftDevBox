@@ -1,32 +1,51 @@
 #!/bin/bash
 
-# This script is designed to help a user log in to their Azure account and set a specific subscription as active.
+# This script helps users log in to their Azure account and set a specific subscription as active.
 
-# Clear the terminal screen for better readability.
+# Functions
+
+function error_exit() {
+    echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
+    exit 1
+}
+
+# Constants
+PROGNAME=$(basename $0)
+
+# Begin main script
+
+# Clear the terminal screen for better user experience.
 clear
 
 # Print a header to indicate the start of the Azure login process.
 echo "Logging in to Azure"
 echo "-------------------"
 
-# Check if a subscription ID has been provided. If not, exit the script with an error message.
+# Check if a subscription ID has been provided. If not, exit the script with a usage message.
 if [ -z "$1" ]; then
     echo "Error: Subscription ID not provided!"
-    echo "Usage: $0 [SUBSCRIPTION_ID]"
+    echo "Usage: ${PROGNAME} [SUBSCRIPTION_ID]"
     exit 1
 fi
 
+SUBSCRIPTION_ID=$1
+
 # Display the subscription ID the user intends to set as active.
-echo "Target Subscription: $1"
+echo "Target Subscription: ${SUBSCRIPTION_ID}"
 echo "-------------------"
 
-# Use the Azure CLI to prompt the user to log in to their Azure account.
-# The user will be redirected to a browser-based authentication process.
+# Prompt user to log in to their Azure account using the Azure CLI.
+# They'll be redirected to a browser-based authentication process.
 echo "Please follow the on-screen instructions to log in."
-az login
+if ! az login; then
+    error_exit "Failed to log in to Azure."
+fi
 
-# After successful login, set the specified subscription (provided as the first argument) as the active subscription.
+# After successful login, set the specified subscription as the active subscription.
 echo "Setting target subscription as active..."
-az account set --subscription $1
+if ! az account set --subscription ${SUBSCRIPTION_ID}; then
+    error_exit "Failed to set target subscription."
+fi
+
 echo "-------------------"
 echo "Subscription set successfully!"
