@@ -1,0 +1,75 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "westus3"
+        },
+        "galleryName": {
+            "value": "ContosoImageGallery1"
+        },
+        "imageDefinitionName": {
+            "value": "Win11EntBaseImageFrontEndEngineers"
+        },
+        "osType": {
+            "value": "Windows"
+        },
+        "osState": {
+            "value": "Generalized"
+        },
+        "publisher": {
+            "value": "Contoso"
+        },
+        "offer": {
+            "value": "Windows11DevTools"
+        },
+        "sku": {
+            "value": "FrontEnd"
+        },
+        "minRecommendedvCPUs": {
+            "value": 1
+        },
+        "maxRecommendedvCPUs": {
+            "value": 16
+        },
+        "minRecommendedMemory": {
+            "value": 1
+        },
+        "maxRecommendedMemory": {
+            "value": 32
+        },
+        "hyperVGeneration": {
+            "value": "V2"
+        },
+        "SecurityType": {
+            "value": "TrustedLaunch"
+        },
+        "architecture": {
+            "value": "x64"
+        },
+        "regionReplications": {
+            "value": [
+                {
+                    "name": "<location>",
+                    "regionalReplicaCount": 1,
+                    "storageAccountType": "Standard_LRS"
+                }
+            ]
+        },
+        "defaultReplicaCount": {
+            "value": 1
+        },
+        "version": {
+            "value": "1.0.0"
+        },
+        "versionLocation": {
+            "value": "westus3"
+        },
+        "sourceImageId": {
+            "value": "/subscriptions/<subscriptionid>/resourceGroups/<resourceGroupName>/providers/Microsoft.Compute/images/<imageName>"
+        },
+        "excludedFromLatest": {
+            "value": false
+        }
+    }
+}

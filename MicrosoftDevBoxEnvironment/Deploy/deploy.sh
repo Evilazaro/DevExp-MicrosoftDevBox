@@ -53,7 +53,7 @@ echo "Creating user-assigned managed identity..."
 
 # Preparing for the front-end image creation.
 echo "-----------------"
-imageName='Win11EntBaseImageFrontEndEngineers'
+frontEndEngineersImageName='Win11EntBaseImageFrontEndEngineers'
 echo "Creating Image: $imageName"
 imageTemplateFile=https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/MicrosoftDevBoxEnvironment/Deploy/Win11-Ent-Base-Image-FrontEnd-Template.json
 outputFile='./DownloadedFiles/Win11-Ent-Base-Image-FrontEnd-Template-Output.json'
@@ -61,12 +61,12 @@ echo "imageTemplateFile: $imageTemplateFile"
 echo "outputFile: $outputFile"
 
 # Initiating the image creation process.
-./CreateImage.sh $outputFile $subscriptionID $imageResourceGroup $location $imageName $identityName $imageTemplateFile
+./CreateImage.sh $outputFile $subscriptionID $imageResourceGroup $location $frontEndEngineersImageName $identityName $imageTemplateFile
 
 
 # Preparing for the back-end image creation.
 echo "-----------------"
-imageName='Win11EntBaseImageBackEndEngineers'
+backEndEngineersImageName='Win11EntBaseImageBackEndEngineers'
 echo "Creating Image: $imageName"
 imageTemplateFile=https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/MicrosoftDevBoxEnvironment/Deploy/Win11-Ent-Base-Image-BackEnd-Template.json
 outputFile='./DownloadedFiles/Win11-Ent-Base-Image-BackEnd-Template-Output.json'
@@ -74,7 +74,7 @@ echo "imageTemplateFile: $imageTemplateFile"
 echo "outputFile: $outputFile"
 
 # Initiating the back-end image creation process.
-./CreateImage.sh $outputFile $subscriptionID $imageResourceGroup $location $imageName $identityName $imageTemplateFile
+./CreateImage.sh $outputFile $subscriptionID $imageResourceGroup $location $backEndEngineersImageName $identityName $imageTemplateFile
 
 # Deploy Microsoft DevBox
-./DeployAzureDevBox.sh $subscriptionID $imageResourceGroup $location $imageName $identityName
+./DeployAzureDevBox.sh $subscriptionID $imageResourceGroup $location $frontEndEngineersImageName $backEndEngineersImageName

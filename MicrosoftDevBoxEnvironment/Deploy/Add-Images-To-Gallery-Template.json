@@ -1,0 +1,72 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/galleries/images",
+            "name": "<imageGalleryName>, '/', <imageName>",
+            "apiVersion": "2021-10-01",
+            "location": "<location>",
+            "properties": {
+                "osType": "Windows",
+                "osState": "Generalized",
+                "identifier": {
+                    "publisher": "Contoso",
+                    "offer": "Windows11DevTools",
+                    "sku": "<sku>"
+                },
+                "recommended": {
+                    "vCPUs": {
+                        "min": "1",
+                        "max": "16"
+                    },
+                    "memory": {
+                        "min": "1",
+                        "max": "32"
+                    }
+                },
+                "hyperVGeneration": "V2",
+                "features": [
+                    {
+                        "name": "SecurityType",
+                        "value": "TrustedLaunch"
+                    }
+                ],
+                "architecture": "x64"
+            },
+            "tags": {
+                "division": "IT",
+                "Environment": "DevBox"
+            }
+        },
+        {
+            "type": "Microsoft.Compute/galleries/images/versions",
+            "dependsOn": [
+                "[concat('Microsoft.Compute/galleries/', <imageGalleryName>, '/images/', <imageName>"
+            ],
+            "name": "<imageGalleryName>, '/', <imageName>, '/', 1.0.0",
+            "apiVersion": "2021-10-01",
+            "location": "<location>",
+            "properties": {
+                "publishingProfile": {
+                    "replicaCount": "1",
+                    "targetRegions": [
+                        {
+                            "name": "<location>",
+                            "regionalReplicaCount": "1"
+                        }
+                    ],
+                    "excludeFromLatest": "false"
+                },
+                "storageProfile": {
+                    "source": {
+                        "id": "/subscriptions/<subscriptionid>/resourceGroups/<imageResourceGroupName>/providers/Microsoft.Compute/images/<imageName>"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}

@@ -3,6 +3,7 @@
 # Assign input arguments to variables
 galleryResourceGroup=$1
 location=$2
+imageGalleryName=$3
 
 # Define the template file URL and the output file name
 galleryTemplateFile=https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/MicrosoftDevBoxEnvironment/Deploy/Compute-Gallery-Template.json
@@ -32,7 +33,7 @@ az resource create \
     --properties @$outputFile \
     --is-full-object \
     --resource-type Microsoft.Compute/galleries \
-    -n Contoso-Gallery
+    -n $imageGalleryName
 
 # Notify the user that the operation has been completed
 echo "Operation completed!"

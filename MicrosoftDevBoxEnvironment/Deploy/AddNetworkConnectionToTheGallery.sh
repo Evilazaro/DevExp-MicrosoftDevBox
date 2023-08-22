@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
-
 # Variables from user input or predefined
 resourceGroup=$1
 location=$2
