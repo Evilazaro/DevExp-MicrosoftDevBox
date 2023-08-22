@@ -29,6 +29,8 @@ wget --header="Cache-Control: no-cache" --header="Pragma: no-cache"  $galleryTem
 
 sed -i -e "s%<galleryName>%$galleryName%g" "$outputFilePath"
 sed -i -e "s%<location>%$location%g" "$outputFilePath"
+sed -i -e "s%<frontEndImageName>%$frontEndImageName%g" "$outputFilePath"
+sed -i -e "s%<backEndImageName>%$backEndImageName%g" "$outputFilePath"
 
 # Check if curl command succeeded
 if [ $? -ne 0 ]; then

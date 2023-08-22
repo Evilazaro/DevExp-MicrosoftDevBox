@@ -22,7 +22,7 @@ imageResourceGroupName=$5
 devBoxResourceGroupName="Contoso-DevBox-rg"
 vnetName="Contoso-AzureDevBox-vnet"
 subnetName="Contoso-AzureDevBox-subnet"
-imageGalleryName="ContosoImageGallery"
+galleryName="ContosoImageGallery"
 
 # Display planned actions for user clarity
 echo "-----------------------------------------"
@@ -53,17 +53,6 @@ echo "-----------------------------------------"
 
 # # Initialize a process to create an Azure Compute Gallery
 echo "Starting the process to create Azure Compute Gallery in resource group: $devBoxResourceGroupName and location: $location..."
-././ComputeGallery/deployComputeGallery.sh $devBoxResourceGroupName $location $imageGalleryName
+././ComputeGallery/deployComputeGallery.sh $devBoxResourceGroupName $location $galleryName $frontEndImageName $backEndImageName $imageResourceGroupName $subscriptionId
 
-# echo "Azure Compute Gallery Creation Completed!"
-
-# # Add images to the Azure Compute Gallery
-# echo "Adding FrontEndEngineerVSCode Image to Gallery..."
-# sku=FrontEndEngineerVSCode
-# ././ComputeGallery/addImagesToGallery.sh $imageGalleryName $frontEndImageName $location $sku $devBoxResourceGroupName $imageResourceGroupName $subscriptionId
-
-# echo "Adding BackEndEnginneerVisualStudio Image to Gallery..."
-# sku=BackEndEnginneerVisualStudio
-# ././ComputeGallery/addImagesToGallery.sh $imageGalleryName $backEndImageName $location $sku $devBoxResourceGroupName $imageResourceGroupName $subscriptionId
-
-# echo "All operations completed successfully!"
+echo "All operations completed successfully!"
