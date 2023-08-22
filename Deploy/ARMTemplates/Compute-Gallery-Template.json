@@ -7,7 +7,7 @@
             "type": "Microsoft.Compute/galleries",
             "name": "<resourceGroup>",
             "apiVersion": "2021-10-01",
-            "location": "<Location>",
+            "location": "<location>",
             "properties": {},
             "tags": {
                 "division": "IT",
