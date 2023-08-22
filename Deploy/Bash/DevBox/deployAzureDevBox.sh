@@ -41,11 +41,11 @@ az group create -n $devBoxResourceGroupName -l $location
 
 # Create the Virtual Network and subnet
 echo "Creating Virtual Network: $vnetName and Subnet: $subnetName..."
-./CreateVNet.sh $devBoxResourceGroupName $location $vnetName $subnetName
+././Vnet/deployVnet.sh $devBoxResourceGroupName $location $vnetName $subnetName
 
 # Set up a network connection for Azure Development Center
 echo "Setting up Network Connection for Azure Development Center..."
-./CreateNetworkConnection.sh $location $devBoxResourceGroupName $vnetName $subnetName $subscriptionId
+././Vnet/createNetWorkConnection.sh $location $devBoxResourceGroupName $vnetName $subnetName $subscriptionId
 
 echo "-----------------------------------------"
 echo "Azure Resource Creation Completed!"
@@ -53,17 +53,17 @@ echo "-----------------------------------------"
 
 # Initialize a process to create an Azure Compute Gallery
 echo "Starting the process to create Azure Compute Gallery in resource group: $devBoxResourceGroupName and location: $location..."
-./CreateComputeGallery.sh $devBoxResourceGroupName $location $imageGalleryName
+././ComputeGallery/deployComputeGallery.sh $devBoxResourceGroupName $location $imageGalleryName
 
 echo "Azure Compute Gallery Creation Completed!"
 
 # Add images to the Azure Compute Gallery
 echo "Adding FrontEndEngineerVSCode Image to Gallery..."
 sku=FrontEndEngineerVSCode
-./AddImagesToGallery.sh $imageGalleryName $frontEndEngineersImageName $location $sku $devBoxResourceGroupName $imageResourceGroupName $subscriptionId
+././ComputeGallery/addImagesToGallery.sh $imageGalleryName $frontEndEngineersImageName $location $sku $devBoxResourceGroupName $imageResourceGroupName $subscriptionId
 
 echo "Adding BackEndEnginneerVisualStudio Image to Gallery..."
 sku=BackEndEnginneerVisualStudio
-./AddImagesToGallery.sh $imageGalleryName $backEndEngineersImageName $location $sku $devBoxResourceGroupName $imageResourceGroupName $subscriptionId
+././ComputeGallery/addImagesToGallery.sh $imageGalleryName $backEndEngineersImageName $location $sku $devBoxResourceGroupName $imageResourceGroupName $subscriptionId
 
 echo "All operations completed successfully!"
