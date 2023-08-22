@@ -5,7 +5,7 @@
     "resources": [
         {
             "type": "Microsoft.Compute/galleries",
-            "name": "<resourceGroup>",
+            "name": "<imageGalleryName>",
             "apiVersion": "2021-10-01",
             "location": "<location>",
             "properties": {},

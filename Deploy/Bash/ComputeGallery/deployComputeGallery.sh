@@ -24,7 +24,7 @@ echo "Downloading template file from: $galleryTemplateURL"
 # Download the template file using wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" 
 wget --header="Cache-Control: no-cache" --header="Pragma: no-cache"  $galleryTemplateURL -O $outputFilePath
 
-sed -i -e "s%<resourceGroup>%$galleryResourceGroup%g" "$outputFilePath"
+sed -i -e "s%<imageGalleryName>%$imageGalleryName%g" "$outputFilePath"
 sed -i -e "s%<location>%$location%g" "$outputFilePath"
 
 # Check if curl command succeeded
