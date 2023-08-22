@@ -77,4 +77,4 @@ echo "outputFile: $outputFile"
 ./CreateImage.sh $outputFile $subscriptionID $imageResourceGroup $location $imageName $identityName $imageTemplateFile
 
 # Deploy Microsoft DevBox
-./Deploy-DevBox.sh $subscriptionID $imageResourceGroup $location $imageName $identityName
+./DeployAzureDevBox.sh $subscriptionID $imageResourceGroup $location $imageName $identityName
