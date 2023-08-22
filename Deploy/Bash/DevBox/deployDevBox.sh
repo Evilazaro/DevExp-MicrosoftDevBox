@@ -14,8 +14,8 @@ fi
 # Assign arguments to variables
 subscriptionId=$1
 location=$2
-frontEndEngineersImageName=$3
-backEndEngineersImageName=$4
+frontEndImageName=$3
+backEndImageName=$4
 imageResourceGroupName=$5
 
 # Define fixed variables for the resource group, location, virtual network, and subnet names.
@@ -60,10 +60,10 @@ echo "Starting the process to create Azure Compute Gallery in resource group: $d
 # # Add images to the Azure Compute Gallery
 # echo "Adding FrontEndEngineerVSCode Image to Gallery..."
 # sku=FrontEndEngineerVSCode
-# ././ComputeGallery/addImagesToGallery.sh $imageGalleryName $frontEndEngineersImageName $location $sku $devBoxResourceGroupName $imageResourceGroupName $subscriptionId
+# ././ComputeGallery/addImagesToGallery.sh $imageGalleryName $frontEndImageName $location $sku $devBoxResourceGroupName $imageResourceGroupName $subscriptionId
 
 # echo "Adding BackEndEnginneerVisualStudio Image to Gallery..."
 # sku=BackEndEnginneerVisualStudio
-# ././ComputeGallery/addImagesToGallery.sh $imageGalleryName $backEndEngineersImageName $location $sku $devBoxResourceGroupName $imageResourceGroupName $subscriptionId
+# ././ComputeGallery/addImagesToGallery.sh $imageGalleryName $backEndImageName $location $sku $devBoxResourceGroupName $imageResourceGroupName $subscriptionId
 
 # echo "All operations completed successfully!"

@@ -2,16 +2,171 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {},
+    "variables": {},
     "resources": [
         {
             "type": "Microsoft.Compute/galleries",
-            "name": "<imageGalleryName>",
-            "apiVersion": "2021-10-01",
+            "apiVersion": "2022-03-03",
+            "name": "<galleryName>",
             "location": "<location>",
-            "properties": {},
             "tags": {
                 "division": "IT",
                 "Environment": "DevBox"
+            },
+            "properties": {
+                "identifier": {}
+            }
+        },
+        {
+            "type": "Microsoft.Compute/galleries/images",
+            "apiVersion": "2022-03-03",
+            "name": "[concat('<galleryName>', '/<backEndImageName>')]",
+            "location": "<location>",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/galleries', '<galleryName>')]"
+            ],
+            "tags": {
+                "division": "IT",
+                "Environment": "Dev-Workstation"
+            },
+            "properties": {
+                "hyperVGeneration": "V2",
+                "architecture": "x64",
+                "features": [
+                    {
+                        "name": "SecurityType",
+                        "value": "TrustedLaunch"
+                    }
+                ],
+                "osType": "Windows",
+                "osState": "Generalized",
+                "identifier": {
+                    "publisher": "Contoso",
+                    "offer": "Windows11DevTools",
+                    "sku": "BackEnd"
+                },
+                "recommended": {
+                    "vCPUs": {
+                        "min": 1,
+                        "max": 16
+                    },
+                    "memory": {
+                        "min": 1,
+                        "max": 32
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/galleries/images",
+            "apiVersion": "2022-03-03",
+            "name": "[concat('<galleryName>', '/<frontEndImageName>')]",
+            "location": "<location>",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/galleries', '<galleryName>')]"
+            ],
+            "tags": {
+                "environment": "Dev-Workstation",
+                "division": "IT"
+            },
+            "properties": {
+                "hyperVGeneration": "V2",
+                "architecture": "x64",
+                "features": [
+                    {
+                        "name": "SecurityType",
+                        "value": "TrustedLaunch"
+                    }
+                ],
+                "osType": "Windows",
+                "osState": "Generalized",
+                "identifier": {
+                    "publisher": "Contoso",
+                    "offer": "Windows11DevTools",
+                    "sku": "FrontEnd"
+                },
+                "recommended": {
+                    "vCPUs": {
+                        "min": 1,
+                        "max": 16
+                    },
+                    "memory": {
+                        "min": 1,
+                        "max": 32
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/galleries/images/versions",
+            "apiVersion": "2022-03-03",
+            "name": "[concat('<galleryName>', '/<backEndImageName>/1.0.0')]",
+            "location": "<location>",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/galleries/images', '<galleryName>', '<backEndImageName>')]",
+                "[resourceId('Microsoft.Compute/galleries', '<galleryName>')]"
+            ],
+            "properties": {
+                "publishingProfile": {
+                    "targetRegions": [
+                        {
+                            "name": "West US 3",
+                            "regionalReplicaCount": 1,
+                            "storageAccountType": "Standard_LRS"
+                        }
+                    ],
+                    "replicaCount": 1,
+                    "excludeFromLatest": false,
+                    "storageAccountType": "Standard_LRS"
+                },
+                "storageProfile": {
+                    "source": {
+                        "id": "/subscriptions/<subscriptionId>/resourceGroups/<resourceGroupName>/providers/Microsoft.Compute/images/<backEndImageName>"
+                    },
+                    "osDiskImage": {
+                        "hostCaching": "None",
+                        "source": {}
+                    }
+                },
+                "safetyProfile": {
+                    "allowDeletionOfReplicatedLocations": true
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/galleries/images/versions",
+            "apiVersion": "2022-03-03",
+            "name": "[concat('<galleryName>', '/<frontEndImageName>/1.0.0')]",
+            "location": "<location>",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/galleries/images', '<galleryName>', '<frontEndImageName>')]",
+                "[resourceId('Microsoft.Compute/galleries', '<galleryName>')]"
+            ],
+            "properties": {
+                "publishingProfile": {
+                    "targetRegions": [
+                        {
+                            "name": "West US 3",
+                            "regionalReplicaCount": 1,
+                            "storageAccountType": "Standard_LRS"
+                        }
+                    ],
+                    "replicaCount": 1,
+                    "excludeFromLatest": false,
+                    "storageAccountType": "Standard_LRS"
+                },
+                "storageProfile": {
+                    "source": {
+                        "id": "/subscriptions/<subscriptionId>/resourceGroups/<resourceGroupName>/providers/Microsoft.Compute/images/<frontEndImageName>"
+                    },
+                    "osDiskImage": {
+                        "hostCaching": "None",
+                        "source": {}
+                    }
+                },
+                "safetyProfile": {
+                    "allowDeletionOfReplicatedLocations": true
+                }
             }
         }
     ]

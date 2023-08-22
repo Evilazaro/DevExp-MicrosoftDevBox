@@ -5,14 +5,17 @@ set -e
 
 # Check if the correct number of arguments are provided
 if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 <galleryResourceGroup> <location> <imageGalleryName>"
+    echo "Usage: $0 <galleryResourceGroup> <location> <galleryName>"
     exit 1
 fi
 
 # Assign input arguments to descriptive variable names
 galleryResourceGroup="$1"
 location="$2"
-imageGalleryName="$3"
+galleryName="$3"
+frontEndImageName="$4"
+backEndImageName="$5"
+
 
 # Define the template file URL and the output file name for clarity
 galleryTemplateURL="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Compute-Gallery-Template.json"
@@ -24,7 +27,7 @@ echo "Downloading template file from: $galleryTemplateURL"
 # Download the template file using wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" 
 wget --header="Cache-Control: no-cache" --header="Pragma: no-cache"  $galleryTemplateURL -O $outputFilePath
 
-sed -i -e "s%<imageGalleryName>%$imageGalleryName%g" "$outputFilePath"
+sed -i -e "s%<galleryName>%$galleryName%g" "$outputFilePath"
 sed -i -e "s%<location>%$location%g" "$outputFilePath"
 
 # Check if curl command succeeded
@@ -37,7 +40,7 @@ fi
 echo "Creating resource in Azure with the provided details..."
 
 az deployment group create \
-    --name $imageGalleryName \
+    --name $galleryName \
     --template-file "$outputFilePath" \
     --resource-group "$galleryResourceGroup" 
 

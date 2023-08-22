@@ -1,72 +1,146 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {},
+    "parameters": {
+        "galleries_ContosoImageGallery_name": {
+            "defaultValue": "ContosoImageGallery",
+            "type": "String"
+        },
+        "images_Win11EntBaseImageFrontEndEngineers_externalid": {
+            "defaultValue": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/CONTOSO-BASE-IMAGES-ENGINEERS-RG/providers/Microsoft.Compute/images/Win11EntBaseImageFrontEndEngineers",
+            "type": "String"
+        }
+    },
     "variables": {},
     "resources": [
         {
-            "type": "Microsoft.Compute/galleries/images",
-            "name": "<imageGalleryName>, '/', <imageName>",
-            "apiVersion": "2021-10-01",
-            "location": "<location>",
+            "type": "Microsoft.Compute/galleries",
+            "apiVersion": "2022-03-03",
+            "name": "[parameters('galleries_ContosoImageGallery_name')]",
+            "location": "westus3",
+            "tags": {
+                "division": "IT",
+                "Environment": "DevBox"
+            },
             "properties": {
-                "osType": "Windows",
-                "osState": "Generalized",
-                "identifier": {
-                    "publisher": "Contoso",
-                    "offer": "Windows11DevTools",
-                    "sku": "<sku>"
-                },
-                "recommended": {
-                    "vCPUs": {
-                        "min": "1",
-                        "max": "16"
-                    },
-                    "memory": {
-                        "min": "1",
-                        "max": "32"
-                    }
-                },
+                "identifier": {}
+            }
+        },
+        {
+            "type": "Microsoft.Compute/galleries/images",
+            "apiVersion": "2022-03-03",
+            "name": "[concat(parameters('galleries_ContosoImageGallery_name'), '/Win11EntBaseImageBackEndEngineers')]",
+            "location": "westus3",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/galleries', parameters('galleries_ContosoImageGallery_name'))]"
+            ],
+            "tags": {
+                "division": "IT",
+                "Environment": "Dev-Workstation"
+            },
+            "properties": {
                 "hyperVGeneration": "V2",
+                "architecture": "x64",
                 "features": [
                     {
                         "name": "SecurityType",
                         "value": "TrustedLaunch"
                     }
                 ],
-                "architecture": "x64"
-            },
+                "osType": "Windows",
+                "osState": "Generalized",
+                "identifier": {
+                    "publisher": "Contoso",
+                    "offer": "Windows11DevTools",
+                    "sku": "BackEnd"
+                },
+                "recommended": {
+                    "vCPUs": {
+                        "min": 1,
+                        "max": 16
+                    },
+                    "memory": {
+                        "min": 1,
+                        "max": 32
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/galleries/images",
+            "apiVersion": "2022-03-03",
+            "name": "[concat(parameters('galleries_ContosoImageGallery_name'), '/Win11EntBaseImageFrontEndEngineers')]",
+            "location": "westus3",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/galleries', parameters('galleries_ContosoImageGallery_name'))]"
+            ],
             "tags": {
-                "division": "IT",
-                "Environment": "DevBox"
+                "environment": "Dev-Workstation",
+                "division": "IT"
+            },
+            "properties": {
+                "hyperVGeneration": "V2",
+                "architecture": "x64",
+                "features": [
+                    {
+                        "name": "SecurityType",
+                        "value": "TrustedLaunch"
+                    }
+                ],
+                "osType": "Windows",
+                "osState": "Generalized",
+                "identifier": {
+                    "publisher": "Contoso",
+                    "offer": "Windows11DevTools",
+                    "sku": "FrontEnd"
+                },
+                "recommended": {
+                    "vCPUs": {
+                        "min": 1,
+                        "max": 16
+                    },
+                    "memory": {
+                        "min": 1,
+                        "max": 32
+                    }
+                }
             }
         },
         {
             "type": "Microsoft.Compute/galleries/images/versions",
+            "apiVersion": "2022-03-03",
+            "name": "[concat(parameters('galleries_ContosoImageGallery_name'), '/Win11EntBaseImageFrontEndEngineers/1.0.0')]",
+            "location": "westus3",
             "dependsOn": [
-                "[concat('Microsoft.Compute/galleries/', <imageGalleryName>, '/images/', <imageName>"
+                "[resourceId('Microsoft.Compute/galleries/images', parameters('galleries_ContosoImageGallery_name'), 'Win11EntBaseImageFrontEndEngineers')]",
+                "[resourceId('Microsoft.Compute/galleries', parameters('galleries_ContosoImageGallery_name'))]"
             ],
-            "name": "<imageGalleryName>, '/', <imageName>, '/', 1.0.0",
-            "apiVersion": "2021-10-01",
-            "location": "<location>",
             "properties": {
                 "publishingProfile": {
-                    "replicaCount": "1",
                     "targetRegions": [
                         {
-                            "name": "<location>",
-                            "regionalReplicaCount": "1"
+                            "name": "West US 3",
+                            "regionalReplicaCount": 1,
+                            "storageAccountType": "Standard_LRS"
                         }
                     ],
-                    "excludeFromLatest": "false"
+                    "replicaCount": 1,
+                    "excludeFromLatest": false,
+                    "storageAccountType": "Standard_LRS"
                 },
                 "storageProfile": {
                     "source": {
-                        "id": "/subscriptions/<subscriptionid>/resourceGroups/<imageResourceGroupName>/providers/Microsoft.Compute/images/<imageName>"
+                        "id": "[parameters('images_Win11EntBaseImageFrontEndEngineers_externalid')]"
+                    },
+                    "osDiskImage": {
+                        "hostCaching": "None",
+                        "source": {}
                     }
+                },
+                "safetyProfile": {
+                    "allowDeletionOfReplicatedLocations": true
                 }
             }
         }
-    ],
-    "outputs": {}
+    ]
 }
