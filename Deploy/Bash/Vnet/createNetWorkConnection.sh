@@ -1,48 +1,45 @@
 #!/bin/bash
 
-# This script creates a network connection for Azure Development Center using the Azure CLI.
-# The connection enables Azure AD domain-join capabilities for VMs in a specified VNet and subnet.
+# Script to deploy an ARM Template for Network Connection using Azure CLI.
 
-# Check for necessary parameters. If they're missing, inform the user and exit.
+# Check if the correct number of arguments is provided.
 if [ "$#" -ne 5 ]; then
-    echo "Error: Incorrect number of parameters supplied."
-    echo "Usage: $0 <location> <resourceGroupName> <vnetName> <subnetName> <subscriptionId>"
+    echo "Error: Incorrect number of arguments."
+    echo "Usage: $0 <location> <subscriptionId> <resourceGroupName> <vnetName> <subNetName>"
     exit 1
 fi
 
-# Collect the necessary parameters from the user input.
+# Assign command-line arguments to variables with descriptive names.
 location=$1
-resourceGroupName=$2
-vnetName=$3
-subnetName=$4
-subscriptionId=$5
+subscriptionId=$2
+resourceGroupName=$3
+vnetName=$4
+subNetName=$5
 
-# Echo out the provided parameters for clarity. This provides a clearer view of the user's input.
-echo "-----------------------------------------"
-echo "Parameters for Network Connection:"
-echo "-----------------------------------------"
-echo "Location: $location"
-echo "Resource Group Name: $resourceGroupName"
-echo "VNet Name: $vnetName"
-echo "Subnet Name: $subnetName"
-echo "Subscription ID: $subscriptionId"
-echo "-----------------------------------------"
+# Specify the URL for the ARM Template and the file path to store the template.
+templateUrl='https://github.com/Evilazaro/MicrosoftDevBox/blob/main/Deploy/ARMTemplates/Network-Connection-Template.json' 
+outputFilePath='./DownloadedFiles/Network-Connection-Template-Output.json'
 
-# Inform the user that the network connection creation process is starting.
-echo "Starting the creation process of a network connection for Azure Development Center..."
+# (Optional) You can add a step to download the ARM template from the URL to the specified file path.
+# wget $templateUrl -O $outputFilePath
 
-# Use the Azure CLI to create the network connection. Details like domain join type, resource group, etc., are specified.
-az devcenter admin network-connection create \
-    --location $location \
-    --domain-join-type "AzureADJoin" \
-    --networking-resource-group-name $resourceGroupName \
-    --subnet-id "/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Network/virtualNetworks/$vnetName/subnets/$subnetName" \
-    --name "ContostoAzureDevBox-Vnet-Connection" \
-    --resource-group $resourceGroupName 
+# Provide feedback to the user about the deployment initiation.
+echo "Initiating deployment using the ARM Template..."
 
-# If the Azure CLI command executed successfully, notify the user. Otherwise, error messages from the `az` command will be displayed.
+# Deploy the ARM Template using the Azure CLI.
+az deployment group create \
+    --name Network-Connection-Template \
+    --template-file $outputFilePath \
+    --parameters \
+        '<location>'=$location \
+        '<subscriptionId>'=$subscriptionId \
+        '<resourceGroupName>'=$resourceGroupName \
+        '<vnetName>'=$vnetName \
+        '<subNetName>'=$subNetName
+
+# Check the exit status of the last command to determine if the deployment was successful.
 if [ $? -eq 0 ]; then
-    echo "Network connection for Azure Development Center created successfully!"
+    echo "Deployment was successful!"
 else
-    echo "Failed to create the network connection. Please check the parameters and your Azure credentials."
+    echo "Deployment failed. Please check the provided parameters and try again."
 fi

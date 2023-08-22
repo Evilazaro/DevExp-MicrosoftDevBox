@@ -15,7 +15,7 @@ location="$2"
 imageGalleryName="$3"
 
 # Define the template file URL and the output file name for clarity
-galleryTemplateURL="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/Bash/Compute-Gallery-Template.json"
+galleryTemplateURL="https://github.com/Evilazaro/MicrosoftDevBox/blob/main/Deploy/ARMTemplates/Compute-Gallery-Template.json"
 outputFilePath="././DownloadedFiles/Create-Gallery-Template-Output.json"
 
 # Notify the user that the template is being downloaded
@@ -30,23 +30,16 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Notify the user about the ongoing placeholder replacement
-echo "Replacing placeholders in the template with the provided values..."
-
-# Use sed to replace the placeholders in the template file
-sed -i -e "s%<resourceGroup>%$galleryResourceGroup%g" "$outputFilePath"
-sed -i -e "s%<Location>%$location%g" "$outputFilePath"
-
 # Notify the user that the resource is about to be created in Azure
 echo "Creating resource in Azure with the provided details..."
 
-# Use the Azure CLI to create the resource
-az resource create \
+az deployment group create \
+    --name $imageGalleryName \
+    --template-file "$outputFilePath" \
     --resource-group "$galleryResourceGroup" \
-    --properties @"$outputFilePath" \
-    --is-full-object \
-    --resource-type "Microsoft.Compute/galleries" \
-    -n "$imageGalleryName"
+    --parameters \
+        '<imageGalleryName>'="$imageGalleryName" \
+        '<location>'="$location"
 
 # Check if the Azure CLI command succeeded
 if [ $? -ne 0 ]; then

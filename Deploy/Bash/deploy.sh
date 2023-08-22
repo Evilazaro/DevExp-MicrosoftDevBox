@@ -68,13 +68,13 @@ build_image() {
     echo "Output File: $outputFilePath"
     echo
 
-    ./VMImages/buildVMImage.sh "$outputFilePath" "$subscriptionID" "$imageResourceGroup" "$location" "$imageName" "$identityName" "$imageTemplateURL"
+    #./VMImages/buildVMImage.sh "$outputFilePath" "$subscriptionID" "$imageResourceGroup" "$location" "$imageName" "$identityName" "$imageTemplateURL"
 }
 
 # Creating images for both front-end and back-end engineers.
-build_image 'Win11EntBaseImageFrontEndEngineers' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/Bash/Win11-Ent-Base-Image-FrontEnd-Template.json' '././DownloadedFiles/Win11-Ent-Base-Image-FrontEnd-Template-Output.json'
-build_image 'Win11EntBaseImageBackEndEngineers' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/Bash/Win11-Ent-Base-Image-BackEnd-Template.json' '././DownloadedFiles/Win11-Ent-Base-Image-BackEnd-Template-Output.json'
+build_image 'Win11EntBaseImageFrontEndEngineers' 'https://github.com/Evilazaro/MicrosoftDevBox/blob/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json' '././DownloadedFiles/Win11-Ent-Base-Image-FrontEnd-Template-Output.json'
+build_image 'Win11EntBaseImageBackEndEngineers' 'https://github.com/Evilazaro/MicrosoftDevBox/blob/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Template.json' '././DownloadedFiles/Win11-Ent-Base-Image-BackEnd-Template-Output.json'
 
 # Deploying Microsoft DevBox
 display_header "Deploying Microsoft DevBox"
-./deployAzureDevBox.sh "$subscriptionID" "$imageResourceGroup" "$location" 'Win11EntBaseImageFrontEndEngineers' 'Win11EntBaseImageBackEndEngineers'
+./DevBox/deployDevBox.sh "$subscriptionID" "$location" 'Win11EntBaseImageFrontEndEngineers' 'Win11EntBaseImageBackEndEngineers' "$imageResourceGroup"
