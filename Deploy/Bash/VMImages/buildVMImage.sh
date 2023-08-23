@@ -37,8 +37,7 @@ echo "Attempting to create image resource '${imageName}' in Azure..."
 az deployment group create \
     --name $imageName \
     --template-file "$outputFile" \
-    --resource-group "$galleryResourceGroup" \
-    --parameters imageTemplateName=$imageName svclocation=$location
+    --resource-group "$galleryResourceGroup" 
 
 # Inform the user about the build initiation process
 echo "Initiating the build process for Image '${imageName}' in Azure..."
