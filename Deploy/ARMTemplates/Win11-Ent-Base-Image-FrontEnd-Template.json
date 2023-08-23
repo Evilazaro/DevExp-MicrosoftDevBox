@@ -5,6 +5,7 @@
     "name": "<imageName>",
     "location": "<region>",
     "properties": {
+        "buildTimeoutInMinutes": 0,
         "vmProfile": {
             "vmSize": "Standard_D8s_v3",
             "osDiskSizeGB": 128,
@@ -19,9 +20,9 @@
                     }
                 }
             ],
-            "userAssignedIdentities": {
-                "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>": {}
-            }
+            "userAssignedIdentities": [
+                "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
+            ]
         },
         "source": {
             "type": "PlatformImage",
@@ -34,7 +35,7 @@
             {
                 "type": "ManagedImage",
                 "imageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/images/<imageName>",
-                "location": "westus3",
+                "location": "<location>",
                 "runOutputName": "runOutputManagedImage"
             }
         ]

@@ -1,31 +1,45 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "name": {
-            "type": "String"
-        },
-        "location": {
-            "type": "String"
-        },
-        "tags": {
-            "type": "Object"
-        }
-    },
+    "parameters": {},
+    "variables": {},
     "resources": [
         {
-            "type": "Microsoft.DevCenter/devcenters",
-            "apiVersion": "2023-04-01",
-            "name": "<devCenterName>",
-            "location": "<location>",
-            "tags": [
-                {
-                    "Environment": "DevBox",
-                    "division": "IT"
-                }
-            ],
+            "type": "Microsoft.VirtualMachineImages/imageTemplates",
+            "apiVersion": "2022-07-01",
+            "name": "fasdfsafdasfasfd",
+            "location": "westus3",
             "identity": {
-                "type": "none"
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/fdasfas/providers/Microsoft.ManagedIdentity/userAssignedIdentities/asdfg": {}
+                }
+            },
+            "properties": {
+                "source": {
+                    "offer": "visualstudioplustools",
+                    "publisher": "microsoftvisualstudio",
+                    "sku": "vs-2022-ent-general-win11-m365-gen2",
+                    "type": "PlatformImage",
+                    "version": "latest"
+                },
+                "distribute": [
+                    {
+                        "artifactTags": {},
+                        "imageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/dfsasf/providers/Microsoft.Compute/images/fasfasfd",
+                        "location": "westus3",
+                        "runOutputName": "runOutputManagedImage",
+                        "type": "ManagedImage"
+                    }
+                ],
+                "buildTimeoutInMinutes": 0,
+                "vmProfile": {
+                    "vmSize": "Standard_DS1_v2",
+                    "osDiskSizeGB": 128,
+                    "userAssignedIdentities": [
+                        "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/fdasfas/providers/Microsoft.ManagedIdentity/userAssignedIdentities/asdfg"
+                    ]
+                }
             }
         }
     ]
