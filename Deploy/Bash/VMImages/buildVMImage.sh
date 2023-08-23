@@ -13,6 +13,24 @@ galleryName="$8"
 offer="$9"
 sku="$10"
 
+echo "Attempting to create the Image Definitions"
+
+imageDefinitionTemplateFile="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/VM-Image-Definition-Template.json"
+imageDefinitionOutputFile="././DownloadedTempTemplates/VM-Image-Definition-Template-Output.json"
+
+# Use 'weget' to fetch the image template and save it to the specified location
+wget --header="Cache-Control: no-cache" --header="Pragma: no-cache"  $imageDefinitionTemplateFile -O $imageDefinitionOutputFile
+
+sed -i -e "s%<location>%$location%g" "$imageDefinitionOutputFile"
+sed -i -e "s%<imageName>%$imageName%g" "$imageDefinitionOutputFile"
+sed -i -e "s%<offer>%$offer%g" "$imageDefinitionOutputFile"
+sed -i -e "s%<sku>%$sku%g" "$imageDefinitionOutputFile"
+
+az deployment group create \
+    --name $imageName \
+    --template-file "$imageDefinitionOutputFile" \
+    --resource-group "$galleryResourceGroup"
+
 echo "Attempting to download image template from ${imageTemplateFile}..."
 
 # Use 'weget' to fetch the image template and save it to the specified location
@@ -37,26 +55,12 @@ echo "Template placeholders successfully updated with the provided details."
 # Create the image resource using the modified template
 echo "Attempting to create image resource '${imageName}' in Azure..."
 
-
 az deployment group create \
     --name $imageName \
     --template-file "$outputFile" \
     --resource-group "$galleryResourceGroup" 
 
 echo "Successfully created image resource '${imageName}' in Azure."
-
-echo "Attempting to create the Image Definitions"
-
-imageTemplateFile="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/VM-Image-Definition-Template.json"
-outputFile="VM-Image-Definition-Template-Output.json"
-
-# Use 'weget' to fetch the image template and save it to the specified location
-wget --header="Cache-Control: no-cache" --header="Pragma: no-cache"  $imageTemplateFile -O $outputFile
-
-sed -i -e "s%<location>%$location%g" "$outputFile"
-sed -i -e "s%<imageName>%$imageName%g" "$outputFile"
-sed -i -e "s%<offer>%$offer%g" "$outputFile"
-sed -i -e "s%<sku>%$sku%g" "$outputFile"
 
 # Inform the user about the build initiation process
 echo "Initiating the build process for Image '${imageName}' in Azure..."

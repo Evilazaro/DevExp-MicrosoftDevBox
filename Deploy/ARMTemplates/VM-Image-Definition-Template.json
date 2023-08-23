@@ -5,7 +5,7 @@
     "variables": {},
     "resources": [
         {
-            "type": "Microsoft.Compute/galleries/images",
+            "type": "Microsoft.Compute/galleries",
             "apiVersion": "2022-03-03",
             "name": "<imageName>",
             "location": "<location>",
