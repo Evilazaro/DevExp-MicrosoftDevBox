@@ -71,6 +71,13 @@ build_image() {
     ./VMImages/buildVMImage.sh "$outputFilePath" "$subscriptionID" "$imageResourceGroup" "$location" "$imageName" "$identityName" "$imageTemplateURL"
 }
 
+# Inform the user about the initiation of the image template download process
+echo "Starting the process..."
+echo "Deploying Compute Gallery ${galleryName}..."
+galleryName="ContosoImageGallery"
+
+././ComputeGallery/deployComputeGallery.sh "$galleryName" "$location" "$imageResourceGroup"
+
 # Creating images for both front-end and back-end engineers.
 build_image 'Win11EntBaseImageFrontEndEngineers' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json' '././DownloadedTempTemplates/Win11-Ent-Base-Image-FrontEnd-Template-Output.json'
 build_image 'Win11EntBaseImageBackEndEngineers' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Template.json' '././DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Template-Output.json'

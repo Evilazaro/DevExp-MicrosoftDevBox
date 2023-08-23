@@ -9,13 +9,6 @@ location="$4"
 imageName="$5"
 identityName="$6"
 imageTemplateFile="$7"
-galleryName="ContosoImageGallery"
-
-# Inform the user about the initiation of the image template download process
-echo "Starting the process..."
-echo "Deploying Compute Gallery ${galleryName}..."
-
-././ComputeGallery/deployComputeGallery.sh $galleryName $location $galleryResourceGroup
 
 echo "Attempting to download image template from ${imageTemplateFile}..."
 
