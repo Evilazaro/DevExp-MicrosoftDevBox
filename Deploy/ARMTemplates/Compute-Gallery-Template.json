@@ -40,6 +40,10 @@
                     {
                         "name": "DiskControllerTypes",
                         "value": "NVMe,SCSI"
+                    },
+                    {
+                        "name": "IsHibernateSupported",
+                        "value": "true"
                     }
                 ],
                 "osType": "Windows",
@@ -84,6 +88,10 @@
                     {
                         "name": "DiskControllerTypes",
                         "value": "NVMe,SCSI"
+                    },
+                    {
+                        "name": "IsHibernateSupported",
+                        "value": "true"
                     }
                 ],
                 "osType": "Windows",
