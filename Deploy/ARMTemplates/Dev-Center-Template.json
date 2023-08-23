@@ -7,37 +7,42 @@
         {
             "type": "Microsoft.VirtualMachineImages/imageTemplates",
             "apiVersion": "2022-07-01",
-            "name": "fasdfsafdasfasfd",
+            "name": "Win11EntBaseImageFrontEndEngineers",
             "location": "westus3",
+            "tags": {
+                "Environment": "Dev-Workstation",
+                "Role": "Front-End-Engineer",
+                "division": "IT"
+            },
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/fdasfas/providers/Microsoft.ManagedIdentity/userAssignedIdentities/asdfg": {}
+                    "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-Base-Images-Engineers-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/contosoIdentityIBuilderUserDevBox": {}
                 }
             },
             "properties": {
                 "source": {
-                    "offer": "visualstudioplustools",
+                    "offer": "windowsplustools",
                     "publisher": "microsoftvisualstudio",
-                    "sku": "vs-2022-ent-general-win11-m365-gen2",
+                    "sku": "base-win11-gen2",
                     "type": "PlatformImage",
                     "version": "latest"
                 },
                 "distribute": [
                     {
                         "artifactTags": {},
-                        "imageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/dfsasf/providers/Microsoft.Compute/images/fasfasfd",
-                        "location": "westus3",
+                        "imageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-Base-Images-Engineers-rg/providers/Microsoft.Compute/images/Win11EntBaseImageFrontEndEngineers",
+                        "location": "WestUS3",
                         "runOutputName": "runOutputManagedImage",
                         "type": "ManagedImage"
                     }
                 ],
                 "buildTimeoutInMinutes": 0,
                 "vmProfile": {
-                    "vmSize": "Standard_DS1_v2",
+                    "vmSize": "Standard_D8s_v3",
                     "osDiskSizeGB": 128,
                     "userAssignedIdentities": [
-                        "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/fdasfas/providers/Microsoft.ManagedIdentity/userAssignedIdentities/asdfg"
+                        "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-Base-Images-Engineers-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/contosoIdentityIBuilderUserDevBox"
                     ]
                 }
             }

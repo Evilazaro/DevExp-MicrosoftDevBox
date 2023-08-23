@@ -26,6 +26,7 @@ echo "Substituting placeholders in the template with provided details..."
 sed -i -e "s%<subscriptionID>%$subscriptionID%g" "$outputFile"
 sed -i -e "s%<rgName>%$imageResourceGroup%g" "$outputFile"
 sed -i -e "s%<region>%$location%g" "$outputFile"
+sed -i -e "s%<location>%$location%g" "$outputFile"
 sed -i -e "s%<imageName>%$imageName%g" "$outputFile"
 sed -i -e "s%<identityName>%$identityName%g" "$outputFile"
 
@@ -42,13 +43,13 @@ az resource create \
     -n "$imageName"
 
 # Inform the user about the build initiation process
-echo "Initiating the build process for Image '${imageName}' in Azure..."
+#echo "Initiating the build process for Image '${imageName}' in Azure..."
 
 # Start the image build process
-az resource invoke-action \
-     --resource-group "$imageResourceGroup" \
-     --resource-type  Microsoft.VirtualMachineImages/imageTemplates \
-     -n "$imageName" \
-     --action Run
+# az resource invoke-action \
+#      --resource-group "$imageResourceGroup" \
+#      --resource-type  Microsoft.VirtualMachineImages/imageTemplates \
+#      -n "$imageName" \
+#      --action Run
 
-echo "Build process for Image '${imageName}' has been successfully initiated!"
+#echo "Build process for Image '${imageName}' has been successfully initiated!"
