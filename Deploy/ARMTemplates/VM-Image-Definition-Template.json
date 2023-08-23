@@ -8,7 +8,7 @@
             "type": "Microsoft.Compute/galleries/images",
             "apiVersion": "2022-03-03",
             "name": "<imageName>",
-            "location": "westus3",
+            "location": "<location>",
             "properties": {
                 "galleryName": "<galleryName>",
                 "hyperVGeneration": "V2",

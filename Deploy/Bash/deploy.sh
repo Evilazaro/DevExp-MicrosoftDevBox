@@ -63,13 +63,15 @@ build_image() {
     local imageTemplateURL=$2
     local outputFilePath=$3
     local galleryName=$4
+    local offer="$5"
+    local sku="$6"
 
     display_header "Creating Image: $imageName"
     echo "Image Template URL: $imageTemplateURL"
     echo "Output File: $outputFilePath"
     echo
 
-    ./VMImages/buildVMImage.sh "$outputFilePath" "$subscriptionID" "$imageResourceGroup" "$location" "$imageName" "$identityName" "$imageTemplateURL" "$galleryName"
+    ./VMImages/buildVMImage.sh "$outputFilePath" "$subscriptionID" "$imageResourceGroup" "$location" "$imageName" "$identityName" "$imageTemplateURL" "$galleryName" "$offer" "$sku"
 }
 
 # Inform the user about the initiation of the image template download process
@@ -80,8 +82,8 @@ galleryName="ContosoImageGallery"
 ././ComputeGallery/deployComputeGallery.sh "$galleryName" "$location" "$imageResourceGroup"
 
 # Creating images for both front-end and back-end engineers.
-build_image 'Win11EntBaseImageFrontEndEngineers' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json' '././DownloadedTempTemplates/Win11-Ent-Base-Image-FrontEnd-Template-Output.json' "$galleryName"
-build_image 'Win11EntBaseImageBackEndEngineers' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Template.json' '././DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Template-Output.json' "$galleryName"
+build_image 'Win11EntBaseImageFrontEndEngineers' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json' '././DownloadedTempTemplates/Win11-Ent-Base-Image-FrontEnd-Template-Output.json' "$galleryName" 'Dev-WorkStations-DevBox' 'FrontEnd-Workstation'
+build_image 'Win11EntBaseImageBackEndEngineers' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Template.json' '././DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Template-Output.json' "$galleryName" 'Dev-WorkStations-DevBox' 'BackEnd-Workstation'
 
 # Deploying Microsoft DevBox
 display_header "Deploying Microsoft DevBox"

@@ -10,6 +10,8 @@ imageName="$5"
 identityName="$6"
 imageTemplateFile="$7"
 galleryName="$8"
+offer="$9"
+sku="$10"
 
 echo "Attempting to download image template from ${imageTemplateFile}..."
 
@@ -45,8 +47,16 @@ echo "Successfully created image resource '${imageName}' in Azure."
 
 echo "Attempting to create the Image Definitions"
 
-imageTemplateFile="https://raw.githubusercontent.com/Azure/azvmimagebuilder/master/solutions/12_Creating_a_Custom_Linux_Image_with_Packer/azvmimagebuilder.json"
-outputFile="azvmimagebuilder.json"
+imageTemplateFile="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/VM-Image-Definition-Template.json"
+outputFile="VM-Image-Definition-Template-Output.json"
+
+# Use 'weget' to fetch the image template and save it to the specified location
+wget --header="Cache-Control: no-cache" --header="Pragma: no-cache"  $imageTemplateFile -O $outputFile
+
+sed -i -e "s%<location>%$location%g" "$outputFile"
+sed -i -e "s%<imageName>%$imageName%g" "$outputFile"
+sed -i -e "s%<offer>%$offer%g" "$outputFile"
+sed -i -e "s%<sku>%$sku%g" "$outputFile"
 
 # Inform the user about the build initiation process
 echo "Initiating the build process for Image '${imageName}' in Azure..."
