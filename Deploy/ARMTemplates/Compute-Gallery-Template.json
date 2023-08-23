@@ -36,6 +36,10 @@
                     {
                         "name": "SecurityType",
                         "value": "TrustedLaunch"
+                    },
+                    {
+                        "name": "DiskControllerTypes",
+                        "value": "NVMe,SCSI"
                     }
                 ],
                 "osType": "Windows",
@@ -76,6 +80,10 @@
                     {
                         "name": "SecurityType",
                         "value": "TrustedLaunch"
+                    },
+                    {
+                        "name": "DiskControllerTypes",
+                        "value": "NVMe,SCSI"
                     }
                 ],
                 "osType": "Windows",
@@ -112,12 +120,12 @@
                         {
                             "name": "West US 3",
                             "regionalReplicaCount": 1,
-                            "storageAccountType": "Standard_LRS"
+                            "storageAccountType": "Premium_LRS"
                         }
                     ],
                     "replicaCount": 1,
                     "excludeFromLatest": false,
-                    "storageAccountType": "Standard_LRS"
+                    "storageAccountType": "Premium_LRS"
                 },
                 "storageProfile": {
                     "source": {
@@ -148,12 +156,12 @@
                         {
                             "name": "West US 3",
                             "regionalReplicaCount": 1,
-                            "storageAccountType": "Standard_LRS"
+                            "storageAccountType": "Premium_LRS"
                         }
                     ],
                     "replicaCount": 1,
                     "excludeFromLatest": false,
-                    "storageAccountType": "Standard_LRS"
+                    "storageAccountType": "Premium_LRS"
                 },
                 "storageProfile": {
                     "source": {

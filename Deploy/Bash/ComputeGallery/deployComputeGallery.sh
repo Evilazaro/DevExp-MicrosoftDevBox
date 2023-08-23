@@ -4,8 +4,8 @@
 set -e
 
 # Check if the correct number of arguments are provided
-if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 <galleryResourceGroup> <location> <galleryName>"
+if [ "$#" -ne 7 ]; then
+    echo "Usage: $0 <galleryResourceGroup> <location> <galleryName> <frontEndImageName> <backEndImageName> <subscriptionId>"
     exit 1
 fi
 
@@ -15,6 +15,8 @@ location="$2"
 galleryName="$3"
 frontEndImageName="$4"
 backEndImageName="$5"
+subscriptionId="$6"
+imageResourceGroupName="$7"
 
 
 # Define the template file URL and the output file name for clarity
@@ -31,6 +33,8 @@ sed -i -e "s%<galleryName>%$galleryName%g" "$outputFilePath"
 sed -i -e "s%<location>%$location%g" "$outputFilePath"
 sed -i -e "s%<frontEndImageName>%$frontEndImageName%g" "$outputFilePath"
 sed -i -e "s%<backEndImageName>%$backEndImageName%g" "$outputFilePath"
+sed -i -e "s%<subscriptionId>%$subscriptionId%g" "$outputFilePath"
+sed -i -e "s%<resourceGroupName>%$imageResourceGroupName%g" "$outputFilePath"
 
 # Check if curl command succeeded
 if [ $? -ne 0 ]; then
