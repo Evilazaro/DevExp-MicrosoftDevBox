@@ -9,6 +9,7 @@ location="$4"
 imageName="$5"
 identityName="$6"
 imageTemplateFile="$7"
+galleryName="$8"
 
 echo "Attempting to download image template from ${imageTemplateFile}..."
 
