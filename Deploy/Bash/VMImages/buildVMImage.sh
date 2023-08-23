@@ -35,10 +35,18 @@ echo "Template placeholders successfully updated with the provided details."
 # Create the image resource using the modified template
 echo "Attempting to create image resource '${imageName}' in Azure..."
 
+
 az deployment group create \
     --name $imageName \
     --template-file "$outputFile" \
     --resource-group "$galleryResourceGroup" 
+
+echo "Successfully created image resource '${imageName}' in Azure."
+
+echo "Attempting to create the Image Definitions"
+
+imageTemplateFile="https://raw.githubusercontent.com/Azure/azvmimagebuilder/master/solutions/12_Creating_a_Custom_Linux_Image_with_Packer/azvmimagebuilder.json"
+outputFile="azvmimagebuilder.json"
 
 # Inform the user about the build initiation process
 echo "Initiating the build process for Image '${imageName}' in Azure..."

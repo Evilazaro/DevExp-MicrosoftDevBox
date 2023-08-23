@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/galleries/images",
+            "apiVersion": "2022-03-03",
+            "name": "<imageName>",
+            "location": "westus3",
+            "properties": {
+                "galleryName": "<galleryName>",
+                "hyperVGeneration": "V2",
+                "architecture": "x64",
+                "features": [
+                    {
+                        "name": "SecurityType",
+                        "value": "TrustedLaunch"
+                    }
+                ],
+                "osType": "Windows",
+                "osState": "Generalized",
+                "identifier": {
+                    "publisher": "Contoso",
+                    "offer": "<offer>",
+                    "sku": "<sku>"
+                },
+                "recommended": {
+                    "vCPUs": {
+                        "min": 4,
+                        "max": 32
+                    },
+                    "memory": {
+                        "min": 32,
+                        "max": 128
+                    }
+                }
+            }
+        }
+    ]
+}
