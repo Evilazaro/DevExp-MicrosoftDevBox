@@ -39,7 +39,11 @@
                     {
                         "type": "SharedImage",
                         "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageName>",
-                        "runOutputName": "<imageName>"
+                        "runOutputName": "<imageName>",
+                        "replicationRegions": [
+                            "<location>",
+                            "westus2"
+                        ]
                     }
                 ]
             },
