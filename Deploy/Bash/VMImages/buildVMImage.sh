@@ -52,4 +52,10 @@ az resource create \
 #      -n "$imageName" \
 #      --action Run
 
+# az resource invoke-action \
+#   --action run \
+#   --ids $(az resource list --resource-type Microsoft.VirtualMachineImages/imageTemplates --query "[?name=='$imageName'].id" --output tsv) \
+#   --request-body '{}'
+
+
 #echo "Build process for Image '${imageName}' has been successfully initiated!"

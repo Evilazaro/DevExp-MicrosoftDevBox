@@ -36,7 +36,8 @@
                 "type": "ManagedImage",
                 "imageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/images/<imageName>",
                 "location": "<location>",
-                "runOutputName": "runOutputManagedImage"
+                "runOutputName": "runOutputManagedImage",
+                "startBuild": true
             }
         ]
     },
