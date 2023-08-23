@@ -8,7 +8,12 @@
         "vmProfile": {
             "vmSize": "Standard_D8s_v3",
             "osDiskSizeGB": 128,
-            "userAssignedIdentities": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
+            "userAssignedIdentities": [
+                {
+                    "name": "<identityName>",
+                    "resourceId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
+                }
+            ]
         },
         "source": {
             "type": "PlatformImage",
