@@ -38,7 +38,7 @@ az deployment group create \
     --name $imageName \
     --template-file "$outputFile" \
     --resource-group "$galleryResourceGroup" \
-    --parameters apiVersion="2020-02-14" imageTemplateName=$imageName svclocation=$location
+    --parameters imageTemplateName=$imageName svclocation=$location
 
 # Inform the user about the build initiation process
 echo "Initiating the build process for Image '${imageName}' in Azure..."
