@@ -77,4 +77,4 @@ build_image 'Win11EntBaseImageBackEndEngineers' 'https://raw.githubusercontent.c
 
 # Deploying Microsoft DevBox
 display_header "Deploying Microsoft DevBox"
-./DevBox/deployDevBox.sh "$subscriptionID" "$location" 'Win11EntBaseImageFrontEndEngineers' 'Win11EntBaseImageBackEndEngineers' "$imageResourceGroup"
+./DevBox/deployDevBox.sh "$subscriptionID" "$location" 'Win11EntBaseImageFrontEndEngineers' 'Win11EntBaseImageBackEndEngineers' "$imageResourceGroup" 
