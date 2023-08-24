@@ -20,9 +20,6 @@
                 ],
                 "osType": "Windows",
                 "osState": "Generalized",
-                "osDiskSkus": [
-                    "Premium_LRS"
-                ],
                 "identifier": {
                     "publisher": "Contoso",
                     "offer": "<offer>",
