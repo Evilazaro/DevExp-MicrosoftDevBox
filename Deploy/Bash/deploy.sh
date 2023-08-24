@@ -2,7 +2,6 @@
 
 # This script automates various Azure tasks like resource group creation, image creation, and deployment.
 
-# Function to display headers in a consistent format
 display_header() {
     echo
     echo "========================"
@@ -10,81 +9,75 @@ display_header() {
     echo "========================"
 }
 
-# Logging into Azure.
+build_image() {
+    local outputFile="$1"
+    local subscriptionID="$2"
+    local galleryResourceGroup="$3"
+    local location="$4"
+    local imageName="$5"
+    local identityName="$6"
+    local imageTemplateFile="$7"
+    local galleryName="$8"
+    local offer="$9"
+    local imgSKU="${10}"
+
+    display_header "Creating Image: $imageName"
+    echo "Image Template URL: $imageTemplateFile"
+    echo "Output File: $outputFile"
+    echo "Subscription ID: $subscriptionID"
+    echo "Gallery Resource Group: $galleryResourceGroup"
+    echo "Location: $location"
+    echo "Image Name: $imageName"
+    echo "Identity Name: $identityName"
+    echo "Gallery Name: $galleryName"
+    echo "Offer: $offer"
+    echo "SKU: $imgSKU"
+    echo
+
+    VMImages/buildVMImage.sh "$outputFile" "$subscriptionID" "$galleryResourceGroup" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU"
+}
+
 display_header "Logging into Azure"
 ./Identity/login.sh "$1"
 
-# Setting up initial variables for the process.
 display_header "Setting Up Variables"
-
-# Defining the resource group name.
-imageResourceGroup='Contoso-Base-Images-Engineers-rg'
-
-# Defining the Azure region where resources will be deployed.
+galleryResourceGroup='Contoso-Base-Images-Engineers-rg'
 location='WestUS3'
-
-# Defining the identity name for the image builder.
 identityName='contosoIdentityIBuilderUserDevBox'
-
-# Fetching the subscription ID for the logged-in account.
 subscriptionID=$(az account show --query id --output tsv)
 
-# Creating the resource group in the defined location.
-echo "Creating resource group: $imageResourceGroup in location: $location..."
-az group create -n "$imageResourceGroup" -l "$location"
+echo "Creating resource group: $galleryResourceGroup in location: $location..."
+az group create -n "$galleryResourceGroup" -l "$location"
 
-# Creating a new managed identity within the resource group.
 echo "Creating managed identity: $identityName..."
-az identity create --resource-group "$imageResourceGroup" -n "$identityName"
+az identity create --resource-group "$galleryResourceGroup" -n "$identityName"
+identityId=$(az identity show --resource-group "$galleryResourceGroup" -n "$identityName" --query principalId --output tsv)
 
-# Fetching the principal ID of the newly created managed identity.
-identityId=$(az identity show --resource-group "$imageResourceGroup" -n "$identityName" --query principalId --output tsv)
-
-# Displaying the set variables for user confirmation.
 display_header "Configuration Summary"
-echo "Image Resource Group: $imageResourceGroup"
+echo "Image Resource Group: $galleryResourceGroup"
 echo "Location: $location"
 echo "Subscription ID: $subscriptionID"
 echo "Identity Name: $identityName"
 echo "Identity ID: $identityId"
 echo "=========================="
 
-# Registering necessary Azure features.
 echo "Registering necessary features..."
 ./Identity/registerFeatures.sh
 
-# Creating a user-assigned managed identity.
 echo "Creating user-assigned managed identity..."
-./Identity/createUserAssignedManagedIdentity.sh "$imageResourceGroup" "$subscriptionID" "$identityId"
+./Identity/createUserAssignedManagedIdentity.sh "$galleryResourceGroup" "$subscriptionID" "$identityId"
 
-# Function for creating images - to reduce redundancy.
-build_image() {
-    local imageName=$1
-    local imageTemplateURL=$2
-    local outputFilePath=$3
-    local galleryName=$4
-    local offer="$5"
-    local sku="$6"
-
-    display_header "Creating Image: $imageName"
-    echo "Image Template URL: $imageTemplateURL"
-    echo "Output File: $outputFilePath"
-    echo
-
-    ./VMImages/buildVMImage.sh "$outputFilePath" "$subscriptionID" "$imageResourceGroup" "$location" "$imageName" "$identityName" "$imageTemplateURL" "$galleryName" "$offer" "$sku"
-}
-
-# Inform the user about the initiation of the image template download process
 echo "Starting the process..."
 echo "Deploying Compute Gallery ${galleryName}..."
 galleryName="ContosoImageGallery"
+./ComputeGallery/deployComputeGallery.sh "$galleryName" "$location" "$galleryResourceGroup"
 
-././ComputeGallery/deployComputeGallery.sh "$galleryName" "$location" "$imageResourceGroup"
+imagesku='FrontEnd-Workstation'
+build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-FrontEnd-Template-Output.json' "$subscriptionID" "$galleryResourceGroup" "$location" 'Win11EntBaseImageFrontEndEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json' "$galleryName" 'Dev-WorkStations-DevBox' "$imagesku"
 
-# Creating images for both front-end and back-end engineers.
-build_image 'Win11EntBaseImageFrontEndEngineers' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json' '././DownloadedTempTemplates/Win11-Ent-Base-Image-FrontEnd-Template-Output.json' "$galleryName" 'Dev-WorkStations-DevBox' 'FrontEnd-Workstation'
-build_image 'Win11EntBaseImageBackEndEngineers' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Template.json' '././DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Template-Output.json' "$galleryName" 'Dev-WorkStations-DevBox' 'BackEnd-Workstation'
+imagesku='BackEnd-Workstation'
+build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Template-Output.json' "$subscriptionID" "$galleryResourceGroup" "$location" 'Win11EntBaseImageBackEndEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Template.json' "$galleryName" 'Dev-WorkStations-DevBox' "$imagesku"
 
-# Deploying Microsoft DevBox
 display_header "Deploying Microsoft DevBox"
-./DevBox/deployDevBox.sh "$subscriptionID" "$location" 'Win11EntBaseImageFrontEndEngineers' 'Win11EntBaseImageBackEndEngineers' "$imageResourceGroup" 
+# Uncomment the line below once you have the correct parameters for deployment
+./DevBox/deployDevBox.sh "$subscriptionID" "$location" 'Win11EntBaseImageFrontEndEngineers' 'Win11EntBaseImageBackEndEngineers' "$galleryResourceGroup"

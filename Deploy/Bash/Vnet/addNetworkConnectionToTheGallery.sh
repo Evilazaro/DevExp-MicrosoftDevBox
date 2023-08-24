@@ -1,56 +1,71 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Ensure the script stops if any command fails
+# Ensure the script stops if any command fails.
 set -e
 
-# Check if the required number of arguments are provided
-if [ "$#" -ne 7 ]; then
+# Function to print usage instructions.
+print_usage() {
     echo "Usage: $0 <resourceGroup> <location> <vmName> <vnetName> <subnetName> <galleryName> <imageName>"
+    echo "Creates a VM in Azure, stops, generalizes, captures it as an image, and shares it to a gallery."
+}
+
+# Ensure Azure CLI is installed.
+if ! command -v az &> /dev/null; then
+    echo "Error: Azure CLI (az) is not installed."
     exit 1
 fi
 
-# Variables from user input
-resourceGroup="$1"
-location="$2"
-vmName="$3"
-vnetName="$4"
-subnetName="$5"
-galleryName="$6"
-imageName="$7"
+# Ensure the required number of arguments are provided.
+if [ "$#" -ne 7 ]; then
+    print_usage
+    exit 1
+fi
 
-# Echo the received inputs
-echo "Starting operation with the following inputs:"
-echo "Resource Group: $resourceGroup"
-echo "Location: $location"
-echo "VM Name: $vmName"
-echo "VNET Name: $vnetName"
-echo "Subnet Name: $subnetName"
-echo "Gallery Name: $galleryName"
-echo "Image Name: $imageName"
-echo "----------------------------------------"
+# Gather input into named variables for clarity.
+resourceGroup="${1}"
+location="${2}"
+vmName="${3}"
+vnetName="${4}"
+subnetName="${5}"
+galleryName="${6}"
+imageName="${7}"
 
-# Create Virtual Network
-echo "Creating Virtual Network named $vnetName..."
-az network vnet create --name "$vnetName" --resource-group "$resourceGroup" --location "$location" --subnet-name "$subnetName"
+# Echo the received inputs.
+cat <<EOF
+----------------------------------------
+Starting operation with the following inputs:
+Resource Group: ${resourceGroup}
+Location:       ${location}
+VM Name:        ${vmName}
+VNET Name:      ${vnetName}
+Subnet Name:    ${subnetName}
+Gallery Name:   ${galleryName}
+Image Name:     ${imageName}
+----------------------------------------
+EOF
 
-# Create a VM with a connection to the created Virtual Network
-echo "Creating VM named $vmName with connection to $vnetName..."
-az vm create --resource-group "$resourceGroup" --name "$vmName" --image UbuntuLTS --vnet-name "$vnetName" --subnet "$subnetName"
+# Create Virtual Network.
+az network vnet create --name "${vnetName}" --resource-group "${resourceGroup}" --location "${location}" --subnet-name "${subnetName}"
+echo "Virtual Network ${vnetName} created."
 
-# Stop the VM before generalizing
-echo "Stopping $vmName to prepare for generalization..."
-az vm stop --resource-group "$resourceGroup" --name "$vmName"
+# Create a VM with a connection to the created Virtual Network.
+az vm create --resource-group "${resourceGroup}" --name "${vmName}" --image UbuntuLTS --vnet-name "${vnetName}" --subnet "${subnetName}"
+echo "VM ${vmName} created and connected to ${vnetName}."
 
-# Generalize the VM
-echo "Generalizing the VM named $vmName..."
-az vm generalize --resource-group "$resourceGroup" --name "$vmName"
+# Stop the VM before generalizing.
+az vm stop --resource-group "${resourceGroup}" --name "${vmName}"
+echo "VM ${vmName} stopped."
 
-# Capture the VM to create an image
-echo "Creating an image from the VM named $vmName..."
-az vm capture --resource-group "$resourceGroup" --name "$vmName" --vhd-name-prefix "$vmName"
+# Generalize the VM.
+az vm generalize --resource-group "${resourceGroup}" --name "${vmName}"
+echo "VM ${vmName} generalized."
 
-# Share the image to the gallery
-echo "Sharing the VM image of $vmName to the gallery named $galleryName..."
-az sig image-version create --resource-group "$resourceGroup" --gallery-name "$galleryName" --gallery-image-definition "$imageName" --gallery-image-version 1.0.0 --managed-image "/subscriptions/<your-subscription-id>/resourceGroups/$resourceGroup/providers/Microsoft.Compute/images/$vmName"
+# Capture the VM to create an image.
+az vm capture --resource-group "${resourceGroup}" --name "${vmName}" --vhd-name-prefix "${vmName}"
+echo "Image captured from VM ${vmName}."
+
+# Share the image to the gallery.
+az sig image-version create --resource-group "${resourceGroup}" --gallery-name "${galleryName}" --gallery-image-definition "${imageName}" --gallery-image-version 1.0.0 --managed-image "/subscriptions/<your-subscription-id>/resourceGroups/${resourceGroup}/providers/Microsoft.Compute/images/${vmName}"
+echo "VM image of ${vmName} shared to gallery ${galleryName}."
 
 echo "Operation completed!"

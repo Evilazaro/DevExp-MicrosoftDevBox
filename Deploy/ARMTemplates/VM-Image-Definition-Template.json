@@ -10,6 +10,7 @@
             "apiVersion": "2021-10-01",
             "location": "<location>",
             "properties": {
+                "name": "<imageName>",
                 "hyperVGeneration": "V2",
                 "architecture": "x64",
                 "features": [

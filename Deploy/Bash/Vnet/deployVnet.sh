@@ -5,9 +5,14 @@ set -e
 
 # Description: This script creates a Virtual Network (VNet) and a subnet within that VNet in Azure.
 
+# Constants
+readonly SCRIPT_NAME=$(basename "$0")
+readonly ADDRESS_PREFIX="10.0.0.0/16"
+readonly SUBNET_PREFIX="10.0.1.0/24"
+
 # Function to display a usage message when the script is not executed correctly.
 usage() {
-    echo "Usage: $0 <RESOURCE_GROUP_NAME> <AZURE_REGION> <VNET_NAME> <SUBNET_NAME>"
+    echo "Usage: $SCRIPT_NAME <RESOURCE_GROUP_NAME> <AZURE_REGION> <VNET_NAME> <SUBNET_NAME>"
     exit 1
 }
 
@@ -17,27 +22,23 @@ if [ "$#" -ne 4 ]; then
     usage
 fi
 
-# Displaying a header to provide clarity on the operation being performed.
-echo "--------------------------"
-echo "Creating VNet in Azure"
-echo "--------------------------"
+# Assigning arguments to meaningful variable names
+resourceGroupName="$1"
+location="$2"
+vnetName="$3"
+subnetName="$4"
 
-# Fetching the Azure resource group name from the first argument and displaying it.
-resourceGroupName=$1
-echo "Resource Group Name: $resourceGroupName"
-
-# Fetching the Azure region/location from the second argument and displaying it.
-location=$2
-echo "Azure Region/Location: $location"
-
-# Fetching the name of the Virtual Network from the third argument and displaying it.
-vnetName=$3
-echo "Virtual Network Name: $vnetName"
-
-# Fetching the name of the subnet from the fourth argument and displaying it.
-subnetName=$4
-echo "Subnet Name: $subnetName"
-echo "--------------------------"
+# Display information
+cat << INFO
+--------------------------
+Creating VNet in Azure
+--------------------------
+Resource Group Name: $resourceGroupName
+Azure Region/Location: $location
+Virtual Network Name: $vnetName
+Subnet Name: $subnetName
+--------------------------
+INFO
 
 # Informing the user about the upcoming operation.
 echo "Initiating the creation of the VNet and subnet..."
@@ -47,9 +48,9 @@ echo "Initiating the creation of the VNet and subnet..."
 az network vnet create \
     --resource-group "$resourceGroupName" \
     --name "$vnetName" \
-    --address-prefix 10.0.0.0/16 \
+    --address-prefix "$ADDRESS_PREFIX" \
     --subnet-name "$subnetName" \
-    --subnet-prefix 10.0.1.0/24
+    --subnet-prefix "$SUBNET_PREFIX"
 
 # Confirming the successful creation of the VNet and subnet.
 echo "Virtual Network '$vnetName' and Subnet '$subnetName' have been successfully created!"

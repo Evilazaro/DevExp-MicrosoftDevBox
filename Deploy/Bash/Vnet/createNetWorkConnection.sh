@@ -1,46 +1,43 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Script to deploy an ARM Template for Network Connection using Azure CLI.
+# Variables
+templateUrl='https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Network-Connection-Template.json'
+outputFilePath='./DownloadedTempTemplates/Network-Connection-Template-Output.json'
 
 # Check if the correct number of arguments is provided.
-if [ "$#" -ne 5 ]; then
-    echo "Error: Incorrect number of arguments."
-    echo "Usage: $0 <location> <subscriptionId> <resourceGroupName> <vnetName> <subNetName>"
+if [[ "$#" -ne 5 ]]; then
+    printf "Error: Incorrect number of arguments.\n"
+    printf "Usage: %s <location> <subscriptionId> <resourceGroupName> <vnetName> <subNetName>\n" "$0"
     exit 1
 fi
 
 # Assign command-line arguments to variables with descriptive names.
-location=$1
-subscriptionId=$2
-resourceGroupName=$3
-vnetName=$4
-subNetName=$5
+location="$1"
+subscriptionId="$2"
+resourceGroupName="$3"
+vnetName="$4"
+subNetName="$5"
 
-# Specify the URL for the ARM Template and the file path to store the template.
-templateUrl='https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Network-Connection-Template.json' 
-outputFilePath='././DownloadedTempTemplates/Network-Connection-Template-Output.json'
+# Download the ARM template from the URL to the specified file path.
+wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" "$templateUrl" -O "$outputFilePath"
 
-# (Optional) You can add a step to download the ARM template from the URL to the specified file path.
-wget --header="Cache-Control: no-cache" --header="Pragma: no-cache"  $templateUrl -O $outputFilePath
-
-sed -i -e "s%<location>%$location%g" "$outputFilePath"
-sed -i -e "s%<subscriptionId>%$subscriptionId%g" "$outputFilePath"
-sed -i -e "s%<resourceGroupName>%$resourceGroupName%g" "$outputFilePath"
-sed -i -e "s%<vnetName>%$vnetName%g" "$outputFilePath"
-sed -i -e "s%<subNetName>%$subNetName%g" "$outputFilePath"
+# Replace placeholders with provided arguments in the template file.
+sed -i -e "s%<location>%$location%g" \
+       -e "s%<subscriptionId>%$subscriptionId%g" \
+       -e "s%<resourceGroupName>%$resourceGroupName%g" \
+       -e "s%<vnetName>%$vnetName%g" \
+       -e "s%<subNetName>%$subNetName%g" "$outputFilePath"
 
 # Provide feedback to the user about the deployment initiation.
-echo "Initiating deployment using the ARM Template..."
+printf "Initiating deployment using the ARM Template...\n"
 
 # Deploy the ARM Template using the Azure CLI.
-az deployment group create \
+if az deployment group create \
     --name Network-Connection-Template \
-    --template-file $outputFilePath \
-    --resource-group $resourceGroupName 
-
-# Check the exit status of the last command to determine if the deployment was successful.
-if [ $? -eq 0 ]; then
-    echo "Deployment was successful!"
+    --template-file "$outputFilePath" \
+    --resource-group "$resourceGroupName"; then
+    printf "Deployment was successful!\n"
 else
-    echo "Deployment failed. Please check the provided parameters and try again."
+    printf "Deployment failed. Please check the provided parameters and try again.\n"
+    exit 2
 fi

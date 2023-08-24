@@ -1,18 +1,25 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# Fail fast: exit on first error
+set -e
 
 # Description:
 # This script registers various Azure Resource Providers necessary for managing and operating virtual machines, storage, networking, and other resources in Azure.
 
+# Check for command dependencies
+if ! command -v az &>/dev/null; then
+    echo "Error: 'az' command is not found. Please ensure Azure CLI is installed."
+    exit 1
+fi
+
 # Define a function to register an Azure provider and display a corresponding message
 register_provider() {
-    local provider_name=$1
-    local description=$2
+    local provider_name="$1"
+    local description="$2"
     
     echo "Starting registration for $description..."
-    az provider register -n $provider_name
-
-    # Check if the operation was successful
-    if [ $? -eq 0 ]; then
+    
+    if az provider register -n "$provider_name"; then
         echo "Successfully registered $description."
     else
         echo "Failed to register $description."
