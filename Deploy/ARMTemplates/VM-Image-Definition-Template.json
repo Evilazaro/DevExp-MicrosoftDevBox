@@ -7,7 +7,6 @@
         {
             "type": "Microsoft.Compute/galleries/images",
             "apiVersion": "2021-10-01",
-            "name": "<imageName>",
             "location": "<location>",
             "properties": {
                 "galleryName": "<galleryName>",
