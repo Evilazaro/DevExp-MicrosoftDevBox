@@ -12,7 +12,7 @@
             "name": "<imageName>",
             "location": "<region>",
             "properties": {
-                "buildTimeoutInMinutes": 60,
+                "buildTimeoutInMinutes": 120,
                 "vmProfile": {
                     "vmSize": "Standard_D8s_v3",
                     "osDiskSizeGB": 128,
