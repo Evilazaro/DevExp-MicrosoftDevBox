@@ -15,7 +15,8 @@
                 "features": [
                     {
                         "name": "SecurityType",
-                        "value": "TrustedLaunch"
+                        "value": "TrustedLaunch",
+                        "IsHibernationSupported": "true"
                     }
                 ],
                 "osType": "Windows",
