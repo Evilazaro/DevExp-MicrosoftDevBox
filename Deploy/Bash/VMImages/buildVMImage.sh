@@ -25,6 +25,7 @@ sed -i -e "s%<location>%$location%g" "$imageDefinitionOutputFile"
 sed -i -e "s%<imageName>%$imageName%g" "$imageDefinitionOutputFile"
 sed -i -e "s%<offer>%$offer%g" "$imageDefinitionOutputFile"
 sed -i -e "s%<sku>%$sku%g" "$imageDefinitionOutputFile"
+sed -i -e "s%<galleryName>%$galleryName%g" "$imageDefinitionOutputFile"
 
 az deployment group create \
     --name $imageName \
