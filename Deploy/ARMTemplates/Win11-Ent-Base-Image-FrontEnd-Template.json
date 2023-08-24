@@ -16,6 +16,19 @@
                 "vmProfile": {
                     "vmSize": "Standard_D8s_v3",
                     "osDiskSizeGB": 128,
+                    "osDisk": {
+                        "osType": "Windows",
+                        "name": "osdisk1",
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage",
+                        "diffDiskSettings": {
+                            "option": "Local"
+                        },
+                        "diskSizeGB": 128,
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS"
+                        }
+                    },
                     "dataDisks": [
                         {
                             "name": "datadisk1",
