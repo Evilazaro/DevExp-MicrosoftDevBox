@@ -21,7 +21,7 @@
                 "osType": "Windows",
                 "osState": "Generalized",
                 "identifier": {
-                    "publisher": "Contoso",
+                    "publisher": "<publisher>",
                     "offer": "<offer>",
                     "sku": "<sku>"
                 },

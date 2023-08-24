@@ -20,6 +20,7 @@ build_image() {
     local galleryName="$8"
     local offer="$9"
     local imgSKU="${10}"
+    local publisher="${11}"
 
     display_header "Creating Image: $imageName"
     echo "Image Template URL: $imageTemplateFile"
@@ -32,9 +33,10 @@ build_image() {
     echo "Gallery Name: $galleryName"
     echo "Offer: $offer"
     echo "SKU: $imgSKU"
+    echo "Publisher: $publisher"
     echo
 
-    VMImages/buildVMImage.sh "$outputFile" "$subscriptionID" "$galleryResourceGroup" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU"
+    VMImages/buildVMImage.sh "$outputFile" "$subscriptionID" "$galleryResourceGroup" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher"
 }
 
 display_header "Logging into Azure"
@@ -72,10 +74,14 @@ echo "Deploying Compute Gallery ${galleryName}..."
 galleryName="ContosoImageGallery"
 ./ComputeGallery/deployComputeGallery.sh "$galleryName" "$location" "$galleryResourceGroup"
 
-imagesku='FrontEnd-Workstation'
-build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-FrontEnd-Template-Output.json' "$subscriptionID" "$galleryResourceGroup" "$location" 'Win11EntBaseImageFrontEndEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json' "$galleryName" 'Dev-WorkStations-DevBox' "$imagesku"
+imagesku='base-win11-gen2'
+publisher='microsoftvisualstudio'
+offer='windowsplustools'
+build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-FrontEnd-Template-Output.json' "$subscriptionID" "$galleryResourceGroup" "$location" 'Win11EntBaseImageFrontEndEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json' "$galleryName" "$offer" "$imagesku" "$publisher" 
 
-imagesku='BackEnd-Workstation'
+imagesku='vs-2022-ent-general-win11-m365-gen2'
+publisher='microsoftvisualstudio'
+offer='visualstudioplustools'
 build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Template-Output.json' "$subscriptionID" "$galleryResourceGroup" "$location" 'Win11EntBaseImageBackEndEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Template.json' "$galleryName" 'Dev-WorkStations-DevBox' "$imagesku"
 
 display_header "Deploying Microsoft DevBox"

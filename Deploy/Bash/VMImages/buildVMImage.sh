@@ -18,6 +18,7 @@ imageTemplateFile="$7"
 galleryName="$8"
 offer="$9"
 sku="${10}"
+publisher="${11}"
 
 echo "Attempting to create the Image Definitions"
 
@@ -44,7 +45,8 @@ substitute_placeholders "${imageDefinitionOutputFile}" \
   "<imageName>" "${imageName}" \
   "<offer>" "${offer}" \
   "<galleryName>" "${galleryName}" \
-  "<sku>" "${sku}"
+  "<sku>" "${sku}" \
+  "<publisher>" "${publisher}"
 
 az deployment group create \
     --name "${imageName}" \
