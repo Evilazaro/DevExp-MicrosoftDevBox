@@ -53,8 +53,7 @@
                         "type": "SharedImage",
                         "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageName>",
                         "runOutputName": "<imageName>",
-                         "replicationRegions": [],
-                         "storageAccountType": "Premium_LRS"
+                         "replicationRegions": []
                     }
                 ]
             },
