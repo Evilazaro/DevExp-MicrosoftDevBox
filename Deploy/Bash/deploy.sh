@@ -79,10 +79,10 @@ publisher='microsoftvisualstudio'
 offer='windowsplustools'
 build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-FrontEnd-Template-Output.json' "$subscriptionID" "$galleryResourceGroup" "$location" 'Win11EntBaseImageFrontEndEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json' "$galleryName" "$offer" "$imagesku" "$publisher" 
 
-imagesku='vs-2022-ent-general-win11-m365-gen2'
-publisher='microsoftvisualstudio'
-offer='visualstudioplustools'
-build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Template-Output.json' "$subscriptionID" "$galleryResourceGroup" "$location" 'Win11EntBaseImageBackEndEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Template.json' "$galleryName" "$offer" "$imagesku" "$publisher"
+# imagesku='vs-2022-ent-general-win11-m365-gen2'
+# publisher='microsoftvisualstudio'
+# offer='visualstudioplustools'
+# build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Template-Output.json' "$subscriptionID" "$galleryResourceGroup" "$location" 'Win11EntBaseImageBackEndEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Template.json' "$galleryName" "$offer" "$imagesku" "$publisher"
 
 display_header "Deploying Microsoft DevBox"
 # Uncomment the line below once you have the correct parameters for deployment

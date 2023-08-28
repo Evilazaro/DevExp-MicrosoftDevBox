@@ -6,22 +6,10 @@
     "resources": [
         {
             "type": "Microsoft.Compute/galleries/images",
-            "apiVersion": "2022-03-03",
-            "name": "<galleryName>/<imageName>",
+            "name": "<imageName>/<galleryName>",
+            "apiVersion": "2021-10-01",
             "location": "<location>",
             "properties": {
-                "hyperVGeneration": "V2",
-                "architecture": "x64",
-                "features": [
-                    {
-                        "name": "SecurityType",
-                        "value": "TrustedLaunchSupported"
-                    },
-                    {
-                        "name": "IsHibernateSupported",
-                        "value": "true"
-                    }
-                ],
                 "osType": "Windows",
                 "osState": "Generalized",
                 "identifier": {
@@ -31,15 +19,29 @@
                 },
                 "recommended": {
                     "vCPUs": {
-                        "min": 4,
-                        "max": 32
+                        "min": 1,
+                        "max": 16
                     },
                     "memory": {
-                        "min": 32,
-                        "max": 128
+                        "min": 1,
+                        "max": 32
                     }
-                }
-            }
+                },
+                "hyperVGeneration": "V2",
+                "features": [
+                    {
+                        "name": "SecurityType",
+                        "value": "TrustedLaunch"
+                    },
+                    {
+                        "name": "IsHibernateSupported",
+                        "value": "true"
+                    }
+                ],
+                "architecture": "x64"
+            },
+            "tags": {}
         }
-    ]
+    ],
+    "outputs": {}
 }

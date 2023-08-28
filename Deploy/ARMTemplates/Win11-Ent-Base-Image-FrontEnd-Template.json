@@ -10,45 +10,27 @@
             "dependsOn": [],
             "name": "<imageName>",
             "location": "<region>",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>": {}
+                }
+            },
             "properties": {
-                "buildTimeoutInMinutes": 120,
+                "source": {
+                    "offer": "windowsplustools",
+                    "publisher": "microsoftvisualstudio",
+                    "sku": "base-win11-gen2",
+                    "type": "PlatformImage",
+                    "version": "latest"
+                },
+                "buildTimeoutInMinutes": 0,
                 "vmProfile": {
                     "vmSize": "Standard_D8s_v3",
                     "osDiskSizeGB": 128,
                     "userAssignedIdentities": [
                         "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
-                    ],
-                    "osDisk": {
-                        "osType": "Windows",
-                        "name": "osdisk1",
-                        "caching": "ReadWrite",
-                        "createOption": "FromImage",
-                        "diffDiskSettings": {
-                            "option": "Local"
-                        },
-                        "diskSizeGB": 128,
-                        "managedDisk": {
-                            "storageAccountType": "Premium_LRS"
-                        }
-                    },
-                    "dataDisks": [
-                        {
-                            "name": "datadisk1",
-                            "diskSizeGB": 1023,
-                            "lun": 0,
-                            "createOption": "Empty",
-                            "sku": {
-                                "name": "Premium_LRS"
-                            }
-                        }
                     ]
-                },
-                "source": {
-                    "type": "PlatformImage",
-                    "publisher": "microsoftvisualstudio",
-                    "offer": "windowsplustools",
-                    "sku": "base-win11-gen2",
-                    "version": "latest"
                 },
                 "distribute": [
                     {
@@ -63,12 +45,6 @@
                 "division": "IT",
                 "Environment": "Dev-Workstation",
                 "Role": "Front-End-Engineer"
-            },
-            "identity": {
-                "type": "UserAssigned",
-                "userAssignedIdentities": {
-                    "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>": {}
-                }
             }
         }
     ]
