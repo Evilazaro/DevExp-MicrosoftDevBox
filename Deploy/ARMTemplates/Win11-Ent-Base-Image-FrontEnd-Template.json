@@ -1,13 +1,12 @@
-
 {
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {},
     "variables": {},
     "resources": [
         {
             "type": "Microsoft.VirtualMachineImages/imageTemplates",
-            "apiVersion": "2022-02-14",
+            "apiVersion": "2022-07-01",
             "dependsOn": [],
             "name": "<imageName>",
             "location": "<region>",
@@ -16,6 +15,9 @@
                 "vmProfile": {
                     "vmSize": "Standard_D8s_v3",
                     "osDiskSizeGB": 128,
+                    "userAssignedIdentities": [
+                        "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
+                    ],
                     "osDisk": {
                         "osType": "Windows",
                         "name": "osdisk1",
@@ -53,7 +55,7 @@
                         "type": "SharedImage",
                         "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageName>",
                         "runOutputName": "<imageName>",
-                         "replicationRegions": []
+                        "replicationRegions": []
                     }
                 ]
             },

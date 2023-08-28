@@ -1,19 +1,27 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {},
+    "parameters": {
+        "imageTemplates_Back_End_Containers_name": {
+            "defaultValue": "Back-End-Containers",
+            "type": "String"
+        },
+        "galleries_ContosoImageGallery_externalid": {
+            "defaultValue": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-Base-Images-Engineers-rg/providers/Microsoft.Compute/galleries/ContosoImageGallery",
+            "type": "String"
+        },
+        "userAssignedIdentities_contosoIdentityIBuilderUserDevBox_externalid": {
+            "defaultValue": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-Base-Images-Engineers-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/contosoIdentityIBuilderUserDevBox",
+            "type": "String"
+        }
+    },
     "variables": {},
     "resources": [
         {
             "type": "Microsoft.VirtualMachineImages/imageTemplates",
             "apiVersion": "2022-07-01",
-            "name": "Win11EntBaseImageFrontEndEngineers",
+            "name": "[parameters('imageTemplates_Back_End_Containers_name')]",
             "location": "westus3",
-            "tags": {
-                "Environment": "Dev-Workstation",
-                "Role": "Front-End-Engineer",
-                "division": "IT"
-            },
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
@@ -22,19 +30,22 @@
             },
             "properties": {
                 "source": {
-                    "offer": "windowsplustools",
+                    "offer": "visualstudioplustools",
                     "publisher": "microsoftvisualstudio",
-                    "sku": "base-win11-gen2",
+                    "sku": "vs-2022-ent-general-win11-m365-gen2",
                     "type": "PlatformImage",
                     "version": "latest"
                 },
                 "distribute": [
                     {
                         "artifactTags": {},
-                        "imageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-Base-Images-Engineers-rg/providers/Microsoft.Compute/images/Win11EntBaseImageFrontEndEngineers",
-                        "location": "WestUS3",
-                        "runOutputName": "runOutputManagedImage",
-                        "type": "ManagedImage"
+                        "excludeFromLatest": false,
+                        "galleryImageId": "[concat(parameters('galleries_ContosoImageGallery_externalid'), concat('/images/', parameters('imageTemplates_Back_End_Containers_name')))]",
+                        "replicationRegions": [
+                            "westus3"
+                        ],
+                        "runOutputName": "runOutputImageVersion",
+                        "type": "SharedImage"
                     }
                 ],
                 "buildTimeoutInMinutes": 0,
@@ -42,7 +53,7 @@
                     "vmSize": "Standard_D8s_v3",
                     "osDiskSizeGB": 128,
                     "userAssignedIdentities": [
-                        "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-Base-Images-Engineers-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/contosoIdentityIBuilderUserDevBox"
+                        "[parameters('userAssignedIdentities_contosoIdentityIBuilderUserDevBox_externalid')]"
                     ]
                 }
             }
