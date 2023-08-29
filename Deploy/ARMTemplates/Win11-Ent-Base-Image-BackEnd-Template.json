@@ -1,52 +1,36 @@
-
 {
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {},
     "variables": {},
     "resources": [
         {
             "type": "Microsoft.VirtualMachineImages/imageTemplates",
-            "apiVersion": "2022-02-14",
+            "apiVersion": "2022-07-01",
             "dependsOn": [],
             "name": "<imageName>",
             "location": "<region>",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>": {}
+                }
+            },
             "properties": {
-                "buildTimeoutInMinutes": 120,
+                "source": {
+                    "offer": "visualstudio2022",
+                    "publisher": "microsoftvisualstudio",
+                    "sku": "visualstudio2022",
+                    "type": "PlatformImage",
+                    "version": "latest"
+                },
+                "buildTimeoutInMinutes": 0,
                 "vmProfile": {
                     "vmSize": "Standard_D8s_v3",
                     "osDiskSizeGB": 128,
-                    "osDisk": {
-                        "osType": "Windows",
-                        "name": "osdisk1",
-                        "caching": "ReadWrite",
-                        "createOption": "FromImage",
-                        "diffDiskSettings": {
-                            "option": "Local"
-                        },
-                        "diskSizeGB": 128,
-                        "managedDisk": {
-                            "storageAccountType": "Premium_LRS"
-                        }
-                    },
-                    "dataDisks": [
-                        {
-                            "name": "datadisk1",
-                            "diskSizeGB": 1023,
-                            "lun": 0,
-                            "createOption": "Empty",
-                            "sku": {
-                                "name": "Premium_LRS"
-                            }
-                        }
+                    "userAssignedIdentities": [
+                        "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
                     ]
-                },
-                "source": {
-                    "type": "PlatformImage",
-                    "publisher": "microsoftvisualstudio",
-                    "offer": "visualstudioplustools",
-                    "sku": "vs-2022-ent-general-win11-m365-gen2",
-                    "version": "latest"
                 },
                 "distribute": [
                     {
@@ -61,12 +45,6 @@
                 "division": "IT",
                 "Environment": "Dev-Workstation",
                 "Role": "Back-End-Engineer"
-            },
-            "identity": {
-                "type": "UserAssigned",
-                "userAssignedIdentities": {
-                    "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>": {}
-                }
             }
         }
     ]
