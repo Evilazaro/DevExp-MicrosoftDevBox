@@ -47,12 +47,11 @@ echo "Substituting placeholders in the template with provided details..."
 # Perform replacements
 sed -i "s/<subscriptionID>/$subscriptionID/g" "$outputFile"
 sed -i "s/<rgName>/$galleryResourceGroup/g" "$outputFile"
-sed -i "s/<runOutputName>/$imageName/g" "$outputFile"
+sed -i "s/<imageName>/$imageName/g" "$outputFile"
 sed -i "s/<imageDefName>/$imageDefName/g" "$outputFile"
 sed -i "s/<sharedImageGalName>/$galleryName/g" "$outputFile"
-sed -i "s/<region1>/$location/g" "$outputFile"
-sed -i "s/<region2>/$replRegion2/g" "$outputFile"
-sed -i "s/<imgBuilderId>/$identityNameResourceId/g" "$outputFile"
+sed -i "s/<location>/$location/g" "$outputFile"
+sed -i "s/<identityName>/$identityName/g" "$outputFile"
 
 
 echo "Template placeholders successfully updated with the provided details."

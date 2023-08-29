@@ -18,9 +18,9 @@
             },
             "properties": {
                 "source": {
-                    "offer": "<offer>",
-                    "publisher": "<publisher>",
-                    "sku": "<sku>",
+                    "offer": "windows-11",
+                    "publisher": "microsoftwindowsdesktop",
+                    "sku": "win11-22h2-ent",
                     "type": "PlatformImage",
                     "version": "latest"
                 },

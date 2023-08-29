@@ -74,14 +74,12 @@ echo "Deploying Compute Gallery ${galleryName}..."
 galleryName="ContosoImageGallery"
 ./ComputeGallery/deployComputeGallery.sh "$galleryName" "$location" "$galleryResourceGroup"
 
-imagesku='win11-22h2-ent'
-publisher='microsoftwindowsdesktop'
-offer='windows-11'
+imagesku='Win11-Engineers-FrontEnd'
+publisher='Contoso'
+offer='Contoso-Fabric'
 build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-FrontEnd-Template-Output.json' "$subscriptionID" "$galleryResourceGroup" "$location" 'Win11EntBaseImageFrontEndEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json' "$galleryName" "$offer" "$imagesku" "$publisher" 
 
-imagesku='vs-2022-ent-latest-win11-n-gen2'
-publisher='microsoftvisualstudio'
-offer='visualstudio2022'
+imagesku='VS22-Engineers-BackEnd'
 build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Template-Output.json' "$subscriptionID" "$galleryResourceGroup" "$location" 'Win11EntBaseImageBackEndEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Template.json' "$galleryName" "$offer" "$imagesku" "$publisher"
 
 display_header "Deploying Microsoft DevBox"

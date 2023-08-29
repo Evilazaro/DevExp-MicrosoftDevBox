@@ -1,0 +1,31 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/galleries/images",
+            "apiVersion": "2022-03-03",
+            "name": "ContosoImageGallery/Win11EntBaseImageBackEndEngineers-image-def",
+            "location": "westus3",
+            "properties": {
+                "hyperVGeneration": "V2",
+                "architecture": "x64",
+                "features": [
+                    {
+                        "name": "SecurityType",
+                        "value": "TrustedLaunch"
+                    }
+                ],
+                "osType": "Windows",
+                "osState": "Generalized",
+                "identifier": {
+                    "publisher": "microsoftvisualstudio",
+                    "offer": "visualstudio2022",
+                    "sku": "vs-2022-ent-latest-win11-n-gen2"
+                }
+            }
+        }
+    ]
+}
