@@ -35,7 +35,7 @@ az sig image-definition create \
     --sku $sku \
     --os-state generalized \
     --hyper-v-generation V2 \
-    --features Name=SecurityType Value=TrustedLaunch \
+    --features "SecurityType=TrustedLaunch" \
     --location $location
 
 echo "Attempting to download image template from ${imageTemplateFile}..."
@@ -61,11 +61,8 @@ echo "Attempting to create image resource '${imageName}' in Azure..."
 # Deploy resources
 az deployment group create \
     --resource-group $galleryResourceGroup \
-    --template-file $outputFile \
-    --parameters api-version="2022-07-01" \
-                imageTemplateName=$imageName \
-                svclocation=$location
-
+    --template-file $outputFile 
+    
 echo "Successfully created image resource '${imageName}' in Azure."
 
 echo "Initiating the build process for Image '${imageName}' in Azure..."

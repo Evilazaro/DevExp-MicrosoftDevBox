@@ -9,7 +9,7 @@
             "apiVersion": "2022-07-01",
             "dependsOn": [],
             "name": "<imageName>",
-            "location": "<region>",
+            "location": "<location>",
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
@@ -46,7 +46,7 @@
                         "type": "SharedImage",
                         "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageName>",
                         "runOutputName": "<imageName>",
-                        "replicationRegions": []
+                        "replicationlocations": []
                     }
                 ]
             },

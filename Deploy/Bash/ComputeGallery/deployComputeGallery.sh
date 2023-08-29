@@ -17,13 +17,10 @@ galleryResourceGroup="$3"
 # Notify the user that the resource is about to be created in Azure
 echo "Creating resource in Azure with the provided details..."
 
-if ! az deployment group create \
-    --name "$galleryName" \
-    --location "$location" \
-    --resource-group "$galleryResourceGroup"; then
-    echo "Error creating the resource in Azure!"
-    exit 1
-fi    
+az sig create \
+    --gallery-name "$galleryName" \
+    --resource-group "$galleryResourceGroup" \
+    --location "$location"
 
 # Notify the user that the entire operation has been completed
 echo "Operation completed successfully!"
