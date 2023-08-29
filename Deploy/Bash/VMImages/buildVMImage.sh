@@ -66,7 +66,10 @@ substitute_placeholders "${outputFile}" \
   "<location>" "${location}" \
   "<imageName>" "${imageName}" \
   "<identityName>" "${identityName}" \
-  "<sharedImageGalName>" "${galleryName}"
+  "<sharedImageGalName>" "${galleryName}" \
+  "<offer>" "${offer}" \
+  "<sku>" "${sku}" \
+  "<publisher>" "${publisher}"
 
 echo "Template placeholders successfully updated with the provided details."
 
