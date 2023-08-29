@@ -37,7 +37,12 @@
                         "type": "SharedImage",
                         "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageDefName>",
                         "runOutputName": "<imageName>",
-                        "replicationlocations": []
+                        "replicationlocations": [],
+                         "targetRegions": [
+                            {
+                                "name": "<location>"
+                            }
+                        ]   
                     }
                 ]
             },
