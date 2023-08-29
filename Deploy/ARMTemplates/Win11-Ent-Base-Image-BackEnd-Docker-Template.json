@@ -18,43 +18,51 @@
             },
             "properties": {
                 "source": {
-                    "offer": "<offer>",
-                    "publisher": "<publisher>",
-                    "sku": "<sku>",
+                    "offer": "visualstudio2022",
+                    "publisher": "microsoftvisualstudio",
+                    "sku": "vs-2022-ent-latest-win11-n-gen2",
                     "type": "PlatformImage",
                     "version": "latest"
                 },
                 "buildTimeoutInMinutes": 0,
                 "vmProfile": {
-                    "vmSize": "Standard_D8s_v3",
+                    "vmSize": "Standard_DS2_v2",
                     "osDiskSizeGB": 128,
                     "userAssignedIdentities": [
                         "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
+                    ],
+                    "customize": [
+                        {
+                            "type": "PowerShell",
+                            "name": "Install Choco and Vscode",
+                            "inline": [
+                                "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                                "$URL='https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe'",
+                                "$Path='C:\\Users\\Public\\Downloads\\DockerDesktopInstaller.exe'",
+                                "Invoke-WebRequest -Uri $URL -OutFile $Path;",
+                                "Start-Process -FilePath $Path -ArgumentList '/quiet' -Wait;"
+                            ]
+                        }
+                    ],
+                    "distribute": [
+                        {
+                            "type": "SharedImage",
+                            "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageDefName>",
+                            "runOutputName": "<imageName>",
+                            "replicationlocations": [],
+                            "targetRegions": [
+                                {
+                                    "name": "<location>"
+                                }
+                            ]
+                        }
                     ]
                 },
-                "customize": {
-                    "type": "PowerShell",
-                    "scriptUri": "<scriptUri>",
-                    "scriptRootPath": "<scriptRootPath>",
-                    "inline": [
-                        "Write-Host \"Hello World\""
-                    ],
-                    "runElevated": true
-                },
-                "distribute": [
-                    {
-                        "type": "SharedImage",
-                        "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageName>",
-                        "runOutputName": "<imageName>",
-                        "replicationlocations": []
-                    }
-                ]
-            },
-            "tags": {
-                "division": "IT",
-                "Environment": "Dev-Workstation",
-                "Role": "Back-End-Engineer"
+                "tags": {
+                    "division": "IT",
+                    "Environment": "Dev-Workstation",
+                    "Role": "Back-End-Engineer"
+                }
             }
-        }
     ]
 }
