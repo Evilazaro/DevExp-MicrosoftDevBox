@@ -20,7 +20,7 @@
                 "source": {
                     "offer": "<offer>",
                     "publisher": "<publisher>",
-                    "sku": "sku",
+                    "sku": "<sku>",
                     "type": "PlatformImage",
                     "version": "latest"
                 },
@@ -31,6 +31,15 @@
                     "userAssignedIdentities": [
                         "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
                     ]
+                },
+                "customize": {
+                    "type": "PowerShell",
+                    "scriptUri": "<scriptUri>",
+                    "scriptRootPath": "<scriptRootPath>",
+                    "inline": [
+                        "Write-Host \"Hello World\""
+                    ],
+                    "runElevated": true
                 },
                 "distribute": [
                     {

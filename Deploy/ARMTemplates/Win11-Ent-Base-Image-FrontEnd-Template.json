@@ -26,7 +26,7 @@
                 },
                 "buildTimeoutInMinutes": 0,
                 "vmProfile": {
-                    "vmSize": "Standard_D8s_v3",
+                    "vmSize": "Standard_DS2_v2",
                     "osDiskSizeGB": 128,
                     "userAssignedIdentities": [
                         "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
@@ -35,7 +35,7 @@
                 "distribute": [
                     {
                         "type": "SharedImage",
-                        "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageName>",
+                        "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageDefName>",
                         "runOutputName": "<imageName>",
                         "replicationRegions": []
                     }

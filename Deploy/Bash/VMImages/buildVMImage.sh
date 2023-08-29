@@ -21,37 +21,22 @@ sku="${10}"
 publisher="${11}"
 
 echo "Attempting to create the Image Definitions"
+imageDefName="${imageName}-image-def"
 
-imageDefinitionTemplateFile="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/VM-Image-Definition-Template.json"
-imageDefinitionOutputFile="./DownloadedTempTemplates//VM-Image-Definition-Template-Output.json"
-
-# Fetch the image template and save it to the specified location
-wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" "${imageDefinitionTemplateFile}" -O "${imageDefinitionOutputFile}"
-
-# Function to substitute placeholders in files
-substitute_placeholders() {
-  local file="$1"
-  shift  # shift arguments to the left, so $2 becomes $1, $3 becomes $2, etc.
-  local args=("$@")  # all remaining arguments are our substitutions
-
-  for ((i=0; i<${#args[@]}; i+=2)); do
-    sed -i -e "s%${args[$i]}%${args[$i+1]}%g" "${file}"
-  done
-}
-
-# Substitute placeholders for the Image Definition
-substitute_placeholders "${imageDefinitionOutputFile}" \
-  "<location>" "${location}" \
-  "<imageName>" "${imageName}" \
-  "<offer>" "${offer}" \
-  "<galleryName>" "${galleryName}" \
-  "<sku>" "${sku}" \
-  "<publisher>" "${publisher}"
-
-az deployment group create \
-    --name "${imageName}" \
-    --template-file "${imageDefinitionOutputFile}" \
-    --resource-group "${galleryResourceGroup}"
+# Create Image Definition
+# Create the image definition
+az sig image-definition create \
+    --resource-group $galleryResourceGroup \
+    --gallery-name $galleryName \
+    --gallery-image-definition $imageDefName \
+    --os-type Windows \
+    --publisher $publisher \
+    --offer $offer \
+    --sku $sku \
+    --os-state generalized \
+    --hyper-v-generation V2 \
+    --features Name=SecurityType Value=TrustedLaunch \
+    --location $location
 
 echo "Attempting to download image template from ${imageTemplateFile}..."
 wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" "${imageTemplateFile}" -O "${outputFile}"
@@ -59,36 +44,36 @@ echo "Successfully downloaded the image template. Saved to ${outputFile}."
 
 echo "Substituting placeholders in the template with provided details..."
 # Substitute placeholders for the main Image Template
-substitute_placeholders "${outputFile}" \
-  "<subscriptionID>" "${subscriptionID}" \
-  "<rgName>" "${galleryResourceGroup}" \
-  "<region>" "${location}" \
-  "<location>" "${location}" \
-  "<imageName>" "${imageName}" \
-  "<identityName>" "${identityName}" \
-  "<sharedImageGalName>" "${galleryName}" \
-  "<offer>" "${offer}" \
-  "<sku>" "${sku}" \
-  "<publisher>" "${publisher}"
+# Perform replacements
+sed -i "s/<subscriptionID>/$subscriptionID/g" "$outputFile"
+sed -i "s/<rgName>/$galleryResourceGroup/g" "$outputFile"
+sed -i "s/<runOutputName>/$imageName/g" "$outputFile"
+sed -i "s/<imageDefName>/$imageDefName/g" "$outputFile"
+sed -i "s/<sharedImageGalName>/$galleryName/g" "$outputFile"
+sed -i "s/<region1>/$location/g" "$outputFile"
+sed -i "s/<region2>/$replRegion2/g" "$outputFile"
+sed -i "s/<imgBuilderId>/$identityNameResourceId/g" "$outputFile"
+
 
 echo "Template placeholders successfully updated with the provided details."
 
 echo "Attempting to create image resource '${imageName}' in Azure..."
+# Deploy resources
 az deployment group create \
-    --name "${imageName}" \
-    --template-file "${outputFile}" \
-    --resource-group "${galleryResourceGroup}" 
+    --resource-group $galleryResourceGroup \
+    --template-file $outputFile \
+    --parameters api-version="2022-07-01" \
+                imageTemplateName=$imageName \
+                svclocation=$location
+
 echo "Successfully created image resource '${imageName}' in Azure."
 
 echo "Initiating the build process for Image '${imageName}' in Azure..."
 az resource invoke-action \
-    --name "${imageName}" \
-    --resource-group "${galleryResourceGroup}" \
+    --ids $(az resource show --name $imageName --resource-group $galleryResourceGroup --resource-type "Microsoft.VirtualMachineImages/imageTemplates" --query id --output tsv) \
     --action "Run" \
-    --resource-type "Microsoft.VirtualMachineImages/imageTemplates" \
     --request-body '{}' \
-    --query id \
-    --api-version "2020-02-14"
+    --query properties.outputs
 
 
 echo "Build process for Image '${imageName}' has been successfully initiated!"
