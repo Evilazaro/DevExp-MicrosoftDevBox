@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Description:
 # This script automates the creation of an Azure Resource Group, a Virtual Network (VNet) inside that Resource Group,
