@@ -30,6 +30,9 @@ The primary script `deploy.sh` automates the deployment of the Microsoft Dev Box
 
 ```bash
 chmod +x deploy.sh
+
+cd Deploy/Bash
+
 ./deploy.sh <Azure_Subscription_Name>
 ```
 
@@ -37,6 +40,9 @@ chmod +x deploy.sh
 ```powershell
 # Grant execute permissions to the script
 Set-ExecutionPolicy Bypass -Scope Process -Force
+
+#Access the PowerShell scripts folder
+cd Deploy/PowerShell
 
 # Run the script
 './deploy.sh' <Azure_Subscription_Name>
