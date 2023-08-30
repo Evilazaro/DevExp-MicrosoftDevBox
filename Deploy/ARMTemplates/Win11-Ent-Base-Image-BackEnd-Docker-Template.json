@@ -34,7 +34,7 @@
                     "customize": [
                         {
                             "type": "PowerShell",
-                            "name": "Install Choco and Vscode",
+                            "name": "Install Docker Desktop",
                             "inline": [
                                 "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                                 "$URL='https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe'",
