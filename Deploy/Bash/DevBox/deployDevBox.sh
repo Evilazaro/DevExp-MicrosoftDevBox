@@ -11,7 +11,7 @@ display_info() {
 Azure Resource Automation Script
 -----------------------------------------
 Subscription ID: $subscriptionId
-Resource Group: $devBoxResourceGroupName
+Resource Group: $imageResourceGroupName
 Location: $location
 VNet Name: $vnetName
 Subnet Name: $subnetName
@@ -37,7 +37,6 @@ main() {
     imageResourceGroupName="$5"
 
     # Define fixed variables for the resource group, virtual network, and subnet names.
-    devBoxResourceGroupName="Contoso-DevBox-rg"
     vnetName="Contoso-AzureDevBox-vnet"
     subnetName="Contoso-AzureDevBox-subnet"
 
@@ -45,8 +44,12 @@ main() {
     display_info
 
     # Create a new resource group using the Azure CLI
-    echo "Creating Resource Group: $devBoxResourceGroupName in location: $location..."
-    az group create -n "$devBoxResourceGroupName" -l "$location"
+    echo "Creating Resource Group: $imageResourceGroupName in location: $location..."
+    az group create -n "$imageResourceGroupName" -l "$location" \
+                     --tags  "division=Contoso-Platform" \
+                    "Environment=Dev-Workstation" \
+                    "offer=Contoso-DevWorkstation-Service" \
+                    "Team=eShopOnContainers" 
 
     # Check for any errors after running Azure CLI command
     if [ $? -ne 0 ]; then
@@ -56,7 +59,7 @@ main() {
 
     # Create the Virtual Network and subnet
     echo "Creating Virtual Network: $vnetName and Subnet: $subnetName..."
-    ./Vnet/deployVnet.sh "$devBoxResourceGroupName" "$location" "$vnetName" "$subnetName"
+    ./Vnet/deployVnet.sh "$imageResourceGroupName" "$location" "$vnetName" "$subnetName"
 
     if [ $? -ne 0 ]; then
         echo "Error creating Virtual Network and Subnet."
@@ -65,7 +68,7 @@ main() {
 
     # Set up a network connection for Azure Development Center
     echo "Setting up Network Connection for Azure Development Center..."
-    ./Vnet/createNetWorkConnection.sh "$location" "$subscriptionId" "$devBoxResourceGroupName" "$vnetName" "$subnetName"
+    ./Vnet/createNetWorkConnection.sh "$location" "$subscriptionId" "$imageResourceGroupName" "$vnetName" "$subnetName"
 
     if [ $? -ne 0 ]; then
         echo "Error setting up Network Connection for Azure Development Center."

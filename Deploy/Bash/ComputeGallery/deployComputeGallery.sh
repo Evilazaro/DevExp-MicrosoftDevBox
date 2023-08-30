@@ -33,7 +33,11 @@ echo "Creating resource in Azure with the provided details..."
 az sig create \
     --gallery-name "$galleryName" \
     --resource-group "$galleryResourceGroup" \
-    --location "$location"
+    --location "$location" \
+    --tags  "division=Contoso-Platform" \
+            "Environment=Dev-Workstation" \
+            "offer=Contoso-DevWorkstation-Service" \
+            "Team=eShopOnContainers" 
 
 # Notify the user that the entire operation has been completed successfully
 echo "----------------------------------------------"

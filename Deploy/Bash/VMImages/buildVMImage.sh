@@ -40,7 +40,11 @@ az sig image-definition create \
     --os-state generalized \
     --hyper-v-generation V2 \
     --features "SecurityType=TrustedLaunch" \
-    --location $location
+    --location $location \
+    --tags  "division=Contoso-Platform" \
+            "Environment=Dev-Workstation" \
+            "offer=Contoso-DevWorkstation-Service" \
+            "Team=eShopOnContainers"
 
 # Download image template
 echo "Downloading image template from ${imageTemplateFile}..."
@@ -62,7 +66,11 @@ echo "Template placeholders updated."
 echo "Creating image resource '${imageName}' in Azure..."
 az deployment group create \
     --resource-group $galleryResourceGroup \
-    --template-file $outputFile 
+    --template-file $outputFile \
+     --tags  "division=Contoso-Platform" \
+            "Environment=Dev-Workstation" \
+            "offer=Contoso-DevWorkstation-Service" \
+            "Team=eShopOnContainers" 
 echo "Successfully created image resource '${imageName}' in Azure."
 
 # Initiate the build process for the image
@@ -71,7 +79,7 @@ az resource invoke-action \
     --ids $(az resource show --name $imageName --resource-group $galleryResourceGroup --resource-type "Microsoft.VirtualMachineImages/imageTemplates" --query id --output tsv) \
     --action "Run" \
     --request-body '{}' \
-    --query properties.outputs
+    --query properties.outputs 
 
 # Create image version
 az sig image-version create \
@@ -82,6 +90,10 @@ az sig image-version create \
     --target-regions $location \
     --managed-image "/subscriptions/$subscriptionID/resourceGroups/$galleryResourceGroup/providers/Microsoft.Compute/images/$imageName" \
     --replica-count 1 \
-    --location $location
+    --location $location \
+     --tags  "division=Contoso-Platform" \
+            "Environment=Dev-Workstation" \
+            "offer=Contoso-DevWorkstation-Service" \
+            "Team=eShopOnContainers" 
 
 echo "Build process for Image '${imageName}' has been initiated successfully!"

@@ -51,7 +51,11 @@ echo "Initiating deployment using the ARM Template..."
 if az deployment group create \
     --name Network-Connection-Template \
     --template-file "$OUTPUT_FILE_PATH" \
-    --resource-group "$RESOURCE_GROUP_NAME"; then
+    --resource-group "$RESOURCE_GROUP_NAME" \
+     --tags  "division=Contoso-Platform" \
+            "Environment=Dev-Workstation" \
+            "offer=Contoso-DevWorkstation-Service" \
+            "Team=eShopOnContainers"; then
     echo "Deployment was successful!"
 else
     echo "Deployment failed. Please check the provided parameters and try again."

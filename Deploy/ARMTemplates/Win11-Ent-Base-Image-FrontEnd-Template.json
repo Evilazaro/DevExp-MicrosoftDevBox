@@ -49,8 +49,10 @@
                 ]
             },
             "tags": {
-                "division": "IT",
+                "division": "Contoso-Platform",
                 "Environment": "Dev-Workstation",
+                "offer": "Contoso-DevWorkstation-Service",
+                "Team": "eShopOnContainers" ,
                 "Role": "Front-End-Engineer"
             }
         }

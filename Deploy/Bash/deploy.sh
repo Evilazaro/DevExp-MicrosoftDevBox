@@ -50,14 +50,18 @@ display_header "Logging into Azure"
 
 # Setting up static variables.
 display_header "Setting Up Variables"
-galleryResourceGroup='Contoso-Base-Images-Engineers-rg'
+galleryResourceGroup='Contoso-DevBox-rg'
 location='WestUS3'
 identityName='contosoIdentityIBuilderUserDevBox'
 subscriptionID=$(az account show --query id --output tsv)
 
 # Creating Azure resources.
 echo "Creating resource group: $galleryResourceGroup in location: $location..."
-az group create -n "$galleryResourceGroup" -l "$location"
+az group create -n "$galleryResourceGroup" -l "$location" \
+                 --tags  "division=Contoso-Platform" \
+                        "Environment=Dev-Workstation" \
+                        "offer=Contoso-DevWorkstation-Service" \
+                        "Team=eShopOnContainers" 
 
 echo "Creating managed identity: $identityName..."
 az identity create --resource-group "$galleryResourceGroup" -n "$identityName"
@@ -94,6 +98,7 @@ build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-FrontEnd-Template-Ou
 imagesku='VS22-Engineers-BackEnd'
 build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Template-Output.json' "$subscriptionID" "$galleryResourceGroup" "$location" 'Win11EntBaseImageBackEndEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Template.json' "$galleryName" "$offer" "$imagesku" "$publisher"
 
+imagesku='VS22-Engineers-BackEnd-Docker'
 build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template-Output.json' "$subscriptionID" "$galleryResourceGroup" "$location" 'Win11EntBaseImageBackEndDockerEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template.json' "$galleryName" "$offer" "$imagesku" "$publisher"
 
 # Deploying DevBox.

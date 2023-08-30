@@ -10,7 +10,7 @@
             "name": "Contoso-Network-Connection-DevBox",
             "location": "<location>",
             "tags": {
-                "Division": "IT",
+                "division": "Contoso-Platform",
                 "Environment": "DevBox"
             },
             "properties": {
