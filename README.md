@@ -6,11 +6,15 @@ This repository contains automation scripts that facilitate various Azure tasks 
 
 The primary script `deploy.sh` automates the deployment of the Microsoft Dev Box. It handles the following tasks:
 - Logs into Azure.
-- Sets up static variables.
-- Creates Azure resources.
 - Deploys Azure Compute Gallery.
-- Builds virtual machine images.
+- Builds virtual machine images for FrontEnd and BackEnd developers.
 - Deploys Microsoft DevBox.
+
+## FrontEnd Developers
+
+## BackEnd Developers
+
+### Docker
 
 ## Prerequisites
 
@@ -35,5 +39,5 @@ chmod +x deploy.sh
 Set-ExecutionPolicy Bypass -Scope Process -Force
 
 # Run the script
-& './deploy.sh' <Azure_Subscription_Name>
-
+'./deploy.sh' <Azure_Subscription_Name>
+```
