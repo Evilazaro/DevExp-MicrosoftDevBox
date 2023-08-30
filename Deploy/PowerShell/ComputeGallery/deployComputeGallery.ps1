@@ -1,53 +1,56 @@
-# Exit on any error to ensure the script stops if there's a problem
-$ErrorActionPreference = "Stop"
+<#
+.SYNOPSIS
+Creates a resource in Azure using provided details.
 
-# Check if the correct number of arguments are provided
-if ($args.Count -ne 3) {
-    Write-Host "Usage: $PSCommandPath <galleryName> <location> <galleryResourceGroup>"
+.DESCRIPTION
+This script uses Azure CLI to create a Shared Image Gallery (SIG) resource 
+with given gallery name, location, and resource group.
+
+.PARAMETER galleryName
+Name of the gallery.
+
+.PARAMETER location
+Azure location (e.g., eastus).
+
+.PARAMETER galleryResourceGroup
+Name of the resource group in Azure.
+
+.EXAMPLE
+.\scriptname.ps1 -galleryName "myGallery" -location "eastus" -galleryResourceGroup "myResourceGroup"
+#>
+
+param(
+    [Parameter(Mandatory=$true)]
+    [string]$galleryName,
+
+    [Parameter(Mandatory=$true)]
+    [string]$location,
+
+    [Parameter(Mandatory=$true)]
+    [string]$galleryResourceGroup
+)
+
+# Function to display the usage of the script
+function usage {
+    Write-Host "Usage: .\$($MyInvocation.MyCommand) -galleryName <galleryName> -location <location> -galleryResourceGroup <galleryResourceGroup>"
+    Write-Host "Example: .\$($MyInvocation.MyCommand) -galleryName 'myGallery' -location 'eastus' -galleryResourceGroup 'myResourceGroup'"
     exit 1
 }
 
-# Assign input arguments to descriptive variable names
-$galleryName = $args[0]
-$location = $args[1]
-$galleryResourceGroup = $args[2]
-
-# Define the template file URL and the output file name for clarity
-$galleryTemplateURL = "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Compute-Gallery-Template.json"
-$outputFilePath = "./DownloadedTempTemplates/Compute-Gallery-Template-Output.json"
-
-# Notify the user that the template is being downloaded
-Write-Host "Downloading template file from: $galleryTemplateURL"
-
-# Download the template file
-Invoke-WebRequest -Headers @{"Cache-Control"="no-cache"; "Pragma"="no-cache"} -Uri $galleryTemplateURL -OutFile $outputFilePath -ErrorAction Stop | Out-Null
-
-# Check if the template file download failed
-if (-not $? -or -not (Test-Path $outputFilePath)) {
-    Write-Host "Error downloading the template file!"
-    exit 1
-}
-
-# Replace placeholders with provided values in the downloaded template
-(Get-Content -Path $outputFilePath) | 
-    Foreach-Object { $_ -replace "<galleryName>", $galleryName } | 
-    Foreach-Object { $_ -replace "<location>", $location } | 
-    Set-Content -Path $outputFilePath
-
-# Notify the user that the resource is about to be created in Azure
+# Display progress to the user
+Write-Host "----------------------------------------------"
+Write-Host "Gallery Name: $galleryName"
+Write-Host "Location: $location"
+Write-Host "Resource Group: $galleryResourceGroup"
+Write-Host "----------------------------------------------"
 Write-Host "Creating resource in Azure with the provided details..."
 
-# Create resource in Azure
-az deployment group create `
-    --name "$galleryName" `
-    --template-file "$outputFilePath" `
-    --resource-group "$galleryResourceGroup" | Out-Null
+# Execute the Azure command to create the resource
+az sig create `
+    --gallery-name $galleryName `
+    --resource-group $galleryResourceGroup `
+    --location $location
 
-# Check if the resource creation in Azure failed
-if (-not $?) {
-    Write-Host "Error creating the resource in Azure!"
-    exit 1
-}
-
-# Notify the user that the entire operation has been completed
+# Notify the user that the entire operation has been completed successfully
+Write-Host "----------------------------------------------"
 Write-Host "Operation completed successfully!"

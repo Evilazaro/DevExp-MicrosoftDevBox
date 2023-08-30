@@ -1,18 +1,24 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-# Fail fast: exit on first error
 set -e
+set -o nounset
+set -o pipefail
 
 # Description:
-# This script registers various Azure Resource Providers necessary for managing and operating virtual machines, storage, networking, and other resources in Azure.
+# This script registers various Azure Resource Providers necessary for managing 
+# and operating virtual machines, storage, networking, and other resources in Azure.
 
-# Check for command dependencies
+# Check for 'az' command dependencies
 if ! command -v az &>/dev/null; then
     echo "Error: 'az' command is not found. Please ensure Azure CLI is installed."
     exit 1
 fi
 
-# Define a function to register an Azure provider and display a corresponding message
+# Function: register_provider
+# Description: Registers an Azure provider and displays a corresponding message.
+# Parameters:
+#   1. Provider name
+#   2. Provider description
 register_provider() {
     local provider_name="$1"
     local description="$2"
@@ -23,17 +29,26 @@ register_provider() {
         echo "Successfully registered $description."
     else
         echo "Failed to register $description."
+        exit 1  # Consider exiting upon failure for 'fail fast' approach.
     fi
 }
 
-# Start of the script
+# Start of the script's main execution
 echo "Beginning Azure Resource Providers registration..."
 
 # Register each Azure Resource Provider with its description
-register_provider "Microsoft.VirtualMachineImages" "Azure Resource Provider for Virtual Machine Images"
-register_provider "Microsoft.Compute" "Azure Resource Provider for Compute"
-register_provider "Microsoft.KeyVault" "Azure Resource Provider for Key Vault"
-register_provider "Microsoft.Storage" "Azure Resource Provider for Storage"
-register_provider "Microsoft.Network" "Azure Resource Provider for Network"
+providers=(
+    "Microsoft.VirtualMachineImages Azure Resource Provider for Virtual Machine Images"
+    "Microsoft.Compute Azure Resource Provider for Compute"
+    "Microsoft.KeyVault Azure Resource Provider for Key Vault"
+    "Microsoft.Storage Azure Resource Provider for Storage"
+    "Microsoft.Network Azure Resource Provider for Network"
+)
+
+for provider in "${providers[@]}"; do
+    # Split the string into name and description using array
+    IFS=' ' read -ra parts <<< "$provider"
+    register_provider "${parts[0]}" "${parts[@]:1}"
+done
 
 echo "Azure Resource Providers registration process completed."

@@ -1,48 +1,38 @@
-# Microsoft DevBox Demos Repository
+# Microsoft Dev Box Automation Demo
 
-## Introduction
+This repository contains automation scripts that facilitate various Azure tasks like resource group creation, image creation, and deployment.
 
-Welcome to the Microsoft DevBox Environment Creation Demo! This demonstration will guide you through the process of setting up and initializing a DevBox environment seamlessly. For in-depth content, resources, and code samples related to this demo, please refer to our main repository.
+## Script Description
 
-## Quick Links
-
-- [Microsoft DevBox Demos Main Repository](https://github.com/Evilazaro/MicrosoftDevBox)
+The primary script `deploy.sh` automates the deployment of the Microsoft Dev Box. It handles the following tasks:
+- Logs into Azure.
+- Sets up static variables.
+- Creates Azure resources.
+- Deploys Azure Compute Gallery.
+- Builds virtual machine images.
+- Deploys Microsoft DevBox.
 
 ## Prerequisites
 
-Before proceeding with the demo, ensure that you have:
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) installed and configured.
+- Appropriate permissions to create Azure resources.
+- Internet access to fetch ARM templates.
+- Ensure all subsidiary scripts have execute permissions.
 
-1. An active Microsoft Azure account.
-2. A Microsoft Azure Subscription
-3. Microsoft Azure CLI
+## Usage
 
-**Option 1: Install Azure CLI with MSI Installer on Windows**
-
-Microsoft provides an MSI installer for Windows which simplifies the installation process:
-
-1. [Download Azure CLI MSI Installer](https://aka.ms/installazurecliwindows)
-   
-2. Once downloaded, open the MSI file to start the installer.
-   
-3. Follow the on-screen prompts to complete the installation.
-
-**Option 2: Install via Windows Subsystem for Linux (WSL)**
-
-If you have Windows Subsystem for Linux (WSL) installed, you can install Azure CLI as you would for a Linux distribution. See the Azure CLI installation guide for your specific Linux distribution in the [official documentation](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli).
-
-## Verification
-
-Once installed, open a new command prompt or PowerShell window and run:
+### Bash
 
 ```bash
-az --version
+chmod +x deploy.sh
+./deploy.sh <Azure_Subscription_Name>
 ```
-3. [Download Azure CLI MSI Installer for Windows](https://aka.ms/installazurecliwindows).
 
-## Feedback and Issues
+### PowerShell
+```powershell
+# Grant execute permissions to the script
+Set-ExecutionPolicy Bypass -Scope Process -Force
 
-If you encounter any issues or have feedback regarding the demo, we'd love to hear from you. Please create an issue in our [GitHub Issue Tracker](https://github.com/Evilazaro/MicrosoftDevBox/issues).
+# Run the script
+& './deploy.sh' <Azure_Subscription_Name>
 
-## Conclusion
-
-Thank you for exploring the Microsoft DevBox Demos Repository. We encourage you to experiment, modify, and adapt the steps to suit your requirements. For any questions, refer to the documentation in the main repository or get in touch with our team.

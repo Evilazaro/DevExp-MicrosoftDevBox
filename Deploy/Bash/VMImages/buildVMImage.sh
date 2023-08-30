@@ -2,9 +2,13 @@
 
 set -e  # Exit the script if any command fails
 
+echo "Checking necessary tools..."
 # Check if necessary tools are available
 for tool in wget az sed; do
-  command -v ${tool} > /dev/null 2>&1 || { echo "${tool} is required but not installed. Exiting."; exit 1; }
+  if ! command -v ${tool} &> /dev/null; then
+    echo "${tool} is required but not installed. Exiting."
+    exit 1
+  fi
 done
 
 # Assign command line arguments to variables
@@ -20,11 +24,11 @@ offer="$9"
 sku="${10}"
 publisher="${11}"
 
-echo "Attempting to create the Image Definitions"
+echo "Starting the process to create Image Definitions..."
 imageDefName="${imageName}-image-def"
 
 # Create Image Definition
-# Create the image definition
+echo "Creating image definition..."
 az sig image-definition create \
     --resource-group $galleryResourceGroup \
     --gallery-name $galleryName \
@@ -38,13 +42,13 @@ az sig image-definition create \
     --features "SecurityType=TrustedLaunch" \
     --location $location
 
-echo "Attempting to download image template from ${imageTemplateFile}..."
+# Download image template
+echo "Downloading image template from ${imageTemplateFile}..."
 wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" "${imageTemplateFile}" -O "${outputFile}"
-echo "Successfully downloaded the image template. Saved to ${outputFile}."
+echo "Successfully downloaded the image template to ${outputFile}."
 
-echo "Substituting placeholders in the template with provided details..."
-# Substitute placeholders for the main Image Template
-# Perform replacements
+# Replace placeholders in the downloaded template
+echo "Updating placeholders in the template..."
 sed -i "s/<subscriptionID>/$subscriptionID/g" "$outputFile"
 sed -i "s/<rgName>/$galleryResourceGroup/g" "$outputFile"
 sed -i "s/<imageName>/$imageName/g" "$outputFile"
@@ -52,24 +56,32 @@ sed -i "s/<imageDefName>/$imageDefName/g" "$outputFile"
 sed -i "s/<sharedImageGalName>/$galleryName/g" "$outputFile"
 sed -i "s/<location>/$location/g" "$outputFile"
 sed -i "s/<identityName>/$identityName/g" "$outputFile"
+echo "Template placeholders updated."
 
-
-echo "Template placeholders successfully updated with the provided details."
-
-echo "Attempting to create image resource '${imageName}' in Azure..."
-# Deploy resources
+# Deploy resources in Azure
+echo "Creating image resource '${imageName}' in Azure..."
 az deployment group create \
     --resource-group $galleryResourceGroup \
     --template-file $outputFile 
-    
 echo "Successfully created image resource '${imageName}' in Azure."
 
-echo "Initiating the build process for Image '${imageName}' in Azure..."
+# Initiate the build process for the image
+echo "Starting the build process for Image '${imageName}' in Azure..."
 az resource invoke-action \
     --ids $(az resource show --name $imageName --resource-group $galleryResourceGroup --resource-type "Microsoft.VirtualMachineImages/imageTemplates" --query id --output tsv) \
     --action "Run" \
     --request-body '{}' \
     --query properties.outputs
 
+# Create image version
+az sig image-version create \
+    --resource-group $galleryResourceGroup \
+    --gallery-name $galleryName \
+    --gallery-image-definition $imageDefName \
+    --gallery-image-version 1.0.0 \
+    --target-regions $location \
+    --managed-image "/subscriptions/$subscriptionID/resourceGroups/$galleryResourceGroup/providers/Microsoft.Compute/images/$imageName" \
+    --replica-count 1 \
+    --location $location
 
-echo "Build process for Image '${imageName}' has been successfully initiated!"
+echo "Build process for Image '${imageName}' has been initiated successfully!"

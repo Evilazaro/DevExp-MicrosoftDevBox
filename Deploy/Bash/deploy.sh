@@ -2,6 +2,7 @@
 
 # This script automates various Azure tasks like resource group creation, image creation, and deployment.
 
+# Displays a header for better script output readability.
 display_header() {
     echo
     echo "========================"
@@ -9,6 +10,7 @@ display_header() {
     echo "========================"
 }
 
+# Builds a virtual machine image in Azure.
 build_image() {
     local outputFile="$1"
     local subscriptionID="$2"
@@ -23,31 +25,37 @@ build_image() {
     local publisher="${11}"
 
     display_header "Creating Image: $imageName"
-    echo "Image Template URL: $imageTemplateFile"
-    echo "Output File: $outputFile"
-    echo "Subscription ID: $subscriptionID"
-    echo "Gallery Resource Group: $galleryResourceGroup"
-    echo "Location: $location"
-    echo "Image Name: $imageName"
-    echo "Identity Name: $identityName"
-    echo "Gallery Name: $galleryName"
-    echo "Offer: $offer"
-    echo "SKU: $imgSKU"
-    echo "Publisher: $publisher"
-    echo
+    
+    # Displaying the provided parameters for transparency.
+    cat <<EOL
+Image Template URL: $imageTemplateFile
+Output File: $outputFile
+Subscription ID: $subscriptionID
+Gallery Resource Group: $galleryResourceGroup
+Location: $location
+Image Name: $imageName
+Identity Name: $identityName
+Gallery Name: $galleryName
+Offer: $offer
+SKU: $imgSKU
+Publisher: $publisher
+EOL
 
     VMImages/buildVMImage.sh "$outputFile" "$subscriptionID" "$galleryResourceGroup" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher"
 }
 
+# Logging into Azure.
 display_header "Logging into Azure"
 ./Identity/login.sh "$1"
 
+# Setting up static variables.
 display_header "Setting Up Variables"
 galleryResourceGroup='Contoso-Base-Images-Engineers-rg'
 location='WestUS3'
 identityName='contosoIdentityIBuilderUserDevBox'
 subscriptionID=$(az account show --query id --output tsv)
 
+# Creating Azure resources.
 echo "Creating resource group: $galleryResourceGroup in location: $location..."
 az group create -n "$galleryResourceGroup" -l "$location"
 
@@ -55,14 +63,17 @@ echo "Creating managed identity: $identityName..."
 az identity create --resource-group "$galleryResourceGroup" -n "$identityName"
 identityId=$(az identity show --resource-group "$galleryResourceGroup" -n "$identityName" --query principalId --output tsv)
 
+# Displaying configuration summary.
 display_header "Configuration Summary"
-echo "Image Resource Group: $galleryResourceGroup"
-echo "Location: $location"
-echo "Subscription ID: $subscriptionID"
-echo "Identity Name: $identityName"
-echo "Identity ID: $identityId"
-echo "=========================="
+cat <<EOL
+Image Resource Group: $galleryResourceGroup
+Location: $location
+Subscription ID: $subscriptionID
+Identity Name: $identityName
+Identity ID: $identityId
+EOL
 
+# Running additional setup scripts.
 echo "Registering necessary features..."
 ./Identity/registerFeatures.sh
 
@@ -74,6 +85,7 @@ echo "Deploying Compute Gallery ${galleryName}..."
 galleryName="ContosoImageGallery"
 ./ComputeGallery/deployComputeGallery.sh "$galleryName" "$location" "$galleryResourceGroup"
 
+# Building virtual machine images.
 imagesku='Win11-Engineers-FrontEnd'
 publisher='Contoso'
 offer='Contoso-Fabric'
@@ -82,8 +94,9 @@ build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-FrontEnd-Template-Ou
 imagesku='VS22-Engineers-BackEnd'
 build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Template-Output.json' "$subscriptionID" "$galleryResourceGroup" "$location" 'Win11EntBaseImageBackEndEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Template.json' "$galleryName" "$offer" "$imagesku" "$publisher"
 
-build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template-Output.json' "$subscriptionID" "$galleryResourceGroup" "$location" 'Win11EntBaseImageBackEndEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template.json' "$galleryName" "$offer" "$imagesku" "$publisher"
+build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template-Output.json' "$subscriptionID" "$galleryResourceGroup" "$location" 'Win11EntBaseImageBackEndDockerEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template.json' "$galleryName" "$offer" "$imagesku" "$publisher"
 
+# Deploying DevBox.
 display_header "Deploying Microsoft DevBox"
-# Uncomment the line below once you have the correct parameters for deployment
+# Uncomment the line below once you have the correct parameters for deployment.
 ./DevBox/deployDevBox.sh "$subscriptionID" "$location" 'Win11EntBaseImageFrontEndEngineers' 'Win11EntBaseImageBackEndEngineers' "$galleryResourceGroup"

@@ -1,43 +1,59 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-# Variables
-templateUrl='https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Network-Connection-Template.json'
-outputFilePath='./DownloadedTempTemplates/Network-Connection-Template-Output.json'
+# Script for deploying an Azure Resource Manager (ARM) template.
 
-# Check if the correct number of arguments is provided.
+# --- Variables ---
+TEMPLATE_URL='https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Network-Connection-Template.json'
+OUTPUT_FILE_PATH='./DownloadedTempTemplates/Network-Connection-Template-Output.json'
+
+# --- Functions ---
+# Print usage information
+print_usage() {
+    echo "Usage: $0 <location> <subscriptionId> <resourceGroupName> <vnetName> <subNetName>"
+}
+
+# --- Main ---
+
+# Ensure the correct number of arguments is provided.
 if [[ "$#" -ne 5 ]]; then
-    printf "Error: Incorrect number of arguments.\n"
-    printf "Usage: %s <location> <subscriptionId> <resourceGroupName> <vnetName> <subNetName>\n" "$0"
+    echo "Error: Incorrect number of arguments provided."
+    print_usage
     exit 1
 fi
 
-# Assign command-line arguments to variables with descriptive names.
-location="$1"
-subscriptionId="$2"
-resourceGroupName="$3"
-vnetName="$4"
-subNetName="$5"
+# Assign command-line arguments to descriptive variables.
+LOCATION="$1"
+SUBSCRIPTION_ID="$2"
+RESOURCE_GROUP_NAME="$3"
+VNET_NAME="$4"
+SUBNET_NAME="$5"
 
-# Download the ARM template from the URL to the specified file path.
-wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" "$templateUrl" -O "$outputFilePath"
+# Download the ARM template from the URL to the specified path.
+echo "Downloading the ARM template..."
+wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" "$TEMPLATE_URL" -O "$OUTPUT_FILE_PATH"
 
-# Replace placeholders with provided arguments in the template file.
-sed -i -e "s%<location>%$location%g" \
-       -e "s%<subscriptionId>%$subscriptionId%g" \
-       -e "s%<resourceGroupName>%$resourceGroupName%g" \
-       -e "s%<vnetName>%$vnetName%g" \
-       -e "s%<subNetName>%$subNetName%g" "$outputFilePath"
+# Check if the download was successful
+if [[ $? -ne 0 ]]; then
+    echo "Error downloading the ARM template. Exiting."
+    exit 2
+fi
 
-# Provide feedback to the user about the deployment initiation.
-printf "Initiating deployment using the ARM Template...\n"
+# Replace placeholders in the template file with provided arguments.
+echo "Updating the ARM template with provided values..."
+sed -i -e "s%<location>%$LOCATION%g" \
+       -e "s%<subscriptionId>%$SUBSCRIPTION_ID%g" \
+       -e "s%<resourceGroupName>%$RESOURCE_GROUP_NAME%g" \
+       -e "s%<vnetName>%$VNET_NAME%g" \
+       -e "s%<subNetName>%$SUBNET_NAME%g" "$OUTPUT_FILE_PATH"
 
-# Deploy the ARM Template using the Azure CLI.
+# Start the deployment using the Azure CLI.
+echo "Initiating deployment using the ARM Template..."
 if az deployment group create \
     --name Network-Connection-Template \
-    --template-file "$outputFilePath" \
-    --resource-group "$resourceGroupName"; then
-    printf "Deployment was successful!\n"
+    --template-file "$OUTPUT_FILE_PATH" \
+    --resource-group "$RESOURCE_GROUP_NAME"; then
+    echo "Deployment was successful!"
 else
-    printf "Deployment failed. Please check the provided parameters and try again.\n"
-    exit 2
+    echo "Deployment failed. Please check the provided parameters and try again."
+    exit 3
 fi

@@ -1,9 +1,9 @@
 #!/bin/bash
 
+# This script creates a Virtual Network (VNet) and a subnet within that VNet in Azure.
+
 # Exit immediately if a command exits with a non-zero status.
 set -e
-
-# Description: This script creates a Virtual Network (VNet) and a subnet within that VNet in Azure.
 
 # Constants
 readonly SCRIPT_NAME=$(basename "$0")
@@ -16,35 +16,34 @@ usage() {
     exit 1
 }
 
-# Check for the right number of arguments.
+# Check for the correct number of arguments.
 if [ "$#" -ne 4 ]; then
     echo "Error: Incorrect number of arguments provided."
     usage
 fi
 
-# Assigning arguments to meaningful variable names
+# Assign arguments to meaningful variable names.
 resourceGroupName="$1"
 location="$2"
 vnetName="$3"
 subnetName="$4"
 
-# Display information
+# Display the operation details.
 cat << INFO
---------------------------
-Creating VNet in Azure
---------------------------
+----------------------------------
+       Creating VNet in Azure      
+----------------------------------
 Resource Group Name: $resourceGroupName
 Azure Region/Location: $location
 Virtual Network Name: $vnetName
 Subnet Name: $subnetName
---------------------------
+----------------------------------
 INFO
 
 # Informing the user about the upcoming operation.
 echo "Initiating the creation of the VNet and subnet..."
 
-# Using the Azure CLI to create the Virtual Network with a pre-defined address prefix.
-# Also, a subnet is instantiated within this VNet with a specified name and address prefix.
+# Create the Virtual Network and Subnet using the Azure CLI.
 az network vnet create \
     --resource-group "$resourceGroupName" \
     --name "$vnetName" \
@@ -53,4 +52,4 @@ az network vnet create \
     --subnet-prefix "$SUBNET_PREFIX"
 
 # Confirming the successful creation of the VNet and subnet.
-echo "Virtual Network '$vnetName' and Subnet '$subnetName' have been successfully created!"
+echo "Success: Virtual Network '$vnetName' and Subnet '$subnetName' have been created."

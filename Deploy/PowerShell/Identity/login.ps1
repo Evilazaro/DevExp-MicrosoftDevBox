@@ -1,58 +1,67 @@
 <#
-    .SYNOPSIS
-    This script helps users log in to their Azure account and set a specific subscription as active.
+.SYNOPSIS
+This script assists users in logging into their Azure account and sets a specified subscription as active.
 #>
 
-# Function to handle errors and exit
-function ErrorExit {
-    param (
-        [string]$ErrorMessage = "Unknown Error"
-    )
+# Exit on error
+$ErrorActionPreference = 'Stop'
 
-    Write-Error -Message "$scriptName: $ErrorMessage"
+# Constants
+$PROGNAME = $MyInvocation.MyCommand.Name
+
+# Functions
+
+# Display an error message and exit the script
+function error_exit {
+    param (
+        [string]$Message = "Unknown Error"
+    )
+    
+    Write-Error "$PROGNAME: $Message"
     exit 1
 }
 
-# Constants
-$scriptName = $PSCommandPath | Split-Path -Leaf
+# Display the script usage instructions
+function usage {
+    Write-Host "Usage: $PROGNAME [SUBSCRIPTION_ID]"
+    exit 1
+}
 
-# Clear the terminal screen for better user experience.
+# Main script execution
+
+# Clear the terminal screen for a cleaner user experience
 Clear-Host
 
-# Print a header to indicate the start of the Azure login process.
 Write-Host "Logging in to Azure"
 Write-Host "-------------------"
 
-# Check if a subscription ID has been provided. If not, exit the script with a usage message.
+# Ensure a subscription ID is provided; if not, display an error and usage message
 if (-not $args[0]) {
     Write-Host "Error: Subscription ID not provided!"
-    Write-Host "Usage: $scriptName [SUBSCRIPTION_ID]"
-    exit 1
+    usage
 }
 
 $SUBSCRIPTION_ID = $args[0]
 
-# Display the subscription ID the user intends to set as active.
 Write-Host "Target Subscription: $SUBSCRIPTION_ID"
 Write-Host "-------------------"
 
-# Prompt user to log in to their Azure account using the Azure CLI.
-# They'll be redirected to a browser-based authentication process.
+# Prompt the user to log in and follow on-screen instructions
 Write-Host "Please follow the on-screen instructions to log in."
 
 try {
     az login
 } catch {
-    ErrorExit "Failed to log in to Azure."
+    error_exit "Failed to log in to Azure."
 }
 
-# After successful login, set the specified subscription as the active subscription.
+# Attempt to set the provided subscription ID as the active subscription
 Write-Host "Setting target subscription as active..."
 
 try {
     az account set --subscription $SUBSCRIPTION_ID
 } catch {
-    ErrorExit "Failed to set target subscription."
+    error_exit "Failed to set target subscription."
 }
 
 Write-Host "-------------------"
