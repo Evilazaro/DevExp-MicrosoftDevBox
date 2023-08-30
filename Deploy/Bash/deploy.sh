@@ -59,7 +59,7 @@ subscriptionID=$(az account show --query id --output tsv)
 echo "Creating resource group: $galleryResourceGroup in location: $location..."
 az group create -n "$galleryResourceGroup" -l "$location" \
                  --tags  "division=Contoso-Platform" \
-                        "Environment=Dev-Workstation" \
+                        "Environment=DevWorkstationService-Prod" \
                         "offer=Contoso-DevWorkstation-Service" \
                         "Team=eShopOnContainers" 
 
@@ -104,4 +104,4 @@ build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Templ
 # Deploying DevBox.
 display_header "Deploying Microsoft DevBox"
 # Uncomment the line below once you have the correct parameters for deployment.
-./DevBox/deployDevBox.sh "$subscriptionID" "$location" 'Win11EntBaseImageFrontEndEngineers' 'Win11EntBaseImageBackEndEngineers' "$galleryResourceGroup"
+./DevBox/deployDevBox.sh "$galleryResourceGroup" "$subscriptionID" "$identityId" "$location" "$galleryName" "$offer" "$publisher"

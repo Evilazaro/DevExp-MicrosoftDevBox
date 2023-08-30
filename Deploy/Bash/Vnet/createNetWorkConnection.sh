@@ -53,7 +53,7 @@ if az deployment group create \
     --template-file "$OUTPUT_FILE_PATH" \
     --resource-group "$RESOURCE_GROUP_NAME" \
      --tags  "division=Contoso-Platform" \
-            "Environment=Dev-Workstation" \
+            "Environment=DevWorkstationService-Prod" \
             "offer=Contoso-DevWorkstation-Service" \
             "Team=eShopOnContainers"; then
     echo "Deployment was successful!"

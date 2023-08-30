@@ -32,6 +32,46 @@
                         "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
                     ]
                 },
+                "customize": [
+                    {
+                        "type": "PowerShell",
+                        "name": "Install VS Code",
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((Invoke-WebRequest -Uri 'https://chocolatey.org/install.ps1').Content);",
+                            "choco install vscode;"
+                        ]
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "Install VS Code Extensions",
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                            "code --install-extension ms-azuretools.vscode-docker;",
+                            "code --install-extension ms-vscode-remote.remote-containers;",
+                            "code --install-extension ms-vscode-remote.remote-ssh;",
+                            "code --install-extension ms-vscode-remote.remote-ssh-edit;",
+                            "code --install-extension ms-vscode-remote.remote-ssh-explorer;",
+                            "code --install-extension ms-vscode-remote.remote-wsl;",
+                            "code --install-extension ms-vscode-remote.vscode-remote-extensionpack;",
+                            "code --install-extension ms-vscode.azure-account;",
+                            "code --install-extension ms-vscode.azurecli;",
+                            "code --install-extension ms-vscode.powershell;",
+                            "code --install-extension ms-vscode.vscode-typescript-tslint-plugin;",
+                            "code --install-extension ms-vscode-remote.vscode-remote-extensionpack;",
+                            "code --install-extension ms-vscode-remote.vscode-remote-try-dotnetcore;",
+                            "code --install-extension ms-vscode-remote.vscode-remote-try-web;"
+                        ]
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "Clone GitHub Repo",
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                            "cd C:\\;",
+                            "git clone https://github.com/Evilazaro/eShopOnContainers.git eShop;"
+                        ]
+                    }
+                ],
                 "distribute": [
                     {
                         "type": "ManagedImage",
@@ -50,7 +90,7 @@
             },
             "tags": {
                 "division": "Contoso-Platform",
-                "Environment": "Dev-Workstation",
+                "Environment": "DevWorkstationService-Prod",
                 "offer": "Contoso-DevWorkstation-Service",
                 "Team": "eShopOnContainers" ,
                 "Role": "Front-End-Engineer"

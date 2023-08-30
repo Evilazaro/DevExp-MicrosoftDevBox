@@ -3,7 +3,6 @@
 set -e
 
 # Declare resource group names
-galleryResourceGroup='Contoso-Base-Images-Engineers-rg'
 devBoxResourceGroupName='Contoso-DevBox-rg'
 
 # Function to delete a resource group
@@ -21,9 +20,6 @@ delete_resource_group() {
         echo "Resource group $resource_group_name does not exist. Skipping deletion."
     fi
 }
-
-# Delete the gallery resource group
-delete_resource_group "$galleryResourceGroup"
 
 # Delete the devBox resource group
 delete_resource_group "$devBoxResourceGroupName"

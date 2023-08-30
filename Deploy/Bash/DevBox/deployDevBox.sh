@@ -47,7 +47,7 @@ main() {
     echo "Creating Resource Group: $imageResourceGroupName in location: $location..."
     az group create -n "$imageResourceGroupName" -l "$location" \
                      --tags  "division=Contoso-Platform" \
-                    "Environment=Dev-Workstation" \
+                    "Environment=DevWorkstationService-Prod" \
                     "offer=Contoso-DevWorkstation-Service" \
                     "Team=eShopOnContainers" 
 

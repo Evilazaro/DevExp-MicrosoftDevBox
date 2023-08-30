@@ -51,7 +51,7 @@ az network vnet create \
     --subnet-name "$subnetName" \
     --subnet-prefix "$SUBNET_PREFIX" \
      --tags  "division=Contoso-Platform" \
-            "Environment=Dev-Workstation" \
+            "Environment=DevWorkstationService-Prod" \
             "offer=Contoso-DevWorkstation-Service" \
             "Team=eShopOnContainers" 
 

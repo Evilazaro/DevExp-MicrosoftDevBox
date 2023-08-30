@@ -35,7 +35,7 @@ az sig create \
     --resource-group "$galleryResourceGroup" \
     --location "$location" \
     --tags  "division=Contoso-Platform" \
-            "Environment=Dev-Workstation" \
+            "Environment=DevWorkstationService-Prod" \
             "offer=Contoso-DevWorkstation-Service" \
             "Team=eShopOnContainers" 
 

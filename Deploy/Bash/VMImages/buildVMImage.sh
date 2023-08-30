@@ -42,7 +42,7 @@ az sig image-definition create \
     --features "SecurityType=TrustedLaunch" \
     --location $location \
     --tags  "division=Contoso-Platform" \
-            "Environment=Dev-Workstation" \
+            "Environment=DevWorkstationService-Prod" \
             "offer=Contoso-DevWorkstation-Service" \
             "Team=eShopOnContainers"
 
@@ -66,11 +66,8 @@ echo "Template placeholders updated."
 echo "Creating image resource '${imageName}' in Azure..."
 az deployment group create \
     --resource-group $galleryResourceGroup \
-    --template-file $outputFile \
-     --tags  "division=Contoso-Platform" \
-            "Environment=Dev-Workstation" \
-            "offer=Contoso-DevWorkstation-Service" \
-            "Team=eShopOnContainers" 
+    --template-file $outputFile 
+
 echo "Successfully created image resource '${imageName}' in Azure."
 
 # Initiate the build process for the image
@@ -79,8 +76,8 @@ az resource invoke-action \
     --ids $(az resource show --name $imageName --resource-group $galleryResourceGroup --resource-type "Microsoft.VirtualMachineImages/imageTemplates" --query id --output tsv) \
     --action "Run" \
     --request-body '{}' \
-    --query properties.outputs 
-
+    --query properties.outputs
+    
 # Create image version
 az sig image-version create \
     --resource-group $galleryResourceGroup \
@@ -92,7 +89,7 @@ az sig image-version create \
     --replica-count 1 \
     --location $location \
      --tags  "division=Contoso-Platform" \
-            "Environment=Dev-Workstation" \
+            "Environment=DevWorkstationService-Prod" \
             "offer=Contoso-DevWorkstation-Service" \
             "Team=eShopOnContainers" 
 
