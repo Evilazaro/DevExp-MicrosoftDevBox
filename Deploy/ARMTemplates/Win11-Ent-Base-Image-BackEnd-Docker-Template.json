@@ -18,9 +18,9 @@
             },
             "properties": {
                 "source": {
-                    "offer": "visualstudio2022",
+                    "offer": "visualstudioplustools",
                     "publisher": "microsoftvisualstudio",
-                    "sku": "vs-2022-ent-latest-win11-n-gen2",
+                    "sku": "vs-2022-ent-general-win11-m365-gen2",
                     "type": "PlatformImage",
                     "version": "latest"
                 },
@@ -30,39 +30,42 @@
                     "osDiskSizeGB": 128,
                     "userAssignedIdentities": [
                         "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
-                    ],
-                    "customize": [
-                        {
-                            "type": "PowerShell",
-                            "name": "Install Docker Desktop",
-                            "inline": [
-                                "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                                "$URL='https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe'",
-                                "$Path='C:\\Users\\Public\\Downloads\\DockerDesktopInstaller.exe'",
-                                "Invoke-WebRequest -Uri $URL -OutFile $Path;",
-                                "Start-Process -FilePath $Path -ArgumentList '/quiet' -Wait;"
-                            ]
-                        }
-                    ],
-                    "distribute": [
-                        {
-                            "type": "SharedImage",
-                            "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageDefName>",
-                            "runOutputName": "<imageName>",
-                            "replicationlocations": [],
-                            "targetRegions": [
-                                {
-                                    "name": "<location>"
-                                }
-                            ]
-                        }
                     ]
                 },
-                "tags": {
-                    "division": "IT",
-                    "Environment": "Dev-Workstation",
-                    "Role": "Back-End-Engineer"
-                }
+                "customize": [
+                    {
+                        "type": "PowerShell",
+                        "name": "Install Docker Desktop",
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                            "$URL='https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe'",
+                            "$Path='C:\\Users\\Public\\Downloads\\DockerDesktopInstaller.exe'",
+                            "Invoke-WebRequest -Uri $URL -OutFile $Path;",
+                            "Start-Process -FilePath $Path -ArgumentList '/quiet' -Wait;"
+                        ]
+                    }
+                ],
+                "distribute": [
+                    {
+                        "type": "ManagedImage",
+                        "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageDefName>",
+                        "imageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/images/<imageName>",
+                        "runOutputName": "runOutputManagedImage",
+                        "location": "<location>",
+                        "replicationlocations": [],
+                        "targetRegions": [
+                            {
+                                "name": "<location>"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "tags": {
+                "division": "IT",
+                "Environment": "Dev-Workstation",
+                "Role": "Back-End-Engineer"
             }
+        }
     ]
 }

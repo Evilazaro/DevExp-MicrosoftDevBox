@@ -1,76 +1,13 @@
-{
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "name": {
-            "type": "string"
-        },
-        "imageName": {
-            "type": "string"
-        },
-        "location": {
-            "type": "string"
-        },
-        "imagePublisher": {
-            "type": "string"
-        },
-        "imageOffer": {
-            "type": "string"
-        },
-        "imageSku": {
-            "type": "string"
-        },
-        "version": {
-            "type": "string"
-        },
-        "vmSize": {
-            "type": "string"
-        },
-        "osDiskSizeGB": {
-            "type": "int"
-        },
-        "userAssignedIdentities": {
-            "type": "array"
-        }
-    },
-    "variables": {},
-    "resources": [
-        {
-            "apiVersion": "2022-02-14",
-            "type": "Microsoft.VirtualMachineImages/imageTemplates",
-            "dependsOn": [],
-            "name": "[parameters('name')]",
-            "location": "[parameters('location')]",
-            "properties": {
-                "vmProfile": {
-                    "vmSize": "[parameters('vmSize')]",
-                    "osDiskSizeGB": "[parameters('osDiskSizeGB')]",
-                    "userAssignedIdentities": "[parameters('userAssignedIdentities')]"
-                },
-                "source": {
-                    "type": "PlatformImage",
-                    "publisher": "[parameters('imagePublisher')]",
-                    "offer": "[parameters('imageOffer')]",
-                    "sku": "[parameters('imageSku')]",
-                    "version": "[parameters('version')]"
-                },
-                "distribute": [
-                    {
-                        "type": "ManagedImage",
-                        "imageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-Base-Images-Engineers-rg/providers/Microsoft.Compute/images/Default",
-                        "location": "westus3",
-                        "runOutputName": "runOutputManagedImage"
-                    }
-                ]
-            },
-            "tags": {},
-            "identity": {
-                "type": "UserAssigned",
-                "userAssignedIdentities": {
-                    "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-Base-Images-Engineers-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/contosoIdentityIBuilderUserDevBox": {}
-                }
-            }
-        }
-    ],
-    "outputs": {}
-}
+"customize": [
+                        {
+                            "type": "PowerShell",
+                            "name": "Install Docker Desktop",
+                            "inline": [
+                                "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                                "$URL='https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe'",
+                                "$Path='C:\\Users\\Public\\Downloads\\DockerDesktopInstaller.exe'",
+                                "Invoke-WebRequest -Uri $URL -OutFile $Path;",
+                                "Start-Process -FilePath $Path -ArgumentList '/quiet' -Wait;"
+                            ]
+                        }
+                    ],

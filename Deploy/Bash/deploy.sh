@@ -82,6 +82,8 @@ build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-FrontEnd-Template-Ou
 imagesku='VS22-Engineers-BackEnd'
 build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Template-Output.json' "$subscriptionID" "$galleryResourceGroup" "$location" 'Win11EntBaseImageBackEndEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Template.json' "$galleryName" "$offer" "$imagesku" "$publisher"
 
+build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template-Output.json' "$subscriptionID" "$galleryResourceGroup" "$location" 'Win11EntBaseImageBackEndEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template.json' "$galleryName" "$offer" "$imagesku" "$publisher"
+
 display_header "Deploying Microsoft DevBox"
 # Uncomment the line below once you have the correct parameters for deployment
 ./DevBox/deployDevBox.sh "$subscriptionID" "$location" 'Win11EntBaseImageFrontEndEngineers' 'Win11EntBaseImageBackEndEngineers' "$galleryResourceGroup"
