@@ -1,38 +1,70 @@
-# Microsoft Dev Box Deployment Script
+# **Microsoft Dev Box Deployment Script*
 
-This Bash script is designed to automate the creation of an Azure Resource Group, a Virtual Network (VNet) inside that Resource Group, and to set up a network connection for Azure Development Center with domain-join capabilities.
+This Bash script facilitates the automated creation of Azure resources such as a Resource Group, Virtual Network (VNet), and sets up a network connection for the Azure Development Center with domain-join capabilities. It's essential for users or developers aiming to quickly deploy a standardized environment in Azure for development or testing.
 
-## Script Overview
+## **Table of Contents**
 
-1. **Display Information**: Before performing any actions, the script will display a summary of the planned actions. This ensures that the user can review the details before the actual operations commence.
-2. **Argument Check**: The script expects exactly 5 arguments. If the number of arguments is not 5, it will display an error message and provide a usage guide.
-3. **Azure Resource Group Creation**: The script will create a new Azure Resource Group with specified tags.
-4. **Virtual Network and Subnet Creation**: A Virtual Network and Subnet will be created by invoking a separate shell script (`deployVnet.sh`).
-5. **Network Connection Setup**: The script will set up a network connection for Azure Development Center using another shell script (`createNetWorkConnection.sh`).
+- [Script Flow](#script-flow)
+- [Usage](#usage)
+  - [Arguments](#arguments)
+  - [Example](#example)
+- [Notes](#notes)
+- [Troubleshooting](#troubleshooting)
 
-## Function Details
+## **Script Flow**
 
-### `display_info()`
+1. **Display the planned actions**:
+    - The script first showcases the set actions by rendering the values of the planned Azure resources (e.g., Subscription ID, Resource Group name, VNet name, etc.)
 
-Displays the following details:
+2. **Check argument count**:
+    - It checks to ensure three arguments are provided: SUBSCRIPTION_ID, LOCATION, and IMAGE_RESOURCE_GROUP_NAME. If not, an error message will be displayed.
 
-- Subscription ID
-- Resource Group
-- Location
-- VNet Name
-- Subnet Name
+3. **Assign arguments to variables**:
+    - Assigns the provided arguments to their respective variables.
 
-### `main()`
+4. **Resource Group Creation**:
+    - Uses the Azure CLI to create a Resource Group with certain tags.
 
-This is the main execution function. It performs the following steps:
+5. **Virtual Network and Subnet Creation**:
+    - Attempts to create a Virtual Network (VNet) and Subnet within the newly created Resource Group.
 
-1. Check if the correct number of arguments has been provided.
-2. Display planned actions for clarity.
-3. Create the Azure Resource Group.
-4. Create the Virtual Network and Subnet.
-5. Set up a network connection for the Azure Development Center.
+6. **Setup Network Connection**:
+    - Aims to establish a network connection for the Azure Development Center post successful VNet and Subnet creation.
 
-## Usage
+7. **Completion Message**:
+    - On successful execution of all steps, a completion message is displayed.
+
+## **Usage**
+
+Navigate to the script's directory and run:
 
 ```bash
-./deployDevBox.sh [SUBSCRIPTION_ID] [LOCATION] [FRONT_END_IMAGE_NAME] [BACK_END_IMAGE_NAME] [IMAGE_RESOURCE_GROUP_NAME]
+./[script_name].sh [SUBSCRIPTION_ID] [LOCATION] [IMAGE_RESOURCE_GROUP_NAME]
+```
+
+## Arguments
+
+- **SUBSCRIPTION_ID**: The Azure subscription ID.
+- **LOCATION**: Azure location (region), e.g., "eastus".
+- **IMAGE_RESOURCE_GROUP_NAME**: Name of the resource group.
+
+## Example
+
+```bash
+./deployDevBox.sh "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" "eastus" "MyResourceGroup"
+```
+## Notes
+
+- Ensure the `az` Azure CLI tool is installed and authenticated.
+- The script calls two more scripts inside the `./Vnet` directory. Ensure they're present and have execution permissions.
+- Always review and understand scripts before execution, especially when making changes to cloud resources.
+
+## Troubleshooting
+
+- The script provides error messages corresponding to failed steps. Ensure correct argument values and required Azure permissions.
+- Ensure `./Vnet/deployVnet.sh` and `./Vnet/createNetWorkConnection.sh` are executable. If not, run:
+
+```bash
+chmod +x ./Vnet/deployVnet.sh ./Vnet/createNetWorkConnection.sh
+```
+

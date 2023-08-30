@@ -32,6 +32,40 @@
                         "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
                     ]
                 },
+                "customize": [
+                    {
+                        "type": "PowerShell",
+                        "name": "Install VS Code Extensions",
+                        "runElevated": true,
+                        "runAsSystem": false,
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                            "code --install-extension ms-azuretools.vscode-docker;",
+                            "code --install-extension ms-vscode-remote.remote-containers;",
+                            "code --install-extension ms-vscode-remote.remote-ssh;",
+                            "code --install-extension ms-vscode-remote.remote-ssh-edit;",
+                            "code --install-extension ms-vscode-remote.remote-ssh-explorer;",
+                            "code --install-extension ms-vscode-remote.remote-wsl;",
+                            "code --install-extension ms-vscode-remote.vscode-remote-extensionpack;",
+                            "code --install-extension ms-vscode.azure-account;",
+                            "code --install-extension ms-vscode.azurecli;",
+                            "code --install-extension ms-vscode.powershell;",
+                            "code --install-extension ms-vscode.vscode-typescript-tslint-plugin;",
+                            "code --install-extension ms-vscode-remote.vscode-remote-extensionpack;",
+                            "code --install-extension ms-vscode-remote.vscode-remote-try-dotnetcore;",
+                            "code --install-extension ms-vscode-remote.vscode-remote-try-web;"
+                        ]
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "Clone GitHub Repo",
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                            "cd C:\\;",
+                            "git clone https://github.com/Evilazaro/eShopOnContainers.git eShop;"
+                        ]
+                    }
+                ],
                 "distribute": [
                     {
                         "type": "ManagedImage",
@@ -40,11 +74,11 @@
                         "runOutputName": "runOutputManagedImage",
                         "location": "<location>",
                         "replicationlocations": [],
-                         "targetRegions": [
+                        "targetRegions": [
                             {
                                 "name": "<location>"
                             }
-                        ]   
+                        ]
                     }
                 ]
             },
@@ -52,7 +86,7 @@
                 "division": "Contoso-Platform",
                 "Environment": "DevWorkstationService-Prod",
                 "offer": "Contoso-DevWorkstation-Service",
-                "Team": "eShopOnContainers" ,
+                "Team": "eShopOnContainers",
                 "Role": "Back-End-Engineer"
             }
         }

@@ -104,4 +104,4 @@ build_image './DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Templ
 # Deploying DevBox.
 display_header "Deploying Microsoft DevBox"
 # Uncomment the line below once you have the correct parameters for deployment.
-./DevBox/deployDevBox.sh "$galleryResourceGroup" "$subscriptionID" "$identityId" "$location" "$galleryName" "$offer" "$publisher"
+./DevBox/deployDevBox.sh "$subscriptionID" "$location" "$galleryResourceGroup" "$identityName"

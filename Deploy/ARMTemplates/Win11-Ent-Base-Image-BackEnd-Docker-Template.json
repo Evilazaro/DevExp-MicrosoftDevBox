@@ -36,12 +36,43 @@
                     {
                         "type": "PowerShell",
                         "name": "Install Docker Desktop",
+                        "runElevated": true,
+                        "runAsSystem": false,
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((Invoke-WebRequest -Uri 'https://chocolatey.org/install.ps1').Content);",
+                            "choco install docker-desktop -y;"
+                        ]
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "Install VS Code Extensions",
+                        "runElevated": true,
+                        "runAsSystem": false,
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "$URL='https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe'",
-                            "$Path='C:\\Users\\Public\\Downloads\\DockerDesktopInstaller.exe'",
-                            "Invoke-WebRequest -Uri $URL -OutFile $Path;",
-                            "Start-Process -FilePath $Path -ArgumentList '/quiet' -Wait;"
+                            "code --install-extension ms-azuretools.vscode-docker;",
+                            "code --install-extension ms-vscode-remote.remote-containers;",
+                            "code --install-extension ms-vscode-remote.remote-ssh;",
+                            "code --install-extension ms-vscode-remote.remote-ssh-edit;",
+                            "code --install-extension ms-vscode-remote.remote-ssh-explorer;",
+                            "code --install-extension ms-vscode-remote.remote-wsl;",
+                            "code --install-extension ms-vscode-remote.vscode-remote-extensionpack;",
+                            "code --install-extension ms-vscode.azure-account;",
+                            "code --install-extension ms-vscode.azurecli;",
+                            "code --install-extension ms-vscode.powershell;",
+                            "code --install-extension ms-vscode.vscode-typescript-tslint-plugin;",
+                            "code --install-extension ms-vscode-remote.vscode-remote-extensionpack;",
+                            "code --install-extension ms-vscode-remote.vscode-remote-try-dotnetcore;",
+                            "code --install-extension ms-vscode-remote.vscode-remote-try-web;"
+                        ]
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "Clone GitHub Repo",
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                            "cd C:\\;",
+                            "git clone https://github.com/Evilazaro/eShopOnContainers.git eShop;"
                         ]
                     }
                 ],
@@ -65,7 +96,7 @@
                 "division": "Contoso-Platform",
                 "Environment": "DevWorkstationService-Prod",
                 "offer": "Contoso-DevWorkstation-Service",
-                "Team": "eShopOnContainers" ,
+                "Team": "eShopOnContainers",
                 "Role": "Back-End-Engineer"
             }
         }

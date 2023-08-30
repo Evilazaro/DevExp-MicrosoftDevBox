@@ -36,14 +36,18 @@
                     {
                         "type": "PowerShell",
                         "name": "Install VS Code",
+                        "runElevated": true,
+                        "runAsSystem": false,
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((Invoke-WebRequest -Uri 'https://chocolatey.org/install.ps1').Content);",
-                            "choco install vscode;"
+                            "choco install vscode -y;"
                         ]
                     },
                     {
                         "type": "PowerShell",
                         "name": "Install VS Code Extensions",
+                        "runElevated": true,
+                        "runAsSystem": false,
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                             "code --install-extension ms-azuretools.vscode-docker;",

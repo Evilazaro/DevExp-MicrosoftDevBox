@@ -1,100 +1,41 @@
-# Azure Shared Image Gallery Deployment Script
+# Azure Compute Gallery Script Deployment
 
-This Bash script facilitates the creation of a shared image gallery (SIG) in Microsoft Azure.
+This is a Bash script designed to simplify the process of creating a resource in Azure. The script accepts three arguments representing the gallery name, location, and resource group. By leveraging Azure CLI's `az sig create` command, this script creates a resource in Azure with the provided details.
 
-## Script Breakdown
+## Pre-requisites
 
-### 1. Shebang and Error Handling
+1. **Azure CLI**: Ensure you have the Azure CLI installed and properly configured.
+2. **Authentication**: Make sure you're authenticated to the right Azure account (where you intend to create the resources).
 
-```bash
-#!/bin/bash
+## Script Flow
 
-# Exit on any non-zero command to ensure the script stops if there's a problem
-set -e
-```
-
-This indicates that the script should be executed using the `bash` shell. The `set -e` causes the script to exit immediately if a command exits with a non-zero status.
-
-### 2. Usage Function
-
-```bash
-usage() {
-    echo "Usage: $0 <galleryName> <location> <galleryResourceGroup>"
-    echo "Example: $0 myGallery eastus myResourceGroup"
-    exit 1
-}
-```
-
-The function `usage` provides instructions on how to use the script if it's invoked incorrectly.
-
-### 3. Argument Validation
-
-```bash
-# Check for correct number of arguments
-if [[ "$#" -ne 3 ]]; then
-    echo "Error: Incorrect number of arguments provided."
-    usage
-fi
-```
-
-The script expects exactly three arguments. If not provided, it informs the user about the error.
-
-### 4. Variable Assignment
-
-```bash
-galleryName="$1"
-location="$2"
-galleryResourceGroup="$3"
-```
-
-The script assigns the three expected arguments to more descriptive variable names.
-
-### 5. Display Information
-
-```bash
-echo "----------------------------------------------"
-echo "Gallery Name: $galleryName"
-echo "Location: $location"
-echo "Resource Group: $galleryResourceGroup"
-echo "----------------------------------------------"
-echo "Creating resource in Azure with the provided details..."
-```
-
-This section uses the `echo` commands to display information to the user.
-
-### 6. Azure CLI Command
-
-```bash
-az sig create \
-    --gallery-name "$galleryName" \
-    --resource-group "$galleryResourceGroup" \
-    --location "$location" \
-    --tags  "division=Contoso-Platform" \
-            "Environment=DevWorkstationService-Prod" \
-            "offer=Contoso-DevWorkstation-Service" \
-            "Team=eShopOnContainers" 
-```
-
-This command does the main job of the script by calling the Azure CLI to create a shared image gallery.
-
-### 7. Completion Notification
-
-```bash
-echo "----------------------------------------------"
-echo "Operation completed successfully!"
-```
-
-Once the Azure CLI command completes without errors, this message notifies the user.
-
-## Requirements
-
-- [Azure CLI installation](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
-- Proper authentication to an Azure subscription using the [Azure CLI's authentication mechanism](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli)
+1. **Error Handling**: The script first checks if any command returns a non-zero value (indicative of an error). If such an occurrence is detected, the script will terminate immediately.
+2. **Usage Function**: A function (`usage`) is defined which displays how to use the script correctly.
+3. **Argument Check**: The script checks if the number of arguments provided by the user is exactly 3. If not, an error is displayed and the script exits.
+4. **Assigning Arguments**: The three arguments are assigned to descriptive variable names for better readability.
+5. **Display Details**: The provided details are displayed back to the user.
+6. **Azure CLI Command Execution**: The Azure CLI command (`az sig create`) is executed to create the resource in Azure with the given details and additional pre-defined tags.
+7. **Completion Notification**: Upon successful completion, the user is notified that the operation was successful.
 
 ## Usage
 
-To use this script, provide it with three parameters:
+To use the script, make sure to provide the necessary three arguments in the following order:
 
-1. Name of the gallery
-2. Its location
-3. The resource group where it should be created
+1. `galleryName`: The name of the gallery.
+2. `location`: The Azure location (e.g., eastus, westus, etc.).
+3. `galleryResourceGroup`: The name of the resource group.
+
+```bash
+./deployComputeGallery.sh <galleryName> <location> <galleryResourceGroup>
+````
+
+## Output
+
+```bash
+----------------------------------------------
+Gallery Name: [provided gallery name]
+Location: [provided location]
+Resource Group: [provided resource group]
+----------------------------------------------
+Creating resource in Azure with the provided details...
+```
