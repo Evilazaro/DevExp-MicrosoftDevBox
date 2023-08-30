@@ -15,6 +15,7 @@ The primary script `deploy.sh` automates the deployment of the Microsoft Dev Box
 ## Prerequisites
 
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) installed and configured.
+- [PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell) installed.
 - Appropriate permissions to create Azure resources.
 - Internet access to fetch ARM templates.
 - Ensure all subsidiary scripts have execute permissions.
