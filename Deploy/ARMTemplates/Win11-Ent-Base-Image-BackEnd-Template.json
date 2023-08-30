@@ -18,9 +18,9 @@
             },
             "properties": {
                 "source": {
-                    "offer": "visualstudio2022",
+                    "offer": "visualstudioplustools",
                     "publisher": "microsoftvisualstudio",
-                    "sku": "vs-2022-ent-latest-win11-n-gen2",
+                    "sku": "vs-2022-ent-general-win11-m365-gen2",
                     "type": "PlatformImage",
                     "version": "latest"
                 },
