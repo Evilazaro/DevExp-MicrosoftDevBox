@@ -36,7 +36,6 @@
                     {
                         "type": "PowerShell",
                         "name": "Install Choco and Vscode",
-                        "runElevated": true,
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
                             "choco install -y vscode"
@@ -45,7 +44,6 @@
                     {
                         "type": "PowerShell",
                         "name": "Install Git",
-                        "runElevated": true,
                         "inline": [
                             "choco install -y git"
                         ]
@@ -53,7 +51,6 @@
                     {
                         "type": "PowerShell",
                         "name": "Install VS Code Extensions",
-                        "runElevated": true,
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                             "code --install-extension ms-azuretools.vscode-docker;",
@@ -75,7 +72,6 @@
                     {
                         "type": "PowerShell",
                         "name": "Clone GitHub Repo",
-                        "runElevated": true,
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                             "cd C:\\;",
