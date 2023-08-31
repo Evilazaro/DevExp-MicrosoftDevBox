@@ -37,7 +37,6 @@
                         "type": "PowerShell",
                         "name": "Install Docker Desktop",
                         "runElevated": true,
-                        "runAsSystem": true,
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((Invoke-WebRequest -Uri 'https://chocolatey.org/install.ps1').Content);",
                             "choco install -y docker-desktop;"
@@ -47,7 +46,7 @@
                         "type": "PowerShell",
                         "name": "Install VS Code Extensions",
                         "runElevated": true,
-                        "runAsSystem": true,
+                        
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                             "code --install-extension ms-azuretools.vscode-docker;",
@@ -70,7 +69,6 @@
                         "type": "PowerShell",
                         "name": "Clone GitHub Repo",
                         "runElevated": true,
-                        "runAsSystem": true,
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                             "cd C:\\;",

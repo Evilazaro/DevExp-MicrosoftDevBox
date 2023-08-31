@@ -37,7 +37,6 @@
                         "type": "PowerShell",
                         "name": "Install VS Code Extensions",
                         "runElevated": true,
-                        "runAsSystem": true,
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                             "code --install-extension ms-azuretools.vscode-docker;",
@@ -60,7 +59,6 @@
                         "type": "PowerShell",
                         "name": "Clone GitHub Repo",
                         "runElevated": true,
-                        "runAsSystem": true,
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                             "cd C:\\;",
