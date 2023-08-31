@@ -35,15 +35,6 @@
                 "customize": [
                     {
                         "type": "PowerShell",
-                        "name": "Instal WSL2 and Ubuntu",
-                        "runElevated": true,
-                        "inline": [
-                            "wsl --install -d Ubuntu-20.04"
-                        ]
-
-                    },
-                    {
-                        "type": "PowerShell",
                         "name": "Install Choco and Vscode",
                         "runElevated": true,
                         "inline": [
