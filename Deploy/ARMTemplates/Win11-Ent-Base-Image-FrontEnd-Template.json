@@ -35,12 +35,29 @@
                 "customize": [
                     {
                         "type": "PowerShell",
+                        "name": "Install Chocolatey",
+                        "runElevated": true,
+                        "runAsSystem": true,
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((Invoke-WebRequest -Uri 'https://chocolatey.org/install.ps1').Content);"
+                        ]
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "Install Git",
+                        "runElevated": true,
+                        "runAsSystem": true,
+                        "inline": [
+                            "choco install git -y"
+                        ]
+                    },
+                     {
+                        "type": "PowerShell",
                         "name": "Install VS Code",
                         "runElevated": true,
                         "runAsSystem": true,
                         "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((Invoke-WebRequest -Uri 'https://chocolatey.org/install.ps1').Content);",
-                            "choco install vscode -y;"
+                            "choco install vscode -y"
                         ]
                     },
                     {
