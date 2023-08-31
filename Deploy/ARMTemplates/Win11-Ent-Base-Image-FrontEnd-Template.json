@@ -18,9 +18,9 @@
             },
             "properties": {
                 "source": {
-                    "offer": "windows-11",
-                    "publisher": "microsoftwindowsdesktop",
-                    "sku": "win11-22h2-ent",
+                    "offer": "windowsplustools",
+                    "publisher": "microsoftvisualstudio",
+                    "sku": "base-win11-gen2",
                     "type": "PlatformImage",
                     "version": "latest"
                 },
@@ -35,38 +35,17 @@
                 "customize": [
                     {
                         "type": "PowerShell",
-                        "name": "Install Choco and Vscode",
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
-                            "choco install -y vscode"
-                        ]
-                    },
-                    {
-                        "type": "PowerShell",
-                        "name": "Install Git",
-                        "inline": [
-                            "choco install -y git"
-                        ]
-                    },
-                    {
-                        "type": "PowerShell",
                         "name": "Install VS Code Extensions",
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "code --install-extension ms-azuretools.vscode-docker;",
-                            "code --install-extension ms-vscode-remote.remote-containers;",
-                            "code --install-extension ms-vscode-remote.remote-ssh;",
-                            "code --install-extension ms-vscode-remote.remote-ssh-edit;",
-                            "code --install-extension ms-vscode-remote.remote-ssh-explorer;",
-                            "code --install-extension ms-vscode-remote.remote-wsl;",
-                            "code --install-extension ms-vscode-remote.vscode-remote-extensionpack;",
                             "code --install-extension ms-vscode.azure-account;",
-                            "code --install-extension ms-vscode.azurecli;",
-                            "code --install-extension ms-vscode.powershell;",
-                            "code --install-extension ms-vscode.vscode-typescript-tslint-plugin;",
-                            "code --install-extension ms-vscode-remote.vscode-remote-extensionpack;",
-                            "code --install-extension ms-vscode-remote.vscode-remote-dotnetcore;",
-                            "code --install-extension ms-vscode-remote.vscode-remote-try-web;"
+                            "code --install-extension ms-azuretools.vscode-azurefunctions;",
+                            "code --install-extension ms-azuretools.vscode-azurestorage;",
+                            "code --install-extension msazurermtools.azurerm-vscode-tools;",
+                            "code --install-extension ms-dotnettools.csharp;",
+                            "code --install-extension ms-dotnettools.csharp formulahendry.dotnet-test-explorer;",
+                            "code --install-extension github.vscode-pull-request-github;",
+                            "code --install-extension github.copilot;"
                         ]
                     },
                     {
