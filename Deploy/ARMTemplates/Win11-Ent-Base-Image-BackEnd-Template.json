@@ -59,6 +59,8 @@
                     {
                         "type": "PowerShell",
                         "name": "Clone GitHub Repo",
+                        "runElevated": true,
+                        "runAsSystem": true,
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                             "cd C:\\;",
