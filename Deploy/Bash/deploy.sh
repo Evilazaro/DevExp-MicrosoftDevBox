@@ -50,7 +50,7 @@ display_header "Logging into Azure"
 
 # Setting up static variables.
 display_header "Setting Up Variables"
-galleryResourceGroup='Contoso-DevBox-rg'
+galleryResourceGroup='Contoso-DevBox2-rg'
 location='WestUS3'
 identityName='contosoIdentityIBuilderUserDevBox'
 subscriptionID=$(az account show --query id --output tsv)
