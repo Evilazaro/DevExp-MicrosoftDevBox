@@ -35,11 +35,20 @@
                 "customize": [
                     {
                         "type": "PowerShell",
-                        "name": "Install Chocolatey",
+                        "name": "Instal WSL2 and Ubuntu",
                         "runElevated": true,
                         "runAsSystem": true,
                         "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((Invoke-WebRequest -Uri 'https://chocolatey.org/install.ps1').Content);"
+                            "wsl --install -d Ubuntu-20.04"
+                        ]
+            
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "Install Choco and Vscode",
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
+                            "choco install -y vscode"
                         ]
                     },
                     {
@@ -48,16 +57,7 @@
                         "runElevated": true,
                         "runAsSystem": true,
                         "inline": [
-                            "choco install git -y"
-                        ]
-                    },
-                     {
-                        "type": "PowerShell",
-                        "name": "Install VS Code",
-                        "runElevated": true,
-                        "runAsSystem": true,
-                        "inline": [
-                            "choco install vscode -y"
+                            "choco install -y git"
                         ]
                     },
                     {
@@ -103,11 +103,11 @@
                         "runOutputName": "runOutputManagedImage",
                         "location": "<location>",
                         "replicationlocations": [],
-                         "targetRegions": [
+                        "targetRegions": [
                             {
                                 "name": "<location>"
                             }
-                        ]   
+                        ]
                     }
                 ]
             },
@@ -115,7 +115,7 @@
                 "division": "Contoso-Platform",
                 "Environment": "DevWorkstationService-Prod",
                 "offer": "Contoso-DevWorkstation-Service",
-                "Team": "eShopOnContainers" ,
+                "Team": "eShopOnContainers",
                 "Role": "Front-End-Engineer"
             }
         }
