@@ -88,6 +88,8 @@ az sig image-version create \
     --managed-image "/subscriptions/$subscriptionID/resourceGroups/$galleryResourceGroup/providers/Microsoft.Compute/images/$imageName" \
     --replica-count 1 \
     --location $location \
+    --target-regions "{ \"$location\": { \"replicaCount\": 1 } { \"storageAccountType\": \"Premium_LRS\" } }" \
+    --storage-account-type Premium_LRS \
      --tags  "division=Contoso-Platform" \
             "Environment=DevWorkstationService-Prod" \
             "offer=Contoso-DevWorkstation-Service" \

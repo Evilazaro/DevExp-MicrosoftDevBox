@@ -61,4 +61,25 @@ echo "Subscription ID: $subscriptionID"
 echo "Identity ID: $identityId"
 echo "-------------------------------------------------------------"
 
+customRoleTemplate="https://raw.githubusercontent.com/azure/azvmimagebuilder/master/solutions/12_Creating_AIB_Security_Roles/aibRoleImageCreation.json"
+outputFile="./DownloadedTempTemplates/aibRoleImageCreation-template.json"
+imageRoleDef="Azure Image Builder Image Def"
+
+# Download image template
+echo "Downloading image template from ${customRoleTemplate}..."
+wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" "${customRoleTemplate}" -O "${outputFile}"
+echo "Successfully downloaded the image template to ${outputFile}."
+
+# Replace placeholders in the downloaded template
+echo "Updating placeholders in the template..."
+sed -i "s/<subscriptionID>/$subscriptionID/g" "$outputFile"
+sed -i "s/<rgName>/$imageResourceGroup/g" "$outputFile"
+sed -i "s/Azure Image Builder Service Image Creation Role/$imageRoleDef/g" "$outputFile"
+echo "Template placeholders updated."
+
+az role definition create --role-definition "$outputFile"
+
+# Assign the role to the identity
 assign_role "$identityId" "$ROLE" "$subscriptionID"
+assign_role "$identityId" "Managed Identity Operator" "$subscriptionID"
+assign_role "$identityId" "$imageRoleDef" "$subscriptionID"

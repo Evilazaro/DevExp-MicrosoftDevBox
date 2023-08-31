@@ -63,7 +63,7 @@ main() {
     echo "Setting up Network Connection for Azure Development Center..."
     ./Vnet/createNetWorkConnection.sh "$location" "$subscriptionId" "$imageResourceGroupName" "$vnetName" "$subnetName"
     
-    deployDevCenter.sh "$devCenterName" "$imageResourceGroupName" "$location" "$identityName" "$subscriptionId"
+    ./DevBox/deployDevCenter.sh "$devCenterName" "$imageResourceGroupName" "$location" "$identityName" "$subscriptionId"
 
     if [ $? -ne 0 ]; then
         echo "Error setting up Network Connection for Azure Development Center."
