@@ -24,7 +24,7 @@
                     "type": "PlatformImage",
                     "version": "latest"
                 },
-                "buildTimeoutInMinutes": 0,
+                "buildTimeoutInMinutes": 120,
                 "vmProfile": {
                     "vmSize": "Standard_DS2_v2",
                     "osDiskSizeGB": 128,
@@ -37,7 +37,7 @@
                         "type": "PowerShell",
                         "name": "Install VS Code Extensions",
                         "runElevated": true,
-                        "runAsSystem": false,
+                        "runAsSystem": true,
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                             "code --install-extension ms-azuretools.vscode-docker;",
