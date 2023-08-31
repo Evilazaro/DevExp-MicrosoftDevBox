@@ -38,14 +38,14 @@
                         "name": "Install VS Code Extensions",
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "code --install-extension ms-vscode.azure-account;",
-                            "code --install-extension ms-azuretools.vscode-azurefunctions;",
-                            "code --install-extension ms-azuretools.vscode-azurestorage;",
-                            "code --install-extension msazurermtools.azurerm-vscode-tools;",
-                            "code --install-extension ms-dotnettools.csharp;",
-                            "code --install-extension ms-dotnettools.csharp formulahendry.dotnet-test-explorer;",
-                            "code --install-extension github.vscode-pull-request-github;",
-                            "code --install-extension github.copilot;"
+                            "code --install-extension ms-vscode.azure-account --force;",
+                            "code --install-extension ms-azuretools.vscode-azurefunctions --force;",
+                            "code --install-extension ms-azuretools.vscode-azurestorage --force;",
+                            "code --install-extension msazurermtools.azurerm-vscode-tools --force;",
+                            "code --install-extension ms-dotnettools.csharp --force;",
+                            "code --install-extension ms-dotnettools.csharp formulahendry.dotnet-test-explorer --force;",
+                            "code --install-extension github.vscode-pull-request-github --force;",
+                            "code --install-extension github.copilot --force;"
                         ]
                     },
                     {
