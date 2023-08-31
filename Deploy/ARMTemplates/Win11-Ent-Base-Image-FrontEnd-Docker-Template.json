@@ -18,9 +18,9 @@
             },
             "properties": {
                 "source": {
-                    "offer": "visualstudioplustools",
+                    "offer": "windowsplustools",
                     "publisher": "microsoftvisualstudio",
-                    "sku": "vs-2022-ent-general-win11-m365-gen2",
+                    "sku": "base-win11-gen2",
                     "type": "PlatformImage",
                     "version": "latest"
                 },
@@ -33,7 +33,7 @@
                     ]
                 },
                 "customize": [
-                    {
+                     {
                         "type": "PowerShell",
                         "name": "Install Docker Desktop",
                         "inline": [
@@ -41,7 +41,7 @@
                             "choco install -y docker-desktop;"
                         ]
                     },
-                   {
+                    {
                         "type": "PowerShell",
                         "name": "Install VS Code Extensions",
                         "inline": [
@@ -87,7 +87,7 @@
                 "Environment": "DevWorkstationService-Prod",
                 "offer": "Contoso-DevWorkstation-Service",
                 "Team": "eShopOnContainers",
-                "Role": "Back-End-Engineer",
+                "Role": "Front-End-Engineer",
                 "ContainerEngine": "Docker"
             }
         }
