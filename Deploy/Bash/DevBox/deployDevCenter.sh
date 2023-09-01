@@ -35,7 +35,7 @@ az devcenter admin devcenter create \
     --resource-group "$devCenterResourceGroup" \
     --location "$location" \
     --identity-type "UserAssigned" \
-    --user-assigned-identity "$userAssignedIdentity" \
+    --user-assigned-identities "$userAssignedIdentity" \
     --tags "division=Contoso-Platform" \
            "Environment=DevWorkstationService-Prod" \
            "offer=Contoso-DevWorkstation-Service" \

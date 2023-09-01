@@ -61,7 +61,7 @@ echo "Subscription ID: $subscriptionID"
 echo "Identity ID: $identityId"
 echo "-------------------------------------------------------------"
 
-customRoleTemplate="https://raw.githubusercontent.com/azure/azvmimagebuilder/master/solutions/12_Creating_AIB_Security_Roles/aibRoleImageCreation.json"
+customRoleTemplate="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/aibRoleImageCreation-template.json"
 outputFile="./DownloadedTempTemplates/aibRoleImageCreation-template.json"
 imageRoleDef="Azure Image Builder Image Def"
 
