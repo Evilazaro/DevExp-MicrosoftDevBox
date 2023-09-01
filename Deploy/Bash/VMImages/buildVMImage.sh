@@ -26,7 +26,7 @@ publisher="${11}"
 
 echo "Starting the process to create Image Definitions..."
 imageDefName="${imageName}-image-def"
-features="{\"SecurityType\": \"TrustedLaunch\", \"IsHibernateSupported\": \"true\"}"
+features="SecurityType=TrustedLaunch IsHibernateSupported=true"
 
 # Create Image Definition
 echo "Creating image definition..."
@@ -89,7 +89,7 @@ az sig image-version create \
     --managed-image "/subscriptions/$subscriptionID/resourceGroups/$galleryResourceGroup/providers/Microsoft.Compute/images/$imageName" \
     --replica-count 1 \
     --location $location \
-    --target-regions "{ \"name\": \"$location\", \"replicaCount\": 1, \"storageAccountType\": \"Premium_LRS\" }" \
+    --target-regions "{ \"location\": \"$location\", \"replicaCount\": 1, \"storageAccountType\": \"Premium_LRS\" }" \
     --storage-account-type Premium_LRS \
      --tags  "division=Contoso-Platform" \
             "Environment=DevWorkstationService-Prod" \
