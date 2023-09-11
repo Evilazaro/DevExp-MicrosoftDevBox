@@ -64,7 +64,7 @@ main() {
 
     # Deploy the Azure Development Center
     echo "Deploying Azure Development Center..."
-    ./DevBox/deployDevCenter.sh "$devCenterName" "$resourceGroupName" "$location" "$identityName" "$subscriptionId"
+    ./DevBox/deployDevCenter.sh "$devCenterName" "$resourceGroupName" "$location" "$identityName" "$subscriptionId" "$galleryName" 
     check_exit_status "Error setting up Network Connection for Azure Development Center."
 
     # # Add the compute gallery to the Azure Development Center

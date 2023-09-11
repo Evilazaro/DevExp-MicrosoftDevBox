@@ -25,12 +25,12 @@
         {
             "type": "Microsoft.DevCenter/devcenters/attachednetworks",
             "apiVersion": "2023-04-01",
-            "name": "<devCenterName>/<netWorkConnectionName>",
+            "name": "<devCenterName>/Contoso-Network-Connection-DevBox",
             "dependsOn": [
                 "[resourceId('Microsoft.DevCenter/devcenters', '<devCenterName>')]"
             ],
             "properties": {
-                "networkConnectionId": "/subscriptions/<subscriptionId>/resourceGroups/<resourceGroupName>/providers/Microsoft.DevCenter/networkconnections/<netWorkConnectionName>"
+                "networkConnectionId": "/subscriptions/<subscriptionId>/resourceGroups/<resourceGroupName>/providers/Microsoft.DevCenter/networkconnections/Contoso-Network-Connection-DevBox"
             }
         },
         {
