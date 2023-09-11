@@ -69,10 +69,10 @@
                 ],
                 "distribute": [
                     {
-                        "type": "ManagedImage",
+                        "type": "SharedImage",
                         "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageDefName>",
                         "imageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/images/<imageName>",
-                        "runOutputName": "runOutputManagedImage",
+                        "runOutputName": "runOutputName",
                         "location": "<location>",
                         "replicationlocations": [],
                         "targetRegions": [
