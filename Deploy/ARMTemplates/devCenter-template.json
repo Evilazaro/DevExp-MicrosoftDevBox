@@ -41,17 +41,6 @@
                 "[resourceId('Microsoft.DevCenter/devcenters', '<devCenterName>')]"
             ],
             "properties": {
-                "galleryResourceId": "/subscriptions/<subscriptionId>/resourceGroups/<resourceGroupName>/providers/Microsoft.Compute/galleries/<galleryName>"
-            }
-        },
-        {
-            "type": "Microsoft.DevCenter/devcenters/galleries",
-            "apiVersion": "2023-04-01",
-            "name": "<devCenterName>/<galleryName>",
-            "dependsOn": [
-                "[resourceId('Microsoft.DevCenter/devcenters', '<devCenterName>')]"
-            ],
-            "properties": {
                 "galleryResourceId": "[resourceId('Microsoft.DevCenter/devcenters/galleries', '<devCenterName>', '<galleryName>')]"
             }
         }
