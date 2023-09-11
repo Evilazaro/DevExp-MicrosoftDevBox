@@ -41,7 +41,7 @@
                 "[resourceId('Microsoft.DevCenter/devcenters', '<devCenterName>')]"
             ],
             "properties": {
-                "galleryResourceId": "[resourceId('Microsoft.DevCenter/devcenters/galleries', '<devCenterName>', '<galleryName>')]"
+                "galleryResourceId": "/subscriptions/<subscriptionId>/resourceGroups/<resourceGroupName>/providers/Microsoft.Compute/galleries/<galleryName>"
             }
         }
     ]
