@@ -18,6 +18,8 @@ create_dev_center() {
 
   # Download Dev Center template file
   devCenterTemplateFile="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/devCenter-template.json"
+  outputFile="./DownloadedTempTemplates/devCenter-template.json"
+  
   echo "Downloading Dev Center template from ${devCenterTemplateFile}..."
   wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" "${devCenterTemplateFile}" -O "${outputFile}"
   echo "Successfully downloaded the image template to ${outputFile}."

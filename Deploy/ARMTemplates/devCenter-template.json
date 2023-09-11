@@ -52,7 +52,7 @@
                 "[resourceId('Microsoft.DevCenter/devcenters', '<devCenterName>')]"
             ],
             "properties": {
-                "galleryResourceId": "[resourceId('Microsoft.DevCenter/devcenters/galleries', '<devCenterName>', 'Default')]"
+                "galleryResourceId": "[resourceId('Microsoft.DevCenter/devcenters/galleries', '<devCenterName>', '<galleryName>')]"
             }
         }
     ]
