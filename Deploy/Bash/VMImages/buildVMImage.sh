@@ -26,7 +26,7 @@ publisher="${11}"
 
 echo "Starting the process to create Image Definitions..."
 imageDefName="${imageName}-image-def"
-features="SecurityType=TrustedLaunch IsHibernateSupported=true"
+features="SecurityType=TrustedLaunch IsHibernateSupported=true diskControllerTypes=SCSI"
 
 # Create Image Definition
 echo "Creating image definition..."
@@ -80,20 +80,20 @@ az resource invoke-action \
     --query properties.outputs
     
 # Create image version
-az sig image-version create \
-    --resource-group $galleryResourceGroup \
-    --gallery-name $galleryName \
-    --gallery-image-definition $imageDefName \
-    --gallery-image-version 1.0.0 \
-    --target-regions $location \
-    --managed-image "/subscriptions/$subscriptionID/resourceGroups/$galleryResourceGroup/providers/Microsoft.Compute/images/$imageName" \
-    --replica-count 1 \
-    --location $location \
-    --target-regions "{ \"location\": \"$location\", \"replicaCount\": 1, \"storageAccountType\": \"Premium_LRS\" }" \
-    --storage-account-type Premium_LRS \
-     --tags  "division=Contoso-Platform" \
-            "Environment=DevWorkstationService-Prod" \
-            "offer=Contoso-DevWorkstation-Service" \
-            "Team=eShopOnContainers" 
+# az sig image-version create \
+#     --resource-group $galleryResourceGroup \
+#     --gallery-name $galleryName \
+#     --gallery-image-definition $imageDefName \
+#     --gallery-image-version 1.0.0 \
+#     --target-regions $location \
+#     --managed-image "/subscriptions/$subscriptionID/resourceGroups/$galleryResourceGroup/providers/Microsoft.Compute/images/$imageName" \
+#     --replica-count 1 \
+#     --location $location \
+#     --target-regions "{ \"location\": \"$location\", \"replicaCount\": 1, \"storageAccountType\": \"Premium_LRS\" }" \
+#     --storage-account-type Premium_LRS \
+#      --tags  "division=Contoso-Platform" \
+#             "Environment=DevWorkstationService-Prod" \
+#             "offer=Contoso-DevWorkstation-Service" \
+#             "Team=eShopOnContainers" 
 
 echo "Build process for Image '${imageName}' has been initiated successfully!"

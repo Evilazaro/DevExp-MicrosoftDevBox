@@ -42,21 +42,6 @@
                             "choco install -y docker-desktop;"
                         ]
                     },
-                   {
-                        "type": "PowerShell",
-                        "name": "Install VS Code Extensions",
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "code --install-extension ms-vscode.azure-account;",
-                            "code --install-extension ms-azuretools.vscode-azurefunctions;",
-                            "code --install-extension ms-azuretools.vscode-azurestorage;",
-                            "code --install-extension msazurermtools.azurerm-vscode-tools;",
-                            "code --install-extension ms-dotnettools.csharp;",
-                            "code --install-extension ms-dotnettools.csharp formulahendry.dotnet-test-explorer;",
-                            "code --install-extension github.vscode-pull-request-github;",
-                            "code --install-extension github.copilot;"
-                        ]
-                    },
                     {
                         "type": "PowerShell",
                         "name": "Clone GitHub Repo",
@@ -72,7 +57,7 @@
                         "type": "SharedImage",
                         "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageDefName>",
                         "imageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/images/<imageName>",
-                        "runOutputName": "runOutputName",
+                        "runOutputName": "<imageName>-output-version-1.0.0",
                         "location": "<location>",
                         "replicationlocations": [],
                         "targetRegions": [

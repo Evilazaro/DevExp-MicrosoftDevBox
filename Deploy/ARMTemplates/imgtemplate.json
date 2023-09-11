@@ -9,5 +9,14 @@
                                 "Invoke-WebRequest -Uri $URL -OutFile $Path;",
                                 "Start-Process -FilePath $Path -ArgumentList '/quiet' -Wait;"
                             ]
+                        },
+                        {
+                            "type": "PowerShell",
+                            "name": "Builds Docker images",
+                            "inline": [
+                                "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                                "cd C:\\eShop\\src;",
+                                "docker-compose build;"
+                            ]
                         }
                     ],

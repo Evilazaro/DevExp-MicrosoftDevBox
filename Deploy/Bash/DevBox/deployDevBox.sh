@@ -37,9 +37,9 @@ main() {
     identityName="$4"
 
     # Define fixed variables for the resource group, virtual network, and subnet names.
-    vnetName="Contoso-AzureDevBox-vnet"
-    subnetName="Contoso-AzureDevBox-subnet"
-    devCenterName="Contoso-AzureDevBox-DevCenter"
+    vnetName="Contoso-DevBox-vnet"
+    subnetName="Contoso-DevBox-subnet"
+    devCenterName="Contoso-DevBox-DevCenter"
 
     # Display planned actions for user clarity
     display_info
