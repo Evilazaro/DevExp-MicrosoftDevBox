@@ -14,7 +14,7 @@ done
 # Assign command line arguments to variables
 outputFile="$1"
 subscriptionID="$2"
-galleryResourceGroup="$3"
+resourceGroupName="$3"
 location="$4"
 imageName="$5"
 identityName="$6"
@@ -31,7 +31,7 @@ features="SecurityType=TrustedLaunch IsHibernateSupported=true diskControllerTyp
 # Create Image Definition
 echo "Creating image definition..."
 az sig image-definition create \
-    --resource-group $galleryResourceGroup \
+    --resource-group $resourceGroupName \
     --gallery-name $galleryName \
     --gallery-image-definition $imageDefName \
     --os-type Windows \
@@ -55,7 +55,7 @@ echo "Successfully downloaded the image template to ${outputFile}."
 # Replace placeholders in the downloaded template
 echo "Updating placeholders in the template..."
 sed -i "s/<subscriptionID>/$subscriptionID/g" "$outputFile"
-sed -i "s/<rgName>/$galleryResourceGroup/g" "$outputFile"
+sed -i "s/<rgName>/$resourceGroupName/g" "$outputFile"
 sed -i "s/<imageName>/$imageName/g" "$outputFile"
 sed -i "s/<imageDefName>/$imageDefName/g" "$outputFile"
 sed -i "s/<sharedImageGalName>/$galleryName/g" "$outputFile"
@@ -66,7 +66,7 @@ echo "Template placeholders updated."
 # Deploy resources in Azure
 echo "Creating image resource '${imageName}' in Azure..."
 az deployment group create \
-    --resource-group $galleryResourceGroup \
+    --resource-group $resourceGroupName \
     --template-file $outputFile 
 
 echo "Successfully created image resource '${imageName}' in Azure."
@@ -74,19 +74,19 @@ echo "Successfully created image resource '${imageName}' in Azure."
 # Initiate the build process for the image
 echo "Starting the build process for Image '${imageName}' in Azure..."
 az resource invoke-action \
-    --ids $(az resource show --name $imageName --resource-group $galleryResourceGroup --resource-type "Microsoft.VirtualMachineImages/imageTemplates" --query id --output tsv) \
+    --ids $(az resource show --name $imageName --resource-group $resourceGroupName --resource-type "Microsoft.VirtualMachineImages/imageTemplates" --query id --output tsv) \
     --action "Run" \
     --request-body '{}' \
     --query properties.outputs
     
 # Create image version
 # az sig image-version create \
-#     --resource-group $galleryResourceGroup \
+#     --resource-group $resourceGroupName \
 #     --gallery-name $galleryName \
 #     --gallery-image-definition $imageDefName \
 #     --gallery-image-version 1.0.0 \
 #     --target-regions $location \
-#     --managed-image "/subscriptions/$subscriptionID/resourceGroups/$galleryResourceGroup/providers/Microsoft.Compute/images/$imageName" \
+#     --managed-image "/subscriptions/$subscriptionID/resourceGroups/$resourceGroupName/providers/Microsoft.Compute/images/$imageName" \
 #     --replica-count 1 \
 #     --location $location \
 #     --target-regions "{ \"location\": \"$location\", \"replicaCount\": 1, \"storageAccountType\": \"Premium_LRS\" }" \

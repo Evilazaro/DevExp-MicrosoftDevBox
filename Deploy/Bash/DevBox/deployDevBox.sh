@@ -11,7 +11,7 @@ display_info() {
 Azure Resource Automation Script
 -----------------------------------------
 Subscription ID: $subscriptionId
-Resource Group: $imageResourceGroupName
+Resource Group: $resourceGroupName
 Location: $location
 VNet Name: $vnetName
 Subnet Name: $subnetName
@@ -20,21 +20,29 @@ Identity Name: $identityName
 EOF
 }
 
-# Main execution
+# Function to check the exit status of the last executed command and display an error message if it failed
+check_exit_status() {
+    if [ $? -ne 0 ]; then
+        echo "$1"
+        exit 1
+    fi
+}
+
+# Main execution function
 main() {
     # Ensure necessary arguments are provided
-    if [ "$#" -lt 4 ]; then
+    if [ "$#" -lt 5 ]; then
         echo "Error: Expected 5 arguments, received $#."
-        echo "Usage: $0 [SUBSCRIPTION_ID] [LOCATION] [IMAGE_RESOURCE_GROUP_NAME] [IDENTITY_NAME]"
+        echo "Usage: $0 [SUBSCRIPTION_ID] [LOCATION] [IMAGE_RESOURCE_GROUP_NAME] [IDENTITY_NAME] [GALLERY_NAME]"
         exit 1
     fi
 
     # Assign arguments to variables
     subscriptionId="$1"
     location="$2"
-    # The following variables are received but not used in this script. Are they needed elsewhere?
-    imageResourceGroupName="$3"
+    resourceGroupName="$3"
     identityName="$4"
+    galleryName="$5"
 
     # Define fixed variables for the resource group, virtual network, and subnet names.
     vnetName="Contoso-DevBox-vnet"
@@ -44,32 +52,32 @@ main() {
     # Display planned actions for user clarity
     display_info
 
-    # Check for any errors after running Azure CLI command
-    if [ $? -ne 0 ]; then
-        echo "Error creating Resource Group."
-        exit 1
-    fi
-
     # Create the Virtual Network and subnet
     echo "Creating Virtual Network: $vnetName and Subnet: $subnetName..."
-    ./Vnet/deployVnet.sh "$imageResourceGroupName" "$location" "$vnetName" "$subnetName"
-
-    if [ $? -ne 0 ]; then
-        echo "Error creating Virtual Network and Subnet."
-        exit 1
-    fi
+    ./Vnet/deployVnet.sh "$resourceGroupName" "$location" "$vnetName" "$subnetName"
+    check_exit_status "Error creating Virtual Network and Subnet."
 
     # Set up a network connection for Azure Development Center
     echo "Setting up Network Connection for Azure Development Center..."
-    ./Vnet/createNetWorkConnection.sh "$location" "$subscriptionId" "$imageResourceGroupName" "$vnetName" "$subnetName"
-    
-    ./DevBox/deployDevCenter.sh "$devCenterName" "$imageResourceGroupName" "$location" "$identityName" "$subscriptionId"
+    ./Vnet/createNetWorkConnection.sh "$location" "$subscriptionId" "$resourceGroupName" "$vnetName" "$subnetName"
+    check_exit_status "Error setting up Network Connection for Azure Development Center."
 
-    if [ $? -ne 0 ]; then
-        echo "Error setting up Network Connection for Azure Development Center."
-        exit 1
-    fi
+    # Deploy the Azure Development Center
+    echo "Deploying Azure Development Center..."
+    ./DevBox/deployDevCenter.sh "$devCenterName" "$resourceGroupName" "$location" "$identityName" "$subscriptionId"
+    check_exit_status "Error setting up Network Connection for Azure Development Center."
 
+    # # Add the compute gallery to the Azure Development Center
+    # echo "Adding Compute Gallery to Azure Development Center..."
+    # ./DevBox/addComputeGalleryToDevCenter.sh "$subscriptionId" "$resourceGroupName" "$devCenterName" "$galleryName"
+    # check_exit_status "Error adding Compute Gallery to Azure Development Center."
+
+    # # Create the DevBox project
+    # echo "Creating DevBox project..."
+    # ./DevBox/createDevBoxProject.sh "$location" "$subscriptionId" "$resourceGroupName" "$devCenterName"
+    # check_exit_status "Error Creating DevBox project."
+
+    # Display completion message
     cat <<- EOF
 -----------------------------------------
 Azure Resource Creation Completed!
@@ -78,5 +86,5 @@ All operations completed successfully!
 EOF
 }
 
-# Invoke the main function
+# Invoke the main function with all the passed arguments
 main "$@"

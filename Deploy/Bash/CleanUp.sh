@@ -10,6 +10,7 @@ set -e
 DEVBOX_RESOURCE_GROUP_NAME='Contoso-DevBox-rg'
 NETWORK_WATCHER_RESOURCE_GROUP_NAME='NetworkWatcherRG'
 IMAGE_ROLE_DEF='Azure Image Builder Image Def'
+NIC_RESOURCE_GROUP_NAME='NI_Contoso-Network-Connection-DevBox_WestUS3'
 
 # Function to retrieve identity and subscription ID
 setup_environment() {
@@ -90,6 +91,7 @@ main() {
     # Deleting resource groups
     delete_resource_group "$DEVBOX_RESOURCE_GROUP_NAME"
     delete_resource_group "$NETWORK_WATCHER_RESOURCE_GROUP_NAME"
+    delete_resource_group "$NIC_RESOURCE_GROUP_NAME"
 
     echo "Script execution completed."
 }

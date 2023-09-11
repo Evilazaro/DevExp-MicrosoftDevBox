@@ -29,6 +29,36 @@ print_header() {
     echo "-------------------------------------------------------------"
 }
 
+# Download and process the template
+download_and_process_template() {
+    local subscription=$1
+    local group=$2
+    local output_file=$3
+    local role_def=$4
+    local template_url="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/aibRoleImageCreation-template.json"
+
+    # Download image template
+    echo "Downloading image template from ${template_url}..."
+    if ! wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" "${template_url}" -O "${output_file}"; then
+        echo "Error: Failed to download the image template."
+        exit 3
+    fi
+    echo "Successfully downloaded the image template to ${output_file}."
+
+    # Replace placeholders in the downloaded template
+    echo "Updating placeholders in the template..."
+    sed -i "s/<subscriptionID>/${subscription}/g" "${output_file}"
+    sed -i "s/<rgName>/${group}/g" "${output_file}"
+    sed -i "s/Azure Image Builder Service Image Creation Role/${role_def}/g" "${output_file}"
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to update placeholders in the template."
+        exit 4
+    fi
+    echo "Template placeholders updated."
+
+    az role definition create --role-definition "${output_file}"
+}
+
 # Assign a role to the identity for a specific subscription
 assign_role() {
     local identity=$1
@@ -36,7 +66,7 @@ assign_role() {
     local subscription=$3
 
     echo "Assigning '$role' role to the identity..."
-    if az role assignment create --assignee "$identity" --role "$role" --scope /subscriptions/"$subscription"; then
+    if az role assignment create --assignee "${identity}" --role "${role}" --scope /subscriptions/"${subscription}"; then
         echo "'$role' role successfully assigned to the identity in the subscription."
     else
         echo "Error: Failed to assign '$role' role to the identity."
@@ -50,34 +80,22 @@ check_args "$@"
 print_header "Creating a User-Assigned Managed Identity & Granting Permissions"
 
 # Extracting and displaying provided arguments
-imageResourceGroup="$1"
+resourceGroupName="$1"
 subscriptionID="$2"
 identityId="$3"
 
 # Displaying the input details for confirmation
 echo "Details Provided:"
-echo "Resource Group: $imageResourceGroup"
+echo "Resource Group: $resourceGroupName"
 echo "Subscription ID: $subscriptionID"
 echo "Identity ID: $identityId"
 echo "-------------------------------------------------------------"
 
-customRoleTemplate="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/aibRoleImageCreation-template.json"
 outputFile="./DownloadedTempTemplates/aibRoleImageCreation-template.json"
 imageRoleDef="Azure Image Builder Image Def"
 
-# Download image template
-echo "Downloading image template from ${customRoleTemplate}..."
-wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" "${customRoleTemplate}" -O "${outputFile}"
-echo "Successfully downloaded the image template to ${outputFile}."
-
-# Replace placeholders in the downloaded template
-echo "Updating placeholders in the template..."
-sed -i "s/<subscriptionID>/$subscriptionID/g" "$outputFile"
-sed -i "s/<rgName>/$imageResourceGroup/g" "$outputFile"
-sed -i "s/Azure Image Builder Service Image Creation Role/$imageRoleDef/g" "$outputFile"
-echo "Template placeholders updated."
-
-az role definition create --role-definition "$outputFile"
+# Download and process the template
+download_and_process_template "$subscriptionID" "$resourceGroupName" "$outputFile" "$imageRoleDef"
 
 # Assign the role to the identity
 assign_role "$identityId" "$ROLE" "$subscriptionID"
