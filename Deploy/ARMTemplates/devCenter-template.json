@@ -47,7 +47,7 @@
         {
             "type": "Microsoft.DevCenter/devcenters/galleries",
             "apiVersion": "2023-04-01",
-            "name": "<devCenterName>/Default",
+            "name": "<devCenterName>/<galleryName>",
             "dependsOn": [
                 "[resourceId('Microsoft.DevCenter/devcenters', '<devCenterName>')]"
             ],
