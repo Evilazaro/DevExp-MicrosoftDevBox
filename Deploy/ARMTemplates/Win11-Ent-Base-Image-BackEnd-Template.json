@@ -26,9 +26,8 @@
                 },
                 "buildTimeoutInMinutes": 120,
                 "vmProfile": {
-                    "vmSize": "Standard_DS1_v2",
+                    "vmSize": "Standard_D8s_v3",
                     "osDiskSizeGB": 128,
-                    "storageAccountType": "Standard_LRS",
                     "userAssignedIdentities": [
                         "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
                     ]
@@ -40,7 +39,7 @@
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                             "cd C:\\;",
-                            "git clone https://github.com/Evilazaro/eShopOnContainers.git eShop;"
+                            "git clone https://github.com/Evilazaro/Engineering.git eShop;"
                         ]
                     }
                 ],
@@ -49,7 +48,7 @@
                         "type": "SharedImage",
                         "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageDefName>",
                         "imageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/images/<imageName>",
-                        "runOutputName": "<imageName>-output-version-1.0.0",
+                        "runOutputName": "<imageName>-output",
                         "location": "<location>",
                         "replicationlocations": [],
                         "targetRegions": [
@@ -62,9 +61,11 @@
             },
             "tags": {
                 "division": "Contoso-Platform",
-                "Environment": "DevWorkstationService-Prod",
+                "solution": "eShop",
+                "businessUnit": "e-Commerce",
+                "Environment": "Prod",
                 "offer": "Contoso-DevWorkstation-Service",
-                "Team": "eShopOnContainers",
+                "Team": "Engineering",
                 "Role": "Back-End-Engineer"
             }
         }

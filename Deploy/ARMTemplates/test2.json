@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "value": "VS-ImageManual-GAllery2"
+        },
+        "imageName": {
+            "value": "VS-ImageManual-GAllery2"
+        },
+        "location": {
+            "value": "westus3"
+        },
+        "imagePublisher": {
+            "value": "microsoftvisualstudio"
+        },
+        "imageOffer": {
+            "value": "visualstudioplustools"
+        },
+        "imageSku": {
+            "value": "vs-2022-pro-general-win10-m365-gen2"
+        },
+        "version": {
+            "value": "latest"
+        },
+        "vmSize": {
+            "value": "Standard_D8s_v3"
+        },
+        "osDiskSizeGB": {
+            "value": 128
+        },
+        "userAssignedIdentities": {
+            "value": []
+        }
+    }
+}

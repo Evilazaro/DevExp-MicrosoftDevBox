@@ -11,9 +11,11 @@
             "location": "<location>",
             "tags": {
                 "division": "Contoso-Platform",
-                "Environment": "DevWorkstationService-Prod",
+                "solution": "eShop",
+                "businessUnit": "e-Commerce",
+                "Environment": "Prod",
                 "offer": "Contoso-DevWorkstation-Service",
-                "Team": "eShopOnContainers"
+                "Team": "Engineering"
             },
             "identity": {
                 "type": "UserAssigned",

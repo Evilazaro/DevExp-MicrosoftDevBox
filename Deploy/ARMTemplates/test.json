@@ -7,36 +7,67 @@
         {
             "type": "Microsoft.VirtualMachineImages/imageTemplates",
             "apiVersion": "2022-07-01",
-            "name": "vmimage-big",
-            "location": "westus3",
+            "dependsOn": [],
+            "name": "Win11EntBaseImageFrontEndEngineers-v2",
+            "location": "WestUS3",
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/asdfg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/vmidentity": {}
+                    "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-DevBox-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/contosoIdentityIBuilderUserDevBox": {}
                 }
             },
             "properties": {
                 "source": {
-                    "offer": "visualstudioplustools",
+                    "offer": "windowsplustools",
                     "publisher": "microsoftvisualstudio",
-                    "sku": "vs-2022-ent-general-win11-m365-gen2",
+                    "sku": "base-win11-gen2",
                     "type": "PlatformImage",
                     "version": "latest"
                 },
-                "distribute": [
+                "buildTimeoutInMinutes": 120,
+                "vmProfile": {
+                    "vmSize": "Standard_D8s_v3",
+                    "osDiskSizeGB": 128,
+                    
+                    "userAssignedIdentities": [
+                        "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-DevBox-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/contosoIdentityIBuilderUserDevBox"
+                    ]
+                },
+                "customize": [
                     {
-                        "artifactTags": {},
-                        "imageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/asdfg/providers/Microsoft.Compute/images/API-Engineer-Win11-VM",
-                        "location": "westus3",
-                        "runOutputName": "runOutputManagedImage",
-                        "type": "ManagedImage"
+                        "type": "PowerShell",
+                        "name": "Clone GitHub Repo",
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                            "cd C:\\;",
+                            "git clone https://github.com/Evilazaro/Engineering.git eShop;"
+                        ]
                     }
                 ],
-                "buildTimeoutInMinutes": 0,
-                "vmProfile": {
-                    "vmSize": "Standard_D8ads_v5",
-                    "osDiskSizeGB": 128
-                }
+                "distribute": [
+                    {
+                        "type": "SharedImage",
+                        "galleryImageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-DevBox-rg/providers/Microsoft.Compute/galleries/ContosoImageGallery/images/Win11EntBaseImageFrontEndEngineers-image-def2",
+                        "imageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-DevBox-rg/providers/Microsoft.Compute/images/Win11EntBaseImageFrontEndEngineers-v2",
+                        "runOutputName": "Win11EntBaseImageFrontEndEngineersv2-output-version-1.0.0",
+                        "location": "WestUS3",
+                        "replicationlocations": [],
+                        "targetRegions": [
+                            {
+                                "name": "WestUS3"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "tags": {
+                "division": "Contoso-Platform",
+"solution": "eShop",
+"businessUnit": "e-Commerce",
+                "Environment": "Prod",
+                "offer": "Contoso-DevWorkstation-Service",
+                "Team": "Engineering",
+                "Role": "Front-End-Engineer"
             }
         }
     ]

@@ -11,6 +11,8 @@
             "location": "<location>",
             "tags": {
                 "division": "Contoso-Platform",
+                "solution": "eShop",
+                "businessUnit": "e-Commerce",
                 "Environment": "DevBox"
             },
             "properties": {

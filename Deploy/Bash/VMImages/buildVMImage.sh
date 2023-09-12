@@ -5,7 +5,7 @@ set -e
 
 # Ensure that the necessary number of arguments are provided
 if [ "$#" -ne 11 ]; then
-  echo "Usage: $0 outputFile subscriptionID resourceGroupName location imageName identityName imageTemplateFile galleryName offer sku publisher"
+  echo "Usage: $0 outputFile subscriptionID resourceGroupName location imageName identityName imageTemplateFile galleryName offer imgSKU publisher"
   exit 1
 fi
 
@@ -28,7 +28,7 @@ identityName="$6"
 imageTemplateFile="$7"
 galleryName="$8"
 offer="$9"
-sku="${10}"
+imgSKU="${10}"
 publisher="${11}"
 
 # Starting the process to create image definitions
@@ -47,15 +47,18 @@ az sig image-definition create \
     --os-type Windows \
     --publisher ${publisher} \
     --offer ${offer} \
-    --sku ${sku} \
+    --sku ${imgSKU} \
     --os-state generalized \
     --hyper-v-generation V2 \
     --features "${features}" \
     --location ${location} \
     --tags  "division=Contoso-Platform" \
-            "Environment=DevWorkstationService-Prod" \
+            "Environment=Prod" \
             "offer=Contoso-DevWorkstation-Service" \
-            "Team=eShopOnContainers"
+            "Team=Engineering" \
+            "division=Contoso-Platform" \
+            "solution=eShop" \
+            "businessUnit=e-Commerce"
 
 # Download the image template file
 echo "Downloading image template from ${imageTemplateFile}..."

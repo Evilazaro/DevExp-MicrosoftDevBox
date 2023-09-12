@@ -49,9 +49,12 @@ az sig create \
     --resource-group "$resourceGroupName" \
     --location "$location" \
     --tags  "division=Contoso-Platform" \
-            "Environment=DevWorkstationService-Prod" \
+            "Environment=Prod" \
             "offer=Contoso-DevWorkstation-Service" \
-            "Team=eShopOnContainers" 
+            "Team=Engineering" \
+	    "division=Contoso-Platform" \
+	    "solution=eShop" \
+	    "businessUnit=e-Commerce"
 
 # If the command succeeds, print a success message
 if [[ $? -eq 0 ]]; then

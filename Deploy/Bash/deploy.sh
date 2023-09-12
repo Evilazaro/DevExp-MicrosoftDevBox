@@ -47,7 +47,7 @@ galleryName="ContosoImageGallery"
 
 # Creating Azure resources
 echo "Creating resource group and managed identity..."
-az group create -n "$resourceGroupName" -l "$location" --tags "division=Contoso-Platform" "Environment=DevWorkstationService-Prod" "offer=Contoso-DevWorkstation-Service" "Team=eShopOnContainers"
+az group create -n "$resourceGroupName" -l "$location" --tags "division=Contoso-Platform" "Environment=Prod" "offer=Contoso-DevWorkstation-Service" "Team=Engineering"
 az identity create --resource-group "$resourceGroupName" -n "$identityName"
 identityId=$(az identity show --resource-group "$resourceGroupName" -n "$identityName" --query principalId --output tsv)
 

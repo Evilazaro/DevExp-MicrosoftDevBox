@@ -25,9 +25,12 @@ az devcenter admin project create \
     --resource-group "$resourceGroupName" \
     --max-dev-boxes-per-user "3" \
     --tags  "division=Contoso-Platform" \
-            "Environment=DevWorkstationService-Prod" \
+            "Environment=Prod" \
             "offer=Contoso-DevWorkstation-Service" \
-            "Team=eShopOnContainers" 
+            "Team=Engineering" \
+            "division=Contoso-Platform" \
+            "solution=eShop" \
+            "businessUnit=e-Commerce"
 
 
 # Check the exit status of the last command and echo a corresponding message
