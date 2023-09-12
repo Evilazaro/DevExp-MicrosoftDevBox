@@ -67,15 +67,10 @@ main() {
     ./DevBox/deployDevCenter.sh "$devCenterName" "$resourceGroupName" "$location" "$identityName" "$subscriptionId" "$galleryName" 
     check_exit_status "Error setting up Network Connection for Azure Development Center."
 
-    # # Add the compute gallery to the Azure Development Center
-    # echo "Adding Compute Gallery to Azure Development Center..."
-    # ./DevBox/addComputeGalleryToDevCenter.sh "$subscriptionId" "$resourceGroupName" "$devCenterName" "$galleryName"
-    # check_exit_status "Error adding Compute Gallery to Azure Development Center."
-
-    # # Create the DevBox project
-    # echo "Creating DevBox project..."
-    # ./DevBox/createDevBoxProject.sh "$location" "$subscriptionId" "$resourceGroupName" "$devCenterName"
-    # check_exit_status "Error Creating DevBox project."
+    # Create the DevBox project
+    echo "Creating DevBox project..."
+    ./DevBox/createDevBoxProject.sh "$location" "$subscriptionId" "$resourceGroupName" "$devCenterName" 
+    check_exit_status "Error Creating DevBox project."
 
     # Display completion message
     cat <<- EOF

@@ -26,7 +26,7 @@
                 },
                 "buildTimeoutInMinutes": 120,
                 "vmProfile": {
-                    "vmSize": "Standard_DS2_v2",
+                    "vmSize": "Standard_D8ads_v5",
                     "osDiskSizeGB": 128,
                     "storageAccountType": "Premium_LRS",
                     "userAssignedIdentities": [

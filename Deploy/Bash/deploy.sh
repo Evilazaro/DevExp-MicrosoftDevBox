@@ -68,14 +68,14 @@ echo "Deploying Compute Gallery ${galleryName}..."
 display_header "Deploying Microsoft DevBox"
 ./DevBox/deployDevBox.sh "$subscriptionID" "$location" "$resourceGroupName" "$identityName" "$galleryName"
 
-# display_header "Building Virtual Machine Images"
+display_header "Building Virtual Machine Images"
 
-# declare -A image_params
-# image_params["Win11EntBaseImageFrontEndEngineers"]="VSCode-Engineers-FrontEnd Contoso-Fabric ./DownloadedTempTemplates/Win11-Ent-Base-Image-FrontEnd-Template-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json Contoso"
-# # ... add other entries in the same format
+declare -A image_params
+image_params["Win11EntBaseImageFrontEndEngineers"]="VSCode-Engineers-FrontEnd Contoso-Fabric ./DownloadedTempTemplates/Win11-Ent-Base-Image-FrontEnd-Template-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json Contoso"
+# ... add other entries in the same format
 
-# for imageName in "${!image_params[@]}"; do
-#     IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${image_params[$imageName]}"
-#     build_image "$outputFile" "$subscriptionID" "$resourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher"
-#     ./DevBox/createDevBoxDefinition.sh "$subscriptionID" "$location" "$resourceGroupName" "$identityName" "$galleryName" "$imageName"
-# done
+for imageName in "${!image_params[@]}"; do
+    IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${image_params[$imageName]}"
+    build_image "$outputFile" "$subscriptionID" "$resourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher"
+    ./DevBox/createDevBoxDefinition.sh "$subscriptionID" "$location" "$resourceGroupName" "$devCenterName" "$galleryName" "$imageName"
+done

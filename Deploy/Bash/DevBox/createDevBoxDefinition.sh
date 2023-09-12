@@ -26,16 +26,19 @@ echo "Dev Center Name: $devCenterName"
 echo "Gallery Name: $galleryName"
 echo "Image Name: $imageName"
 
+imageVersion="1.0.0"
+imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/$galleryName/images/$imageName" 
+
 # Creating the DevBox Definition
 echo "Creating DevBox Definition..."
 az devcenter admin devbox-definition create --location "$location" \
-    --image-reference id="/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/$galleryName/images/$imageName/version/latest" \
+    --image-reference id="$imageReferenceId" \
     --os-storage-type "ssd_1024gb" \
-    --sku name="general_a_8c32gb_v1" \
-    --name "WebDevBox" \
+    --sku name="general_i_8c32gb256ssd_v2" \
+    --name "devBox-$imageName-definition" \
     --dev-center-name "$devCenterName" \
     --resource-group "$resourceGroupName" \
-    --devbox-definition-name "devBox-$imageName-definition"
+    --devbox-definition-name "devBox-$imageName-definition" 
 
 # Echoing the completion message
 echo "DevBox Definition creation completed successfully."
