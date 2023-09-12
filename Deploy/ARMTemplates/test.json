@@ -1,93 +1,42 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "devcenters_Contoso_DevBox_DevCenter_name": {
-            "defaultValue": "Contoso-DevBox-DevCenter",
-            "type": "String"
-        },
-        "networkconnections_Contoso_Network_Connection_DevBox_externalid": {
-            "defaultValue": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-DevBox-rg/providers/Microsoft.DevCenter/networkconnections/Contoso-Network-Connection-DevBox",
-            "type": "String"
-        },
-        "galleries_ContosoImageGallery_externalid": {
-            "defaultValue": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-DevBox-rg/providers/Microsoft.Compute/galleries/ContosoImageGallery",
-            "type": "String"
-        }
-    },
+    "parameters": {},
     "variables": {},
     "resources": [
         {
-            "type": "Microsoft.DevCenter/devcenters",
-            "apiVersion": "2023-04-01",
-            "name": "[parameters('devcenters_Contoso_DevBox_DevCenter_name')]",
-            "location": "WestUS3",
-            "tags": {
-                "division": "Contoso-Platform",
-                "Environment": "DevWorkstationService-Prod",
-                "offer": "Contoso-DevWorkstation-Service",
-                "Team": "eShopOnContainers"
-            },
+            "type": "Microsoft.VirtualMachineImages/imageTemplates",
+            "apiVersion": "2022-07-01",
+            "name": "vmimage-big",
+            "location": "westus3",
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-DevBox-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/contosoIdentityIBuilderUserDevBox": {}
+                    "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/asdfg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/vmidentity": {}
                 }
             },
             "properties": {
-                "devCenterUri": "https://2a44cbaf-da25-4a57-bf6c-7fcfb4267163-contoso-devbox-devcenter.westus3.devcenter.azure.com/"
-            }
-        },
-        {
-            "type": "Microsoft.DevCenter/devcenters/attachednetworks",
-            "apiVersion": "2023-04-01",
-            "name": "[concat(parameters('devcenters_Contoso_DevBox_DevCenter_name'), '/Contoso-Network-Connection-DevBox')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenters_Contoso_DevBox_DevCenter_name'))]"
-            ],
-            "properties": {
-                "networkConnectionId": "[parameters('networkconnections_Contoso_Network_Connection_DevBox_externalid')]"
-            }
-        },
-        {
-            "type": "Microsoft.DevCenter/devcenters/galleries",
-            "apiVersion": "2023-04-01",
-            "name": "[concat(parameters('devcenters_Contoso_DevBox_DevCenter_name'), '/ContosoImageGallery')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenters_Contoso_DevBox_DevCenter_name'))]"
-            ],
-            "properties": {
-                "galleryResourceId": "[parameters('galleries_ContosoImageGallery_externalid')]"
-            }
-        },
-        {
-            "type": "Microsoft.DevCenter/devcenters/galleries",
-            "apiVersion": "2023-04-01",
-            "name": "[concat(parameters('devcenters_Contoso_DevBox_DevCenter_name'), '/Default')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenters_Contoso_DevBox_DevCenter_name'))]"
-            ],
-            "properties": {
-                "galleryResourceId": "[resourceId('Microsoft.DevCenter/devcenters/galleries', parameters('devcenters_Contoso_DevBox_DevCenter_name'), 'Default')]"
-            }
-        },
-        {
-            "type": "Microsoft.DevCenter/devcenters/devboxdefinitions",
-            "apiVersion": "2023-04-01",
-            "name": "[concat(parameters('devcenters_Contoso_DevBox_DevCenter_name'), '/test')]",
-            "location": "WestUS3",
-            "dependsOn": [
-                "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenters_Contoso_DevBox_DevCenter_name'))]",
-                "[resourceId('Microsoft.DevCenter/devcenters/galleries', parameters('devcenters_Contoso_DevBox_DevCenter_name'), 'ContosoImageGallery')]"
-            ],
-            "properties": {
-                "imageReference": {
-                    "id": "[concat(resourceId('Microsoft.DevCenter/devcenters/galleries', parameters('devcenters_Contoso_DevBox_DevCenter_name'), 'ContosoImageGallery'), '/images/Win11EntBaseImageFrontEndEngineers-image-def')]"
+                "source": {
+                    "offer": "visualstudioplustools",
+                    "publisher": "microsoftvisualstudio",
+                    "sku": "vs-2022-ent-general-win11-m365-gen2",
+                    "type": "PlatformImage",
+                    "version": "latest"
                 },
-                "sku": {
-                    "name": "general_i_8c32gb256ssd_v2"
-                },
-                "hibernateSupport": "Enabled"
+                "distribute": [
+                    {
+                        "artifactTags": {},
+                        "imageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/asdfg/providers/Microsoft.Compute/images/API-Engineer-Win11-VM",
+                        "location": "westus3",
+                        "runOutputName": "runOutputManagedImage",
+                        "type": "ManagedImage"
+                    }
+                ],
+                "buildTimeoutInMinutes": 0,
+                "vmProfile": {
+                    "vmSize": "Standard_D8ads_v5",
+                    "osDiskSizeGB": 128
+                }
             }
         }
     ]

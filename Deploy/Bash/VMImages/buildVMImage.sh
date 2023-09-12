@@ -36,7 +36,7 @@ echo "Initiating the process to create image definitions..."
 
 # Construct image definition name and feature list
 imageDefName="${imageName}-image-def"
-features="SecurityType=TrustedLaunch IsHibernateSupported=true diskControllerTypes=SCSI"
+features="SecurityType=TrustedLaunch IsHibernateSupported=true"
 
 # Creating image definition using az cli
 echo "Creating image definition..."

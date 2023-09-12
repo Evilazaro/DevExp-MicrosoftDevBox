@@ -49,7 +49,7 @@ download_and_process_template() {
     echo "Updating placeholders in the template..."
     sed -i "s/<subscriptionID>/${subscription}/g" "${output_file}"
     sed -i "s/<rgName>/${group}/g" "${output_file}"
-    sed -i "s/Azure Image Builder Service Image Creation Role/${role_def}/g" "${output_file}"
+    sed -i "s/<roleName>/${role_def}/g" "${output_file}"
     if [ $? -ne 0 ]; then
         echo "Error: Failed to update placeholders in the template."
         exit 4
@@ -92,12 +92,12 @@ echo "Identity ID: $identityId"
 echo "-------------------------------------------------------------"
 
 outputFile="./DownloadedTempTemplates/aibRoleImageCreation-template.json"
-imageRoleDef="Azure Image Builder Image Def"
+customRoleDef="Azure Image Builder Image Def"
 
 # Download and process the template
-download_and_process_template "$subscriptionID" "$resourceGroupName" "$outputFile" "$imageRoleDef"
+download_and_process_template "$subscriptionID" "$resourceGroupName" "$outputFile" "$customRoleDef"
 
 # Assign the role to the identity
 assign_role "$identityId" "$ROLE" "$subscriptionID"
 assign_role "$identityId" "Managed Identity Operator" "$subscriptionID"
-assign_role "$identityId" "$imageRoleDef" "$subscriptionID"
+assign_role "$identityId" "$customRoleDef" "$subscriptionID"
