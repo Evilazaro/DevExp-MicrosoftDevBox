@@ -61,7 +61,9 @@
                             "Role": "Front-End-Engineer"
                         },
                         "location": "WestUS3",
-                        "replicationlocations": [],
+                        "replicationRegions": [
+                            "WestUS3"                            
+                        ],
                         "replicationRegions": [
                             "WestUS3"                            
                         ],
