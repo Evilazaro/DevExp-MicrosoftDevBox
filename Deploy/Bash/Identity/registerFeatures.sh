@@ -53,6 +53,7 @@ providers=(
     "Microsoft.KeyVault|Azure Resource Provider for Key Vault"
     "Microsoft.Storage|Azure Resource Provider for Storage"
     "Microsoft.Network|Azure Resource Provider for Network"
+    "Microsoft.DevCenter|Azure Resource Provider for Dev Center"
 )
 
 # Loop through each provider and initiate the registration process

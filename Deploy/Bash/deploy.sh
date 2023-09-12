@@ -42,6 +42,8 @@ resourceGroupName='Contoso-DevBox-rg'
 location='WestUS3'
 identityName='contosoIdentityIBuilderUserDevBox'
 subscriptionID=$(az account show --query id --output tsv)
+devCenterName="Contoso-DevBox-DevCenter"
+galleryName="ContosoImageGallery"
 
 # Creating Azure resources
 echo "Creating resource group and managed identity..."
@@ -58,15 +60,12 @@ echo "Registering necessary features and creating user-assigned managed identity
 ./Identity/registerFeatures.sh
 ./Identity/createUserAssignedManagedIdentity.sh "$resourceGroupName" "$subscriptionID" "$identityId"
 
-# Defining gallery name variable
-galleryName="ContosoImageGallery"
-
 echo "Deploying Compute Gallery ${galleryName}..."
 ./ComputeGallery/deployComputeGallery.sh "$galleryName" "$location" "$resourceGroupName"
 
 # Deploying DevBox
 display_header "Deploying Microsoft DevBox"
-./DevBox/deployDevBox.sh "$subscriptionID" "$location" "$resourceGroupName" "$identityName" "$galleryName"
+./DevBox/deployDevBox.sh "$subscriptionID" "$location" "$resourceGroupName" "$identityName" "$galleryName" "$devCenterName"
 
 display_header "Building Virtual Machine Images"
 

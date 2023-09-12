@@ -9,7 +9,7 @@ set -e
 # Declare constants
 DEVBOX_RESOURCE_GROUP_NAME='Contoso-DevBox-rg'
 NETWORK_WATCHER_RESOURCE_GROUP_NAME='NetworkWatcherRG'
-IMAGE_ROLE_DEF='Azure Image Builder Image Def'
+customRoleDef='Azure Image Builder Image Def'
 NIC_RESOURCE_GROUP_NAME='NI_Contoso-Network-Connection-DevBox_WestUS3'
 
 # Function to retrieve identity and subscription ID
@@ -80,13 +80,14 @@ main() {
     setup_environment
 
     # Deleting role assignments and role definitions
-    for role_name in 'Owner' 'Managed Identity Operator' "$IMAGE_ROLE_DEF"; do
+    for role_name in 'Owner' 'Managed Identity Operator' "$customRoleDef"; do
         echo "Getting the role ID for '$role_name'..."
         ROLE_ID=$(az role definition list --name "$role_name" --query [].name --output tsv)
 
         remove_role_assignment "$ROLE_ID"
-        remove_role "$role_name"
     done
+
+    remove_role "$role_name"
 
     # Deleting resource groups
     delete_resource_group "$DEVBOX_RESOURCE_GROUP_NAME"

@@ -31,9 +31,9 @@ check_exit_status() {
 # Main execution function
 main() {
     # Ensure necessary arguments are provided
-    if [ "$#" -lt 5 ]; then
+    if [ "$#" -lt 6 ]; then
         echo "Error: Expected 5 arguments, received $#."
-        echo "Usage: $0 [SUBSCRIPTION_ID] [LOCATION] [IMAGE_RESOURCE_GROUP_NAME] [IDENTITY_NAME] [GALLERY_NAME]"
+        echo "Usage: $0 [SUBSCRIPTION_ID] [LOCATION] [IMAGE_RESOURCE_GROUP_NAME] [IDENTITY_NAME] [GALLERY_NAME] [DEV_CENTER_NAME]"
         exit 1
     fi
 
@@ -43,12 +43,12 @@ main() {
     resourceGroupName="$3"
     identityName="$4"
     galleryName="$5"
+    devCenterName="$6"
 
     # Define fixed variables for the resource group, virtual network, and subnet names.
     vnetName="Contoso-DevBox-vnet"
     subnetName="Contoso-DevBox-subnet"
-    devCenterName="Contoso-DevBox-DevCenter"
-
+    
     # Display planned actions for user clarity
     display_info
 

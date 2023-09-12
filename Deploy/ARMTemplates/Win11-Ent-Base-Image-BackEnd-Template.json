@@ -28,7 +28,7 @@
                 "vmProfile": {
                     "vmSize": "Standard_DS1_v2",
                     "osDiskSizeGB": 128,
-                    "storageAccountType": "Premium_LRS",
+                    "storageAccountType": "Standard_LRS",
                     "userAssignedIdentities": [
                         "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
                     ]
