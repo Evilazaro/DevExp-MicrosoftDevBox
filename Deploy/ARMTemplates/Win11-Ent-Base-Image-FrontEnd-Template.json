@@ -27,10 +27,8 @@
                 "buildTimeoutInMinutes": 120,
                 "vmProfile": {
                     "vmSize": "Standard_D8s_v3",
-                    "osDiskSizeGB": 128,                    
-                    "userAssignedIdentities": [
-                        "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
-                    ]
+                    "osDiskSizeGB": 128,
+                    "osDiskType": "StandardSSD_LRS"
                 },
                 "customize": [
                     {
