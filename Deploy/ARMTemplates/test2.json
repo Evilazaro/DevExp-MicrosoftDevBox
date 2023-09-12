@@ -7,7 +7,7 @@
         {
             "type": "Microsoft.Compute/galleries/images",
             "apiVersion": "2022-03-03",
-            "name": "ContosoImageGallery/Win11-Manualv8-def",
+            "name": "ContosoImageGallery/Shared-Image-Def",
             "location": "westus3",
             "properties": {
                 "hyperVGeneration": "V2",

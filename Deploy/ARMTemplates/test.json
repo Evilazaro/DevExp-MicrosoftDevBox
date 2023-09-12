@@ -8,7 +8,7 @@
             "type": "Microsoft.VirtualMachineImages/imageTemplates",
             "apiVersion": "2022-02-14",
             "dependsOn": [],
-            "name": "Win11-Manualv8",
+            "name": "Shared-Image",
             "location": "WestUS3",
             "identity": {
                 "type": "UserAssigned",
@@ -26,11 +26,11 @@
                 },
                 "buildTimeoutInMinutes": 120,
                 "vmProfile": {
-                    "vmSize": "Standard_DS1_v2",
+                    "vmSize": "Standard_DS2_v2",
                     "osDiskSizeGB": 128,
                     "osDiskType": "StandardSSD_LRS",
                     "storageAccountType": "StandardSSD_LRS",
-                     "userAssignedIdentities": [
+                    "userAssignedIdentities": [
                         "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-DevBox-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/contosoIdentityIBuilderUserDevBox"
                     ]
                 },
@@ -47,10 +47,10 @@
                 ],
                 "distribute": [
                     {
-                        "type": "ManagedImage",
-                        "galleryImageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-DevBox-rg/providers/Microsoft.Compute/galleries/ContosoImageGallery/images/Win11-Manualv8-def",
-                        "imageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-DevBox-rg/providers/Microsoft.Compute/images/Win11-Manualv8",
-                        "runOutputName": "Win11-Manualv8-output",
+                        "type": "SharedImage",
+                        "galleryImageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-DevBox-rg/providers/Microsoft.Compute/galleries/ContosoImageGallery/images/Shared-Image-def",
+                        "imageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-DevBox-rg/providers/Microsoft.Compute/images/Shared-Image",
+                        "runOutputName": "runOutputManagedImage",
                         "artifactTags": {
                             "division": "Contoso-Platform",
                             "solution": "eShop",
@@ -62,13 +62,19 @@
                         },
                         "location": "WestUS3",
                         "replicationlocations": [],
+                        "replicationRegions": [
+                            "WestUS3"                            
+                        ],
                         "targetRegions": [
                             {
                                 "name": "WestUS3"
                             }
                         ]
                     }
-                ]
+                ],
+                "validate": {
+                    "continueDistributeOnFailure": true
+                }
             },
             "tags": {
                 "division": "Contoso-Platform",

@@ -47,10 +47,12 @@
                 ],
                 "distribute": [
                     {
-                        "type": "ManagedImage",
+                        "type": "SharedImage",
+                        "excludeFromLatest": false,
                         "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageDefName>",
                         "imageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/images/<imageName>",
-                        "runOutputName": "runOutputManagedImage",
+                        "storageAccountType": "StandardSSD_LRS",
+                        "runOutputName": "runOutputName",
                         "artifactTags": {
                             "division": "Contoso-Platform",
                             "solution": "eShop",

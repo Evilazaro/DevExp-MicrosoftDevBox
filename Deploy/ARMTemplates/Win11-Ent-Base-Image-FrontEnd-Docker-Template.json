@@ -53,12 +53,14 @@
                         ]
                     }
                 ],
-                "distribute": [
+              "distribute": [
                     {
-                        "type": "ManagedImage",
+                        "type": "SharedImage",
+                        "excludeFromLatest": false,
                         "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageDefName>",
                         "imageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/images/<imageName>",
-                        "runOutputName": "runOutputManagedImage",
+                        "storageAccountType": "StandardSSD_LRS",
+                        "runOutputName": "runOutputName",
                         "artifactTags": {
                             "division": "Contoso-Platform",
                             "solution": "eShop",
@@ -76,7 +78,10 @@
                             }
                         ]
                     }
-                ]
+                ],
+                "validate": {
+                    "continueDistributeOnFailure": true
+                }
             },
             "tags": {
                 "division": "Contoso-Platform",
@@ -85,8 +90,7 @@
                 "Environment": "Prod",
                 "offer": "Contoso-DevWorkstation-Service",
                 "Team": "Engineering",
-                "Role": "Front-End-Engineer",
-                "ContainerEngine": "Docker"
+                "Role": "Front-End-Engineer"
             }
         }
     ]
