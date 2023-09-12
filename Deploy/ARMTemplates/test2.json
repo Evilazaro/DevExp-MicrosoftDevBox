@@ -24,7 +24,7 @@
             "value": "latest"
         },
         "vmSize": {
-            "value": "Standard_D8s_v3"
+            "value": "Standard_DS2_v2"
         },
         "osDiskSizeGB": {
             "value": 128

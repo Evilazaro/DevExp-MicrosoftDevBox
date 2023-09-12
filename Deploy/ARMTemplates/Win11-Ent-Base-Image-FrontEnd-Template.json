@@ -26,9 +26,8 @@
                 },
                 "buildTimeoutInMinutes": 120,
                 "vmProfile": {
-                    "vmSize": "Standard_D8s_v3",
-                    "osDiskSizeGB": 128,
-                    "osDiskType": "StandardSSD_LRS"
+                    "vmSize": "Standard_DS2_v2",
+                    "osDiskSizeGB": 127
                 },
                 "customize": [
                     {
