@@ -29,7 +29,7 @@
                     "vmSize": "Standard_DS2_v2",
                     "osDiskSizeGB": 128,
                     "osDiskType": "StandardSSD_LRS",
-                    "storageAccountType": "StandardSSD_LRS",
+                    "storageAccountType": "Standard_LRS",
                     "userAssignedIdentities": [
                         "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
                     ]
@@ -49,7 +49,7 @@
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                             "cd C:\\;",
-                            "git clone https://github.com/Evilazaro/Engineering.git eShop;"
+                            "git clone https://github.com/Evilazaro/eShopOnContainers.git eShop;"
                         ]
                     }
                 ],
@@ -59,7 +59,7 @@
                         "excludeFromLatest": false,
                         "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageDefName>",
                         "imageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/images/<imageName>",
-                        "storageAccountType": "StandardSSD_LRS",
+                        "storageAccountType": "Standard_LRS",
                         "runOutputName": "runOutputName",
                         "artifactTags": {
                             "division": "Contoso-Platform",

@@ -29,7 +29,7 @@
                     "vmSize": "Standard_DS2_v2",
                     "osDiskSizeGB": 128,
                     "osDiskType": "StandardSSD_LRS",
-                    "storageAccountType": "StandardSSD_LRS",
+                    "storageAccountType": "Standard_LRS",
                     "userAssignedIdentities": [
                         "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-DevBox-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/contosoIdentityIBuilderUserDevBox"
                     ]
@@ -41,7 +41,7 @@
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                             "cd C:\\;",
-                            "git clone https://github.com/Evilazaro/Engineering.git eShop;"
+                            "git clone https://github.com/Evilazaro/eShopOnContainers.git eShop;"
                         ]
                     }
                 ],
