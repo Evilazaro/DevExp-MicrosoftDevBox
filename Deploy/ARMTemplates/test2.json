@@ -1,36 +1,41 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "name": {
-            "value": "VS-ImageManual-GAllery2"
-        },
-        "imageName": {
-            "value": "VS-ImageManual-GAllery2"
-        },
-        "location": {
-            "value": "westus3"
-        },
-        "imagePublisher": {
-            "value": "microsoftvisualstudio"
-        },
-        "imageOffer": {
-            "value": "visualstudioplustools"
-        },
-        "imageSku": {
-            "value": "vs-2022-pro-general-win10-m365-gen2"
-        },
-        "version": {
-            "value": "latest"
-        },
-        "vmSize": {
-            "value": "Standard_DS2_v2"
-        },
-        "osDiskSizeGB": {
-            "value": 128
-        },
-        "userAssignedIdentities": {
-            "value": []
+    "parameters": {},
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/galleries/images",
+            "apiVersion": "2022-03-03",
+            "name": "ContosoImageGallery/Win11-Manualv8-def",
+            "location": "westus3",
+            "properties": {
+                "hyperVGeneration": "V2",
+                "architecture": "x64",
+                "features": [
+                    {
+                        "name": "SecurityType",
+                        "value": "TrustedLaunch"
+                    }
+                ],
+                "osType": "Windows",
+                "osState": "Generalized",
+                "identifier": {
+                    "publisher": "Contoso",
+                    "offer": "Contoso-Fabric",
+                    "sku": "Contoso-sku8"
+                },
+                "recommended": {
+                    "vCPUs": {
+                        "min": 1,
+                        "max": 16
+                    },
+                    "memory": {
+                        "min": 1,
+                        "max": 32
+                    }
+                }
+            }
         }
-    }
+    ]
 }

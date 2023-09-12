@@ -6,7 +6,7 @@
     "resources": [
         {
             "type": "Microsoft.VirtualMachineImages/imageTemplates",
-            "apiVersion": "2022-07-01",
+            "apiVersion": "2022-02-14",
             "dependsOn": [],
             "name": "<imageName>",
             "location": "<location>",
@@ -25,9 +25,14 @@
                     "version": "latest"
                 },
                 "buildTimeoutInMinutes": 120,
-                "vmProfile": {
+                 "vmProfile": {
                     "vmSize": "Standard_DS2_v2",
-                    "osDiskSizeGB": 127
+                    "osDiskSizeGB": 128,
+                    "osDiskType": "StandardSSD_LRS",
+                    "storageAccountType": "StandardSSD_LRS",
+                    "userAssignedIdentities": [
+                        "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
+                    ]
                 },
                 "customize": [
                     {
@@ -50,10 +55,19 @@
                 ],
                 "distribute": [
                     {
-                        "type": "SharedImage",
+                        "type": "ManagedImage",
                         "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageDefName>",
                         "imageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/images/<imageName>",
-                        "runOutputName": "<imageName>-output",
+                        "runOutputName": "runOutputManagedImage",
+                        "artifactTags": {
+                            "division": "Contoso-Platform",
+                            "solution": "eShop",
+                            "businessUnit": "e-Commerce",
+                            "Environment": "Prod",
+                            "offer": "Contoso-DevWorkstation-Service",
+                            "Team": "Engineering",
+                            "Role": "Front-End-Engineer"
+                        },
                         "location": "<location>",
                         "replicationlocations": [],
                         "targetRegions": [
