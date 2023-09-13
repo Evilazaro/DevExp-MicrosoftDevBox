@@ -51,7 +51,6 @@
                         "excludeFromLatest": false,
                         "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageDefName>",
                         "imageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/images/<imageName>",
-                        "storageAccountType": "Standard_GRS",
                         "runOutputName": "runOutputName",
                         "artifactTags": {
                             "division": "Contoso-Platform",
