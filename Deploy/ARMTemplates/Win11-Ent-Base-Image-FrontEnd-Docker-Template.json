@@ -29,7 +29,7 @@
                     "vmSize": "Standard_DS2_v2",
                     "osDiskSizeGB": 128,
                     "osDiskType": "StandardSSD_LRS",
-                    "storageAccountType": "Premium_LRS",
+                    "storageAccountType": "Standard_LRS",
                     "userAssignedIdentities": [
                         "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
                     ]
@@ -59,7 +59,7 @@
                         "excludeFromLatest": false,
                         "galleryImageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/galleries/<sharedImageGalName>/images/<imageDefName>",
                         "imageId": "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.Compute/images/<imageName>",
-                        "storageAccountType": "Premium_LRS",
+                        "storageAccountType": "Standard_GRS",
                         "runOutputName": "runOutputName",
                         "artifactTags": {
                             "division": "Contoso-Platform",
