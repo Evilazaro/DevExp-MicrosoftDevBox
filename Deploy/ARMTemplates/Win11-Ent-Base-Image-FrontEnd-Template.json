@@ -64,11 +64,13 @@
                         },
                         "location": "<location>",
                         "replicationRegions": [
-                            "<location>"                            
+                            "<location>"
                         ],
                         "targetRegions": [
                             {
-                                "name": "<location>"
+                                "name": "<location>",
+                                "replicaCount": 2,
+                                "storageAccountType": "Standard_LRS"
                             }
                         ]
                     }
