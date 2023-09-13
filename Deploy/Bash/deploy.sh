@@ -70,7 +70,10 @@ display_header "Deploying Microsoft DevBox"
 display_header "Building Virtual Machine Images"
 
 declare -A image_params
-image_params["FrontEndEngineerBaseImage"]="VSCode-Engineers-FrontEnd Contoso-Fabric ./DownloadedTempTemplates/Win11-Ent-Base-Image-FrontEnd-Template-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json Contoso"
+image_params["FrontEnd-Img"]="VSCode-FrontEnd Contoso-Fabric ./DownloadedTempTemplates/FrontEnd-Img-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json Contoso"
+image_params["FrontEnd-Docker-Img"]="VSCode-FrontEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/FrontEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json Contoso"
+image_params["BackEnd-Img"]="VS22-BackEnd Contoso-Fabric ./DownloadedTempTemplates/BackEnd-Img-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json Contoso"
+image_params["BackEnd-Docker-Img"]="VS22-BackEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json Contoso"
 # ... add other entries in the same format
 
 for imageName in "${!image_params[@]}"; do
