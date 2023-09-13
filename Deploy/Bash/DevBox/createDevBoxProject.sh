@@ -21,7 +21,7 @@ az devcenter admin project create \
     --location "$location" \
     --description "Sample .NET Core reference application, powered by Microsoft" \
     --dev-center-id "/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName" \
-    --name "Contoso-eShop" \
+    --name "eShop" \
     --resource-group "$resourceGroupName" \
     --max-dev-boxes-per-user "3" \
     --tags  "division=Contoso-Platform" \

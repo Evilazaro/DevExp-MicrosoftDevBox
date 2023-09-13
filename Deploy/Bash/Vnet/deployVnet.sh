@@ -50,13 +50,13 @@ az network vnet create \
     --address-prefix "$ADDRESS_PREFIX" \
     --subnet-name "$subnetName" \
     --subnet-prefix "$SUBNET_PREFIX" \
-     --tags  "division=Contoso-Platform" \
+    --tags  "division=Contoso-Platform" \
             "Environment=Prod" \
             "offer=Contoso-DevWorkstation-Service" \
             "Team=Engineering" \
-	    "division=Contoso-Platform" \
-	    "solution=eShop" \
-	    "businessUnit=e-Commerce"
+            "division=Contoso-Platform" \
+            "solution=eShop" \
+            "businessUnit=e-Commerce"
 
 # Confirming the successful creation of the VNet and subnet.
 echo "Success: Virtual Network '$vnetName' and Subnet '$subnetName' have been created."

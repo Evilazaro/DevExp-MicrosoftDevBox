@@ -80,19 +80,20 @@ main() {
     setup_environment
 
     # Deleting role assignments and role definitions
-    for role_name in 'Owner' 'Managed Identity Operator' "$customRoleDef"; do
+    for role_name in 'Owner' 'Managed Identity Operator' 'Reader' 'DevCenter Dev Box User' "$customRoleDef"; do
         echo "Getting the role ID for '$role_name'..."
         ROLE_ID=$(az role definition list --name "$role_name" --query [].name --output tsv)
 
         remove_role_assignment "$ROLE_ID"
     done
-
+    
     remove_role "$role_name"
 
     # Deleting resource groups
     delete_resource_group "$DEVBOX_RESOURCE_GROUP_NAME"
     delete_resource_group "$NETWORK_WATCHER_RESOURCE_GROUP_NAME"
     delete_resource_group "$NIC_RESOURCE_GROUP_NAME"
+    delete_resource_group "Default-ActivityLogAlerts"
 
     echo "Script execution completed."
 }

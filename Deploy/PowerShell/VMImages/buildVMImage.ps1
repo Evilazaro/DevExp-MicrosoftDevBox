@@ -26,7 +26,7 @@ $sku = $args[9]
 $publisher = $args[10]
 
 Write-Host "Starting the process to create Image Definitions..."
-$imageDefName = "${imageName}-image-def"
+$imageDefName = "${imageName}-def"
 
 # Create Image Definition
 Write-Host "Creating image definition..."

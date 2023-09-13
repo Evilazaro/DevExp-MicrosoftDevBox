@@ -63,5 +63,7 @@ for provider in "${providers[@]}"; do
     register_provider "${parts[0]}" "${parts[1]}"
 done
 
+az extension add --name devcenter
+
 # Indicate the completion of the registration process
 echo "Azure Resource Providers registration process completed."

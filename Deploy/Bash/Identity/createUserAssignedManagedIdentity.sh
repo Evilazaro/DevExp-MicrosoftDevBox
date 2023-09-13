@@ -96,8 +96,14 @@ customRoleDef="Azure Image Builder Image Def"
 
 # Download and process the template
 download_and_process_template "$subscriptionID" "$resourceGroupName" "$outputFile" "$customRoleDef"
+windows365IdentityId="0af06dc6-e4b5-4f28-818e-e78e62d137a5"
+currentAzureLoggedUser=$(az account show --query id -o tsv)
 
 # Assign the role to the identity
 assign_role "$identityId" "$ROLE" "$subscriptionID"
 assign_role "$identityId" "Managed Identity Operator" "$subscriptionID"
+assign_role "$identityId" "Managed Identity Operator" "$subscriptionID"
 assign_role "$identityId" "$customRoleDef" "$subscriptionID"
+assign_role "$windows365IdentityId" "Reader" "$subscriptionID"
+assign_role "$currentAzureLoggedUser" "DevCenter Dev Box User" "$subscriptionID"
+
