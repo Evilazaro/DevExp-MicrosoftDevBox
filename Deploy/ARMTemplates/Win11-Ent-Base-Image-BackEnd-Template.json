@@ -73,10 +73,7 @@
                             }
                         ]
                     }
-                ],
-                "validate": {
-                    "continueDistributeOnFailure": true
-                }
+                ]
             },
             "tags": {
                 "division": "Contoso-Platform",
