@@ -23,7 +23,7 @@ az devcenter admin project create \
     --dev-center-id "/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName" \
     --name "eShop" \
     --resource-group "$resourceGroupName" \
-    --max-dev-boxes-per-user "3" \
+    --max-dev-boxes-per-user "10" \
     --tags  "division=Contoso-Platform" \
             "Environment=Prod" \
             "offer=Contoso-DevWorkstation-Service" \

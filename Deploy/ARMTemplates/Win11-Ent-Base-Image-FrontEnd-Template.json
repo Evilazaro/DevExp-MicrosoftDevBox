@@ -43,6 +43,14 @@
                             "cd C:\\;",
                             "git clone https://github.com/Evilazaro/eShopOnContainers.git eShop;"
                         ]
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "Install VS Code Extensions",
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                            "code --install-extension ms-vscode.vscode-node-azure-pack --force;"
+                        ]
                     }
                 ],
                 "distribute": [
