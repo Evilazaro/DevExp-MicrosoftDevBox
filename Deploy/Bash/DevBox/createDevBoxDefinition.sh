@@ -69,5 +69,6 @@ initialize_creation
 create_devbox_definition
 
 # Execute additional scripts
-./createDevBoxPools.sh "$location" "$devBoxDefinitionName" "$networkConnectionName" "$poolName" "$projectName" "$resourceGroupName"
-./createDevBoxforEngineers.sh "$poolName" "$devBoxName" "$devCenterName" "$projectName"
+./DevBox/createDevBoxPools.sh "$location" "$devBoxDefinitionName" "$networkConnectionName" "$poolName" "$projectName" "$resourceGroupName"
+./DevBox/createDevBoxforEngineers.sh "$poolName" "$devBoxName" "$devCenterName" "$projectName"
+

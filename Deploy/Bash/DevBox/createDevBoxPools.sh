@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Validate the number of command line arguments
 if [[ $# -lt 6 ]]; then
