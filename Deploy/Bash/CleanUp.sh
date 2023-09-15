@@ -7,7 +7,7 @@
 set -e
 
 # Declare constants
-DEVBOX_RESOURCE_GROUP_NAME='Contoso-DevBox-rg'
+DEVBOX_RESOURCE_GROUP_NAME='ContosoFabric-DevBox-rg'
 NETWORK_WATCHER_RESOURCE_GROUP_NAME='NetworkWatcherRG'
 customRoleDef='Azure Image Builder Image Def'
 NIC_RESOURCE_GROUP_NAME='NI_Contoso-Network-Connection-DevBox_WestUS3'

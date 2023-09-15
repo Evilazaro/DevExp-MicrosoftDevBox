@@ -35,9 +35,9 @@ function Main {
     }
 
     # Define fixed variables for the resource group, virtual network, and subnet names.
-    $devBoxResourceGroupName = "Contoso-DevBox-rg"
-    $vnetName = "Contoso-DevBox-vnet"
-    $subnetName = "Contoso-DevBox-subnet"
+    $devBoxResourceGroupName = "ContosoFabric-DevBox-rg"
+    $vnetName = "ContosoFabric-DevBox-vnet"
+    $subnetName = "ContosoFabric-DevBox-subnet"
 
     # Display planned actions for user clarity
     Display-Info

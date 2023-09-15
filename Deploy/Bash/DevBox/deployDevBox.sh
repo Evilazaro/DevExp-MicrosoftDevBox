@@ -46,8 +46,8 @@ main() {
     devCenterName="$6"
 
     # Define fixed variables for the resource group, virtual network, and subnet names.
-    vnetName="Contoso-DevBox-vnet"
-    subnetName="Contoso-DevBox-subnet"
+    vnetName="ContosoFabric-DevBox-vnet"
+    subnetName="ContosoFabric-DevBox-subnet"
     
     # Display planned actions for user clarity
     display_info

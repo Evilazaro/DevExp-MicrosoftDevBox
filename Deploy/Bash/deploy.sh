@@ -38,11 +38,11 @@ display_header "Logging into Azure"
 
 # Setting up static variables
 display_header "Setting Up Variables"
-resourceGroupName='Contoso-DevBox-rg'
+resourceGroupName='ContosoFabric-DevBox-rg'
 location='WestUS3'
 identityName='contosoIdentityIBuilderUserDevBox'
 subscriptionID=$(az account show --query id --output tsv)
-devCenterName="Contoso-DevBox-DevCenter"
+devCenterName="ContosoFabric-DevCenter"
 galleryName="ContosoImageGallery"
 
 # Creating Azure resources
@@ -79,5 +79,5 @@ image_params["FrontEnd-Img"]="VSCode-FrontEnd Contoso-Fabric ./DownloadedTempTem
 for imageName in "${!image_params[@]}"; do
     IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${image_params[$imageName]}"
     build_image "$outputFile" "$subscriptionID" "$resourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher"
-    ./DevBox/createDevBoxDefinition.sh "$subscriptionID" "$location" "$resourceGroupName" "$devCenterName" "$galleryName" "${imageName}-def"
+    ./DevBox/createDevBoxDefinition.sh "$subscriptionID" "$location" "$resourceGroupName" "$devCenterName" "$galleryName" "$imageName"
 done

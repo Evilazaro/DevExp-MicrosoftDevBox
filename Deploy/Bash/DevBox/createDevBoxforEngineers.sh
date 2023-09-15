@@ -49,6 +49,13 @@ az devcenter dev dev-box create \
     --user-id "$currentAzureLoggedUser" \
     --local-administrator Enabled 
 
+
+az devcenter dev dev-box restart \
+    --name "$devBoxName" \
+    --dev-center-name "$devCenterName" \
+    --project-name "$projectName" \
+    --user-id "$currentAzureLoggedUser" 
+
 echo "Development box created successfully!"
 
 # Exit the script

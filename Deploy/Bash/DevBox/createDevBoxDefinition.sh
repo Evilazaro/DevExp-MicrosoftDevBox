@@ -20,6 +20,13 @@ initialize_creation() {
     echo "Dev Center Name: $devCenterName"
     echo "Gallery Name: $galleryName"
     echo "Image Name: $imageName"
+    echo "Image Version: $imageVersion"	
+    echo "Image Reference ID: $imageReferenceId"
+    echo "DevBox Definition Name: $devBoxDefinitionName"
+    echo "Network Connection Name: $networkConnectionName"
+    echo "Project Name: $projectName"
+    echo "Pool Name: $poolName"
+    echo "DevBox Name: $devBoxName"
 }
 
 # Function to create the DevBox Definition
@@ -57,7 +64,7 @@ imageName="$6"
 
 # Construct necessary variables
 imageVersion="1.0.0"
-imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/${galleryName}/images/$imageName/versions/$imageVersion"
+imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/${galleryName}/images/${imageName}-def/versions/$imageVersion"
 devBoxDefinitionName="devBox-$imageName"
 networkConnectionName="Contoso-Network-Connection-DevBox"
 projectName="eShop"

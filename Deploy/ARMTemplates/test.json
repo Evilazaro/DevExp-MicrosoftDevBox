@@ -13,7 +13,7 @@
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-DevBox-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/contosoIdentityIBuilderUserDevBox": {}
+                    "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/ContosoFabric-DevBox-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/contosoIdentityIBuilderUserDevBox": {}
                 }
             },
             "properties": {
@@ -31,7 +31,7 @@
                     "osDiskType": "StandardSSD_LRS",
                     "storageAccountType": "Standard_LRS",
                     "userAssignedIdentities": [
-                        "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-DevBox-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/contosoIdentityIBuilderUserDevBox"
+                        "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/ContosoFabric-DevBox-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/contosoIdentityIBuilderUserDevBox"
                     ]
                 },
                 "customize": [
@@ -48,8 +48,8 @@
                 "distribute": [
                     {
                         "type": "SharedImage",
-                        "galleryImageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-DevBox-rg/providers/Microsoft.Compute/galleries/ContosoImageGallery/images/Shared-Image-def",
-                        "imageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/Contoso-DevBox-rg/providers/Microsoft.Compute/images/Shared-Image",
+                        "galleryImageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/ContosoFabric-DevBox-rg/providers/Microsoft.Compute/galleries/ContosoImageGallery/images/Shared-Image-def",
+                        "imageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/ContosoFabric-DevBox-rg/providers/Microsoft.Compute/images/Shared-Image",
                         "runOutputName": "runOutputManagedImage",
                         "artifactTags": {
                             "division": "Contoso-Platform",
