@@ -47,8 +47,7 @@ az devcenter dev dev-box create \
     --dev-center-name "$devCenterName" \
     --project-name "$projectName" \
     --user-id "$currentAzureLoggedUser" \
-    --local-administrator Enabled \
-    --no-wait True
+    --local-administrator Enabled 
 
 echo "Development box created successfully!"
 
