@@ -54,14 +54,6 @@
                     },
                     {
                         "type": "PowerShell",
-                        "name": "Install WSL Ubuntu Distribution",
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "wsl --install -d Ubuntu --no-launch;"
-                        ]
-                    },
-                    {
-                        "type": "PowerShell",
                         "name": "Install VS Code Extensions",
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
