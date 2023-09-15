@@ -11,6 +11,8 @@ DEVBOX_RESOURCE_GROUP_NAME='ContosoFabric-DevBox-rg'
 NETWORK_WATCHER_RESOURCE_GROUP_NAME='NetworkWatcherRG'
 customRoleDef='Azure Image Builder Image Def'
 NIC_RESOURCE_GROUP_NAME='NI_Contoso-Network-Connection-DevBox_WestUS3'
+ActivityLogAlertsName='Default-ActivityLogAlerts'
+
 
 # Function to retrieve identity and subscription ID
 setup_environment() {
@@ -93,7 +95,7 @@ main() {
     delete_resource_group "$DEVBOX_RESOURCE_GROUP_NAME"
     delete_resource_group "$NETWORK_WATCHER_RESOURCE_GROUP_NAME"
     delete_resource_group "$NIC_RESOURCE_GROUP_NAME"
-    delete_resource_group "Default-ActivityLogAlerts"
+    delete_resource_group "$ActivityLogAlertsName"
 
     echo "Script execution completed."
 }
