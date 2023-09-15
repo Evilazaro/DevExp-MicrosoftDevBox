@@ -68,7 +68,7 @@
                         "targetRegions": [
                             {
                                 "name": "<location>",
-                                "replicaCount": 2,
+                                "replicaCount": 1,
                                 "storageAccountType": "Standard_LRS"
                             }
                         ]

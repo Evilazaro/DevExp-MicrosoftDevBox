@@ -63,8 +63,7 @@ galleryName="$5"
 imageName="$6"
 
 # Construct necessary variables
-imageVersion="1.0.0"
-imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/${galleryName}/images/${imageName}-def/versions/$imageVersion"
+imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/${galleryName}/images/${imageName}-def/"
 devBoxDefinitionName="devBox-$imageName"
 networkConnectionName="Contoso-Network-Connection-DevBox"
 projectName="eShop"
