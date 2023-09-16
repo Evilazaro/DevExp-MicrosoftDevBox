@@ -20,7 +20,6 @@ initialize_creation() {
     echo "Dev Center Name: $devCenterName"
     echo "Gallery Name: $galleryName"
     echo "Image Name: $imageName"
-    echo "Image Version: $imageVersion"	
     echo "Image Reference ID: $imageReferenceId"
     echo "DevBox Definition Name: $devBoxDefinitionName"
     echo "Network Connection Name: $networkConnectionName"
