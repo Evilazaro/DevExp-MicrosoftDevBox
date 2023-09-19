@@ -6,7 +6,7 @@
     "resources": [
         {
             "type": "Microsoft.VirtualMachineImages/imageTemplates",
-            "apiVersion": "2022-07-01",
+            "apiVersion": "2022-02-14",
             "dependsOn": [],
             "name": "<imageName>",
             "location": "<location>",
@@ -25,7 +25,7 @@
                     "version": "latest"
                 },
                 "buildTimeoutInMinutes": 120,
-                 "vmProfile": {
+                "vmProfile": {
                     "vmSize": "Standard_DS2_v2",
                     "osDiskSizeGB": 128,
                     "osDiskType": "StandardSSD_LRS",
@@ -35,7 +35,7 @@
                     ]
                 },
                 "customize": [
-                      {
+                    {
                         "type": "PowerShell",
                         "name": "Install Chocolatey",
                         "inline": [
@@ -46,6 +46,7 @@
                         "type": "PowerShell",
                         "name": "Install Docker Desktop",
                         "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                             "choco install -y docker-desktop;"
                         ]
                     },
@@ -59,7 +60,7 @@
                         ]
                     }
                 ],
-              "distribute": [
+                "distribute": [
                     {
                         "type": "SharedImage",
                         "excludeFromLatest": false,
@@ -77,7 +78,7 @@
                         },
                         "location": "<location>",
                         "replicationRegions": [
-                            "<location>"                            
+                            "<location>"
                         ],
                         "targetRegions": [
                             {

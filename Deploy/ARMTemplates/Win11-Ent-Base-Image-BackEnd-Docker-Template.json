@@ -46,6 +46,7 @@
                         "type": "PowerShell",
                         "name": "Install Docker Desktop",
                         "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                             "choco install -y docker-desktop;"
                         ]
                     },
