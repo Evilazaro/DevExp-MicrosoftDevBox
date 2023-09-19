@@ -38,12 +38,12 @@ display_header "Logging into Azure"
 
 # Setting up static variables
 display_header "Setting Up Variables"
-resourceGroupName='ContosoFabric-DevBox-rg'
+resourceGroupName='ContosoFabric-eShop-DevBox-rg'
 location='WestUS3'
-identityName='contosoIdentityIBuilderUserDevBox'
+identityName='contosoIdImgBld'
 subscriptionID=$(az account show --query id --output tsv)
 devCenterName="ContosoFabric-DevCenter"
-galleryName="ContosoImageGallery"
+galleryName="ContosoFabriceShopImgGallery"
 
 # Creating Azure resources
 echo "Creating resource group and managed identity..."
@@ -70,10 +70,10 @@ display_header "Deploying Microsoft DevBox"
 display_header "Building Virtual Machine Images"
 
 declare -A image_params
-image_params["FrontEnd-Img"]="VSCode-FrontEnd Contoso-Fabric ./DownloadedTempTemplates/FrontEnd-Img-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json Contoso"
+#image_params["FrontEnd-Img"]="VSCode-FrontEnd Contoso-Fabric ./DownloadedTempTemplates/FrontEnd-Img-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json Contoso"
 image_params["FrontEnd-Docker-Img"]="VSCode-FrontEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/FrontEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Docker-Template.json Contoso"
-image_params["BackEnd-Img"]="VS22-BackEnd Contoso-Fabric ./DownloadedTempTemplates/BackEnd-Img-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Template.json Contoso"
-image_params["BackEnd-Docker-Img"]="VS22-BackEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template.json Contoso"
+#image_params["BackEnd-Img"]="VS22-BackEnd Contoso-Fabric ./DownloadedTempTemplates/BackEnd-Img-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Template.json Contoso"
+#image_params["BackEnd-Docker-Img"]="VS22-BackEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template.json Contoso"
 # ... add other entries in the same format
 
 for imageName in "${!image_params[@]}"; do

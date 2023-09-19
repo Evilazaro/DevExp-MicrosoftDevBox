@@ -56,7 +56,7 @@ Display-Header "Logging into Azure"
 Display-Header "Setting Up Variables"
 $galleryResourceGroup = 'Contoso-Base-Images-Engineers-rg'
 $location = 'WestUS3'
-$identityName = 'contosoIdentityIBuilderUserDevBox'
+$identityName = 'contosoIdImgBld'
 $subscriptionID = (az account show --query id --output tsv)
 
 # Creating Azure resources.
@@ -86,7 +86,7 @@ Write-Output "Creating user-assigned managed identity..."
 
 Write-Output "Starting the process..."
 Write-Output "Deploying Compute Gallery ${galleryName}..."
-$galleryName = "ContosoImageGallery"
+$galleryName = "ContosoFabriceShopImgGallery"
 .\ComputeGallery\deployComputeGallery.ps1 $galleryName $location $galleryResourceGroup
 
 # Building virtual machine images.
@@ -94,12 +94,12 @@ $imagesku = 'Win11-Engineers-FrontEnd'
 $publisher = 'Contoso'
 $offer = 'Contoso-Fabric'
 
-Build-Image './DownloadedTempTemplates/Win11-Ent-Base-Image-FrontEnd-Template-Output.json' $subscriptionID $galleryResourceGroup $location 'Win11EntBaseImageFrontEndEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json' $galleryName $offer $imagesku $publisher
+Build-Image './DownloadedTempTemplates/Win11-Ent-Base-Image-FrontEnd-Template-Output.json' $subscriptionID $galleryResourceGroup $location 'Win11EntBaseImageFrontEndEngineers' 'contosoIdImgBld' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Template.json' $galleryName $offer $imagesku $publisher
 
 $imagesku = 'VS22-Engineers-BackEnd'
-Build-Image './DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Template-Output.json' $subscriptionID $galleryResourceGroup $location 'Win11EntBaseImageBackEndEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Template.json' $galleryName $offer $imagesku $publisher
+Build-Image './DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Template-Output.json' $subscriptionID $galleryResourceGroup $location 'Win11EntBaseImageBackEndEngineers' 'contosoIdImgBld' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Template.json' $galleryName $offer $imagesku $publisher
 
-Build-Image './DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template-Output.json' $subscriptionID $galleryResourceGroup $location 'Win11EntBaseImageBackEndDockerEngineers' 'contosoIdentityIBuilderUserDevBox' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template.json' $galleryName $offer $imagesku $publisher
+Build-Image './DownloadedTempTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template-Output.json' $subscriptionID $galleryResourceGroup $location 'Win11EntBaseImageBackEndDockerEngineers' 'contosoIdImgBld' 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template.json' $galleryName $offer $imagesku $publisher
 
 # Deploying DevBox.
 Display-Header "Deploying Microsoft DevBox"

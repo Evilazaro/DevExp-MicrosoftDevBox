@@ -3,7 +3,7 @@ $ErrorActionPreference = "Stop"
 
 # Declare resource group names
 $galleryResourceGroup = 'Contoso-Base-Images-Engineers-rg'
-$devBoxResourceGroupName = 'ContosoFabric-DevBox-rg'
+$devBoxResourceGroupName = 'ContosoFabric-eShop-DevBox-rg'
 
 # Function to delete a resource group
 function Delete-ResourceGroup {

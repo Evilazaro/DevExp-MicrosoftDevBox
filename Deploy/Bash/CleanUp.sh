@@ -7,7 +7,7 @@
 set -e
 
 # Declare constants
-DEVBOX_RESOURCE_GROUP_NAME='ContosoFabric-DevBox-rg'
+DEVBOX_RESOURCE_GROUP_NAME='ContosoFabric-eShop-DevBox-rg'
 NETWORK_WATCHER_RESOURCE_GROUP_NAME='NetworkWatcherRG'
 customRoleDef='Azure Image Builder Image Def'
 NIC_RESOURCE_GROUP_NAME='NI_Contoso-Network-Connection-DevBox_WestUS3'
@@ -19,7 +19,7 @@ setup_environment() {
     echo "Setting up environment..."
 
     echo "Fetching the identity..."
-    IDENTITY=$(az identity list --query "[?name=='contosoIdentityIBuilderUserDevBox'].name" --output tsv)
+    IDENTITY=$(az identity list --query "[?name=='contosoIdImgBld'].name" --output tsv)
 
     echo "Retrieving the subscription ID..."
     SUBSCRIPTION_ID=$(az account show --query id --output tsv)
