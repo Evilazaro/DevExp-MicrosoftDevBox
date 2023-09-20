@@ -47,8 +47,13 @@
                         "name": "Install Docker Desktop",
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "choco install -y docker-desktop --version 4.22.1;"
+                            "choco install -y docker-desktop;"
                         ]
+                    },
+                                        {
+                        "type": "WindowsRestart",
+                        "name": "Restart Computer",
+                        "restartTimeout": "10m"
                     },
                     {
                         "type": "PowerShell",
