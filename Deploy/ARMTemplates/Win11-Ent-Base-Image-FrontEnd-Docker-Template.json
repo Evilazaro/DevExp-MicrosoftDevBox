@@ -47,7 +47,7 @@
                         "name": "Install Docker Desktop",
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "choco install -y docker-desktop;"
+                            "choco install -y docker-desktop --version 4.22 --ia '--quiet --accept-license';"
                         ]
                     },
                     {
