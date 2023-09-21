@@ -49,15 +49,6 @@ az devcenter dev dev-box create \
     --user-id "$currentAzureLoggedUser" \
     --local-administrator Enabled 
 
-echo "Reestarting the development box..."
-az devcenter dev dev-box restart \
-    --name "$devBoxName" \
-    --dev-center-name "$devCenterName" \
-    --project-name "$projectName" \
-    --user-id "$currentAzureLoggedUser" 
-
-echo "Waiting for the development box to be ready..."
-
 echo "Development box created successfully!"
 
 # Exit the script
