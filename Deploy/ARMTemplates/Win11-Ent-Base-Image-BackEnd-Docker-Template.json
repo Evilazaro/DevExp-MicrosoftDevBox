@@ -36,6 +36,13 @@
                 },
                 "customize": [
                     {
+                        "type": "WindowsUpdate",
+                        "name": "Install Windows Updates",
+                        "updateLimit": 60,
+                        "restart": "Auto",
+                        "restartTimeout": "30m"
+                    },
+                    {
                         "type": "PowerShell",
                         "name": "Install Chocolatey",
                         "inline": [
