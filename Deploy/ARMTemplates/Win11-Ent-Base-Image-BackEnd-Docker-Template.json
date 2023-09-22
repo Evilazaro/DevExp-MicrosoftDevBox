@@ -24,7 +24,6 @@
                     "type": "PlatformImage",
                     "version": "latest"
                 },
-                "buildTimeoutInMinutes": 120,
                  "vmProfile": {
                     "vmSize": "Standard_DS2_v2",
                     "osDiskSizeGB": 128,
@@ -38,9 +37,7 @@
                     {
                         "type": "WindowsUpdate",
                         "name": "Install Windows Updates",
-                        "updateLimit": 60,
-                        "restart": "Auto",
-                        "restartTimeout": "30m"
+                        "restart": "Auto"
                     },
                     {
                         "type": "PowerShell",
@@ -59,8 +56,7 @@
                     },
                                         {
                         "type": "WindowsRestart",
-                        "name": "Restart Computer",
-                        "restartTimeout": "10m"
+                        "name": "Restart Computer"
                     },
                     {
                         "type": "PowerShell",
