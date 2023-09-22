@@ -39,6 +39,7 @@ create_devbox_definition() {
         --dev-center-name "$devCenterName" \
         --resource-group "$resourceGroupName" \
         --devbox-definition-name "devBox-$imageName" \
+        --hibernation-enabled "true" \
         --tags  "division=Contoso-Platform" \
                     "Environment=Prod" \
                     "offer=Contoso-DevWorkstation-Service" \
