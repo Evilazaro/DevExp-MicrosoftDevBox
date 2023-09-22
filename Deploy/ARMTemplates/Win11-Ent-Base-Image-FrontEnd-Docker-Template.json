@@ -34,11 +34,6 @@
                     ]
                 },
                 "customize": [
-                     {
-                        "type": "WindowsUpdate",
-                        "name": "Install Windows Updates",
-                        "restart": "Auto"
-                    },
                     {
                         "type": "PowerShell",
                         "name": "Install Chocolatey",
@@ -51,7 +46,7 @@
                         "name": "Install Docker Desktop",
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "choco install -y docker-desktop --version 4.22 --ia '--quiet --accept-license';"
+                            "choco install -y docker-desktop --ia '--quiet --accept-license';"
                         ]
                     },
                     {
