@@ -17,7 +17,10 @@ subNetName="$4"
 networkConnectionName="$5"
 
 # Define the template file path
-templateFilePath="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/network/networkConnectionTemplate.json"
+templateUrl="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/network/networkConnectionTemplate.json"
+outputFile="./downloadedTempTemplates/network/networkConnectionTemplate.json"
+
+wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" "${templateUrl}" -O "${outputFile}"
 
 # Echo starting the operation
 echo "Initiating the deployment in the resource group: $networkResourceGroupName, location: $location."
@@ -39,10 +42,10 @@ fi
 echo "Subnet ID for $subNetName retrieved successfully."
 
 # Deploy the ARM template
-echo "Deploying ARM Template from $templateFilePath..."
+echo "Deploying ARM Template from $templateUrl..."
 az deployment group create \
     --resource-group "$networkResourceGroupName" \
-    --template-uri "$templateFilePath" \
+    --template-file "$outputFile" \
     --parameters \
         name="$networkConnectionName" \
         vnetId="$subnetId" \

@@ -113,6 +113,34 @@ function deployComputeGallery {
     fi
 }
 
+function deployDevCenter
+{
+    local devCenterName="$1"
+    local networkConnectionName="$2"
+    local computeGalleryName="$3"
+    local location="$4"
+    local identityName="$5"
+    local devBoxResourceGroupName="$6"
+    local networkResourceGroupName="$7"
+    local identityResourceGroupName="$8"
+
+    # Check if the deployDevCenter.sh script exists before attempting to execute it
+    if [ ! -f "./devBox/deployDevCenter.sh" ]; then
+        echo "Error: deployDevCenter.sh script not found."
+        return 1
+    fi
+
+    # Execute the deployDevCenter.sh script with the passed parameters and capture its exit code
+    ./devBox/deployDevCenter.sh "$devCenterName" "$networkConnectionName" "$computeGalleryName" "$location" "$identityName" "$devBoxResourceGroupName" "$networkResourceGroupName" "$identityResourceGroupName"
+    local exitCode="$?"
+
+    # Check the exit code of the deployDevCenter.sh script and echo appropriate message
+    if [ "$exitCode" -ne 0 ]; then
+        echo "Error: Deployment of Dev Center failed with exit code $exitCode."
+        return 1
+    fi
+}
+
 
 # Declaring Variables
 
