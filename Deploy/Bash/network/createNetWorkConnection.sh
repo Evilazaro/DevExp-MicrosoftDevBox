@@ -45,7 +45,7 @@ echo "Subnet ID for $subNetName retrieved successfully."
 echo "Deploying ARM Template from $templateUrl..."
 az deployment group create \
     --resource-group "$networkResourceGroupName" \
-    --template-file "$outputFile" \
+    --template-uri "$templateUrl" \
     --parameters \
         name="$networkConnectionName" \
         vnetId="$subnetId" \
