@@ -7,11 +7,11 @@
             "type": "String"
         },
         "networkConnectionId": {
-            "defaultValue": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/eShop-DevBox-network-rg/providers/Microsoft.DevCenter/networkconnections/dasfasdfasf",
+            "defaultValue": "",
             "type": "String"
         },
         "computeGalleryId": {
-            "defaultValue": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/eShop-DevBox-ImgGallery-rg/providers/Microsoft.Compute/galleries/eShopDevBoxImageGallery",
+            "defaultValue": "",
             "type": "String"
         },
         "location": {
@@ -19,6 +19,10 @@
             "type": "String"
         },
         "networkConnectionName": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "userIdentityId": {
             "defaultValue": "",
             "type": "String"
         }
@@ -33,7 +37,7 @@
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/eShop-DevBox-Identity-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/eShopDevBoxImgBldId": {}
+                    "[parameters('userIdentityId')]": {}
                 }
             },
             "properties": {
