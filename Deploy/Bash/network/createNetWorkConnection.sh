@@ -49,9 +49,7 @@ az deployment group create \
     --parameters \
         name="$networkConnectionName" \
         vnetId="$subnetId" \
-        location="$location" \
-        subnetName="$subNetName" \
-    --no-wait
+        location="$location" 
 
 # Check the status of the last command
 if [ $? -eq 0 ]; then

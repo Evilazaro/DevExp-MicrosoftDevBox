@@ -13,10 +13,6 @@
         "location": {
             "defaultValue": "",
             "type": "String"
-        },
-        "subnetName": {
-            "defaultValue": "",
-            "type": "String"
         }
     },
     "variables": {},
@@ -28,7 +24,7 @@
             "location": "[parameters('location')]",
             "properties": {
                 "domainJoinType": "AzureADJoin",
-                "subnetId": "[concat(parameters('vnetId'), '/subnets/', parameters('subnetName'))]",
+                "subnetId": "[parameters('vnetId')]",
                 "networkingResourceGroupName": "[concat('NI_', parameters('name'), '_', parameters('location'))]"
             }
         }
