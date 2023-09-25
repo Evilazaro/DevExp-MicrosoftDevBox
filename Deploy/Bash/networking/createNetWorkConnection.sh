@@ -7,7 +7,7 @@ vnetName="$3"
 subNetName="$4"
 networkConnectionName="$5"
 
-templateFilePath="$6"
+templateFilePath="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/networking/networkConnectionTemplate.json"
 
 subnetId=$(az network vnet subnet show \
     --resource-group $networkingResourceGroupName \
@@ -29,3 +29,14 @@ az devcenter admin network-connection create \
             "Team=Engineering" \
             "division=Contoso-Platform" \
             "solution=eShop" 
+
+
+az group deployment create \
+    --resource-group "$networkingResourceGroupName" \
+    --template-uri "$templateFilePath" \
+    --parameters \
+        name="$networkConnectionName" \
+        vnetId="$vnetId" \
+        location="$location" \
+        subnetName="$subNetName" \
+    --no-wait

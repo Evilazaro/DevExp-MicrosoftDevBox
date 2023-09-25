@@ -13,6 +13,10 @@
         "location": {
             "defaultValue": "",
             "type": "String"
+        },
+        "subnetName": {
+            "defaultValue": "",
+            "type": "String"
         }
     },
     "variables": {},
@@ -24,7 +28,7 @@
             "location": "[parameters('location')]",
             "properties": {
                 "domainJoinType": "AzureADJoin",
-                "subnetId": "[concat(parameters('vnetId'), '/subnets/eShop-DevBox-SubNet')]",
+                "subnetId": "[concat(parameters('vnetId'), '/subnets/', parameters('subnetName'))]",
                 "networkingResourceGroupName": "[concat('NI_', parameters('name'), '_', parameters('location'))]"
             }
         }
