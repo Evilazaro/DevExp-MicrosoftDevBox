@@ -1,17 +1,19 @@
 #!/bin/bash
 
-# Declaring Variables 
+# Declaring Variables
 
 # Resources Organization
-devBoxResourceGroupName='ContosoFabric-eShop-DevBox-rg'
-imageGalleryResourceGroupName='ContosoFabric-eShop-ImgGallery-rg'
-identityResourceGroupName='ContosoFabric-eShop-Identity-rg'
-networkingResourceGroupName='ContosoFabric-eShop-Networking-rg'
 subscriptionId=$(az account show --query id --output tsv)
+devBoxResourceGroupName='eShop-DevBox-rg'
+imageGalleryResourceGroupName='eShop-DevBox-ImgGallery-rg'
+identityResourceGroupName='eShop-DevBox-Identity-rg'
+networkingResourceGroupName='eShop-DevBox-Networking-rg'
+managementResourceGroupName='eShop-DevBox-Management-rg'
+location='WestUS3'
 
 # Identity
-identityName='contosoIdImgBld'
-customRoleName='ContosoImageBuilderRole'
+identityName='eShopDevBoxImgBldId'
+customRoleName='eShopImgBuilderRole'
 
 # Function to delete a resource group
 function deleteResourceGroup() {
@@ -60,7 +62,7 @@ function removeRoleAssignment() {
     if [[ -z "$output" || "$output" == "[]" ]]; then
         echo "'$roleId' role assignment does not exist. Skipping deletion."
     else
-        echo "Removing '$role_id' role assignment from the identity..."   
+        echo "Removing '$roleId' role assignment from the identity..."   
         az role assignment delete --role "$roleId" --scope /subscriptions/"$subscriptionId"
         echo "'$roleId' role assignment successfully removed."
     fi
@@ -81,3 +83,4 @@ deleteResourceGroup "$devBoxResourceGroupName"
 deleteResourceGroup "$imageGalleryResourceGroupName"
 deleteResourceGroup "$identityResourceGroupName"
 deleteResourceGroup "$networkingResourceGroupName"
+deleteResourceGroup "$managementResourceGroupName"

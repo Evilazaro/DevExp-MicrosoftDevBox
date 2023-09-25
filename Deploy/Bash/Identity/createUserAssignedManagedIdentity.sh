@@ -1,72 +1,83 @@
 #!/bin/bash
 
-# Constants
-role="Owner"
+# Parameters
+identityResourceGroupName="$1" # Resource group of the managed identity
+subscriptionId="$2"           # Azure Subscription ID
+identityName="$3"             # Name of the Managed Identity
+customRoleName="$4"           # Custom Role Name
 
-# Download and process the template
-downloadProcessTemplate() {
+# Constants
+outputFile="./downloadedTempTemplates/identity/aibroleImageCreation-template.json"
+windows365identityName="0af06dc6-e4b5-4f28-818e-e78e62d137a5"
+branch="Dev"
+
+# Derive Current User Details
+currentUserName=$(az account show --query user.name -o tsv) # Azure Logged in Username
+currentAzureLoggedUser=$(az ad user show --id $currentUserName --query id -o tsv) # Azure Logged in User ID
+identityId=$(az identity show --name $identityName --resource-group $identityResourceGroupName --query principalId -o tsv) # Managed Identity ID
+
+# Function to create custom role using a template
+function createCustomRole() {
     local subscriptionId=$1
     local group=$2
-    local output_file=$3
-    local role_def=$4
-    local template_url="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/aibroleImageCreation-template.json"
-
-    # Download image template
-    echo "Downloading image template from ${template_url}..."
-    if ! wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" "${template_url}" -O "${output_file}"; then
+    local outputFile=$3
+    local customRoleName=$4
+    
+    local templateUrl="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/aibRoleImageCreation-template.json"
+    
+    echo "Starting custom role creation..."
+    echo "Downloading image template from ${templateUrl}..."
+    
+    if ! wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" "${templateUrl}" -O "${outputFile}"; then
         echo "Error: Failed to download the image template."
         exit 3
     fi
-    echo "Successfully downloaded the image template to ${output_file}."
-
-    # Replace placeholders in the downloaded template
+    
+    echo "Successfully downloaded the image template to ${outputFile}."
+    echo "Custom Role Name is ${customRoleName}"	
+    
     echo "Updating placeholders in the template..."
-    sed -i "s/<subscriptionId>/${subscriptionId}/g" "${output_file}"
-    sed -i "s/<rgName>/${group}/g" "${output_file}"
-    sed -i "s/<roleName>/${role_def}/g" "${output_file}"
+    sed -i "s/<subscriptionId>/${subscriptionId}/g" "${outputFile}"
+    sed -i "s/<rgName>/${group}/g" "${outputFile}"
+    sed -i "s/<roleName>/${customRoleName}/g" "${outputFile}"
+    
     if [ $? -ne 0 ]; then
         echo "Error: Failed to update placeholders in the template."
         exit 4
     fi
+    
     echo "Template placeholders updated."
-
-    az role definition create --role-definition "${output_file}"
+    az role definition create --role-definition "${outputFile}"
+    echo "Custom role creation completed."
 }
 
-# Assign a role to the identity for a specific subscriptionId
-assignRole() {
-    local identity=$1
-    local role=$2
+# Function to assign a role to an identity
+function assignRole() {
+    local identityId=$1
+    local roleName=$2
     local subscriptionId=$3
 
-    echo "Assigning '$role' role to the identity..."
-    if az role assignment create --assignee "${identity}" --role "${role}" --scope /subscriptionIds/"${subscriptionId}"; then
-        echo "'$role' role successfully assigned to the identity in the subscriptionId."
+    echo "Starting role assignment..."
+    echo "Assigning '$roleName' role to the identity $identityId for subscriptionId ${subscriptionId}"
+    
+    if az role assignment create --assignee "${identityId}" --role "${roleName}" --scope /subscriptions/"${subscriptionId}"; then
+        echo "'$roleName' role successfully assigned to the identity in the subscriptionId."
     else
-        echo "Error: Failed to assign '$role' role to the identity."
+        echo "Error: Failed to assign '$roleName' role to the identity."
         exit 2
     fi
+    echo "Role assignment completed."
 }
 
-# Extracting and displaying provided arguments
-resourceGroupName="$1"
-subscriptionId="$2"
-identityId="$3"
+# Main Script Execution
+echo "Script started."
 
+createCustomRole "$subscriptionId" "$identityResourceGroupName" "$outputFile" "$customRoleName"
 
-outputFile="./DownloadedTempTemplates/aibroleImageCreation-template.json"
-customroleDef="Azure Image Builder Image Def"
-
-# Download and process the template
-downloadProcessTemplate "$subscriptionId" "$resourceGroupName" "$outputFile" "$customroleDef"
-windows365IdentityId="0af06dc6-e4b5-4f28-818e-e78e62d137a5"
-currentUserName=$(az account show --query user.name -o tsv)
-currentAzureLoggedUser=$(az ad user show --id $currentUserName --query id -o tsv)
-
-# Assign the role to the identity
-assignRole "$identityId" "$role" "$subscriptionId"
+assignRole "$identityId" "Owner" "$subscriptionId"
 assignRole "$identityId" "Managed Identity Operator" "$subscriptionId"
-assignRole "$identityId" "Managed Identity Operator" "$subscriptionId"
-assignRole "$identityId" "$customroleDef" "$subscriptionId"
-assignRole "$windows365IdentityId" "Reader" "$subscriptionId"
+assignRole "$identityId" "$customRoleName" "$subscriptionId"
+assignRole "$windows365identityName" "Reader" "$subscriptionId"
 assignRole "$currentAzureLoggedUser" "DevCenter Dev Box User" "$subscriptionId"
+
+echo "Script completed."
