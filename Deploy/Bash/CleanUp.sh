@@ -7,7 +7,7 @@ subscriptionId=$(az account show --query id --output tsv)
 devBoxResourceGroupName='eShop-DevBox-rg'
 imageGalleryResourceGroupName='eShop-DevBox-ImgGallery-rg'
 identityResourceGroupName='eShop-DevBox-Identity-rg'
-networkingResourceGroupName='eShop-DevBox-Networking-rg'
+networkResourceGroupName='eShop-DevBox-network-rg'
 managementResourceGroupName='eShop-DevBox-Management-rg'
 location='WestUS3'
 
@@ -82,5 +82,5 @@ removeRole "$customRoleName"
 deleteResourceGroup "$devBoxResourceGroupName"
 deleteResourceGroup "$imageGalleryResourceGroupName"
 deleteResourceGroup "$identityResourceGroupName"
-deleteResourceGroup "$networkingResourceGroupName"
+deleteResourceGroup "$networkResourceGroupName"
 deleteResourceGroup "$managementResourceGroupName"

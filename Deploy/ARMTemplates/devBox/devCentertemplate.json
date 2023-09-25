@@ -1,0 +1,77 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "devCenterName": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "networkConnectionId": {
+            "defaultValue": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/eShop-DevBox-network-rg/providers/Microsoft.DevCenter/networkconnections/dasfasdfasf",
+            "type": "String"
+        },
+        "computeGalleryId": {
+            "defaultValue": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/eShop-DevBox-ImgGallery-rg/providers/Microsoft.Compute/galleries/eShopDevBoxImageGallery",
+            "type": "String"
+        },
+        "location": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "networkConnectionName": {
+            "defaultValue": "",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.DevCenter/devcenters",
+            "apiVersion": "2023-04-01",
+            "name": "[parameters('devCenterName')]",
+            "location": "westus3",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/eShop-DevBox-Identity-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/eShopDevBoxImgBldId": {}
+                }
+            },
+            "properties": {
+                "devCenterUri": "[concat('https://', resourceId('Microsoft.DevCenter/devcenters', '-', parameters('devCenterName')), parameters('devCenterName'), '.', parameters('location'), '.devcenter.azure.com/')]"
+            }
+        },
+        {
+            "type": "Microsoft.DevCenter/devcenters/attachednetworks",
+            "apiVersion": "2023-04-01",
+            "name": "[concat(parameters('devCenterName'), '/', parameters('networkConnectionName'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DevCenter/devcenters', parameters('devCenterName'))]"
+            ],
+            "properties": {
+                "networkConnectionId": "[parameters('networkConnectionId')]"
+            }
+        },
+        {
+            "type": "Microsoft.DevCenter/devcenters/galleries",
+            "apiVersion": "2023-04-01",
+            "name": "[concat(parameters('devCenterName'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DevCenter/devcenters', parameters('devCenterName'))]"
+            ],
+            "properties": {
+                "galleryResourceId": "[resourceId('Microsoft.DevCenter/devcenters/galleries', parameters('devCenterName'), 'Default')]"
+            }
+        },
+        {
+            "type": "Microsoft.DevCenter/devcenters/galleries",
+            "apiVersion": "2023-04-01",
+            "name": "[concat(parameters('devCenterName'), '/eShopDevBoxImageGallery')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DevCenter/devcenters', parameters('devCenterName'))]"
+            ],
+            "properties": {
+                "galleryResourceId": "[parameters('computeGalleryId')]"
+            }
+        }
+    ]
+}

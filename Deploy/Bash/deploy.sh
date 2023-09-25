@@ -61,7 +61,7 @@ function createIdentity {
     
 } 
 
-function deployNetworking() {
+function deploynetwork() {
     # Local variables to store function arguments
     local vnetName="$1"
     local subNetName="$2"
@@ -71,14 +71,14 @@ function deployNetworking() {
     local location="$6"
 
     # Check if the deployVnet.sh script exists before attempting to execute it
-    if [ ! -f "./networking/deployVnet.sh" ]; then
+    if [ ! -f "./network/deployVnet.sh" ]; then
         echo "Error: deployVnet.sh script not found."
         return 1
     fi
 
     # Execute the deployVnet.sh script with the passed parameters and capture its exit code
-    ./networking/deployVnet.sh "$resourceGroupName" "$location" "$vnetName" "$subNetName"
-    ./networking/createNetWorkConnection.sh "$location" "$resourceGroupName" "$vnetName" "$subNetName" "$networkConnectionName"
+    ./network/deployVnet.sh "$resourceGroupName" "$location" "$vnetName" "$subNetName"
+    ./network/createNetWorkConnection.sh "$location" "$resourceGroupName" "$vnetName" "$subNetName" "$networkConnectionName"
     local exitCode="$?"
 
     # Check the exit code of the deployVnet.sh script and echo appropriate message
@@ -88,6 +88,32 @@ function deployNetworking() {
     fi
 }
 
+#!/bin/bash
+
+# This function deploys a Compute Gallery to a specified location and resource group.
+# It receives three parameters: 
+# 1. computeGalleryName: The name of the Compute Gallery
+# 2. location: The Azure region where the Compute Gallery will be deployed
+# 3. galleryResourceGroupName: The name of the resource group where the Compute Gallery will be placed
+
+function deployComputeGallery {
+    local computeGalleryName="$1"  # The name of the Compute Gallery to deploy
+    local location="$2"            # The Azure location (region) where the Compute Gallery will be deployed
+    local galleryResourceGroupName="$3"  # The resource group where the Compute Gallery will reside
+
+    # The actual deployment command. Using a relative path to the deployment script
+    ./devBox/computeGallery/deployComputeGallery.sh "$computeGalleryName" "$location" "$galleryResourceGroupName"
+
+    # Check if the deployment command was successful
+    if [ $? -eq 0 ]; then
+        echo "Compute Gallery $computeGalleryName successfully deployed to $location in resource group $galleryResourceGroupName."
+    else
+        echo "Deployment of Compute Gallery $computeGalleryName failed. Please check the parameters and try again."
+        return 1
+    fi
+}
+
+
 # Declaring Variables
 
 # Resources Organization
@@ -96,7 +122,7 @@ subscriptionId=$(az account show --query id --output tsv)
 devBoxResourceGroupName='eShop-DevBox-rg'
 imageGalleryResourceGroupName='eShop-DevBox-ImgGallery-rg'
 identityResourceGroupName='eShop-DevBox-Identity-rg'
-networkingResourceGroupName='eShop-DevBox-Networking-rg'
+networkResourceGroupName='eShop-DevBox-network-rg'
 location='WestUS3'
 
 # Identity
@@ -108,7 +134,7 @@ imageGalleryName='eShopDevBoxImageGallery'
 frontEndImageName='eShop-DevBox-FrontEnd'
 backEndImageName='eShop-DevBox-BackEnd'
 
-# Networking
+# network
 vnetName='eShop-DevBox-VNet'
 subNetName='eShop-DevBox-SubNet'
 networkConnectionName='eShop-DevBox-Network-Connection-DevBox'
@@ -123,13 +149,14 @@ login $subscriptionName
 createResourceGroup $devBoxResourceGroupName $location
 createResourceGroup $imageGalleryResourceGroupName $location
 createResourceGroup $identityResourceGroupName $location
-createResourceGroup $networkingResourceGroupName $location
+createResourceGroup $networkResourceGroupName $location
 createResourceGroup $managementResourceGroupName $location
 
 # Deploying Identity
 createIdentity $identityName $identityResourceGroupName $subscriptionId $customRoleName $location
 
-# Deploying Networking
-deployNetworking $vnetName $subNetName $networkConnectionName $networkingResourceGroupName $subscriptionId $location
+# Deploying network
+deploynetwork $vnetName $subNetName $networkConnectionName $networkResourceGroupName $subscriptionId $location
 
-
+# Deploying Compute Gallery
+deployComputeGallery $imageGalleryName $location $imageGalleryResourceGroupName

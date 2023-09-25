@@ -29,7 +29,7 @@
             "properties": {
                 "domainJoinType": "AzureADJoin",
                 "subnetId": "[concat(parameters('vnetId'), '/subnets/', parameters('subnetName'))]",
-                "networkingResourceGroupName": "[concat('NI_', parameters('name'), '_', parameters('location'))]"
+                "networkResourceGroupName": "[concat('NI_', parameters('name'), '_', parameters('location'))]"
             }
         }
     ]

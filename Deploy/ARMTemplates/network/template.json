@@ -25,7 +25,7 @@
             "properties": {
                 "domainJoinType": "AzureADJoin",
                 "subnetId": "[concat(parameters('vnetId'), '/subnets/eShop-DevBox-SubNet')]",
-                "networkingResourceGroupName": "[concat('NI_', parameters('name'), '_', parameters('location'))]"
+                "networkResourceGroupName": "[concat('NI_', parameters('name'), '_', parameters('location'))]"
             }
         }
     ]
