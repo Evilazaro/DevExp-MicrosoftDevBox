@@ -26,10 +26,9 @@ az deployment group create \
         location="$location" \
         networkConnetionName="$networkConnetionName" \
         userIdenityId="$userIdenityId" \
-    --tags  "division=Contoso-Platform" \
+    --tags "Division=Contoso-Platform" \
             "Environment=Prod" \
-            "offer=Contoso-DevWorkstation-Service" \
+            "Offer=Contoso-DevWorkstation-Service" \
             "Team=Engineering" \
-            "division=Contoso-Platform" \
-            "solution=eShop" \
-            "businessUnit=e-Commerce"
+            "Solution=eShop" \
+            "BusinessUnit=e-Commerce"

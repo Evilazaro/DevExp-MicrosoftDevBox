@@ -125,7 +125,7 @@ function deployDevCenter
     local identityResourceGroupName="$8"
 
     # Check if the deployDevCenter.sh script exists before attempting to execute it
-    if [ ! -f "./devBox/deployDevCenter.sh" ]; then
+    if [ ! -f "./devBox/devcenter/deployDevCenter.sh" ]; then
         echo "Error: deployDevCenter.sh script not found."
         return 1
     fi
