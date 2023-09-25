@@ -1,81 +1,93 @@
 #!/bin/bash
-set -e  # Exit immediately if a command exits with a non-zero status
 
-# This script automates various Azure tasks like resource group creation, image creation, and deployment.
+# Functions
 
-display_header() {
-    echo -e "\n========================\n$1\n========================"
+function login {
+    local subscriptionName=$1
+
+    ./identity/login.sh $subscriptionName
 }
 
-build_image() {
-    local outputFile="$1" subscriptionID="$2" resourceGroupName="$3" location="$4" imageName="$5"
-    local identityName="$6" imageTemplateFile="$7" galleryName="$8" offer="$9" imgSKU="${10}"
-    local publisher="${11}"
+function createResourceGroup {
+    local resourceGroupName=$1
+    local location=$2
 
-    display_header "Creating Image: $imageName"
-    cat <<EOL
-Image Template URL: $imageTemplateFile
-Output File: $outputFile
-Subscription ID: $subscriptionID
-Resource Group: $resourceGroupName
-Location: $location
-Image Name: $imageName
-Identity Name: $identityName
-Gallery Name: $galleryName
-Offer: $offer
-SKU: $imgSKU
-Publisher: $publisher
-EOL
-
-    VMImages/buildVMImage.sh "$outputFile" "$subscriptionID" "$resourceGroupName" "$location" \
-                            "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" \
-                            "$offer" "$imgSKU" "$publisher" || { echo "Image building failed"; exit 1; }
+    az group create \
+        --name $resourceGroupName \
+        --location $location \
+        --tags $tags
 }
 
-# Logging into Azure
-display_header "Logging into Azure"
-./Identity/login.sh "$1"
+function createIdentity {
+    local identityName=$1
+    local resourceGroupName=$2
+    local subscriptionId=$3
 
-# Setting up static variables
-display_header "Setting Up Variables"
-resourceGroupName='ContosoFabric-eShop-DevBox-rg'
+    ./Identity/registerFeatures.sh
+    ./identity/createUserAssignedManagedIdentity.sh $resourceGroupName $subscriptionId $identityName
+} 
+
+function deployNetworking
+{
+    local vnetName=$1
+    local subNetName=$2
+    local networkConnectionName=$3
+    local resourceGroupName=$4
+    local subscriptionId=$5
+
+    ./networking/deployVnet.sh $vnetName $subNetName $networkConnectionName $resourceGroupName $subscriptionId
+}
+
+
+subscriptionName=$1
+
+# Declaring Variables
+
+# Resources Organization
+subscriptionId=$(az account show --query id --output tsv)
+devBoxResourceGroupName='ContosoFabric-eShop-DevBox-rg'
+imageGalleryResourceGroupName='ContosoFabric-eShop-ImgGallery-rg'
+identityResourceGroupName='ContosoFabric-eShop-Identity-rg'
+networkingResourceGroupName='ContosoFabric-eShop-Networking-rg'
 location='WestUS3'
+
+# Identity
 identityName='contosoIdImgBld'
-subscriptionID=$(az account show --query id --output tsv)
-devCenterName="ContosoFabric-DevCenter"
-galleryName="ContosoFabriceShopImgGallery"
+customRoleName='ContosoImageBuilderRole'
 
-# Creating Azure resources
-echo "Creating resource group and managed identity..."
-az group create -n "$resourceGroupName" -l "$location" --tags "division=Contoso-Platform" "Environment=Prod" "offer=Contoso-DevWorkstation-Service" "Team=Engineering"
-az identity create --resource-group "$resourceGroupName" -n "$identityName"
-identityId=$(az identity show --resource-group "$resourceGroupName" -n "$identityName" --query principalId --output tsv)
+# Dev Box 
+imageGalleryName='ContosoFabriceShopImgGallery'
+frontEndImageName='ContosoFabric-eShop-FrontEnd'
+backEndImageName='ContosoFabric-eShop-BackEnd'
 
-# Displaying configuration summary
-display_header "Configuration Summary"
-echo -e "Image Resource Group: $resourceGroupName\nLocation: $location\nSubscription ID: $subscriptionID\nIdentity Name: $identityName\nIdentity ID: $identityId"
+# Networking
+vnetName='ContosoFabric-eShop-VNet'
+subNetName='ContosoFabric-eShop-SubNet'
+networkConnectionName='ContosoFabric-eShop-Network-Connection-DevBox'
 
-# Running additional setup scripts
-echo "Registering necessary features and creating user-assigned managed identity..."
-./Identity/registerFeatures.sh
-./Identity/createUserAssignedManagedIdentity.sh "$resourceGroupName" "$subscriptionID" "$identityId"
+# Management
+managementResourceGroupName='ContosoFabric-eShop-Management-rg'
+tags="division=Contoso-Platform \
+    Environment=Prod \
+    offer=Contoso-DevWorkstation-Service \
+    Team=Engineering \
+    division=Contoso-Platform \
+    solution=eShop \
+    businessUnit=e-Commerce"
 
-echo "Deploying Compute Gallery ${galleryName}..."
-./ComputeGallery/deployComputeGallery.sh "$galleryName" "$location" "$resourceGroupName"
+# Login to Azure
+login $subscriptionName
 
-# Deploying DevBox
-display_header "Deploying Microsoft DevBox"
-./DevBox/deployDevBox.sh "$subscriptionID" "$location" "$resourceGroupName" "$identityName" "$galleryName" "$devCenterName"
+# Deploying Resources Group
+createResourceGroup $devBoxResourceGroupName $location
+createResourceGroup $imageGalleryResourceGroupName $location
+createResourceGroup $identityResourceGroupName $location
+createResourceGroup $networkingResourceGroupName $location
+createResourceGroup $managementResourceGroupName $location
 
-display_header "Building Virtual Machine Images"
+# Deploying Identity
+createIdentity $identityName $identityResourceGroupName $subscriptionId
 
-declare -A image_params
-image_params["FrontEnd-Docker-Img"]="VSCode-FrontEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/FrontEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Docker-Template.json Contoso"
-image_params["BackEnd-Docker-Img"]="VS22-BackEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template.json Contoso"
-# ... add other entries in the same format
+# Deploying Networking
+deployNetworking $vnetName $subNetName $networkConnectionName $networkingResourceGroupName $subscriptionId
 
-for imageName in "${!image_params[@]}"; do
-    IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${image_params[$imageName]}"
-    build_image "$outputFile" "$subscriptionID" "$resourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher"
-    ./DevBox/createDevBoxDefinition.sh "$subscriptionID" "$location" "$resourceGroupName" "$devCenterName" "$galleryName" "$imageName"
-done
