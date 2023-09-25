@@ -131,7 +131,7 @@ function deployDevCenter
     fi
 
     # Execute the deployDevCenter.sh script with the passed parameters and capture its exit code
-    ./devBox/deployDevCenter.sh "$devCenterName" "$networkConnectionName" "$computeGalleryName" "$location" "$identityName" "$devBoxResourceGroupName" "$networkResourceGroupName" "$identityResourceGroupName"
+    ./devBox/devCenter/deployDevCenter.sh "$devCenterName" "$networkConnectionName" "$computeGalleryName" "$location" "$identityName" "$devBoxResourceGroupName" "$networkResourceGroupName" "$identityResourceGroupName"
     local exitCode="$?"
 
     # Check the exit code of the deployDevCenter.sh script and echo appropriate message
@@ -165,7 +165,7 @@ backEndImageName='eShop-DevBox-BackEnd'
 # network
 vnetName='eShop-DevBox-VNet'
 subNetName='eShop-DevBox-SubNet'
-networkConnectionName='eShop-DevBox-Network-Connection-DevBox'
+networkConnectionName='eShop-DevBox-Network-Connection'
 
 # Management
 managementResourceGroupName='eShop-DevBox-Management-rg'
@@ -188,3 +188,6 @@ deploynetwork $vnetName $subNetName $networkConnectionName $networkResourceGroup
 
 # Deploying Compute Gallery
 deployComputeGallery $imageGalleryName $location $imageGalleryResourceGroupName
+
+# Deploying Dev Center
+deployDevCenter $devCenterName $networkConnectionName $computeGalleryName $location $identityName $devBoxResourceGroupName $networkResourceGroupName $identityResourceGroupName

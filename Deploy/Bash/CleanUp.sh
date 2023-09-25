@@ -9,6 +9,7 @@ imageGalleryResourceGroupName='eShop-DevBox-ImgGallery-rg'
 identityResourceGroupName='eShop-DevBox-Identity-rg'
 networkResourceGroupName='eShop-DevBox-network-rg'
 managementResourceGroupName='eShop-DevBox-Management-rg'
+networkWatcherResourceGroupName='NetworkWatcherRG'
 location='WestUS3'
 
 # Identity
@@ -84,3 +85,4 @@ deleteResourceGroup "$imageGalleryResourceGroupName"
 deleteResourceGroup "$identityResourceGroupName"
 deleteResourceGroup "$networkResourceGroupName"
 deleteResourceGroup "$managementResourceGroupName"
+deleteResourceGroup "$networkWatcherResourceGroupName"

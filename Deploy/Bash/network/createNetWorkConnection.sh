@@ -18,9 +18,6 @@ networkConnectionName="$5"
 
 # Define the template file path
 templateUrl="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/network/networkConnectionTemplate.json"
-outputFile="./downloadedTempTemplates/network/networkConnectionTemplate.json"
-
-wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" "${templateUrl}" -O "${outputFile}"
 
 # Echo starting the operation
 echo "Initiating the deployment in the resource group: $networkResourceGroupName, location: $location."
@@ -49,9 +46,10 @@ az deployment group create \
     --parameters \
         name="$networkConnectionName" \
         vnetId="$subnetId" \
-        location="$location" 
+        location="$location"
 
 # Check the status of the last command
+
 if [ $? -eq 0 ]; then
     echo "ARM Template deployment initiated successfully."
 else
