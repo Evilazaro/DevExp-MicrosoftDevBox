@@ -1,22 +1,52 @@
 #!/bin/bash
 
+# Exit script if any command fails
+set -e
+
+# Validate number of arguments
+if [ "$#" -ne 9 ]; then
+    echo "Usage: $0 <devCenterName> <networkConnectionName> <imageGalleryName> <location> <identityName> <devBoxResourceGroupName> <networkResourceGroupName> <identityResourceGroupName> <imageGalleryResourceGroupName>"
+    exit 1
+fi
+
+# Assign arguments to variables
 devCenterName="$1"
 networkConnectionName="$2"
-computeGalleryName="$3"
+imageGalleryName="$3"
 location="$4"
 identityName="$5"
 devBoxResourceGroupName="$6"
 networkResourceGroupName="$7"
 identityResourceGroupName="$8"
+imageGalleryResourceGroupName="$9"
 
+echo "Starting to deploy Dev Center with the following parameters:"
+echo "Dev Center Name: $devCenterName"
+echo "Network Connection Name: $networkConnectionName"
+echo "Image Gallery Name: $imageGalleryName"
+echo "Location: $location"
+echo "Identity Name: $identityName"
+echo "DevBox Resource Group Name: $devBoxResourceGroupName"
+echo "Network Resource Group Name: $networkResourceGroupName"
+echo "Identity Resource Group Name: $identityResourceGroupName"
+echo "Image Gallery Resource Group Name: $imageGalleryResourceGroupName"
+
+# Define other constants
 branch="Dev"
 templateFileUri="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/devBox/devCentertemplate.json"
+
+echo "Fetching network connection id..."
 networkConnectionId=$(az devcenter admin network-connection list --resource-group $networkResourceGroupName --query [0].id --output tsv)
-computeGalleryId=$(az sig show --resource-group $devBoxResourceGroupName --gallery-name $computeGalleryName --query id --output tsv)
+
+echo "Fetching compute gallery id..."
+computeGalleryId=$(az sig show --resource-group $imageGalleryResourceGroupName --gallery-name $imageGalleryName --query id --output tsv)
+
+echo "Fetching user identity id..."
 userIdentityId=$(az identity show --resource-group $identityResourceGroupName --name $identityName --query id --output tsv)
 
+echo "Creating deployment group..."
 az deployment group create \
-    --name "devCenterDeployment" \
+    --name "$devCenterName" \
     --resource-group "$devBoxResourceGroupName" \
     --template-uri $templateFileUri \
     --parameters \
@@ -24,11 +54,8 @@ az deployment group create \
         networkConnectionId="$networkConnectionId" \
         computeGalleryId="$computeGalleryId" \
         location="$location" \
-        networkConnetionName="$networkConnetionName" \
-        userIdenityId="$userIdenityId" \
-    --tags "Division=Contoso-Platform" \
-            "Environment=Prod" \
-            "Offer=Contoso-DevWorkstation-Service" \
-            "Team=Engineering" \
-            "Solution=eShop" \
-            "BusinessUnit=e-Commerce"
+        networkConnectionName="$networkConnectionName" \
+        userIdentityId="$userIdentityId" \
+        computeGalleryImageName="$imageGalleryName"
+
+echo "Deployment of Dev Center is complete."

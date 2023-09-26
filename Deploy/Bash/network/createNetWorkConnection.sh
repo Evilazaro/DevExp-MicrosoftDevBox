@@ -46,7 +46,7 @@ az deployment group create \
     --parameters \
         name="$networkConnectionName" \
         vnetId="$subnetId" \
-        location="$location"
+        location="$location" 
 
 # Check the status of the last command
 

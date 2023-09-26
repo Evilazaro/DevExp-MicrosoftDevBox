@@ -88,57 +88,36 @@ function deploynetwork() {
     fi
 }
 
-#!/bin/bash
-
 # This function deploys a Compute Gallery to a specified location and resource group.
 # It receives three parameters: 
-# 1. computeGalleryName: The name of the Compute Gallery
+# 1. imageGalleryName: The name of the Compute Gallery
 # 2. location: The Azure region where the Compute Gallery will be deployed
 # 3. galleryResourceGroupName: The name of the resource group where the Compute Gallery will be placed
 
 function deployComputeGallery {
-    local computeGalleryName="$1"  # The name of the Compute Gallery to deploy
+    local imageGalleryName="$1"  # The name of the Compute Gallery to deploy
     local location="$2"            # The Azure location (region) where the Compute Gallery will be deployed
     local galleryResourceGroupName="$3"  # The resource group where the Compute Gallery will reside
 
     # The actual deployment command. Using a relative path to the deployment script
-    ./devBox/computeGallery/deployComputeGallery.sh "$computeGalleryName" "$location" "$galleryResourceGroupName"
-
-    # Check if the deployment command was successful
-    if [ $? -eq 0 ]; then
-        echo "Compute Gallery $computeGalleryName successfully deployed to $location in resource group $galleryResourceGroupName."
-    else
-        echo "Deployment of Compute Gallery $computeGalleryName failed. Please check the parameters and try again."
-        return 1
-    fi
+    ./devBox/computeGallery/deployComputeGallery.sh "$imageGalleryName" "$location" "$galleryResourceGroupName"
 }
 
 function deployDevCenter
 {
     local devCenterName="$1"
     local networkConnectionName="$2"
-    local computeGalleryName="$3"
+    local imageGalleryName="$3"
     local location="$4"
     local identityName="$5"
     local devBoxResourceGroupName="$6"
     local networkResourceGroupName="$7"
     local identityResourceGroupName="$8"
-
-    # Check if the deployDevCenter.sh script exists before attempting to execute it
-    if [ ! -f "./devBox/devcenter/deployDevCenter.sh" ]; then
-        echo "Error: deployDevCenter.sh script not found."
-        return 1
-    fi
+    local imageGalleryResourceGroupName="$9"
 
     # Execute the deployDevCenter.sh script with the passed parameters and capture its exit code
-    ./devBox/devCenter/deployDevCenter.sh "$devCenterName" "$networkConnectionName" "$computeGalleryName" "$location" "$identityName" "$devBoxResourceGroupName" "$networkResourceGroupName" "$identityResourceGroupName"
-    local exitCode="$?"
+    ./devBox/devCenter/deployDevCenter.sh "$devCenterName" "$networkConnectionName" "$imageGalleryName" "$location" "$identityName" "$devBoxResourceGroupName" "$networkResourceGroupName" "$identityResourceGroupName" "$imageGalleryResourceGroupName"
 
-    # Check the exit code of the deployDevCenter.sh script and echo appropriate message
-    if [ "$exitCode" -ne 0 ]; then
-        echo "Error: Deployment of Dev Center failed with exit code $exitCode."
-        return 1
-    fi
 }
 
 
@@ -161,6 +140,7 @@ customRoleName='eShopImgBuilderRole'
 imageGalleryName='eShopDevBoxImageGallery'
 frontEndImageName='eShop-DevBox-FrontEnd'
 backEndImageName='eShop-DevBox-BackEnd'
+devCenterName='eShop-DevBox-DevCenter'
 
 # network
 vnetName='eShop-DevBox-VNet'
@@ -190,4 +170,14 @@ deploynetwork $vnetName $subNetName $networkConnectionName $networkResourceGroup
 deployComputeGallery $imageGalleryName $location $imageGalleryResourceGroupName
 
 # Deploying Dev Center
-deployDevCenter $devCenterName $networkConnectionName $computeGalleryName $location $identityName $devBoxResourceGroupName $networkResourceGroupName $identityResourceGroupName
+echo "Deploying Dev Center"
+echo "Dev Center Name: $devCenterName"
+echo "Network Connection Name: $networkConnectionName"
+echo "Compute Gallery Name: $imageGalleryName"
+echo "Location: $location"
+echo "Identity Name: $identityName"
+echo "Dev Box Resource Group Name: $devBoxResourceGroupName"
+echo "Network Resource Group Name: $networkResourceGroupName"
+echo "Identity Resource Group Name: $identityResourceGroupName"
+echo "Image Gallery Resource Group Name: $imageGalleryResourceGroupName"
+deployDevCenter $devCenterName $networkConnectionName $imageGalleryName $location $identityName $devBoxResourceGroupName $networkResourceGroupName $identityResourceGroupName $imageGalleryResourceGroupName

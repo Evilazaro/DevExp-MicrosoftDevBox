@@ -43,9 +43,6 @@
                 "userAssignedIdentities": {
                     "[parameters('userIdentityId')]": {}
                 }
-            },
-            "properties": {
-                "devCenterUri": "[concat('https://', resourceId('Microsoft.DevCenter/devcenters', '-', parameters('devCenterName')), parameters('devCenterName'), '.', parameters('location'), '.devcenter.azure.com/')]"
             }
         },
         {
