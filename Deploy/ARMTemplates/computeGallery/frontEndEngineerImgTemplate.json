@@ -11,7 +11,7 @@
             "type": "String"
         },
         "userAssignedId": {
-            "defaultValue": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/eShop-DevBox-Identity-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/eShopDevBoxImgBldId",
+            "defaultValue": "",
             "type": "String"
         },
         "location": {
