@@ -75,7 +75,7 @@
                             "cd C:\\;",
                             "git clone https://github.com/Evilazaro/eShopOnContainers.git eShop;"
                         ],
-                        "name": "Clone GitHub Repo",
+                        "name": "Clone GitHub Repo for eShopOnContainers",
                         "runAsSystem": false,
                         "runElevated": false,
                         "type": "PowerShell"
