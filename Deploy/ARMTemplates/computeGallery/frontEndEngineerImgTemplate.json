@@ -98,7 +98,7 @@
                             "solution": "eShop"
                         },
                         "excludeFromLatest": false,
-                        "galleryImageId": "[concat(parameters('imageGalleryId'), concat('/images/', parameters('imgName'), '-def'))]",
+                        "galleryImageId": "[concat(parameters('imageGalleryId'), concat('/images/', parameters('imgName'), 'def'))]",
                         "replicationRegions": [
                             "[parameters('location')]"
                         ],
