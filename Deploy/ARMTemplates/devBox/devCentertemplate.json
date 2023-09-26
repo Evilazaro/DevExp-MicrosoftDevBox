@@ -59,17 +59,6 @@
         {
             "type": "Microsoft.DevCenter/devcenters/galleries",
             "apiVersion": "2023-04-01",
-            "name": "[concat(parameters('devCenterName'), '/Default')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.DevCenter/devcenters', parameters('devCenterName'))]"
-            ],
-            "properties": {
-                "galleryResourceId": "[resourceId('Microsoft.DevCenter/devcenters/galleries', parameters('devCenterName'), 'Default')]"
-            }
-        },
-        {
-            "type": "Microsoft.DevCenter/devcenters/galleries",
-            "apiVersion": "2023-04-01",
             "name": "[concat(parameters('devCenterName'), '/', parameters('computeGalleryImageName'))]",
             "dependsOn": [
                 "[resourceId('Microsoft.DevCenter/devcenters', parameters('devCenterName'))]"
