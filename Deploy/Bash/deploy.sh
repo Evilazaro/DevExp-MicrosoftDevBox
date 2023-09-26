@@ -148,8 +148,28 @@ function createDevCenterProject() {
     ./devBox/devCenter/createDevCenterProject.sh "$location" "$subscriptionId" "$resourceGroupName" "$devCenterName"
 }
 
+function buildImage
+{
+    local subscriptionId="$1"
+    local resourceGroupName="$2"
+    local location="$3"
+    local identityName="$4"
+    local galleryName="$5"
+    local identityResourceGroupName="$6"
+
+    declare -A image_params
+    image_params["FrontEnd-Docker-Img"]="VSCode-FrontEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/FrontEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/computeGallery/Win11-Ent-Base-Image-FrontEnd-Docker-Template.json Contoso"
+    #image_params["BackEnd-Docker-Img"]="VS22-BackEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template.json Contoso"
+
+    for imageName in "${!image_params[@]}"; do
+        IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${image_params[$imageName]}"
+        ./DevBox/computeGallery/createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$resourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher" "$identityResourceGroupName"
+    done
+}
+
 
 # Declaring Variables
+branch="Dev"
 
 # Resources Organization
 subscriptionName=$1
@@ -202,3 +222,6 @@ deployDevCenter $devCenterName $networkConnectionName $imageGalleryName $locatio
 
 # Creating Dev Center Project
 createDevCenterProject $location $subscriptionId $devBoxResourceGroupName $devCenterName
+
+# Building Images
+buildImage $subscriptionId $imageGalleryResourceGroupName $location $identityName $imageGalleryName

@@ -13,7 +13,7 @@
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>": {}
+                    "/subscriptions/<subscriptionID>/resourceGroups/<rgIdentity>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>": {}
                 }
             },
             "properties": {
@@ -30,7 +30,7 @@
                     "osDiskType": "StandardSSD_LRS",
                     "storageAccountType": "Standard_LRS",
                     "userAssignedIdentities": [
-                        "/subscriptions/<subscriptionID>/resourceGroups/<rgName>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
+                        "/subscriptions/<subscriptionID>/resourceGroups/<rgIdentity>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identityName>"
                     ]
                 },
                 "customize": [
