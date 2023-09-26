@@ -2,10 +2,38 @@
 
 # Functions
 
-function login {
-    local subscriptionName=$1
+function login() {
+    # Declaring 'local' makes 'subscriptionName' a local variable, restricting its scope to within this function.
+    local subscriptionName="$1"  # $1 represents the first argument passed to the function.
+    
+    # Check if the subscriptionName is empty and print a helpful message if it is.
+    if [[ -z "$subscriptionName" ]]; then
+        echo "Error: Subscription name is missing!"
+        echo "Usage: login <subscriptionName>"
+        return 1
+    fi
+    
+    echo "Attempting to login to Azure subscription: $subscriptionName"
 
-    ./identity/login.sh $subscriptionName
+    # The path to 'login.sh' script. This script presumably handles Azure CLI login details.
+    local scriptPath='./identity/login.sh'
+    
+    # Check if the login.sh script exists and is executable, if not print a helpful message.
+    if [[ ! -x "$scriptPath" ]]; then
+        echo "Error: The login script $scriptPath does not exist or is not executable."
+        return 1
+    fi
+    
+    # Execute the login script with the provided subscription name.
+    "$scriptPath" "$subscriptionName"
+    
+    # Check the exit status of the last command (login.sh) and print appropriate message.
+    if [[ $? -eq 0 ]]; then
+        echo "Successfully logged in to $subscriptionName."
+    else
+        echo "Failed to log in to $subscriptionName."
+        return 1
+    fi
 }
 
 function createResourceGroup {
@@ -158,7 +186,7 @@ function buildImage
     local identityResourceGroupName="$6"
 
     declare -A image_params
-    image_params["FrontEnd-Docker-Img"]="VSCode-FrontEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/FrontEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/computeGallery/Win11-Ent-Base-Image-FrontEnd-Docker-Template.json Contoso"
+    image_params["FrontEnd-Docker-Img"]="VSCode-FrontEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/FrontEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/computeGallery/frontEndEngineerImgTemplate.json Contoso"
     #image_params["BackEnd-Docker-Img"]="VS22-BackEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template.json Contoso"
 
     for imageName in "${!image_params[@]}"; do
@@ -224,4 +252,4 @@ deployDevCenter $devCenterName $networkConnectionName $imageGalleryName $locatio
 createDevCenterProject $location $subscriptionId $devBoxResourceGroupName $devCenterName
 
 # Building Images
-buildImage $subscriptionId $imageGalleryResourceGroupName $location $identityName $imageGalleryName
+buildImage $subscriptionId $imageGalleryResourceGroupName $location $identityName $imageGalleryName $identityResourceGroupName

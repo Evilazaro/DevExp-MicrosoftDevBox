@@ -1,0 +1,120 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "imgName": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "imageGalleryId": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "userAssignedId": {
+            "defaultValue": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/eShop-DevBox-Identity-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/eShopDevBoxImgBldId",
+            "type": "String"
+        },
+        "location": {
+            "defaultValue": "",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.VirtualMachineImages/imageTemplates",
+            "apiVersion": "2022-07-01",
+            "name": "[parameters('imgName')]",
+            "location": "[parameters('location')]",
+            "tags": {
+                "Environment": "Prod",
+                "Role": "Front-End-Engineer",
+                "Team": "Engineering",
+                "businessUnit": "e-Commerce",
+                "division": "Contoso-Platform",
+                "offer": "Contoso-DevWorkstation-Service",
+                "solution": "eShop"
+            },
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[parameters('userAssignedId')]": {}
+                }
+            },
+            "properties": {
+                "source": {
+                    "offer": "windowsplustools",
+                    "publisher": "microsoftvisualstudio",
+                    "sku": "base-win11-gen2",
+                    "type": "PlatformImage",
+                    "version": "latest"
+                },
+                "customize": [
+                    {
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'));"
+                        ],
+                        "name": "Install Chocolatey",
+                        "runAsSystem": false,
+                        "runElevated": false,
+                        "type": "PowerShell"
+                    },
+                    {
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                            "choco install -y docker-desktop --ia '--quiet --accept-license';"
+                        ],
+                        "name": "Install Docker Desktop",
+                        "runAsSystem": false,
+                        "runElevated": false,
+                        "type": "PowerShell"
+                    },
+                    {
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                            "cd C:\\;",
+                            "git clone https://github.com/Evilazaro/eShopOnContainers.git eShop;"
+                        ],
+                        "name": "Clone GitHub Repo",
+                        "runAsSystem": false,
+                        "runElevated": false,
+                        "type": "PowerShell"
+                    },
+                    {
+                        "name": "Restart Computer",
+                        "restartTimeout": "10m",
+                        "type": "WindowsRestart"
+                    }
+                ],
+                "distribute": [
+                    {
+                        "artifactTags": {
+                            "Environment": "Prod",
+                            "Role": "Front-End-Engineer",
+                            "Team": "Engineering",
+                            "businessUnit": "e-Commerce",
+                            "division": "Contoso-Platform",
+                            "offer": "Contoso-DevWorkstation-Service",
+                            "solution": "eShop"
+                        },
+                        "excludeFromLatest": false,
+                        "galleryImageId": "[concat(parameters('imageGalleryId'), concat('/images/', parameters('imgName'), '-def'))]",
+                        "replicationRegions": [
+                            "[parameters('location')]"
+                        ],
+                        "runOutputName": "[parameters('imgName')]",
+                        "type": "SharedImage"
+                    }
+                ],
+                "buildTimeoutInMinutes": 0,
+                "vmProfile": {
+                    "vmSize": "Standard_DS2_v2",
+                    "osDiskSizeGB": 128,
+                    "userAssignedIdentities": [
+                        "[parameters('userAssignedId')]"
+                    ]
+                }
+            }
+        }
+    ]
+}
