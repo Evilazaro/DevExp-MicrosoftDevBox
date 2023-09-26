@@ -23,7 +23,7 @@ function createCustomRole() {
     local outputFile=$3
     local customRoleName=$4
     
-    local templateUrl="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/aibRoleImageCreation-template.json"
+    local templateUrl="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/identity/aibRoleImageCreation-template.json"
     
     echo "Starting custom role creation..."
     echo "Downloading image template from ${templateUrl}..."

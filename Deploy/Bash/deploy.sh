@@ -103,8 +103,8 @@ function deployComputeGallery {
     ./devBox/computeGallery/deployComputeGallery.sh "$imageGalleryName" "$location" "$galleryResourceGroupName"
 }
 
-function deployDevCenter
-{
+# Function to deploy Dev Center
+function deployDevCenter() {
     local devCenterName="$1"
     local networkConnectionName="$2"
     local imageGalleryName="$3"
@@ -115,9 +115,37 @@ function deployDevCenter
     local identityResourceGroupName="$8"
     local imageGalleryResourceGroupName="$9"
 
-    # Execute the deployDevCenter.sh script with the passed parameters and capture its exit code
+    # Validate that all required parameters are provided
+    if [ -z "$devCenterName" ] || [ -z "$networkConnectionName" ] || [ -z "$imageGalleryName" ] || [ -z "$location" ] || [ -z "$identityName" ] || [ -z "$devBoxResourceGroupName" ] || [ -z "$networkResourceGroupName" ] || [ -z "$identityResourceGroupName" ] || [ -z "$imageGalleryResourceGroupName" ]; then
+        echo "Error: Missing required parameters."
+        return 1 # Return with error code
+    fi
+    
+    # Execute the deployDevCenter.sh script with the provided parameters and capture its exit code
     ./devBox/devCenter/deployDevCenter.sh "$devCenterName" "$networkConnectionName" "$imageGalleryName" "$location" "$identityName" "$devBoxResourceGroupName" "$networkResourceGroupName" "$identityResourceGroupName" "$imageGalleryResourceGroupName"
 
+}
+
+function createDevCenterProject() {
+    local location="$1"
+    local subscriptionId="$2"
+    local resourceGroupName="$3"
+    local devCenterName="$4"
+    
+    # Check if the necessary parameters are provided
+    if [[ -z "$location" || -z "$subscriptionId" || -z "$resourceGroupName" || -z "$devCenterName" ]]; then
+        echo "Error: Missing required parameters."
+        echo "Usage: createDevCenterProject <location> <subscriptionId> <resourceGroupName> <devCenterName>"
+        return 1
+    fi
+    
+    # Validate if the createDevCenterProject.sh script exists before executing
+    if [[ ! -f "./devBox/devCenter/createDevCenterProject.sh" ]]; then
+        echo "Error: createDevCenterProject.sh script not found!"
+        return 1
+    fi
+    
+    ./devBox/devCenter/createDevCenterProject.sh "$location" "$subscriptionId" "$resourceGroupName" "$devCenterName"
 }
 
 
@@ -170,14 +198,7 @@ deploynetwork $vnetName $subNetName $networkConnectionName $networkResourceGroup
 deployComputeGallery $imageGalleryName $location $imageGalleryResourceGroupName
 
 # Deploying Dev Center
-echo "Deploying Dev Center"
-echo "Dev Center Name: $devCenterName"
-echo "Network Connection Name: $networkConnectionName"
-echo "Compute Gallery Name: $imageGalleryName"
-echo "Location: $location"
-echo "Identity Name: $identityName"
-echo "Dev Box Resource Group Name: $devBoxResourceGroupName"
-echo "Network Resource Group Name: $networkResourceGroupName"
-echo "Identity Resource Group Name: $identityResourceGroupName"
-echo "Image Gallery Resource Group Name: $imageGalleryResourceGroupName"
 deployDevCenter $devCenterName $networkConnectionName $imageGalleryName $location $identityName $devBoxResourceGroupName $networkResourceGroupName $identityResourceGroupName $imageGalleryResourceGroupName
+
+# Creating Dev Center Project
+createDevCenterProject $location $subscriptionId $devBoxResourceGroupName $devCenterName
