@@ -5,7 +5,7 @@
 # Define variables
 location="$1"
 subscriptionId="$2"
-resourceGroupName="$3"
+devBoxResourceGroupName="$3"
 devCenterName="$4"
 description="Sample .NET Core reference application, powered by Microsoft"
 projectName="eShop"
@@ -13,18 +13,18 @@ maxDevBoxesPerUser="10"
 
 # Print usage information if not enough arguments are provided
 if [ "$#" -ne 4 ]; then
-    echo "Usage: $0 <location> <subscriptionId> <resourceGroupName> <devCenterName>"
+    echo "Usage: $0 <location> <subscriptionId> <devBoxResourceGroupName> <devCenterName>"
     exit 1
 fi
 
 # Construct the dev-center-id
-devCenterId="/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName"
+devCenterId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName"
 
 # Inform the user about the action to be performed
 echo "Creating a new devcenter admin project in Azure..."
 echo "Location: $location"
 echo "Subscription ID: $subscriptionId"
-echo "Resource Group Name: $resourceGroupName"
+echo "Resource Group Name: $devBoxResourceGroupName"
 echo "Dev Center Name: $devCenterName"
 echo "Description: $description"
 echo "Project Name: $projectName"
@@ -36,7 +36,7 @@ az devcenter admin project create \
     --description "$description" \
     --dev-center-id "$devCenterId" \
     --name "$projectName" \
-    --resource-group "$resourceGroupName" \
+    --resource-group "$devBoxResourceGroupName" \
     --max-dev-boxes-per-user "$maxDevBoxesPerUser" \
     --tags  "division=Contoso-Platform" \
             "Environment=Prod" \

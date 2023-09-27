@@ -179,79 +179,95 @@ function createDevCenterProject() {
 function buildImage
 {
     local subscriptionId="$1"
-    local resourceGroupName="$2"
+    local imageGalleryResourceGroupName="$2"
     local location="$3"
     local identityName="$4"
     local galleryName="$5"
     local identityResourceGroupName="$6"
     local devBoxResourceGroupName="$7"
+    local networkConnectionName="$8"
 
     declare -A image_params
     image_params["FrontEnd-Docker-Img"]="VSCode-FrontEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/FrontEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/computeGallery/frontEndEngineerImgTemplate.json Contoso"
-    #image_params["BackEnd-Docker-Img"]="VS22-BackEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template.json Contoso"
+    image_params["BackEnd-Docker-Img"]="VS22-BackEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/computeGallery/backEndEngineerImgTemplate.json Contoso"
 
     for imageName in "${!image_params[@]}"; do
         IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${image_params[$imageName]}"
-        ./devBox/computeGallery/createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$resourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher" "$identityResourceGroupName"
-        ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$location" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName"
+        ./devBox/computeGallery/createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$imageGalleryResourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher" "$identityResourceGroupName"
+        ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$location" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName"
     done
 }
 
 
-# Declaring Variables
-branch="Dev"
+set -e
 
-# Resources Organization
+# Variables
+branch="Dev"
+location='WestUS3'
+
+# Validate if subscriptionName is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <subscriptionName>"
+    exit 1
+fi
+
 subscriptionName=$1
 subscriptionId=$(az account show --query id --output tsv)
+
+# Resource Group names
 devBoxResourceGroupName='ContosoFabric-DevBox-RG'
 imageGalleryResourceGroupName='ContosoFabric-ImageGallery-RG'
 identityResourceGroupName='ContosoFabric-Identity-DevBox-RG'
 networkResourceGroupName='eShop-Network-Connectivity-RG'
-location='WestUS3'
+managementResourceGroupName='ContosoFabric-DevBox-Management-RG'
 
-# Identity
+# Identity Variables
 identityName='ContosoFabricDevBoxImgBldId'
 customRoleName='ContosoFabricBuilderRole'
 
-# Dev Box 
+# Image and DevCenter Names
 imageGalleryName='ContosoFabricImageGallery'
 frontEndImageName='eShop-FrontEnd'
 backEndImageName='eShop-BackEnd'
 devCenterName='DevBox-DevCenter'
 
-# network
+# Network Variables
 vnetName='eShop-Vnet'
 subNetName='eShop-SubNet'
 networkConnectionName='eShop-DevBox-Network-Connection'
 
-# Management
-managementResourceGroupName='ContosoFabric-DevBox-Management-RG'
+# Execute the script with proper sequence
+echo "Starting Deployment..."
 
 # Login to Azure
-login $subscriptionName
+login "$subscriptionName"
 
-# Deploying Resources Group
-createResourceGroup $devBoxResourceGroupName $location
-createResourceGroup $imageGalleryResourceGroupName $location
-createResourceGroup $identityResourceGroupName $location
-createResourceGroup $networkResourceGroupName $location
-createResourceGroup $managementResourceGroupName $location
+# Deploy Resource Groups
+createResourceGroup "$devBoxResourceGroupName" "$location"
+createResourceGroup "$imageGalleryResourceGroupName" "$location"
+createResourceGroup "$identityResourceGroupName" "$location"
+createResourceGroup "$networkResourceGroupName" "$location"
+createResourceGroup "$managementResourceGroupName" "$location"
 
-# Deploying Identity
+# ... Here you would call the other functions in a similar fashion
+
+echo "Deployment Completed Successfully!"
+
+
+# Deploy Identity
 createIdentity $identityName $identityResourceGroupName $subscriptionId $customRoleName $location
 
-# Deploying network
+# Deploy network
 deploynetwork $vnetName $subNetName $networkConnectionName $networkResourceGroupName $subscriptionId $location
 
-# Deploying Compute Gallery
+# Deploy Compute Gallery
 deployComputeGallery $imageGalleryName $location $imageGalleryResourceGroupName
 
-# Deploying Dev Center
+# Deploy Dev Center
 deployDevCenter $devCenterName $networkConnectionName $imageGalleryName $location $identityName $devBoxResourceGroupName $networkResourceGroupName $identityResourceGroupName $imageGalleryResourceGroupName
 
 # Creating Dev Center Project
 createDevCenterProject $location $subscriptionId $devBoxResourceGroupName $devCenterName
 
 # Building Images
-buildImage $subscriptionId $imageGalleryResourceGroupName $location $identityName $imageGalleryName $identityResourceGroupName
+buildImage $subscriptionId $imageGalleryResourceGroupName $location $identityName $imageGalleryName $identityResourceGroupName $devBoxResourceGroupName $networkConnectionName

@@ -2,7 +2,7 @@
 
 # Define the usage of the script to inform users about expected parameters
 usage() {
-    echo "Usage: $0 <location> <devBoxDefinitionName> <networkConnectionName> <poolName> <projectName> <resourceGroup>"
+    echo "Usage: $0 <location> <devBoxDefinitionName> <networkConnectionName> <poolName> <projectName> <devBoxResourceGroupName>"
 }
 
 # Validate the number of arguments passed to the script
@@ -18,7 +18,7 @@ devBoxDefinitionName="$2"
 networkConnectionName="$3"
 poolName="$4"
 projectName="$5"
-resourceGroup="$6"
+devBoxResourceGroupName="$6"
 
 # Function to create a DevCenter admin pool
 function createDevCenterAdminPool() {
@@ -28,7 +28,7 @@ function createDevCenterAdminPool() {
     echo "Network Connection Name: $networkConnectionName"
     echo "Pool Name: $poolName"
     echo "Project Name: $projectName"
-    echo "Resource Group: $resourceGroup"
+    echo "Resource Group: $devBoxResourceGroupName"
     
     az devcenter admin pool create \
         --location "$location" \
@@ -36,7 +36,7 @@ function createDevCenterAdminPool() {
         --network-connection-name "$networkConnectionName" \
         --pool-name "$poolName" \
         --project-name "$projectName" \
-        --resource-group "$resourceGroup" \
+        --resource-group "$devBoxResourceGroupName" \
         --local-administrator "Enabled" \
         --tags "Division=Contoso-Platform" \
                "Environment=Prod" \
