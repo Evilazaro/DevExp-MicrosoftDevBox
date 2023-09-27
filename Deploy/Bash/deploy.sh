@@ -184,6 +184,7 @@ function buildImage
     local identityName="$4"
     local galleryName="$5"
     local identityResourceGroupName="$6"
+    local devBoxResourceGroupName="$7"
 
     declare -A image_params
     image_params["FrontEnd-Docker-Img"]="VSCode-FrontEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/FrontEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/computeGallery/frontEndEngineerImgTemplate.json Contoso"
@@ -192,6 +193,7 @@ function buildImage
     for imageName in "${!image_params[@]}"; do
         IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${image_params[$imageName]}"
         ./DevBox/computeGallery/createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$resourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher" "$identityResourceGroupName"
+        ./DevBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$location" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName"
     done
 }
 
