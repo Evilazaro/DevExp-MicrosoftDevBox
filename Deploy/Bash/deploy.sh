@@ -192,8 +192,8 @@ function buildImage
 
     for imageName in "${!image_params[@]}"; do
         IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${image_params[$imageName]}"
-        ./DevBox/computeGallery/createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$resourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher" "$identityResourceGroupName"
-        ./DevBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$location" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName"
+        ./devBox/computeGallery/createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$resourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher" "$identityResourceGroupName"
+        ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$location" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName"
     done
 }
 
@@ -204,29 +204,29 @@ branch="Dev"
 # Resources Organization
 subscriptionName=$1
 subscriptionId=$(az account show --query id --output tsv)
-devBoxResourceGroupName='eShop-DevBox-rg'
-imageGalleryResourceGroupName='eShop-DevBox-ImgGallery-rg'
-identityResourceGroupName='eShop-DevBox-Identity-rg'
-networkResourceGroupName='eShop-DevBox-network-rg'
+devBoxResourceGroupName='ContosoFabric-DevBox-RG'
+imageGalleryResourceGroupName='ContosoFabric-ImageGallery-RG'
+identityResourceGroupName='ContosoFabric-Identity-DevBox-RG'
+networkResourceGroupName='eShop-Network-Connectivity-RG'
 location='WestUS3'
 
 # Identity
-identityName='eShopDevBoxImgBldId'
-customRoleName='eShopImgBuilderRole'
+identityName='ContosoFabricDevBoxImgBldId'
+customRoleName='ContosoFabricBuilderRole'
 
 # Dev Box 
-imageGalleryName='eShopDevBoxImageGallery'
-frontEndImageName='eShop-DevBox-FrontEnd'
-backEndImageName='eShop-DevBox-BackEnd'
-devCenterName='eShop-DevBox-DevCenter'
+imageGalleryName='ContosoFabricImageGallery'
+frontEndImageName='eShop-FrontEnd'
+backEndImageName='eShop-BackEnd'
+devCenterName='DevBox-DevCenter'
 
 # network
-vnetName='eShop-DevBox-VNet'
-subNetName='eShop-DevBox-SubNet'
+vnetName='eShop-Vnet'
+subNetName='eShop-SubNet'
 networkConnectionName='eShop-DevBox-Network-Connection'
 
 # Management
-managementResourceGroupName='eShop-DevBox-Management-rg'
+managementResourceGroupName='ContosoFabric-DevBox-Management-RG'
 
 # Login to Azure
 login $subscriptionName

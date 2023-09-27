@@ -38,7 +38,7 @@ display_header "Logging into Azure"
 
 # Setting up static variables
 display_header "Setting Up Variables"
-resourceGroupName='ContosoFabric-eShop-DevBox-rg'
+resourceGroupName='ContosoFabric-ContosoFabric-DevBox-RG'
 location='WestUS3'
 identityName='contosoIdImgBld'
 subscriptionID=$(az account show --query id --output tsv)
