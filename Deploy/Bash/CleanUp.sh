@@ -4,17 +4,17 @@
 
 # Resources Organization
 subscriptionId=$(az account show --query id --output tsv)
-devBoxResourceGroupName='eShop-DevBox-rg'
-imageGalleryResourceGroupName='eShop-DevBox-ImgGallery-rg'
-identityResourceGroupName='eShop-DevBox-Identity-rg'
-networkResourceGroupName='eShop-DevBox-network-rg'
-managementResourceGroupName='eShop-DevBox-Management-rg'
+devBoxResourceGroupName='ContosoFabric-DevBox-RG'
+imageGalleryResourceGroupName='ContosoFabric-ImageGallery-RG'
+identityResourceGroupName='ContosoFabric-Identity-DevBox-RG'
+networkResourceGroupName='eShop-Network-Connectivity-RG'
+managementResourceGroupName='ContosoFabric-DevBox-Management-RG'
 networkWatcherResourceGroupName='NetworkWatcherRG'
 location='WestUS3'
 
 # Identity
-identityName='eShopDevBoxImgBldId'
-customRoleName='eShopImgBuilderRole'
+identityName='ContosoFabricDevBoxImgBldId'
+customRoleName='ContosoFabricBuilderRole'
 
 # Function to delete a resource group
 function deleteResourceGroup() {
