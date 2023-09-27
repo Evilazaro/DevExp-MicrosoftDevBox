@@ -1,71 +1,30 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-# This script assists users in logging into their Azure account and sets a specified subscription as active.
+# Ensure the script stops on the first error
+set -e
 
-# Exit on error, unset variable usage, or pipe failure
-set -eou pipefail
-
-# Constants
-readonly PROGNAME=$(basename "$0")
-
-# Functions
-
-# Display an error message and exit the script
-error_exit() {
-    echo "${PROGNAME}: ${1:-"Unknown Error"}" >&2
+# Ensure a command line argument is provided
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <subscriptionId>"
     exit 1
-}
+fi
 
-# Display the script usage instructions
-usage() {
-    echo "Usage: ${PROGNAME} [SUBSCRIPTION_ID]"
+# Assigning argument to a variable for better readability
+subscriptionId=$1
+
+# Step 1: Logging in to Azure
+echo "Attempting to log in to Azure..."
+az login
+echo "Successfully logged in to Azure."
+
+# Step 2: Setting the Azure subscription
+echo "Attempting to set subscription to ${subscriptionId}..."
+# Check if the subscription exists and is valid
+if az account set --subscription "${subscriptionId}"; then
+    echo "Successfully set Azure subscription to ${subscriptionId}."
+else
+    echo "Failed to set Azure subscription to ${subscriptionId}. Please check if the subscription ID is valid and you have access to it."
     exit 1
-}
-
-# Cleanup function to execute any necessary cleanup operations before script exit
-cleanup() {
-    # Place any cleanup operations here
-    :
-}
-
-# Register the cleanup function to be called on script exit
-trap cleanup EXIT
-
-# Main script execution
-
-# Clear the terminal screen for a cleaner user experience
-clear
-
-# Display script purpose and steps
-echo "This script will help you to log into your Azure account and set a specified subscription as active."
-echo "-------------------"
-
-# Ensure a subscription ID is provided; if not, display an error and usage message
-if [[ $# -eq 0 ]]; then
-    echo "Error: Subscription ID not provided!"
-    usage
 fi
 
-readonly SUBSCRIPTION_ID="$1"
-
-echo "Step 1: Logging in to Azure"
-echo "-------------------"
-
-# Prompt the user to log in and follow on-screen instructions
-echo "Please follow the on-screen instructions to log in."
-if ! az login; then
-    error_exit "Failed to log in to Azure."
-fi
-
-echo "Step 2: Setting Target Subscription"
-echo "-------------------"
-echo "Target Subscription: ${SUBSCRIPTION_ID}"
-
-# Attempt to set the provided subscription ID as the active subscription
-echo "Setting target subscription as active..."
-if ! az account set --subscription "${SUBSCRIPTION_ID}"; then
-    error_exit "Failed to set target subscription."
-fi
-
-echo "-------------------"
-echo "Subscription set successfully!"
+# Additional comments for future steps or improvements can be added below this line.

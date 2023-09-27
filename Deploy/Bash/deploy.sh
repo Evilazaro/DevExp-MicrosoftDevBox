@@ -1,81 +1,257 @@
 #!/bin/bash
-set -e  # Exit immediately if a command exits with a non-zero status
 
-# This script automates various Azure tasks like resource group creation, image creation, and deployment.
+# Functions
 
-display_header() {
-    echo -e "\n========================\n$1\n========================"
+function login() {
+    # Declaring 'local' makes 'subscriptionName' a local variable, restricting its scope to within this function.
+    local subscriptionName="$1"  # $1 represents the first argument passed to the function.
+    
+    # Check if the subscriptionName is empty and print a helpful message if it is.
+    if [[ -z "$subscriptionName" ]]; then
+        echo "Error: Subscription name is missing!"
+        echo "Usage: login <subscriptionName>"
+        return 1
+    fi
+    
+    echo "Attempting to login to Azure subscription: $subscriptionName"
+
+    # The path to 'login.sh' script. This script presumably handles Azure CLI login details.
+    local scriptPath='./identity/login.sh'
+    
+    # Check if the login.sh script exists and is executable, if not print a helpful message.
+    if [[ ! -x "$scriptPath" ]]; then
+        echo "Error: The login script $scriptPath does not exist or is not executable."
+        return 1
+    fi
+    
+    # Execute the login script with the provided subscription name.
+    "$scriptPath" "$subscriptionName"
+    
+    # Check the exit status of the last command (login.sh) and print appropriate message.
+    if [[ $? -eq 0 ]]; then
+        echo "Successfully logged in to $subscriptionName."
+    else
+        echo "Failed to log in to $subscriptionName."
+        return 1
+    fi
 }
 
-build_image() {
-    local outputFile="$1" subscriptionID="$2" resourceGroupName="$3" location="$4" imageName="$5"
-    local identityName="$6" imageTemplateFile="$7" galleryName="$8" offer="$9" imgSKU="${10}"
-    local publisher="${11}"
+function createResourceGroup {
+    local resourceGroupName=$1
+    local location=$2
 
-    display_header "Creating Image: $imageName"
-    cat <<EOL
-Image Template URL: $imageTemplateFile
-Output File: $outputFile
-Subscription ID: $subscriptionID
-Resource Group: $resourceGroupName
-Location: $location
-Image Name: $imageName
-Identity Name: $identityName
-Gallery Name: $galleryName
-Offer: $offer
-SKU: $imgSKU
-Publisher: $publisher
-EOL
+    # Exit on error
+    set -e
 
-    VMImages/buildVMImage.sh "$outputFile" "$subscriptionID" "$resourceGroupName" "$location" \
-                            "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" \
-                            "$offer" "$imgSKU" "$publisher" || { echo "Image building failed"; exit 1; }
+    # Validate inputs
+    if [ -z "$resourceGroupName" ] || [ -z "$location" ]; then
+        echo "Usage: $0 <ResourceGroupName> <Location>"
+        exit 1
+    fi
+
+    # Echo steps
+    echo "Creating Azure Resource Group..."
+    echo "Resource Group Name: $resourceGroupName"
+    echo "Location: $location"
+
+    # Creating Azure Resource Group
+    az group create \
+        --name "$resourceGroupName" \
+        --location "$location" \
+        --tags  "division=Contoso-Platform" \
+                "Environment=Prod" \
+                "offer=Contoso-DevWorkstation-Service" \
+                "Team=Engineering" \
+                "division=Contoso-Platform" \
+                "solution=eShop"
+
+    # Echo successful creation
+    echo "Resource group '$resourceGroupName' created successfully."
 }
 
-# Logging into Azure
-display_header "Logging into Azure"
-./Identity/login.sh "$1"
+function createIdentity {
+    local identityName=$1
+    local resourceGroupName=$2
+    local subscriptionId=$3
+    local customRoleName=$4
+    local location=$5
 
-# Setting up static variables
-display_header "Setting Up Variables"
-resourceGroupName='ContosoFabric-eShop-DevBox-rg'
+    # Validate the presence of all parameters
+    if [[ -z $identityName || -z $resourceGroupName || -z $subscriptionId || -z $customRoleName || -z $location ]]; then
+        echo "Error: Missing required parameters."
+        echo "Usage: createIdentity <identityName> <resourceGroupName> <subscriptionId> <customRoleName> <location>"
+        return 1
+    fi
+    
+    ./identity/createIdentity.sh "$resourceGroupName" "$location" "$identityName"
+    ./identity/registerFeatures.sh
+    ./identity/createUserAssignedManagedIdentity.sh "$resourceGroupName" "$subscriptionId" "$identityName" "$customRoleName"
+    
+} 
+
+function deploynetwork() {
+    # Local variables to store function arguments
+    local vnetName="$1"
+    local subNetName="$2"
+    local networkConnectionName="$3"
+    local resourceGroupName="$4"
+    local subscriptionId="$5"
+    local location="$6"
+
+    # Check if the deployVnet.sh script exists before attempting to execute it
+    if [ ! -f "./network/deployVnet.sh" ]; then
+        echo "Error: deployVnet.sh script not found."
+        return 1
+    fi
+
+    # Execute the deployVnet.sh script with the passed parameters and capture its exit code
+    ./network/deployVnet.sh "$resourceGroupName" "$location" "$vnetName" "$subNetName"
+    ./network/createNetWorkConnection.sh "$location" "$resourceGroupName" "$vnetName" "$subNetName" "$networkConnectionName"
+    local exitCode="$?"
+
+    # Check the exit code of the deployVnet.sh script and echo appropriate message
+    if [ "$exitCode" -ne 0 ]; then
+        echo "Error: Deployment of Vnet failed with exit code $exitCode."
+        return 1
+    fi
+}
+
+# This function deploys a Compute Gallery to a specified location and resource group.
+# It receives three parameters: 
+# 1. imageGalleryName: The name of the Compute Gallery
+# 2. location: The Azure region where the Compute Gallery will be deployed
+# 3. galleryResourceGroupName: The name of the resource group where the Compute Gallery will be placed
+
+function deployComputeGallery {
+    local imageGalleryName="$1"  # The name of the Compute Gallery to deploy
+    local location="$2"            # The Azure location (region) where the Compute Gallery will be deployed
+    local galleryResourceGroupName="$3"  # The resource group where the Compute Gallery will reside
+
+    # The actual deployment command. Using a relative path to the deployment script
+    ./devBox/computeGallery/deployComputeGallery.sh "$imageGalleryName" "$location" "$galleryResourceGroupName"
+}
+
+# Function to deploy Dev Center
+function deployDevCenter() {
+    local devCenterName="$1"
+    local networkConnectionName="$2"
+    local imageGalleryName="$3"
+    local location="$4"
+    local identityName="$5"
+    local devBoxResourceGroupName="$6"
+    local networkResourceGroupName="$7"
+    local identityResourceGroupName="$8"
+    local imageGalleryResourceGroupName="$9"
+
+    # Validate that all required parameters are provided
+    if [ -z "$devCenterName" ] || [ -z "$networkConnectionName" ] || [ -z "$imageGalleryName" ] || [ -z "$location" ] || [ -z "$identityName" ] || [ -z "$devBoxResourceGroupName" ] || [ -z "$networkResourceGroupName" ] || [ -z "$identityResourceGroupName" ] || [ -z "$imageGalleryResourceGroupName" ]; then
+        echo "Error: Missing required parameters."
+        return 1 # Return with error code
+    fi
+    
+    # Execute the deployDevCenter.sh script with the provided parameters and capture its exit code
+    ./devBox/devCenter/deployDevCenter.sh "$devCenterName" "$networkConnectionName" "$imageGalleryName" "$location" "$identityName" "$devBoxResourceGroupName" "$networkResourceGroupName" "$identityResourceGroupName" "$imageGalleryResourceGroupName"
+
+}
+
+function createDevCenterProject() {
+    local location="$1"
+    local subscriptionId="$2"
+    local resourceGroupName="$3"
+    local devCenterName="$4"
+    
+    # Check if the necessary parameters are provided
+    if [[ -z "$location" || -z "$subscriptionId" || -z "$resourceGroupName" || -z "$devCenterName" ]]; then
+        echo "Error: Missing required parameters."
+        echo "Usage: createDevCenterProject <location> <subscriptionId> <resourceGroupName> <devCenterName>"
+        return 1
+    fi
+    
+    # Validate if the createDevCenterProject.sh script exists before executing
+    if [[ ! -f "./devBox/devCenter/createDevCenterProject.sh" ]]; then
+        echo "Error: createDevCenterProject.sh script not found!"
+        return 1
+    fi
+    
+    ./devBox/devCenter/createDevCenterProject.sh "$location" "$subscriptionId" "$resourceGroupName" "$devCenterName"
+}
+
+function buildImage
+{
+    local subscriptionId="$1"
+    local resourceGroupName="$2"
+    local location="$3"
+    local identityName="$4"
+    local galleryName="$5"
+    local identityResourceGroupName="$6"
+    local devBoxResourceGroupName="$7"
+
+    declare -A image_params
+    image_params["FrontEnd-Docker-Img"]="VSCode-FrontEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/FrontEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/computeGallery/frontEndEngineerImgTemplate.json Contoso"
+    #image_params["BackEnd-Docker-Img"]="VS22-BackEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template.json Contoso"
+
+    for imageName in "${!image_params[@]}"; do
+        IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${image_params[$imageName]}"
+        ./DevBox/computeGallery/createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$resourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher" "$identityResourceGroupName"
+        ./DevBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$location" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName"
+    done
+}
+
+
+# Declaring Variables
+branch="Dev"
+
+# Resources Organization
+subscriptionName=$1
+subscriptionId=$(az account show --query id --output tsv)
+devBoxResourceGroupName='eShop-DevBox-rg'
+imageGalleryResourceGroupName='eShop-DevBox-ImgGallery-rg'
+identityResourceGroupName='eShop-DevBox-Identity-rg'
+networkResourceGroupName='eShop-DevBox-network-rg'
 location='WestUS3'
-identityName='contosoIdImgBld'
-subscriptionID=$(az account show --query id --output tsv)
-devCenterName="ContosoFabric-DevCenter"
-galleryName="ContosoFabriceShopImgGallery"
 
-# Creating Azure resources
-echo "Creating resource group and managed identity..."
-az group create -n "$resourceGroupName" -l "$location" --tags "division=Contoso-Platform" "Environment=Prod" "offer=Contoso-DevWorkstation-Service" "Team=Engineering"
-az identity create --resource-group "$resourceGroupName" -n "$identityName"
-identityId=$(az identity show --resource-group "$resourceGroupName" -n "$identityName" --query principalId --output tsv)
+# Identity
+identityName='eShopDevBoxImgBldId'
+customRoleName='eShopImgBuilderRole'
 
-# Displaying configuration summary
-display_header "Configuration Summary"
-echo -e "Image Resource Group: $resourceGroupName\nLocation: $location\nSubscription ID: $subscriptionID\nIdentity Name: $identityName\nIdentity ID: $identityId"
+# Dev Box 
+imageGalleryName='eShopDevBoxImageGallery'
+frontEndImageName='eShop-DevBox-FrontEnd'
+backEndImageName='eShop-DevBox-BackEnd'
+devCenterName='eShop-DevBox-DevCenter'
 
-# Running additional setup scripts
-echo "Registering necessary features and creating user-assigned managed identity..."
-./Identity/registerFeatures.sh
-./Identity/createUserAssignedManagedIdentity.sh "$resourceGroupName" "$subscriptionID" "$identityId"
+# network
+vnetName='eShop-DevBox-VNet'
+subNetName='eShop-DevBox-SubNet'
+networkConnectionName='eShop-DevBox-Network-Connection'
 
-echo "Deploying Compute Gallery ${galleryName}..."
-./ComputeGallery/deployComputeGallery.sh "$galleryName" "$location" "$resourceGroupName"
+# Management
+managementResourceGroupName='eShop-DevBox-Management-rg'
 
-# Deploying DevBox
-display_header "Deploying Microsoft DevBox"
-./DevBox/deployDevBox.sh "$subscriptionID" "$location" "$resourceGroupName" "$identityName" "$galleryName" "$devCenterName"
+# Login to Azure
+login $subscriptionName
 
-display_header "Building Virtual Machine Images"
+# Deploying Resources Group
+createResourceGroup $devBoxResourceGroupName $location
+createResourceGroup $imageGalleryResourceGroupName $location
+createResourceGroup $identityResourceGroupName $location
+createResourceGroup $networkResourceGroupName $location
+createResourceGroup $managementResourceGroupName $location
 
-declare -A image_params
-image_params["FrontEnd-Docker-Img"]="VSCode-FrontEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/FrontEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-FrontEnd-Docker-Template.json Contoso"
-image_params["BackEnd-Docker-Img"]="VS22-BackEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/Win11-Ent-Base-Image-BackEnd-Docker-Template.json Contoso"
-# ... add other entries in the same format
+# Deploying Identity
+createIdentity $identityName $identityResourceGroupName $subscriptionId $customRoleName $location
 
-for imageName in "${!image_params[@]}"; do
-    IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${image_params[$imageName]}"
-    build_image "$outputFile" "$subscriptionID" "$resourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher"
-    ./DevBox/createDevBoxDefinition.sh "$subscriptionID" "$location" "$resourceGroupName" "$devCenterName" "$galleryName" "$imageName"
-done
+# Deploying network
+deploynetwork $vnetName $subNetName $networkConnectionName $networkResourceGroupName $subscriptionId $location
+
+# Deploying Compute Gallery
+deployComputeGallery $imageGalleryName $location $imageGalleryResourceGroupName
+
+# Deploying Dev Center
+deployDevCenter $devCenterName $networkConnectionName $imageGalleryName $location $identityName $devBoxResourceGroupName $networkResourceGroupName $identityResourceGroupName $imageGalleryResourceGroupName
+
+# Creating Dev Center Project
+createDevCenterProject $location $subscriptionId $devBoxResourceGroupName $devCenterName
+
+# Building Images
+buildImage $subscriptionId $imageGalleryResourceGroupName $location $identityName $imageGalleryName $identityResourceGroupName

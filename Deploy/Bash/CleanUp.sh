@@ -1,104 +1,89 @@
 #!/bin/bash
-# This script performs several operations on Azure resources including:
-# - Deleting specific role assignments
-# - Deleting specific role definitions
-# - Deleting specific resource groups
 
-set -e
+# Declaring Variables
 
-# Declare constants
-DEVBOX_RESOURCE_GROUP_NAME='ContosoFabric-eShop-DevBox-rg'
-NETWORK_WATCHER_RESOURCE_GROUP_NAME='NetworkWatcherRG'
-customRoleDef='Azure Image Builder Image Def'
-NIC_RESOURCE_GROUP_NAME='NI_Contoso-Network-Connection-DevBox_WestUS3'
-ActivityLogAlertsName='Default-ActivityLogAlerts'
+# Resources Organization
+subscriptionId=$(az account show --query id --output tsv)
+devBoxResourceGroupName='eShop-DevBox-rg'
+imageGalleryResourceGroupName='eShop-DevBox-ImgGallery-rg'
+identityResourceGroupName='eShop-DevBox-Identity-rg'
+networkResourceGroupName='eShop-DevBox-network-rg'
+managementResourceGroupName='eShop-DevBox-Management-rg'
+networkWatcherResourceGroupName='NetworkWatcherRG'
+location='WestUS3'
 
-
-# Function to retrieve identity and subscription ID
-setup_environment() {
-    echo "Setting up environment..."
-
-    echo "Fetching the identity..."
-    IDENTITY=$(az identity list --query "[?name=='contosoIdImgBld'].name" --output tsv)
-
-    echo "Retrieving the subscription ID..."
-    SUBSCRIPTION_ID=$(az account show --query id --output tsv)
-}
+# Identity
+identityName='eShopDevBoxImgBldId'
+customRoleName='eShopImgBuilderRole'
 
 # Function to delete a resource group
-delete_resource_group() {
-    local resource_group_name="$1"
+function deleteResourceGroup() {
+    local resourceGroupName="$1"
 
-    output=$(az group exists --name "$resource_group_name")
+    output=$(az group exists --name "$resourceGroupName")
 
     if $output; then
-        echo "Deleting resource group: $resource_group_name..."
-        az group delete --name "$resource_group_name" --yes --no-wait
-        echo "Resource group $resource_group_name deletion initiated."
+        echo "Deleting resource group: $resourceGroupName..."
+        az group delete --name "$resourceGroupName" --yes --no-wait
+        echo "Resource group $resourceGroupName deletion initiated."
     else
-        echo "Resource group $resource_group_name does not exist. Skipping deletion."
+        echo "Resource group $resourceGroupName does not exist. Skipping deletion."
     fi
 }
 
 # Function to remove a role
-remove_role() {
-    local role=$1
+function removeRole() {
+    local customRoleName=$1
 
-    output=$(az role definition list --name "$role")
+    output=$(az role definition list --name "$customRoleName")
 
     if [[ -z "$output" || "$output" == "[]" ]]; then
-        echo "'$role' role does not exist. Skipping deletion."
+        echo "'$customRoleName' role does not exist. Skipping deletion."
     else   
-        echo "Deleting the '$role' role..."
-        az role definition delete --name "$role"
-        echo "'$role' role successfully deleted." 
+        echo "Deleting the '$customRoleName' role..."
+        az role definition delete --name "$customRoleName"
+        echo "'$customRoleName' role successfully deleted." 
     fi
 }
 
 # Function to remove a role assignment
-remove_role_assignment() {
-    local role_id=$1
+function removeRoleAssignment() {
+    local roleId=$1
+    local subscriptionId=$2
 
     echo "Checking the role assignments for the identity..."
 
-    if [[ -z "$role_id" ]]; then
+    if [[ -z "$roleId" ]]; then
         echo "Role not defined. Skipping role assignment deletion."
         return
     fi
 
-    output=$(az role assignment list --role "$role_id" --scope /subscriptions/"$SUBSCRIPTION_ID")
+    output=$(az role assignment list --role "$roleId" --scope /subscriptions/"$subscriptionId")
 
     if [[ -z "$output" || "$output" == "[]" ]]; then
-        echo "'$role_id' role assignment does not exist. Skipping deletion."
+        echo "'$roleId' role assignment does not exist. Skipping deletion."
     else
-        echo "Removing '$role_id' role assignment from the identity..."   
-        az role assignment delete --role "$role_id" --scope /subscriptions/"$SUBSCRIPTION_ID"
-        echo "'$role_id' role assignment successfully removed."
+        echo "Removing '$roleId' role assignment from the identity..."   
+        az role assignment delete --role "$roleId" --scope /subscriptions/"$subscriptionId"
+        echo "'$roleId' role assignment successfully removed."
     fi
 }
 
-# Main function to orchestrate the script execution
-main() {
-    setup_environment
+# Deleting role assignments and role definitions
+for roleName in 'Owner' 'Managed Identity Operator' 'Reader' 'DevCenter Dev Box User' "$customRoleName"; do
+    echo "Getting the role ID for '$roleName'..."
+    roleId=$(az role definition list --name "$roleName" --query [].name --output tsv)
 
-    # Deleting role assignments and role definitions
-    for role_name in 'Owner' 'Managed Identity Operator' 'Reader' 'DevCenter Dev Box User' "$customRoleDef"; do
-        echo "Getting the role ID for '$role_name'..."
-        ROLE_ID=$(az role definition list --name "$role_name" --query [].name --output tsv)
+    removeRoleAssignment "$roleId" "$subscriptionId"
+done
 
-        remove_role_assignment "$ROLE_ID"
-    done
-    
-    remove_role "$role_name"
+removeRole "$customRoleName"
 
-    # Deleting resource groups
-    delete_resource_group "$DEVBOX_RESOURCE_GROUP_NAME"
-    delete_resource_group "$NETWORK_WATCHER_RESOURCE_GROUP_NAME"
-    delete_resource_group "$NIC_RESOURCE_GROUP_NAME"
-    delete_resource_group "$ActivityLogAlertsName"
-
-    echo "Script execution completed."
-}
-
-# Execute the script
-main
+# Deleting resource groups
+deleteResourceGroup "$devBoxResourceGroupName"
+deleteResourceGroup "$imageGalleryResourceGroupName"
+deleteResourceGroup "$identityResourceGroupName"
+deleteResourceGroup "$networkResourceGroupName"
+deleteResourceGroup "$managementResourceGroupName"
+deleteResourceGroup "$networkWatcherResourceGroupName"
+deleteResourceGroup "Default-ActivityLogAlerts"
