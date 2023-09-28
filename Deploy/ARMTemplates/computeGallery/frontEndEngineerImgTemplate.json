@@ -62,6 +62,21 @@
                     {
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                            "choco install wsl-ubuntu-2204 --params '/AutomaticInstall:true';"
+                        ],
+                        "name": "Install Ubuntu WSL Distro",
+                        "runAsSystem": false,
+                        "runElevated": false,
+                        "type": "PowerShell"
+                    },
+                    {
+                        "name": "Restart Computer",
+                        "restartTimeout": "10m",
+                        "type": "WindowsRestart"
+                    },
+                    {
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                             "choco install -y docker-desktop --ia '--quiet --accept-license';"
                         ],
                         "name": "Install Docker Desktop",
@@ -79,12 +94,7 @@
                         "runAsSystem": false,
                         "runElevated": false,
                         "type": "PowerShell"
-                    },
-                    {
-                        "name": "Restart Computer",
-                        "restartTimeout": "10m",
-                        "type": "WindowsRestart"
-                    }
+                    }                    
                 ],
                 "distribute": [
                     {
