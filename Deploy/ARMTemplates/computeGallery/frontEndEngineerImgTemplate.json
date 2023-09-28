@@ -62,7 +62,7 @@
                     {
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "choco install wsl-ubuntu-2204 --params '/AutomaticInstall:true';"
+                            "choco install -y wsl-ubuntu-2204 --params '/AutomaticInstall:true';"
                         ],
                         "name": "Install Ubuntu WSL Distro",
                         "runAsSystem": false,
