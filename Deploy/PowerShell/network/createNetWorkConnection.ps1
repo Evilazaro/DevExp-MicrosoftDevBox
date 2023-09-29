@@ -1,6 +1,7 @@
 # Define Variables
 $branch = "Dev"
 
+
 # Ensure all required parameters are provided
 if ($args.Count -ne 5) {
     Write-Host "Usage: $($MyInvocation.InvocationName) <location> <networkResourceGroupName> <vnetName> <subNetName> <networkConnectionName>"
