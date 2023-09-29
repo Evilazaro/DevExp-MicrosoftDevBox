@@ -63,7 +63,7 @@
                         "type": "PowerShell",
                         "name": "Install WSL Ubuntu and Docker Desktop",
                         "inline": ["Set-ExecutionPolicy Bypass -Scope Process -Force;"],
-                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/eShopOnContainers/main/Scripts/InstallWSL2UbuntuDocker.ps1"
+                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/install-docker.ps1"
                     },
                     {
                         "inline": [
