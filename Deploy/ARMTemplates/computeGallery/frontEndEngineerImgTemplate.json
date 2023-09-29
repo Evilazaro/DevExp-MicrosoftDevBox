@@ -62,7 +62,7 @@
                     {
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "choco install -y docker-desktop --ia '--quiet --accept-license';"
+                            "choco install -y docker-desktop --ignore-checksums --ia '--quiet --accept-license';"
                         ],
                         "name": "Install Docker Desktop",
                         "runAsSystem": false,
@@ -79,11 +79,6 @@
                         "runAsSystem": false,
                         "runElevated": false,
                         "type": "PowerShell"
-                    },
-                    {
-                        "name": "Restart Computer",
-                        "restartTimeout": "10m",
-                        "type": "WindowsRestart"
                     }
                 ],
                 "distribute": [
