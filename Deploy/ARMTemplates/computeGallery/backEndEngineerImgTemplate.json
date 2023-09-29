@@ -60,14 +60,10 @@
                         "type": "PowerShell"
                     },
                     {
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "choco install -y docker-desktop --ignore-checksums --ia '--quiet --accept-license';"
-                        ],
-                        "name": "Install Docker Desktop",
-                        "runAsSystem": false,
-                        "runElevated": false,
-                        "type": "PowerShell"
+                        "type": "PowerShell",
+                        "name": "Install WSL Ubuntu and Docker Desktop",
+                        "inline": ["Set-ExecutionPolicy Bypass -Scope Process -Force;"],
+                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/eShopOnContainers/main/Scripts/InstallWSL2UbuntuDocker.ps1"
                     },
                     {
                         "inline": [
