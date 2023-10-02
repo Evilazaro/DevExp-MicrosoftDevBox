@@ -93,7 +93,7 @@ try {
     Clone-Repositories -Repositories $repositories
     Install-VSCodeExtensions
     Install-Chocolatey
-    Install-Ubuntu
+    #Install-Ubuntu
     Install-DockerDesktop
     Write-Output "Script completed successfully"
 } catch {
