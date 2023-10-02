@@ -64,8 +64,6 @@ function Install-DockerDesktop {
 function Install-VSCodeExtensions {
     Write-Output "Installing VS Code Extensions"
     try {
-        mkdir c:\VSExtensions;
-        code --extensions-dir c:\VSExtensions;
         code --install-extension ms-vscode-remote.remote-wsl --force; 
         code --install-extension ms-vscode.vscode-node-azure-pack --force;
         code --install-extension ms-azuretools.vscode-docker --force;
