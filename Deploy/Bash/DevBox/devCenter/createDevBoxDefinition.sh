@@ -14,7 +14,7 @@ networkConnectionName="$7"     # network connection name
 echo "Initializing script with subscriptionId: $subscriptionId, location: $location, devBoxResourceGroupName: $devBoxResourceGroupName, devCenterName: $devCenterName, galleryName: $galleryName, and imageName: $imageName."
 
 # Construct necessary variables with camelCase naming conventions
-imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/${galleryName}/images/${imageName}def/"
+imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/${galleryName}/images/${imageName}Def/versions/1.0.0"
 devBoxDefinitionName="devBox-$imageName"
 projectName="eShop"
 poolName="$imageName-pool"
