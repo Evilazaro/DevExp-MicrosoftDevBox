@@ -70,26 +70,19 @@
                         }
                     },
                     {
+                        "type": "PowerShell",
+                        "name": "Installing eShop Dependencies and Customizations",
                         "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "cd C:\\;",
-                            "git clone https://github.com/Evilazaro/eShopOnContainers.git eShop;"
-                        ],
-                        "name": "Clone GitHub Repo for eShopOnContainers",
-                        "runAsSystem": false,
-                        "runElevated": false,
-                        "type": "PowerShell"
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/eShopFrontEnd-Customizations.ps1'));"
+                        ]
                     },
                     {
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "cd C:\\;",
-                            "git clone https://github.com/Evilazaro/eShopAPIM.git;"
-                        ],
-                        "name": "Clone GitHub Repo for eShopAPIs",
-                        "runAsSystem": false,
-                        "runElevated": false,
-                        "type": "PowerShell"
+                        "type": "WindowsRestart",
+                        "name": "Restarting Windows",
+                        "windowsRestartConfiguration": {
+                            "restartOnlyIfRequired": false,
+                            "restartSetting": "always"
+                        }
                     }
                 ],
                 "distribute": [
