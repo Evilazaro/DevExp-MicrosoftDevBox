@@ -51,34 +51,21 @@
                 },
                 "customize": [
                     {
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'));"
-                        ],
-                        "name": "Install Chocolatey",
-                        "runAsSystem": false,
-                        "runElevated": false,
-                        "type": "PowerShell"
+                        "type": "WindowsUpdate",
+                        "windowsUpdateProvisioning": {
+                            "searchCriteria": "IsInstalled=0",
+                            "filters": [
+                                "exclude:$_.Title -like '*Preview*'",
+                                "include:$true"
+                            ]
+                        }
                     },
                     {
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "choco install -y docker-desktop --ignore-checksums --ia '--quiet --accept-license';"
-                        ],
-                        "name": "Install Docker Desktop",
-                        "runAsSystem": false,
-                        "runElevated": false,
-                        "type": "PowerShell"
-                    },
-                    {
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "cd C:\\;",
-                            "git clone https://github.com/Evilazaro/eShopOnContainers.git eShop;"
-                        ],
-                        "name": "Clone GitHub Repo for eShopOnContainers",
-                        "runAsSystem": false,
-                        "runElevated": false,
-                        "type": "PowerShell"
+                        "type": "WindowsRestart",
+                        "windowsRestartConfiguration": {
+                            "restartOnlyIfRequired": false,
+                            "restartSetting": "always"
+                        }
                     }
                 ],
                 "distribute": [

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+clear
+
 # Functions
 
 function login() {

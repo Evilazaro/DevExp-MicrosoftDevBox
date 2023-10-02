@@ -1,5 +1,7 @@
 #!/bin/bash
 
+clear
+
 # Declaring Variables
 
 # Resources Organization
