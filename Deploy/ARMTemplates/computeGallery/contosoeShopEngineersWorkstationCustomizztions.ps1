@@ -64,7 +64,13 @@ function Install-DockerDesktop {
 function Install-VSCodeExtensions {
     Write-Output "Installing VS Code Extensions"
     try {
+        code --install-extension ms-vscode-remote.remote-wsl --force 
         code --install-extension ms-vscode.vscode-node-azure-pack --force
+        code --install-extension ms-azuretools.vscode-docker --force
+        code --install-extension ms-kubernetes-tools.vscode-aks-tools --force
+        code --install-extension ms-azuretools.vscode-apimanagement --force
+        code --install-extension VisualStudioOnlineApplicationInsights.application-insights --force
+        code --install-extension ms-dotnettools.csdevkit --force
     } catch {
         throw "Failed to install VS Code Extensions"
     }
@@ -73,6 +79,7 @@ function Install-VSCodeExtensions {
 # Execute Functions
 try {
     Clone-Repositories -Repositories $repositories
+    Install-VSCodeExtensions
     Install-Chocolatey
     Install-DockerDesktop
     Write-Output "Script completed successfully"
