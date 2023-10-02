@@ -51,23 +51,23 @@
                 },
                 "customize": [
                     {
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'));"
-                        ],
-                        "name": "Install Chocolatey",
-                        "runAsSystem": false,
-                        "runElevated": false,
-                        "type": "PowerShell"
-                    },
-                    {
-                        "type": "PowerShell",
-                        "name": "Install WSL Ubuntu and Docker Desktop",
-                        "inline": ["Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/install-docker.ps1'));"]
+                        "type": "WindowsUpdate",
+                        "name": "Updating Windows",
+                        "windowsUpdateProvisioning": {
+                            "searchCriteria": "IsInstalled=0",
+                            "filters": [
+                                "exclude:$_.Title -like '*Preview*'",
+                                "include:$true"
+                            ]
+                        }
                     },
                     {
                         "type": "WindowsRestart",
-                        "name": "Restart Computer",
-                        "restartCheckCommand": "powershell.exe -command \"&{Write-Host 'Restarting computer...'; Start-Sleep -s 60; if (Test-Path -Path 'C:\\Windows\\System32') {exit 0} else {exit 1}}\""
+                        "name": "Restarting Windows",
+                        "windowsRestartConfiguration": {
+                            "restartOnlyIfRequired": false,
+                            "restartSetting": "always"
+                        }
                     },
                     {
                         "inline": [
@@ -89,6 +89,15 @@
                         "name": "Clone GitHub Repo for eShopAPIs",
                         "runAsSystem": false,
                         "runElevated": false,
+                        "type": "PowerShell"
+                    },
+                    {
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'));"
+                        ],
+                        "name": "Install Chocolatey",
+                        "runAsSystem": false,
+                        "runElevated": true,
                         "type": "PowerShell"
                     }
                 ],

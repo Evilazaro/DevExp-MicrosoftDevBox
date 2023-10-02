@@ -1,14 +1,31 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {},
+    "parameters": {
+        "imgName": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "imageGalleryId": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "userAssignedId": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "location": {
+            "defaultValue": "",
+            "type": "String"
+        }
+    },
     "variables": {},
     "resources": [
         {
             "type": "Microsoft.VirtualMachineImages/imageTemplates",
             "apiVersion": "2022-07-01",
-            "name": "BackEnd-Docker-Img",
-            "location": "westus3",
+            "name": "[parameters('imgName')]",
+            "location": "[parameters('location')]",
             "tags": {
                 "Environment": "Prod",
                 "Role": "Front-End-Engineer",
@@ -21,7 +38,7 @@
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourcegroups/ContosoFabric-Identity-DevBox-RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ContosoFabricDevBoxImgBldId": {}
+                    "[parameters('userAssignedId')]": {}
                 }
             },
             "properties": {
@@ -43,29 +60,14 @@
                         "type": "PowerShell"
                     },
                     {
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "choco install -y wsl-ubuntu-2204 --ignore-checksums --params '/AutomaticInstall:true' --force;"
-                        ],
-                        "name": "Install Ubuntu WSL Distro",
-                        "runAsSystem": false,
-                        "runElevated": false,
-                        "type": "PowerShell"
+                        "type": "PowerShell",
+                        "name": "Install WSL Ubuntu and Docker Desktop",
+                        "inline": ["Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/contosoeShopEngineersWorkstationCustomizztions.ps1'));"]
                     },
                     {
+                        "type": "WindowsRestart",
                         "name": "Restart Computer",
-                        "restartTimeout": "10m",
-                        "type": "WindowsRestart"
-                    },
-                    {
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "choco install -y docker-desktop --ignore-checksums --ia '--quiet --accept-license';"
-                        ],
-                        "name": "Install Docker Desktop",
-                        "runAsSystem": false,
-                        "runElevated": false,
-                        "type": "PowerShell"
+                        "restartCheckCommand": "powershell.exe -command \"&{Write-Host 'Restarting computer...'; Start-Sleep -s 60; if (Test-Path -Path 'C:\\Windows\\System32') {exit 0} else {exit 1}}\""
                     },
                     {
                         "inline": [
@@ -74,6 +76,17 @@
                             "git clone https://github.com/Evilazaro/eShopOnContainers.git eShop;"
                         ],
                         "name": "Clone GitHub Repo for eShopOnContainers",
+                        "runAsSystem": false,
+                        "runElevated": false,
+                        "type": "PowerShell"
+                    },
+                    {
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                            "cd C:\\;",
+                            "git clone https://github.com/Evilazaro/eShopAPIM.git;"
+                        ],
+                        "name": "Clone GitHub Repo for eShopAPIs",
                         "runAsSystem": false,
                         "runElevated": false,
                         "type": "PowerShell"
@@ -91,11 +104,11 @@
                             "solution": "eShop"
                         },
                         "excludeFromLatest": false,
-                        "galleryImageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/ContosoFabric-ImageGallery-RG/providers/Microsoft.Compute/galleries/ContosoFabricImageGallery/images/BackEnd-Docker-Imgdef",
+                        "galleryImageId": "[concat(parameters('imageGalleryId'), concat('/images/', parameters('imgName'), 'def'))]",
                         "replicationRegions": [
-                            "WestUS3"
+                            "[parameters('location')]"
                         ],
-                        "runOutputName": "BackEnd-Docker-Img",
+                        "runOutputName": "[parameters('imgName')]",
                         "type": "SharedImage"
                     }
                 ],
@@ -104,7 +117,7 @@
                     "vmSize": "Standard_DS2_v2",
                     "osDiskSizeGB": 128,
                     "userAssignedIdentities": [
-                        "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourcegroups/ContosoFabric-Identity-DevBox-RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ContosoFabricDevBoxImgBldId"
+                        "[parameters('userAssignedId')]"
                     ]
                 }
             }
