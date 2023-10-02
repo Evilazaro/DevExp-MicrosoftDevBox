@@ -17,12 +17,12 @@ Set-ExecutionPolicy Bypass -Scope Process -Force
 $repositories = @(
     @{
         Url = 'https://github.com/Evilazaro/eShopOnContainers.git'
-        Destination = 'C:\eShop'
+        Destination = 'eShop'
         Description = 'eShopOnContainers Repository'
     },
     @{
         Url = 'https://github.com/Evilazaro/eShopAPIM.git'
-        Destination = 'C:\eShopAPIM'
+        Destination = 'eShopAPIM'
         Description = 'eShopOnContainers APIs Repository'
     }
 )
@@ -36,7 +36,7 @@ function Clone-Repositories {
     foreach ($repo in $Repositories) {
         Write-Output "Cloning $($repo.Description)"
         try {
-            git clone $repo.Url $repo.Destination
+            git clone $repo.Url "c:\"$repo.Destination
         } catch {
             throw "Failed to clone $($repo.Description) from $($repo.Url) to $($repo.Destination)"
         }
