@@ -17,12 +17,12 @@ Set-ExecutionPolicy Bypass -Scope Process -Force
 $repositories = @(
     @{
         Url = 'https://github.com/Evilazaro/eShopOnContainers.git'
-        Destination = 'eShop'
+        Destination = 'c:\eShop'
         Description = 'eShopOnContainers Repository'
     },
     @{
         Url = 'https://github.com/Evilazaro/eShopAPIM.git'
-        Destination = 'eShopAPIM'
+        Destination = 'c:\eShopAPIM'
         Description = 'eShopOnContainers APIs Repository'
     }
 )
@@ -36,7 +36,7 @@ function Clone-Repositories {
     foreach ($repo in $Repositories) {
         Write-Output "Cloning $($repo.Description)"
         try {
-            git clone $repo.Url "c:\$repo.Destination"
+            git clone $repo.Url $repo.Destination
         } catch {
             throw "Failed to clone $($repo.Description) from $($repo.Url) to $($repo.Destination)"
         }
@@ -73,7 +73,6 @@ function Install-VSCodeExtensions {
 # Execute Functions
 try {
     Clone-Repositories -Repositories $repositories
-    Install-VSCodeExtensions
     Install-Chocolatey
     Install-DockerDesktop
     Write-Output "Script completed successfully"
