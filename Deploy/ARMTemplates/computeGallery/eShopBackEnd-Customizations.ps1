@@ -64,15 +64,27 @@ function Install-DockerDesktop {
 function Install-VSCodeExtensions {
     Write-Output "Installing VS Code Extensions"
     try {
-        code --install-extension ms-vscode-remote.remote-wsl --force 
-        code --install-extension ms-vscode.vscode-node-azure-pack --force
-        code --install-extension ms-azuretools.vscode-docker --force
-        code --install-extension ms-kubernetes-tools.vscode-aks-tools --force
-        code --install-extension ms-azuretools.vscode-apimanagement --force
-        code --install-extension VisualStudioOnlineApplicationInsights.application-insights --force
-        code --install-extension ms-dotnettools.csdevkit --force
+        mkdir c:\VSExtensions;
+        code --extensions-dir c:\VSExtensions;
+        code --install-extension ms-vscode-remote.remote-wsl --force; 
+        code --install-extension ms-vscode.vscode-node-azure-pack --force;
+        code --install-extension ms-azuretools.vscode-docker --force;
+        code --install-extension ms-kubernetes-tools.vscode-aks-tools --force;
+        code --install-extension ms-azuretools.vscode-apimanagement --force;
+        code --install-extension VisualStudioOnlineApplicationInsights.application-insights --force;
+        code --install-extension ms-dotnettools.csdevkit --force;
     } catch {
         throw "Failed to install VS Code Extensions"
+    }
+}
+
+function Install-Ubuntu{
+    Write-Output "Installing Ubuntu"
+    try {
+        choco install -y wsl2 --ignore-checksums --params "/Version:2 /Retry:true"
+        choco install -y wsl-ubuntu-2204 --ignore-checksums --params "/AutomaticInstall:true"
+    } catch {
+        throw "Failed to install Ubuntu"
     }
 }
 
@@ -81,6 +93,7 @@ try {
     Clone-Repositories -Repositories $repositories
     Install-VSCodeExtensions
     Install-Chocolatey
+    Install-Ubuntu
     Install-DockerDesktop
     Write-Output "Script completed successfully"
 } catch {
