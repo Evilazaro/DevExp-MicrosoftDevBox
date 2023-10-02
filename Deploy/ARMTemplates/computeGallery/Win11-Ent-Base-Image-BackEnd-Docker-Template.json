@@ -62,7 +62,7 @@
                     {
                         "type": "PowerShell",
                         "name": "Install WSL Ubuntu and Docker Desktop",
-                        "inline": ["Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/install-docker.ps1'));"]
+                        "inline": ["Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/contosoeShopEngineersWorkstationCustomizztions.ps1'));"]
                     },
                     {
                         "type": "WindowsRestart",
