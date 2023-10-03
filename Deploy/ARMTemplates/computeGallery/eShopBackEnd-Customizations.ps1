@@ -79,8 +79,9 @@ function Install-VSCodeExtensions {
 function Install-Ubuntu{
     Write-Output "Installing Ubuntu"
     try {
-        choco install -y wsl2 --ignore-checksums --params "/Version:2 /Retry:true" --force
-        choco install -y wsl-ubuntu-2204 --ignore-checksums --params "/AutomaticInstall:true" --force
+        wsl --install -d Ubuntu --no-launch
+        # choco install -y wsl2 --ignore-checksums --params "/Version:2 /Retry:true" --force
+        # choco install -y wsl-ubuntu-2204 --ignore-checksums --params "/AutomaticInstall:true" --force
     } catch {
         throw "Failed to install Ubuntu"
     }
