@@ -55,7 +55,7 @@ function Install-Chocolatey{
 function Install-DockerDesktop {
     Write-Output "Installing Docker Desktop"
     try {
-        choco install -y --ignore-checksums docker-desktop --ia '--quiet --accept-license'
+        choco install -y --ignore-checksums docker-desktop --ia '--quiet --accept-license' --force
     } catch {
         throw "Failed to install Docker Desktop"
     }
@@ -79,8 +79,8 @@ function Install-VSCodeExtensions {
 function Install-Ubuntu{
     Write-Output "Installing Ubuntu"
     try {
-        choco install -y wsl2 --ignore-checksums --params "/Version:2 /Retry:true"
-        choco install -y wsl-ubuntu-2204 --ignore-checksums --params "/AutomaticInstall:true"
+        choco install -y wsl2 --ignore-checksums --params "/Version:2 /Retry:true" --force
+        choco install -y wsl-ubuntu-2204 --ignore-checksums --params "/AutomaticInstall:true" --force
     } catch {
         throw "Failed to install Ubuntu"
     }
@@ -91,7 +91,7 @@ try {
     Clone-Repositories -Repositories $repositories
     Install-VSCodeExtensions
     Install-Chocolatey
-    #Install-Ubuntu
+    Install-Ubuntu
     Install-DockerDesktop
     Write-Output "Script completed successfully"
 } catch {
