@@ -63,11 +63,12 @@ if ($automaticInstall) {
 
     Move-Item $wslTempPath\staging\$wslName-Temp.zip $wslTempPath\ubuntu2204.appx 
     Remove-Item -r $wslTempPath\staging\
-
+    
+    Write-Host $wslScriptsPth
 
     # # create your user and add it to sudoers
-    wsl -d $wslName -u root bash -ic $($wslScriptsPth)\createUser.sh $wslUsername ubuntu
-
+    wsl -d $wslName -u root bash -ic "/mnt/c/WSL2/scripts/createUser.sh $wslUsername ubuntu"
+    
     # # ensure WSL Distro is restarted when first used with user account
     wsl -t $wslName
 }
