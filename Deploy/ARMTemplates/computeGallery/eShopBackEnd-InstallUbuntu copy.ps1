@@ -4,12 +4,13 @@ $automaticInstall = $true
 $wslRootPath = "c:\WSL2"
 $wslTempPath = $wslRootPath+"\temp"
 $wslStagingPath = $wslTempPath+"\staging"
-
+$wslScriptsPth = $wslRootPath+"\scripts"
 Write-Host "Creating Directories"
 
 mkdir $wslRootPath
 mkdir $wslTempPath
 mkdir $wslStagingPath
+mkdir $wslScriptsPth
 
 $packageArgs = @{
     packageName    = 'wsl-ubuntu-2204'
@@ -35,6 +36,8 @@ if (!$wslIntalled) {
 
 # Download Docker Desktop Installer
 Invoke-WebRequest -Uri $($packageArgs.url) -OutFile $($packageArgs.fileFullPath)
+Invoke-WebRequest -Uri $("https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/createUser.sh") -OutFile $($wslScriptsPth+"\createUser.sh")
+Invoke-WebRequest -Uri $("https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/installUtils.sh") -OutFile $($wslScriptsPth+"\installUtils.sh")
 
 
 if ($automaticInstall) {
@@ -62,14 +65,11 @@ if ($automaticInstall) {
     Remove-Item -r $wslTempPath\staging\
 
 
-    # $chocolateyInstallFolder = $env:ChocolateyInstall.Replace('\', '/')
-    # $chocolateyInstallFolder = $chocolateyInstallFolder.Replace("C:", "/mnt/c")
-
     # # create your user and add it to sudoers
-    # wsl -d $wslName -u root bash -ic "$chocolateyInstallFolder/lib/wsl-ubuntu-2204/tools/scripts/createUser.sh $wslUsername ubuntu"
+    wsl -d $wslName -u root bash -ic $($wslScriptsPth)\createUser.sh $wslUsername ubuntu
 
     # # ensure WSL Distro is restarted when first used with user account
-    # wsl -t $wslName
+    wsl -t $wslName
 }
 else {
     Add-AppxPackage $packageArgs.fileFullPath

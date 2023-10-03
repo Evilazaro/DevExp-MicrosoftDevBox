@@ -14,9 +14,9 @@ createMainUser () {
   fi
 
   # add to sudo group
-  #if [[ "${OS_TYPE}" == "ubuntu" ]]; then
-  #  usermod -aG sudo ${USERNAME}
-  #fi
+  if [[ "${OS_TYPE}" == "ubuntu" ]]; then
+    usermod -aG sudo ${USERNAME}
+  fi
 
   if [[ ! -d ${HOMEDIR}/Downloads ]]; then
       mkdir ${HOMEDIR}/Downloads
