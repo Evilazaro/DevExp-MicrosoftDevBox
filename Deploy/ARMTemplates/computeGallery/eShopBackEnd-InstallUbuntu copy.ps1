@@ -1,6 +1,15 @@
 $ErrorActionPreference = 'Stop'
 
 $automaticInstall = $true
+$wslRootPath = "c:\WSL2"
+$wslTempPath = $wslRootPath+"\temp"
+$wslStagingPath = $wslTempPath+"\staging"
+
+Write-Host "Creating Directories"
+
+mkdir $wslRootPath
+mkdir $wslTempPath
+mkdir $wslStagingPath
 
 $packageArgs = @{
     packageName    = 'wsl-ubuntu-2204'
@@ -8,7 +17,7 @@ $packageArgs = @{
     checksum       = 'c5028547edfe72be8f7d44ef52cee5aacaf9b1ae1ed4f7e39b94dae3cf286bc2'
     checksumType   = 'sha256'
     url            = 'https://aka.ms/wslubuntu2204'
-    fileFullPath   = "$env:TEMP\ubuntu2204.appx"
+    fileFullPath   = "$wslTempPath\ubuntu2204.appx"
     validExitCodes = @(0)
 }
 
@@ -30,29 +39,27 @@ Invoke-WebRequest -Uri $($packageArgs.url) -OutFile $($packageArgs.fileFullPath)
 
 if ($automaticInstall) {
     $wslName = 'Ubuntu'
-    #$wslInstallationPath = "$env:USERPROFILE\WSL2\$wslName"
     $wslInstallationPath = "c:\WSL2\$wslName"
-    #$wslUsername = $env:USERNAME.ToLower().Replace(' ', '')
     $wslUsername = "ubuntu-usr"
 
     # create staging directory if it does not exists
-    if (-Not (Test-Path -Path $env:TEMP\staging)) { $dir = mkdir $env:TEMP\staging }
+    if (-Not (Test-Path -Path $wslTempPath\staging)) { $dir = mkdir $wslTempPath\staging }
 
-    Move-Item $env:TEMP\ubuntu2204.appx $env:TEMP\staging\$wslName-Temp.zip
+    Move-Item $wslTempPath\ubuntu2204.appx $wslTempPath\staging\$wslName-Temp.zip
 
-    Expand-Archive $env:TEMP\staging\$wslName-Temp.zip $env:TEMP\staging\$wslName-Temp
+    Expand-Archive $wslTempPath\staging\$wslName-Temp.zip $wslTempPath\staging\$wslName-Temp
 
-    Move-Item $env:TEMP\staging\$wslName-Temp\Ubuntu_2204.0.10.0_x64.appx $env:TEMP\staging\$wslName.zip
+    Move-Item $wslTempPath\staging\$wslName-Temp\Ubuntu_2204.1.7.0_x64.appx $wslTempPath\staging\$wslName.zip
 
-    Expand-Archive $env:TEMP\staging\$wslName.zip $env:TEMP\staging\$wslName
+    Expand-Archive $wslTempPath\staging\$wslName.zip $wslTempPath\staging\$wslName
 
     if (-Not (Test-Path -Path $wslInstallationPath)) {
         mkdir $wslInstallationPath
     }
-    wsl --import $wslName $wslInstallationPath $env:TEMP\staging\$wslName\install.tar.gz
+    wsl --import $wslName $wslInstallationPath $wslTempPath\staging\$wslName\install.tar.gz
 
-    Move-Item $env:TEMP\staging\$wslName-Temp.zip $env:TEMP\ubuntu2204.appx 
-    Remove-Item -r $env:TEMP\staging\
+    Move-Item $wslTempPath\staging\$wslName-Temp.zip $wslTempPath\ubuntu2204.appx 
+    Remove-Item -r $wslTempPath\staging\
 
 
     # $chocolateyInstallFolder = $env:ChocolateyInstall.Replace('\', '/')
