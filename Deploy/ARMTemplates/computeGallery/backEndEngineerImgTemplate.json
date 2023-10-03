@@ -54,7 +54,10 @@
                         "type": "WindowsUpdate",
                         "name": "Updating Windows",
                         "windowsUpdateProvisioning": {
-                            "searchCriteria": "IsInstalled=0"
+                            "searchCriteria": "IsInstalled=0",
+                            "filters": [
+                                "exclude:$_.Title -like '*Preview*'"
+                            ]
                         }
                     },
                     {
