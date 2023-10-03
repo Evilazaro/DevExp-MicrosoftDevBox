@@ -51,46 +51,10 @@
                 },
                 "customize": [
                     {
-                        "type": "PowerShell",
-                        "name": "Disabling Windows Features",
-                        "inline": [
-                            "Disable-WindowsOptionalFeature –FeatureName 'Microsoft-Windows-Subsystem-Linux' -Online -NoRestart;",
-                            "Disable-WindowsOptionalFeature –FeatureName 'VirtualMachinePlatform' -Online -NoRestart;"
-                        ]
-                    },
-                    {
-                        "type": "WindowsRestart",
-                        "name": "Restarting Windows",
-                        "windowsRestartConfiguration": {
-                            "restartOnlyIfRequired": false,
-                            "restartSetting": "always"
-                        }
-                    },
-                    {
-                        "type": "PowerShell",
-                        "name": "Installing Windows Features",
-                        "inline": [
-                            "Enable-WindowsOptionalFeature –FeatureName 'Microsoft-Windows-Subsystem-Linux' -Online -All -NoRestart;",
-                            "Enable-WindowsOptionalFeature –FeatureName 'VirtualMachinePlatform' -Online -All -NoRestart;"
-                        ]
-                    },
-                    {
-                        "type": "WindowsRestart",
-                        "name": "Restarting Windows",
-                        "windowsRestartConfiguration": {
-                            "restartOnlyIfRequired": false,
-                            "restartSetting": "always"
-                        }
-                    },
-                    {
                         "type": "WindowsUpdate",
                         "name": "Updating Windows",
                         "windowsUpdateProvisioning": {
-                            "searchCriteria": "IsInstalled=0",
-                            "filters": [
-                                "exclude:$_.Title -like '*Preview*'",
-                                "include:$true"
-                            ]
+                            "searchCriteria": "IsInstalled=0"
                         }
                     },
                     {
