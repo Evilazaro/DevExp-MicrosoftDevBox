@@ -1,3 +1,5 @@
+Set-ExecutionPolicy Bypass -Scope Process -Force;
+
 $ErrorActionPreference = 'Stop'
 
 $automaticInstall = $true
@@ -67,7 +69,7 @@ if ($automaticInstall) {
     Write-Host $wslScriptsPth
 
     # # create your user and add it to sudoers
-    wsl -d $wslName -u root bash -ic "/mnt/c/WSL2/scripts/createUser.sh $wslUsername ubuntu"
+    #wsl -d $wslName -u root bash -ic "/mnt/c/WSL2/scripts/createUser.sh $wslUsername ubuntu"
     
     # # ensure WSL Distro is restarted when first used with user account
     wsl -t $wslName
