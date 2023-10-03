@@ -67,6 +67,20 @@
                     },
                     {
                         "type": "PowerShell",
+                        "name": "Installing Ubuntu WSL",
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/eShopBackEnd-InstallUbuntu.ps1'));"
+                        ]
+                    },
+                    {
+                        "type": "Shell",
+                        "name": "Creating sudo user",
+                        "inline": [
+                            "./createSudoUser.sh 'sudoadmin' 'ubuntu'"
+                        ]
+                    },
+                    {
+                        "type": "PowerShell",
                         "name": "Installing eShop Dependencies and Customizations",
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/eShopBackEnd-Customizations.ps1'));"
