@@ -1,13 +1,41 @@
 #!/bin/bash
 
 set -euo pipefail
-DIR_ME=$(realpath $(dirname $0))
+USERNAME=""
+HOMEDIR=""
 # this script is called by root an must fail if no user is provided
-. ${DIR_ME}/installUtils.sh
-setUserName ${1-""}
-OS_TYPE=${2-"ubuntu"}
 
-createMainUser () {
+setUserName ${"rootdmin"-""}
+OS_TYPE=${"ubuntu"}
+
+# install Utils
+
+setUserName () {
+  USERNAME=${1-""}
+  verifyUserName
+}
+
+verifyUserName () {
+  if [[ ${USERNAME} == "" ]]; then
+    echo "Please pass a user name"
+    exit 1
+  elif [[ ${USERNAME} == "root" ]]; then
+    HOMEDIR="/root"
+  else
+    HOMEDIR="/home/${USERNAME}"
+  fi
+}
+
+modifyWslConf () {
+  verifyUserName
+  sudo touch /etc/wsl.conf
+  sudo echo "[user]" >> /etc/wsl.conf
+  sudo echo "default=${USERNAME}" >> /etc/wsl.conf
+}
+
+# install Utils
+
+function createMainUser () {
   verifyUserName
   if [[ $(cat /etc/passwd | grep ${USERNAME} | wc -l) == 0 ]]; then
     useradd -m -s /bin/bash ${USERNAME}

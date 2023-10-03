@@ -76,23 +76,11 @@ function Install-VSCodeExtensions {
     }
 }
 
-function Install-Ubuntu{
-    Write-Output "Installing Ubuntu"
-    try {
-        wsl --install -d Ubuntu --no-launch
-        # choco install -y wsl2 --ignore-checksums --params "/Version:2 /Retry:true" --force
-        # choco install -y wsl-ubuntu-2204 --ignore-checksums --params "/AutomaticInstall:true" --force
-    } catch {
-        throw "Failed to install Ubuntu"
-    }
-}
-
 # Execute Functions
 try {
     Clone-Repositories -Repositories $repositories
     Install-VSCodeExtensions
     Install-Chocolatey
-    Install-Ubuntu
     Install-DockerDesktop
     Write-Output "Script completed successfully"
 } catch {

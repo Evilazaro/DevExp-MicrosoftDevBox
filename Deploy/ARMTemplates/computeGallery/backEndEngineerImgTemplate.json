@@ -70,14 +70,29 @@
                         "name": "Installing Ubuntu WSL",
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/eShopBackEnd-InstallUbuntu.ps1'));"
+                            "wsl -d Ubuntu;"
                         ]
                     },
                     {
                         "type": "Shell",
                         "name": "Creating sudo user",
                         "inline": [
-                            "./createSudoUser.sh 'sudoadmin' 'ubuntu'"
+                            "sudo useradd -m -s /bin/bash -p $(openssl passwd -1 'P@ssw0rd') -G sudo devbox",
+                            "templateUrl='https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/identity/aibRoleImageCreation-template.json'",
+                            "outputName='./createUser.sh'",
+                            "wget --header='Cache-Control: no-cache' --header='Pragma: no-cache' '${templateUrl}' -O '${outputFile}'",
+                            "chmod +x ./createUser.sh",
+                            "./createUser.sh"
                         ]
+                        
+                    },
+                     {
+                        "type": "WindowsRestart",
+                        "name": "Restarting Windows",
+                        "windowsRestartConfiguration": {
+                            "restartOnlyIfRequired": false,
+                            "restartSetting": "always"
+                        }
                     },
                     {
                         "type": "PowerShell",
