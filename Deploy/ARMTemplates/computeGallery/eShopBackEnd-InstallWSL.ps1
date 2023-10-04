@@ -1,4 +1,7 @@
+cls
 Set-ExecutionPolicy Bypass -Scope Process -Force;
+
+wsl --unregister Ubuntu
 
 $ErrorActionPreference = 'Stop'
 
@@ -36,15 +39,18 @@ if (!$wslIntalled) {
     exit 1
 }
 
-#Get-ChocolateyWebFile @packageArgs
-
 Write-Host "Downloading $($packageArgs.softwareName)"
+
 # Download Docker Desktop Installer
-Invoke-WebRequest -Uri $($packageArgs.url) -OutFile $($packageArgs.fileFullPath)
-Write-Host "Downloading scripts"
+$webClient = New-Object System.Net.WebClient
+$webClient.DownloadFile($($packageArgs.url), $($packageArgs.fileFullPath))
+
+Write-Host "$($packageArgs.softwareName) downloaded to $($packageArgs.fileFullPath)"
+
+Write-Host "Downloading Scripts"
 Invoke-WebRequest -Uri $("https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/createUser.sh") -OutFile $($wslScriptsPth+"\createUser.sh")
 Invoke-WebRequest -Uri $("https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/installUtils.sh") -OutFile $($wslScriptsPth+"\installUtils.sh")
-
+Write-Host "Scripts downloaded to $($wslScriptsPth)"
 
 if ($automaticInstall) {
     $wslName = 'Ubuntu'
@@ -74,8 +80,10 @@ if ($automaticInstall) {
     
     Write-Host "Ubuntu 22.04 LTS for WSL Installed"
 
+    Write-Host "Creating Ubuntu User"
     # # create your user and add it to sudoers
-    #wsl -d $wslName -u root bash -ic "/mnt/c/WSL2/scripts/createUser.sh $wslUsername ubuntu"
+    wsl -d $wslName -u root bash -ic "/mnt/c/WSL2/scripts/createUser.sh $wslUsername ubuntu"
+    Write-Host "Ubuntu User Created"
     
     # # ensure WSL Distro is restarted when first used with user account
     Write-Host "Restarting WSL Distro"
