@@ -1,7 +1,5 @@
 Set-ExecutionPolicy Bypass -Scope Process -Force;
 
-wsl --unregister Ubuntu
-
 $ErrorActionPreference = 'Stop'
 
 $automaticInstall = $true
@@ -40,7 +38,6 @@ if (!$wslIntalled) {
 
 Write-Host "Downloading $($packageArgs.softwareName)"
 
-# Download Docker Desktop Installer
 $webClient = New-Object System.Net.WebClient
 $webClient.DownloadFile($($packageArgs.url), $($packageArgs.fileFullPath))
 
