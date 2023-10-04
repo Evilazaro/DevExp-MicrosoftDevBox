@@ -82,10 +82,16 @@ if ($automaticInstall) {
     $date = $date.ToLongTimeString()
     Write-Host "Importing/Installing WSL at $($date)"
     wsl --import $wslName $wslInstallationPath $wslTempPath\staging\$wslName\install.tar.gz
+    Write-Host "Ubuntu Imported succesfuly at $($date)"
 
-    Move-Item $wslTempPath\staging\$wslName-Temp.zip $wslTempPath\ubuntu2204.appx 
+    Write-Host "Moving Ubuntu to staging directory at $($date)"
+    Move-Item $wslTempPath\staging\$wslName-Temp.zip $wslTempPath\ubuntu2204.appx -Force 
+    Write-Host "Ubuntu Moved to statgin directory succesfully at $($date)"
+
+    Write-Host "Deleting Ubuntu from staging directory at $($date)"
     Remove-Item -r $wslTempPath\staging\ -Force
-    
+    Write-Host "Ubuntu deleted succesfully from staging directory at $($date)"
+
     $date = Get-Date
     $date = $date.ToLongTimeString()
     Write-Host "Ubuntu 22.04 LTS for WSL Installed at $($date)"
