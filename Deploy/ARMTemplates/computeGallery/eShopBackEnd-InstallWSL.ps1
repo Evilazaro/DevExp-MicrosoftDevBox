@@ -20,7 +20,7 @@ $packageArgs = @{
     softwareName   = 'Ubuntu 22.04 LTS for WSL'
     checksum       = 'c5028547edfe72be8f7d44ef52cee5aacaf9b1ae1ed4f7e39b94dae3cf286bc2'
     checksumType   = 'sha256'
-    url            = 'https://aka.ms/wslubuntu2204'
+    url            = 'https://wsl2.blob.core.windows.net/ubuntu/Ubuntu2204-221101.AppxBundle'
     fileFullPath   = "$wslTempPath\ubuntu2204.appx"
     validExitCodes = @(0)
 }
