@@ -88,9 +88,9 @@ if ($automaticInstall) {
     Move-Item $wslTempPath\staging\$wslName-Temp.zip $wslTempPath\ubuntu2204.appx -Force 
     Write-Host "Ubuntu Moved to statgin directory succesfully at $($date)"
 
-    Write-Host "Deleting Ubuntu from staging directory at $($date)"
-    Remove-Item -r $wslTempPath\staging\ -Force
-    Write-Host "Ubuntu deleted succesfully from staging directory at $($date)"
+    # Write-Host "Deleting Ubuntu from staging directory at $($date)"
+    # Remove-Item -r $wslTempPath\staging\ -Force
+    # Write-Host "Ubuntu deleted succesfully from staging directory at $($date)"
 
     $date = Get-Date
     $date = $date.ToLongTimeString()
@@ -98,9 +98,10 @@ if ($automaticInstall) {
 
     $date = Get-Date
     $date = $date.ToLongTimeString()
+    
     Write-Host "Creating Ubuntu User at $($date)"
-    # # create your user and add it to sudoers
     wsl -d $wslName -u root bash -ic "/mnt/c/WSL2/scripts/createUser.sh $wslUsername ubuntu"
+    
     $date = Get-Date
     $date = $date.ToLongTimeString()
     Write-Host "Ubuntu User Created at $($date)"
@@ -108,7 +109,7 @@ if ($automaticInstall) {
     $date = Get-Date
     $date = $date.ToLongTimeString()
     Write-Host "Updating Ubuntu Use at $($date)"
-    # # create your user and add it to sudoers 
+    
     wsl -d $wslName -u root bash -ic "/mnt/c/temp/configureUbuntuFrontEnd.sh" -Force
     wsl -d $wslName -u root bash -ic "DEBIAN_FRONTEND=noninteractive /mnt/c/temp/updateUbuntu.sh"
 
@@ -116,7 +117,6 @@ if ($automaticInstall) {
     $date = $date.ToLongTimeString()
     Write-Host "Ubuntu Updated at $($date)"
     
-    # # ensure WSL Distro is restarted when first used with user account
     Write-Host "Restarting WSL Distro"
     wsl -t $wslName -Force
 }
