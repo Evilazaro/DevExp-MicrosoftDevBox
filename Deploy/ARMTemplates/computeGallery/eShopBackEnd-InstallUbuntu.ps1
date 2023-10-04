@@ -23,7 +23,7 @@ $packageArgs = @{
     softwareName   = 'Ubuntu 22.04 LTS for WSL'
     checksum       = 'c5028547edfe72be8f7d44ef52cee5aacaf9b1ae1ed4f7e39b94dae3cf286bc2'
     checksumType   = 'sha256'
-    url            = 'https://wsl2.blob.core.windows.net/ubuntu/Ubuntu2204-221101.AppxBundle'
+    url            = 'https://aka.ms/wslubuntu2204'
     fileFullPath   = "$wslTempPath\ubuntu2204.appx"
     validExitCodes = @(0)
 }
@@ -32,6 +32,7 @@ $wslIntalled = $false
 Write-Host "Checking if WSL is installed"
 if (Get-Command wsl.exe -ErrorAction SilentlyContinue) {
     $wslIntalled = $true
+    Write-Host "WSL is Intalled"
 }
 
 if (!$wslIntalled) {
@@ -39,13 +40,18 @@ if (!$wslIntalled) {
     exit 1
 }
 
-Write-Host "Downloading $($packageArgs.softwareName)"
+$date = Get-Date
+$date = $date.ToLongTimeString()
+Write-Host "Downloading $($packageArgs.softwareName) at $($date)"
 
 # Download Docker Desktop Installer
 $webClient = New-Object System.Net.WebClient
 $webClient.DownloadFile($($packageArgs.url), $($packageArgs.fileFullPath))
 
-Write-Host "$($packageArgs.softwareName) downloaded to $($packageArgs.fileFullPath)"
+$date = Get-Date
+$date = $date.ToLongTimeString()
+
+Write-Host "$($packageArgs.softwareName) downloaded to $($packageArgs.fileFullPath) at $($date)"
 
 Write-Host "Downloading Scripts"
 Invoke-WebRequest -Uri $("https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/createUser.sh") -OutFile $($wslScriptsPth+"\createUser.sh")
@@ -60,34 +66,53 @@ if ($automaticInstall) {
     # create staging directory if it does not exists
     if (-Not (Test-Path -Path $wslTempPath\staging)) { $dir = mkdir $wslTempPath\staging }
 
-    Move-Item $wslTempPath\ubuntu2204.appx $wslTempPath\staging\$wslName-Temp.zip
+    Move-Item $wslTempPath\ubuntu2204.appx $wslTempPath\staging\$wslName-Temp.zip -Force
 
-    Expand-Archive $wslTempPath\staging\$wslName-Temp.zip $wslTempPath\staging\$wslName-Temp
+    Expand-Archive $wslTempPath\staging\$wslName-Temp.zip $wslTempPath\staging\$wslName-Temp -Force
 
-    Move-Item $wslTempPath\staging\$wslName-Temp\Ubuntu_2204.1.7.0_x64.appx $wslTempPath\staging\$wslName.zip
+    Move-Item $wslTempPath\staging\$wslName-Temp\Ubuntu_2204.1.7.0_x64.appx $wslTempPath\staging\$wslName.zip -Force
 
-    Expand-Archive $wslTempPath\staging\$wslName.zip $wslTempPath\staging\$wslName
+    Expand-Archive $wslTempPath\staging\$wslName.zip $wslTempPath\staging\$wslName -Force
 
     if (-Not (Test-Path -Path $wslInstallationPath)) {
         mkdir $wslInstallationPath
     }
 
-    Write-Host "Importing/Installing WSL"
+    $date = Get-Date
+    $date = $date.ToLongTimeString()
+    Write-Host "Importing/Installing WSL at $($date)"
     wsl --import $wslName $wslInstallationPath $wslTempPath\staging\$wslName\install.tar.gz
 
     Move-Item $wslTempPath\staging\$wslName-Temp.zip $wslTempPath\ubuntu2204.appx 
-    Remove-Item -r $wslTempPath\staging\
+    Remove-Item -r $wslTempPath\staging\ -Force
     
-    Write-Host "Ubuntu 22.04 LTS for WSL Installed"
+    $date = Get-Date
+    $date = $date.ToLongTimeString()
+    Write-Host "Ubuntu 22.04 LTS for WSL Installed at $($date)"
 
-    Write-Host "Creating Ubuntu User"
+    $date = Get-Date
+    $date = $date.ToLongTimeString()
+    Write-Host "Creating Ubuntu User at $($date)"
     # # create your user and add it to sudoers
     wsl -d $wslName -u root bash -ic "/mnt/c/WSL2/scripts/createUser.sh $wslUsername ubuntu"
-    Write-Host "Ubuntu User Created"
+    $date = Get-Date
+    $date = $date.ToLongTimeString()
+    Write-Host "Ubuntu User Created at $($date)"
+
+    $date = Get-Date
+    $date = $date.ToLongTimeString()
+    Write-Host "Updating Ubuntu Use at $($date)"
+    # # create your user and add it to sudoers 
+    wsl -d $wslName -u root bash -ic "/mnt/c/temp/configureUbuntuFrontEnd.sh" -Force
+    wsl -d $wslName -u root bash -ic "DEBIAN_FRONTEND=noninteractive /mnt/c/temp/updateUbuntu.sh"
+
+    $date = Get-Date
+    $date = $date.ToLongTimeString()
+    Write-Host "Ubuntu Updated at $($date)"
     
     # # ensure WSL Distro is restarted when first used with user account
     Write-Host "Restarting WSL Distro"
-    wsl -t $wslName
+    wsl -t $wslName -Force
 }
 else {
     Add-AppxPackage $packageArgs.fileFullPath
