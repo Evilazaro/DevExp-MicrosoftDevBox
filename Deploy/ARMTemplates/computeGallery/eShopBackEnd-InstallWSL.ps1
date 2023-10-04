@@ -66,13 +66,13 @@ if ($automaticInstall) {
         mkdir $wslInstallationPath
     }
 
-    Write-Host "Importing WSL"
+    Write-Host "Importing/Installing WSL"
     wsl --import $wslName $wslInstallationPath $wslTempPath\staging\$wslName\install.tar.gz
 
     Move-Item $wslTempPath\staging\$wslName-Temp.zip $wslTempPath\ubuntu2204.appx 
     Remove-Item -r $wslTempPath\staging\
     
-    Write-Host $wslScriptsPth
+    Write-Host "Ubuntu 22.04 LTS for WSL Installed"
 
     # # create your user and add it to sudoers
     #wsl -d $wslName -u root bash -ic "/mnt/c/WSL2/scripts/createUser.sh $wslUsername ubuntu"
