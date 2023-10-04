@@ -1,4 +1,3 @@
-cls
 Set-ExecutionPolicy Bypass -Scope Process -Force;
 
 wsl --unregister Ubuntu
@@ -23,7 +22,7 @@ $packageArgs = @{
     softwareName   = 'Ubuntu 22.04 LTS for WSL'
     checksum       = 'c5028547edfe72be8f7d44ef52cee5aacaf9b1ae1ed4f7e39b94dae3cf286bc2'
     checksumType   = 'sha256'
-    url            = 'https://wsl2.blob.core.windows.net/ubuntu/Ubuntu2204-221101.AppxBundle'
+    url            = 'https://aka.ms/wslubuntu2204'
     fileFullPath   = "$wslTempPath\ubuntu2204.appx"
     validExitCodes = @(0)
 }
@@ -50,6 +49,8 @@ Write-Host "$($packageArgs.softwareName) downloaded to $($packageArgs.fileFullPa
 Write-Host "Downloading Scripts"
 Invoke-WebRequest -Uri $("https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/createUser.sh") -OutFile $($wslScriptsPth+"\createUser.sh")
 Invoke-WebRequest -Uri $("https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/installUtils.sh") -OutFile $($wslScriptsPth+"\installUtils.sh")
+Invoke-WebRequest -Uri $("https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/installUtils.sh") -OutFile $($wslScriptsPth+"\configureUbuntuFrontEnd.sh")
+Invoke-WebRequest -Uri $("https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/installUtils.sh") -OutFile $($wslScriptsPth+"\updateUbuntu.sh")
 Write-Host "Scripts downloaded to $($wslScriptsPth)"
 
 if ($automaticInstall) {
@@ -84,6 +85,13 @@ if ($automaticInstall) {
     # # create your user and add it to sudoers
     wsl -d $wslName -u root bash -ic "/mnt/c/WSL2/scripts/createUser.sh $wslUsername ubuntu"
     Write-Host "Ubuntu User Created"
+
+     Write-Host "Updating Ubuntu"
+    # # create your user and add it to sudoers
+    wsl -d $wslName -u root bash -ic "/mnt/c/temp/configureUbuntuFrontEnd.sh"
+    wsl -d $wslName -u root bash -ic "DEBIAN_FRONTEND=noninteractive /mnt/c/temp/updateUbuntu.sh"
+
+    Write-Host "Ubuntu Updated"
     
     # # ensure WSL Distro is restarted when first used with user account
     Write-Host "Restarting WSL Distro"
