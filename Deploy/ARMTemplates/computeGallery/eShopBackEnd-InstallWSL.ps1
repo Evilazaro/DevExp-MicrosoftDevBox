@@ -94,9 +94,9 @@ if ($automaticInstall) {
     Move-Item $wslTempPath\staging\$wslName-Temp.zip $wslTempPath\ubuntu2204.appx -Force 
     Write-Host "Ubuntu Moved to statgin directory succesfully at $($date)"
 
-    Write-Host "Deleting Ubuntu from staging directory at $($date)"
-    Remove-Item -r $wslTempPath\staging\ -Force
-    Write-Host "Ubuntu deleted succesfully from staging directory at $($date)"
+    # Write-Host "Deleting Ubuntu from staging directory at $($date)"
+    # Remove-Item -r $wslTempPath\staging\ -Force
+    # Write-Host "Ubuntu deleted succesfully from staging directory at $($date)"
 
     $date = Get-Date
     $date = $date.ToLongTimeString()
