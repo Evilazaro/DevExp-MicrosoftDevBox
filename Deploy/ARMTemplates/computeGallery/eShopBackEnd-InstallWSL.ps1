@@ -60,8 +60,8 @@ Write-Host "Scripts downloaded to $($wslScriptsPth)"
 
 if ($automaticInstall) {
     $wslName = 'Ubuntu'
-    $wslInstallationPath = "c:\WSL2\$wslName"
-    $wslUsername = "ubuntu-usr"
+    $wslInstallationPath = "C:\Users\Default\AppData\Local\WSL\$wslName"
+    $wslUsername = "vmadmin"
 
     # create staging directory if it does not exists
     if (-Not (Test-Path -Path $wslTempPath\staging)) { $dir = mkdir $wslTempPath\staging }
@@ -80,6 +80,11 @@ if ($automaticInstall) {
 
     $date = Get-Date
     $date = $date.ToLongTimeString()
+    Write-Host "Creating Ubuntu Directory at $($date)"
+    mkdir $wslInstallationPath
+    Write-Host "Ubuntu Directory created succesfully at $($date)"
+    $date = Get-Date
+    $date = $date.ToLongTimeString()
     Write-Host "Importing/Installing WSL at $($date)"
     wsl --import $wslName $wslInstallationPath $wslTempPath\staging\$wslName\install.tar.gz
     Write-Host "Ubuntu Imported succesfuly at $($date)"
@@ -88,9 +93,9 @@ if ($automaticInstall) {
     Move-Item $wslTempPath\staging\$wslName-Temp.zip $wslTempPath\ubuntu2204.appx -Force 
     Write-Host "Ubuntu Moved to statgin directory succesfully at $($date)"
 
-    # Write-Host "Deleting Ubuntu from staging directory at $($date)"
-    # Remove-Item -r $wslTempPath\staging\ -Force
-    # Write-Host "Ubuntu deleted succesfully from staging directory at $($date)"
+    Write-Host "Deleting Ubuntu from staging directory at $($date)"
+    Remove-Item -r $wslTempPath\staging\ -Force
+    Write-Host "Ubuntu deleted succesfully from staging directory at $($date)"
 
     $date = Get-Date
     $date = $date.ToLongTimeString()
