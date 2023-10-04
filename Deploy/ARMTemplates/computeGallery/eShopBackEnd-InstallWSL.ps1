@@ -110,7 +110,7 @@ if ($automaticInstall) {
     $date = $date.ToLongTimeString()
     Write-Host "Updating Ubuntu Use at $($date)"
     
-    wsl -d $wslName -u root bash -ic "/mnt/c/temp/configureUbuntuFrontEnd.sh" -Force
+    wsl -d $wslName -u root bash -ic "/mnt/c/temp/configureUbuntuFrontEnd.sh" 
     wsl -d $wslName -u root bash -ic "DEBIAN_FRONTEND=noninteractive /mnt/c/temp/updateUbuntu.sh"
 
     $date = Get-Date
@@ -118,7 +118,7 @@ if ($automaticInstall) {
     Write-Host "Ubuntu Updated at $($date)"
     
     Write-Host "Restarting WSL Distro"
-    wsl -t $wslName -Force
+    wsl -t $wslName
 }
 else {
     Add-AppxPackage $packageArgs.fileFullPath
