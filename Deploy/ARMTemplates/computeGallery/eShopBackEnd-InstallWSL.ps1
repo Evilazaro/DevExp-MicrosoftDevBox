@@ -7,6 +7,7 @@ $wslRootPath = "c:\WSL2"
 $wslTempPath = $wslRootPath+"\temp"
 $wslStagingPath = $wslTempPath+"\staging"
 $wslScriptsPth = $wslRootPath+"\scripts"
+
 Write-Host "Creating Directories"
 
 mkdir $wslRootPath
@@ -25,6 +26,7 @@ $packageArgs = @{
 }
 
 $wslIntalled = $false
+Write-Host "Checking if WSL is installed"
 if (Get-Command wsl.exe -ErrorAction SilentlyContinue) {
     $wslIntalled = $true
 }
@@ -36,8 +38,10 @@ if (!$wslIntalled) {
 
 #Get-ChocolateyWebFile @packageArgs
 
+Write-Host "Downloading $($packageArgs.softwareName)"
 # Download Docker Desktop Installer
 Invoke-WebRequest -Uri $($packageArgs.url) -OutFile $($packageArgs.fileFullPath)
+Write-Host "Downloading scripts"
 Invoke-WebRequest -Uri $("https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/createUser.sh") -OutFile $($wslScriptsPth+"\createUser.sh")
 Invoke-WebRequest -Uri $("https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/installUtils.sh") -OutFile $($wslScriptsPth+"\installUtils.sh")
 
@@ -61,6 +65,8 @@ if ($automaticInstall) {
     if (-Not (Test-Path -Path $wslInstallationPath)) {
         mkdir $wslInstallationPath
     }
+
+    Write-Host "Importing WSL"
     wsl --import $wslName $wslInstallationPath $wslTempPath\staging\$wslName\install.tar.gz
 
     Move-Item $wslTempPath\staging\$wslName-Temp.zip $wslTempPath\ubuntu2204.appx 
@@ -72,6 +78,7 @@ if ($automaticInstall) {
     #wsl -d $wslName -u root bash -ic "/mnt/c/WSL2/scripts/createUser.sh $wslUsername ubuntu"
     
     # # ensure WSL Distro is restarted when first used with user account
+    Write-Host "Restarting WSL Distro"
     wsl -t $wslName
 }
 else {
