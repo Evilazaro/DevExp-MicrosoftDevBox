@@ -60,7 +60,7 @@ Write-Host "Scripts downloaded to $($wslScriptsPth)"
 
 if ($automaticInstall) {
     $wslName = 'Ubuntu'
-    $wslInstallationPath = "C:\Users\Default\AppData\Local\WSL\$wslName"
+    $wslInstallationPath = "C:\Users\Default\AppData\Local\WSL2\$wslName"
     $wslUsername = "vmadmin"
 
     # create staging directory if it does not exists
@@ -75,14 +75,15 @@ if ($automaticInstall) {
     Expand-Archive $wslTempPath\staging\$wslName.zip $wslTempPath\staging\$wslName -Force
 
     if (-Not (Test-Path -Path $wslInstallationPath)) {
+        $date = Get-Date
+        $date = $date.ToLongTimeString()
+        Write-Host "Creating Ubuntu Directory at $($date)"
         mkdir $wslInstallationPath
+        $date = Get-Date
+        $date = $date.ToLongTimeString()
+        Write-Host "Ubuntu Directory created succesfully at $($date)"
     }
 
-    $date = Get-Date
-    $date = $date.ToLongTimeString()
-    Write-Host "Creating Ubuntu Directory at $($date)"
-    mkdir $wslInstallationPath
-    Write-Host "Ubuntu Directory created succesfully at $($date)"
     $date = Get-Date
     $date = $date.ToLongTimeString()
     Write-Host "Importing/Installing WSL at $($date)"
