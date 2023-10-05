@@ -1,14 +1,3 @@
-<#
-.SYNOPSIS
-This script clones repositories, installs Docker Desktop, and VS Code Extensions.
-
-.DESCRIPTION
-The script performs the following actions:
-- Sets the execution policy to Bypass for the process scope.
-- Clones the specified repositories to the specified destinations.
-- Installs Docker Desktop using Chocolatey.
-- Installs specified VS Code Extensions.
-#>
 
 # Set the execution policy
 Set-ExecutionPolicy Bypass -Scope Process -Force
@@ -43,22 +32,27 @@ function Clone-Repositories {
     }
 }
 
-function Install-Chocolatey{
-    Write-Output "Installing Chocolatey"
-    try {
-        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'));
-    } catch {
-        throw "Failed to install Chocolatey"
-    }
-}
-
 function Install-DockerDesktop {
     Write-Output "Installing Docker Desktop"
     try {
-        choco install -y --ignore-checksums docker-desktop --ia '--quiet --accept-license' --force
+        $dockerTempFilePath="c:\DockerTemp"
+        mkdir $dockerTempFilePath
+
+        $packageArgs = @{
+            packageName    = 'docker-desktop'
+            softwareName   = 'Docker Desktop'
+            url            = 'https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe' 
+            fileFullPath   = "$($dockerTempFilePath)\dockerinstall.exe" 
+            validExitCodes = @(0)
+        }
+
+        $webClient = New-Object System.Net.WebClient
+        $webClient.DownloadFile($($packageArgs.url), $($packageArgs.fileFullPath))
+        c:\DockerTemp\dockerinstall.exe install --wait --quiet --quiet --accept-license
     } catch {
         throw "Failed to install Docker Desktop"
     }
+    Write-Output "Docker Desktop installed successfully"
 }
 
 function Install-VSCodeExtensions {
@@ -80,7 +74,6 @@ function Install-VSCodeExtensions {
 try {
     Clone-Repositories -Repositories $repositories
     Install-VSCodeExtensions
-    Install-Chocolatey
     Install-DockerDesktop
     Write-Output "Script completed successfully"
 } catch {
