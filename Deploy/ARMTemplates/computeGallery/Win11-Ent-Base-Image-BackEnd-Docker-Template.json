@@ -1,14 +1,31 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {},
+    "parameters": {
+        "imgName": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "imageGalleryId": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "userAssignedId": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "location": {
+            "defaultValue": "",
+            "type": "String"
+        }
+    },
     "variables": {},
     "resources": [
         {
             "type": "Microsoft.VirtualMachineImages/imageTemplates",
             "apiVersion": "2022-07-01",
-            "name": "BackEnd-Docker-v2",
-            "location": "westus3",
+            "name": "[parameters('imgName')]",
+            "location": "[parameters('location')]",
             "tags": {
                 "Environment": "Prod",
                 "Role": "Front-End-Engineer",
@@ -21,7 +38,7 @@
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourcegroups/ContosoFabric-Identity-DevBox-RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ContosoFabricDevBoxImgBldId": {}
+                    "[parameters('userAssignedId')]": {}
                 }
             },
             "properties": {
@@ -34,30 +51,38 @@
                 },
                 "customize": [
                     {
+                        "type": "PowerShell",
+                        "name": "Installing Ubuntu WSL",
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/eShopBackEnd-InstallWSL.ps1'));"
                         ],
-                        "name": "Installing Ubuntu WSL",
-                        "runAsSystem": false,
-                        "runElevated": false,
-                        "type": "PowerShell"
+                        "validExitCodes": [
+                            0,
+                            4294
+                        ]
                     },
                     {
+                        "type": "WindowsRestart",
                         "name": "Restarting Windows",
-                        "type": "WindowsRestart"
+                        "windowsRestartConfiguration": {
+                            "restartOnlyIfRequired": false,
+                            "restartSetting": "always"
+                        }
                     },
                     {
+                        "type": "PowerShell",
+                        "name": "Installing eShop Dependencies and Customizations",
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/eShopBackEnd-Customizations.ps1'));"
-                        ],
-                        "name": "Installing eShop Dependencies and Customizations",
-                        "runAsSystem": false,
-                        "runElevated": false,
-                        "type": "PowerShell"
+                        ]
                     },
                     {
+                        "type": "WindowsRestart",
                         "name": "Restarting Windows",
-                        "type": "WindowsRestart"
+                        "windowsRestartConfiguration": {
+                            "restartOnlyIfRequired": false,
+                            "restartSetting": "always"
+                        }
                     }
                 ],
                 "distribute": [
@@ -72,11 +97,11 @@
                             "solution": "eShop"
                         },
                         "excludeFromLatest": false,
-                        "galleryImageId": "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourceGroups/ContosoFabric-ImageGallery-RG/providers/Microsoft.Compute/galleries/ContosoFabricImageGallery/images/BackEnd-Docker-Imgdef",
+                        "galleryImageId": "[concat(parameters('imageGalleryId'), concat('/images/', parameters('imgName'), 'def'))]",
                         "replicationRegions": [
-                            "WestUS3"
+                            "[parameters('location')]"
                         ],
-                        "runOutputName": "BackEnd-Docker-Img",
+                        "runOutputName": "[parameters('imgName')]",
                         "type": "SharedImage"
                     }
                 ],
@@ -85,7 +110,7 @@
                     "vmSize": "Standard_DS2_v2",
                     "osDiskSizeGB": 128,
                     "userAssignedIdentities": [
-                        "/subscriptions/9e946e16-45cd-4e6a-ad69-bb7c5e24c230/resourcegroups/ContosoFabric-Identity-DevBox-RG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ContosoFabricDevBoxImgBldId"
+                        "[parameters('userAssignedId')]"
                     ]
                 }
             }
