@@ -55,7 +55,7 @@ function Install-Chocolatey{
 function Install-DockerDesktop {
     Write-Output "Installing Docker Desktop"
     try {
-        choco install -y --ignore-checksums docker-desktop --ia '--quiet --accept-license'
+        choco install -y --ignore-checksums docker-desktop --ia '--quiet --accept-license' --force
     } catch {
         throw "Failed to install Docker Desktop"
     }
@@ -64,13 +64,13 @@ function Install-DockerDesktop {
 function Install-VSCodeExtensions {
     Write-Output "Installing VS Code Extensions"
     try {
-        code --install-extension ms-vscode-remote.remote-wsl --force 
-        code --install-extension ms-vscode.vscode-node-azure-pack --force
-        code --install-extension ms-azuretools.vscode-docker --force
-        code --install-extension ms-kubernetes-tools.vscode-aks-tools --force
-        code --install-extension ms-azuretools.vscode-apimanagement --force
-        code --install-extension VisualStudioOnlineApplicationInsights.application-insights --force
-        code --install-extension ms-dotnettools.csdevkit --force
+        code --install-extension ms-vscode-remote.remote-wsl --force; 
+        code --install-extension ms-vscode.vscode-node-azure-pack --force;
+        code --install-extension ms-azuretools.vscode-docker --force;
+        code --install-extension ms-kubernetes-tools.vscode-aks-tools --force;
+        code --install-extension ms-azuretools.vscode-apimanagement --force;
+        code --install-extension VisualStudioOnlineApplicationInsights.application-insights --force;
+        code --install-extension ms-dotnettools.csdevkit --force;
     } catch {
         throw "Failed to install VS Code Extensions"
     }

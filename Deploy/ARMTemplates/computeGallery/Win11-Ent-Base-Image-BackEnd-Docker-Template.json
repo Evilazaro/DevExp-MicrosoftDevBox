@@ -51,45 +51,38 @@
                 },
                 "customize": [
                     {
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'));"
-                        ],
-                        "name": "Install Chocolatey",
-                        "runAsSystem": false,
-                        "runElevated": false,
-                        "type": "PowerShell"
-                    },
-                    {
                         "type": "PowerShell",
-                        "name": "Install WSL Ubuntu and Docker Desktop",
-                        "inline": ["Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/contosoeShopEngineersWorkstationCustomizztions.ps1'));"]
+                        "name": "Installing Ubuntu WSL",
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/eShopBackEnd-InstallWSL.ps1'));"
+                        ],
+                        "validExitCodes": [
+                            0,
+                            4294
+                        ]
                     },
                     {
                         "type": "WindowsRestart",
-                        "name": "Restart Computer",
-                        "restartCheckCommand": "powershell.exe -command \"&{Write-Host 'Restarting computer...'; Start-Sleep -s 60; if (Test-Path -Path 'C:\\Windows\\System32') {exit 0} else {exit 1}}\""
+                        "name": "Restarting Windows",
+                        "windowsRestartConfiguration": {
+                            "restartOnlyIfRequired": false,
+                            "restartSetting": "always"
+                        }
                     },
                     {
+                        "type": "PowerShell",
+                        "name": "Installing eShop Dependencies and Customizations",
                         "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "cd C:\\;",
-                            "git clone https://github.com/Evilazaro/eShopOnContainers.git eShop;"
-                        ],
-                        "name": "Clone GitHub Repo for eShopOnContainers",
-                        "runAsSystem": false,
-                        "runElevated": false,
-                        "type": "PowerShell"
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/eShopBackEnd-Customizations.ps1'));"
+                        ]
                     },
                     {
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "cd C:\\;",
-                            "git clone https://github.com/Evilazaro/eShopAPIM.git;"
-                        ],
-                        "name": "Clone GitHub Repo for eShopAPIs",
-                        "runAsSystem": false,
-                        "runElevated": false,
-                        "type": "PowerShell"
+                        "type": "WindowsRestart",
+                        "name": "Restarting Windows",
+                        "windowsRestartConfiguration": {
+                            "restartOnlyIfRequired": false,
+                            "restartSetting": "always"
+                        }
                     }
                 ],
                 "distribute": [
