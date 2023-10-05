@@ -9,7 +9,7 @@ customRoleName="$4"           # Custom Role Name
 # Constants
 outputFile="./downloadedTempTemplates/identity/aibroleImageCreation-template.json"
 windows365identityName="0af06dc6-e4b5-4f28-818e-e78e62d137a5"
-branch="Dev"
+branch="main"
 
 # Derive Current User Details
 currentUserName=$(az account show --query user.name -o tsv) # Azure Logged in Username

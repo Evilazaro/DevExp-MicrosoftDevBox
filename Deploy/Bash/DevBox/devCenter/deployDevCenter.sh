@@ -32,7 +32,7 @@ echo "Identity Resource Group Name: $identityResourceGroupName"
 echo "Image Gallery Resource Group Name: $imageGalleryResourceGroupName"
 
 # Define other constants
-branch="Dev"
+branch="main"
 templateFileUri="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/devBox/devCentertemplate.json"
 
 echo "Fetching network connection id..."

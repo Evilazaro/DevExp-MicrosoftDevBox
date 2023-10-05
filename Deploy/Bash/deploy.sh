@@ -204,7 +204,7 @@ function buildImage
 set -e
 
 # Variables
-branch="Dev"
+branch="main"
 location='WestUS3'
 
 # Validate if subscriptionName is provided

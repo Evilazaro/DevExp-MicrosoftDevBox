@@ -54,8 +54,8 @@ $date = $date.ToLongTimeString()
 Write-Host "$($packageArgs.softwareName) downloaded to $($packageArgs.fileFullPath) at $($date)"
 
 Write-Host "Downloading Scripts"
-Invoke-WebRequest -Uri $("https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/createUser.sh") -OutFile $($wslScriptsPth+"\createUser.sh")
-Invoke-WebRequest -Uri $("https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/Dev/Deploy/ARMTemplates/computeGallery/installUtils.sh") -OutFile $($wslScriptsPth+"\installUtils.sh")
+Invoke-WebRequest -Uri $("https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/createUser.sh") -OutFile $($wslScriptsPth+"\createUser.sh")
+Invoke-WebRequest -Uri $("https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/installUtils.sh") -OutFile $($wslScriptsPth+"\installUtils.sh")
 Write-Host "Scripts downloaded to $($wslScriptsPth)"
 
 if ($automaticInstall) {

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define variables
-branch="Dev"
+branch="main"
 
 # Ensure all required parameters are provided
 if [ "$#" -ne 5 ]; then
