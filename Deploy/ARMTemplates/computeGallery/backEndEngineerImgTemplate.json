@@ -53,29 +53,14 @@
                     {
                         "type": "WindowsUpdate",
                         "name": "Installing Windows Updates",
-                        "filters": [
-                            {
-                                "applyRule": "All",
-                                "category": "Critical",
-                                "severity": "Unspecified"
-                            },
-                            {
-                                "applyRule": "All",
-                                "category": "Security",
-                                "severity": "Unspecified"
-                            },
-                            {
-                                "applyRule": "All",
-                                "category": "Update Rollups",
-                                "severity": "Unspecified"
-                            },
-                            {
-                                "applyRule": "All",
-                                "category": "Updates",
-                                "severity": "Unspecified"
-                            }
-                        ]
-
+                        "windowsUpdateProvisioningConfiguration": {
+                            "includedUpdateClassifications": [
+                                "Critical",
+                                "Security",
+                                "UpdateRollup"
+                            ],
+                            "rebootSetting": "ifRequired"
+                        }
                     },
                     {
                         "type": "WindowsRestart",
