@@ -44,7 +44,7 @@ if ($automaticInstall) {
     $date = Get-Date
     $date = $date.ToLongTimeString()
     Write-Host "Installing Ubuntu at $($date)"
-    wsl --install -d Ubuntu
+    wsl --install -d Ubuntu --no-launch
     Write-Host "Ubuntu installed succesfuly at $($date)"
 
     # $date = Get-Date
@@ -72,9 +72,9 @@ if ($automaticInstall) {
     # $date = $date.ToLongTimeString()
     # Write-Host "Ubuntu Updated at $($date)"
     
-    Write-Host "Restarting WSL Distro"
-    wsl -t $wslName
-    write-host "WSL Distro Restarted"
+    # Write-Host "Restarting WSL Distro"
+    # wsl -t $wslName
+    # write-host "WSL Distro Restarted"
 
     Write-Host "Finishing WSL Ubuntu installation at $(Get-Date)"
 }
