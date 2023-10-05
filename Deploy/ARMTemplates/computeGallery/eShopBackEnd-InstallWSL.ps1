@@ -106,7 +106,7 @@ if ($automaticInstall) {
     $date = $date.ToLongTimeString()
     
     Write-Host "Creating Ubuntu User at $($date)"
-    wsl -d $wslName -u root bash -ic "/mnt/c/WSL2/scripts/createUser.sh $wslUsername ubuntu"
+    #wsl -d $wslName -u root bash -ic "/mnt/c/WSL2/scripts/createUser.sh $wslUsername ubuntu"
     
     $date = Get-Date
     $date = $date.ToLongTimeString()
@@ -116,8 +116,8 @@ if ($automaticInstall) {
     $date = $date.ToLongTimeString()
     Write-Host "Updating Ubuntu Use at $($date)"
     
-    wsl -d $wslName -u root bash -ic "/mnt/c/temp/configureUbuntuFrontEnd.sh" 
-    wsl -d $wslName -u root bash -ic "DEBIAN_FRONTEND=noninteractive /mnt/c/temp/updateUbuntu.sh"
+    #wsl -d $wslName -u root bash -ic "/mnt/c/temp/configureUbuntuFrontEnd.sh" 
+    #wsl -d $wslName -u root bash -ic "DEBIAN_FRONTEND=noninteractive /mnt/c/temp/updateUbuntu.sh"
 
     $date = Get-Date
     $date = $date.ToLongTimeString()
