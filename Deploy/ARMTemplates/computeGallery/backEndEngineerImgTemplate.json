@@ -76,6 +76,22 @@
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/eShopBackEnd-Customizations.ps1'));"
                         ]
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "Adding local Administrators Group to Docker-Users Group",
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                            "Add-LocalGroupMember -Group 'docker-users' -Member 'Administrators';"
+                        ]
+                    },
+                    {
+                        "type": "WindowsRestart",
+                        "name": "Restarting Windows",
+                        "windowsRestartConfiguration": {
+                            "restartOnlyIfRequired": false,
+                            "restartSetting": "always"
+                        }
                     }
                 ],
                 "distribute": [
