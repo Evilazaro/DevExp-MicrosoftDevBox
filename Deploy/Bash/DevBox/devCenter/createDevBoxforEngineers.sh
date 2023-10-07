@@ -46,8 +46,12 @@ az devcenter dev dev-box create \
     --name "$devBoxName" \
     --dev-center-name "$devCenterName" \
     --project-name "$projectName" \
-    --user-id "$currentAzureLoggedUserID" \
-    --no-wait
+    --user-id "$currentAzureLoggedUserID"
+
+# Restarting Dev Box
+echo "Restarting Dev Box..."
+az devcenter dev dev-box restart --dev-box-name "$devBoxName" \
+                                 --project "$projectName"
 
 # Check if the dev box creation was successful
 if [ "$?" -eq 0 ]; then
