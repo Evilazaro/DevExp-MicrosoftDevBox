@@ -9,6 +9,7 @@ customRoleName="$4"           # Custom Role Name
 # Constants
 outputFile="./downloadedTempTemplates/identity/aibroleImageCreation-template.json"
 windows365identityName="0af06dc6-e4b5-4f28-818e-e78e62d137a5"
+globalAdminIdentityName=
 branch="main"
 
 # Derive Current User Details
@@ -74,7 +75,13 @@ echo "Script started."
 
 createCustomRole "$subscriptionId" "$identityResourceGroupName" "$outputFile" "$customRoleName"
 
-assignRole "$identityId" "Owner" "$subscriptionId"
+assignRole "$identityId" "Virtual Machine Contributor" "$subscriptionId"
+assignRole "$identityId" "Desktop Virtualization Contributor" "$subscriptionId"
+assignRole "$identityId" "Desktop Virtualization Virtual Machine Contributor" "$subscriptionId"
+assignRole "$identityId" "Desktop Virtualization Workspace Contributor" "$subscriptionId"
+assignRole "$identityId" "Compute Gallery Sharing Admin" "$subscriptionId"
+assignRole "$identityId" "Virtual Machine Contributor" "$subscriptionId"
+assignRole "$identityId" "Virtual Machine Local User Login" "$subscriptionId"
 assignRole "$identityId" "Managed Identity Operator" "$subscriptionId"
 assignRole "$identityId" "$customRoleName" "$subscriptionId"
 assignRole "$windows365identityName" "Reader" "$subscriptionId"

@@ -46,6 +46,7 @@ az devcenter dev dev-box create \
     --name "$devBoxName" \
     --dev-center-name "$devCenterName" \
     --project-name "$projectName" \
+    --user-id "$currentAzureLoggedUserID" \
     --no-wait
 
 # Check if the dev box creation was successful
