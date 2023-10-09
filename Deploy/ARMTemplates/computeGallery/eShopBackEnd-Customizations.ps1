@@ -55,6 +55,34 @@ function Install-DockerDesktop {
     Write-Output "Docker Desktop installed successfully"
 }
 
+function addUsersToDockerUsersGroup()
+{
+    # Get and display Azure AD users based on the UserPrincipalName search string
+    Write-Host "Getting Azure AD users..."
+    $users = Get-AzureADUser
+
+    # Process and display the results
+    Write-Host "Adding Azure AD users to the docker-users group..."
+    try {
+        foreach ($user in $users) {
+            
+            if ($user.UserType -eq "Member") {
+                Write-Host "Display Name: $($user.DisplayName)";
+                Write-Host "User Principal Name: $($user.UserPrincipalName)";
+                Write-Host "Object ID: $($user.ObjectId)";
+                Write-Host "Object Type: $($user.ObjectType)";
+                Write-Host "Creation Type: $($user.CreationType)";
+                Write-Host "Account Enabled: $($user.AccountEnabled)";
+                Write-Host "-----------------------------";
+                Add-LocalGroupMember -Group 'docker-users' -Member "$($user.UserPrincipalName)";
+            }        
+        }
+    }
+    catch {
+        
+    }
+}
+
 function Install-VSCodeExtensions {
     Write-Output "Installing VS Code Extensions"
     try {
