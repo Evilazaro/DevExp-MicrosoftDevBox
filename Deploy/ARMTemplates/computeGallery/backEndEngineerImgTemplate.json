@@ -81,7 +81,7 @@
                         "type": "PowerShell",
                         "name": "Adding User to Docker Group",
                         "inline": [
-                            "Add-LocalGroupMember -Group 'docker-users' -Member 'admin@MngEnvMCAP919353.onmicrosoft.com';"
+                            "Add-LocalGroupMember -Group 'docker-users' -Member 'azuread\systemadministrator';"
                         ]
                     },
                     {
