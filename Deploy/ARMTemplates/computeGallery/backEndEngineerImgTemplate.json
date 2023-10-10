@@ -78,6 +78,13 @@
                         ]
                     },
                     {
+                        "type": "PowerShell",
+                        "name": "Adding User to Docker Group",
+                        "inline": [
+                            "Add-LocalGroupMember -Group 'docker-users' -Member 'admin@MngEnvMCAP919353.onmicrosoft.com';"
+                        ]
+                    },
+                    {
                         "type": "WindowsRestart",
                         "name": "Restarting Windows",
                         "windowsRestartConfiguration": {
