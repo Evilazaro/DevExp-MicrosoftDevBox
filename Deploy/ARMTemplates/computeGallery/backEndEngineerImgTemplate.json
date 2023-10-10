@@ -78,13 +78,6 @@
                         ]
                     },
                     {
-                        "type": "PowerShell",
-                        "name": "Adding User to Docker Group",
-                        "inline": [
-                            "Add-LocalGroupMember -Group 'docker-users' -Member 'azuread\systemadministrator';"
-                        ]
-                    },
-                    {
                         "type": "WindowsRestart",
                         "name": "Restarting Windows",
                         "windowsRestartConfiguration": {
