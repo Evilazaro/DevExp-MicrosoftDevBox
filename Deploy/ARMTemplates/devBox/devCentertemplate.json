@@ -37,7 +37,7 @@
             "type": "Microsoft.DevCenter/devcenters",
             "apiVersion": "2023-04-01",
             "name": "[parameters('devCenterName')]",
-            "location": "westus3",
+            "location": "[parameters('location')]",
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
