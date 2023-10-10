@@ -101,7 +101,7 @@ function Install-VSCodeExtensions {
 function installAzureADModules{
     Write-Output "Installing Azure AD Modules"
     try {
-        Install-Module -Name AzureAD -Force
+        Install-Module -Name AzureAD -Force -SkipPublisherCheck
     } catch {
         throw "Failed to install Azure AD Modules"
     }
