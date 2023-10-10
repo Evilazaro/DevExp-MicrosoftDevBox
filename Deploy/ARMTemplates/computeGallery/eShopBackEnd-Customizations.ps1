@@ -82,7 +82,6 @@ function installAzureADModules{
 # Execute Functions
 try {
     Clone-Repositories -Repositories $repositories
-    installAzureADModules
     Install-VSCodeExtensions
     Install-DockerDesktop
     Write-Output "Script completed successfully"
