@@ -1,0 +1,43 @@
+[
+  {
+    "businessPhones": [
+      "425-555-0100"
+    ],
+    "displayName": "System Administrator",
+    "givenName": "System",
+    "id": "bf3b6314-6f63-498e-872c-798c90bdf052",
+    "jobTitle": null,
+    "mail": "admin@MngEnvMCAP919353.onmicrosoft.com",
+    "mobilePhone": "425-555-0101",
+    "officeLocation": null,
+    "preferredLanguage": "en",
+    "surname": "Administrator",
+    "userPrincipalName": "admin@MngEnvMCAP919353.onmicrosoft.com"
+  },
+  {
+    "businessPhones": [],
+    "displayName": "Evilazaro Alves Da Costa",
+    "givenName": "Evilazaro",
+    "id": "2ea58845-e26b-4075-a23a-4bdcd2b1bd4a",
+    "jobTitle": null,
+    "mail": "evalvesd@microsoft.com",
+    "mobilePhone": null,
+    "officeLocation": null,
+    "preferredLanguage": null,
+    "surname": "Alves",
+    "userPrincipalName": "evalvesd_microsoft.com#EXT#@MngEnvMCAP919353.onmicrosoft.com"
+  },
+  {
+    "businessPhones": [],
+    "displayName": "Evilazaro Alves da Costa",
+    "givenName": null,
+    "id": "e2e3408f-b3b0-4607-9a46-98aaa66656f0",
+    "jobTitle": null,
+    "mail": null,
+    "mobilePhone": null,
+    "officeLocation": null,
+    "preferredLanguage": null,
+    "surname": null,
+    "userPrincipalName": "evilazaro@MngEnvMCAP919353.onmicrosoft.com"
+  }
+]
