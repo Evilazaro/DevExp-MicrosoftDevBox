@@ -85,6 +85,9 @@ try {
     installAzureADModules
     Install-VSCodeExtensions
     Install-DockerDesktop
+    # Adds the current user to the docker-users group
+    Write-Host "Adding current user to docker-users group"
+    Add-LocalGroupMember -Group 'docker-users' -Member 'azuread\systemadministrator';
     Write-Output "Script completed successfully"
 } catch {
     Write-Error $_.Exception.Message
