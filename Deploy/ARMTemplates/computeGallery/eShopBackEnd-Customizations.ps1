@@ -103,6 +103,7 @@ try {
     Clone-Repositories -Repositories $repositories
     Install-VSCodeExtensions
     Install-DockerDesktop
+    addUsersToDockerUsersGroup
     Write-Output "Script completed successfully"
 } catch {
     Write-Error $_.Exception.Message
