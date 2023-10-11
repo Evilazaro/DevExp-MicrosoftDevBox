@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Define variables
-branch="main"
-
 # Ensure all required parameters are provided
 if [ "$#" -ne 5 ]; then
     echo "Usage: $0 <location> <networkResourceGroupName> <vnetName> <subNetName> <networkConnectionName>"
@@ -15,9 +12,6 @@ networkResourceGroupName="$2"
 vnetName="$3"
 subNetName="$4"
 networkConnectionName="$5"
-
-# Define the template file path
-templateUrl="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/network/networkConnectionTemplate.json"
 
 # Echo starting the operation
 echo "Initiating the deployment in the resource group: $networkResourceGroupName, location: $location."
@@ -38,22 +32,22 @@ if [ -z "$subnetId" ]; then
 fi
 echo "Subnet ID for $subNetName retrieved successfully."
 
-# Deploy the ARM template
-echo "Deploying ARM Template from $templateUrl..."
-az deployment group create \
-    --resource-group "$networkResourceGroupName" \
-    --template-uri "$templateUrl" \
-    --parameters \
-        name="$networkConnectionName" \
-        vnetId="$subnetId" \
-        location="$location" 
+
+echo "Deploying Network Connection"
+az devcenter admin network-connection create \
+    --location "$location" \
+    --domain-join-type "AzureADJoin" \
+    --networking-resource-group-name "$networkResourceGroupName" \
+    --subnet-id "$subnetId" \
+    --name "$networkConnectionName" \
+    --resource-group "$networkResourceGroupName"
 
 # Check the status of the last command
 
 if [ $? -eq 0 ]; then
-    echo "ARM Template deployment initiated successfully."
+    echo "Deployment initiated successfully."
 else
-    echo "Error: ARM Template deployment failed."
+    echo "Error: Deployment failed."
     exit 1
 fi
 
