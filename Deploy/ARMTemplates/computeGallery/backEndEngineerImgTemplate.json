@@ -63,14 +63,6 @@
                         }
                     },
                     {
-                        "type": "WindowsRestart",
-                        "name": "Restarting Windows",
-                        "windowsRestartConfiguration": {
-                            "restartOnlyIfRequired": false,
-                            "restartSetting": "always"
-                        }
-                    },
-                    {
                         "type": "PowerShell",
                         "name": "Installing eShop Dependencies and Customizations",
                         "inline": [
