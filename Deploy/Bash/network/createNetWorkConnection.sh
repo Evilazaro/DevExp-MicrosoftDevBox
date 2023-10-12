@@ -37,7 +37,6 @@ echo "Deploying Network Connection"
 az devcenter admin network-connection create \
     --location "$location" \
     --domain-join-type "AzureADJoin" \
-    --networking-resource-group-name "$networkResourceGroupName" \
     --subnet-id "$subnetId" \
     --name "$networkConnectionName" \
     --resource-group "$networkResourceGroupName"
