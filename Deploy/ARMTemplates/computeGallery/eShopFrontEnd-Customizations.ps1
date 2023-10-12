@@ -16,7 +16,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force
 # Define repositories to clone
 $repositories = @(
     @{
-        Url = 'https://github.com/Evilazaro/eShopOnContainers.git'
+        Url = 'https://github.com/Evilazaro/eShop.git'
         Destination = 'c:\eShop'
         Description = 'eShopOnContainers Repository'
     },
