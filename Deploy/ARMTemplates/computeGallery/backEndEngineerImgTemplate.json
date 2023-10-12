@@ -51,18 +51,6 @@
                 },
                 "customize": [
                     {
-                        "type": "WindowsUpdate",
-                        "name": "Installing Windows Updates",
-                        "windowsUpdateProvisioningConfiguration": {
-                            "includedUpdateClassifications": [
-                                "Critical",
-                                "Security",
-                                "UpdateRollup"
-                            ],
-                            "rebootSetting": "ifRequired"
-                        }
-                    },
-                    {
                         "type": "PowerShell",
                         "name": "Installing eShop Dependencies and Customizations",
                         "inline": [
