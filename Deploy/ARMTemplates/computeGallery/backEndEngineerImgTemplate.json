@@ -62,18 +62,20 @@
                         "name": "Adding current user to docker-users group",
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "# Adds the current user to the docker-users group",
                             "Write-Host 'Adding current user to docker-users group';",
                             "Add-LocalGroupMember -Group 'docker-users' -Member 'Everyone';"
                         ]
                     },
                     {
+                        "type": "WindowsUpdate",
+                        "searchCriteria": "IsInstalled=0",
+                        "filters": [
+                            "exclude:$_.Title -like '*Preview*'"
+                        ]
+                    },
+                    {
                         "type": "WindowsRestart",
-                        "name": "Restarting Windows",
-                        "windowsRestartConfiguration": {
-                            "restartOnlyIfRequired": false,
-                            "restartSetting": "always"
-                        }
+                        "restartCheckCommand": "powershell.exe -Command Write-Host 'VM has been restarted succesfuly';"
                     }
                 ],
                 "distribute": [
