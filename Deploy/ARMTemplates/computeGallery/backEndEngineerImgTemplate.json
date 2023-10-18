@@ -67,6 +67,10 @@
                         ]
                     },
                     {
+                        "type": "WindowsRestart",
+                        "restartCheckCommand": "powershell.exe -Command Write-Host 'VM has been restarted succesfuly'"
+                    },
+                    {
                         "type": "WindowsUpdate",
                         "searchCriteria": "IsInstalled=0",
                         "filters": [
@@ -75,7 +79,7 @@
                     },
                     {
                         "type": "WindowsRestart",
-                        "restartCheckCommand": "powershell.exe -Command Write-Host 'VM has been restarted succesfuly';"
+                        "restartCheckCommand": "powershell.exe -Command Write-Host 'VM has been restarted succesfuly'"
                     }
                 ],
                 "distribute": [
