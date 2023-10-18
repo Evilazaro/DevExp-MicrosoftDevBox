@@ -56,6 +56,17 @@
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/eShopFrontEnd-Customizations.ps1'));"
                         ]
+                    },
+                    {
+                        "type": "WindowsUpdate",
+                        "searchCriteria": "IsInstalled=0",
+                        "filters": [
+                            "exclude:$_.Title -like '*Preview*'"
+                        ]
+                    },
+                    {
+                        "type": "WindowsRestart",
+                        "restartCheckCommand": "powershell.exe -Command Write-Host 'VM has been restarted succesfuly';"
                     }
                 ],
                 "distribute": [
