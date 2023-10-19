@@ -65,7 +65,7 @@ function createResourceGroup {
                 "offer=Contoso-DevWorkstation-Service" \
                 "Team=Engineering" \
                 "division=Contoso-Platform" \
-                "solution=eShop"
+                "solution=ContosoProjects"
 
     # Echo successful creation
     echo "Resource group '$resourceGroupName' created successfully."
@@ -220,7 +220,7 @@ subscriptionId=$(az account show --query id --output tsv)
 devBoxResourceGroupName='ContosoFabric-DevBox-RG'
 imageGalleryResourceGroupName='ContosoFabric-ImageGallery-RG'
 identityResourceGroupName='ContosoFabric-Identity-DevBox-RG'
-networkResourceGroupName='eShop-Network-Connectivity-RG'
+networkResourceGroupName='ContosoFabric-Network-Connectivity-RG'
 managementResourceGroupName='ContosoFabric-DevBox-Management-RG'
 
 # Identity Variables
@@ -229,14 +229,14 @@ customRoleName='ContosoFabricBuilderRole'
 
 # Image and DevCenter Names
 imageGalleryName='ContosoFabricImageGallery'
-frontEndImageName='eShop-FrontEnd'
-backEndImageName='eShop-BackEnd'
+frontEndImageName='FrontEndVm'
+backEndImageName='BackEndVm'
 devCenterName='DevBox-DevCenter'
 
 # Network Variables
-vnetName='eShop-Vnet'
-subNetName='eShop-SubNet'
-networkConnectionName='eShop-DevBox-Network-Connection'
+vnetName='ContosoFabric-Vnet'
+subNetName='ContosoFabric-SubNet'
+networkConnectionName='DevBox-Network-Connection'
 
 # Execute the script with proper sequence
 echo "Starting Deployment..."

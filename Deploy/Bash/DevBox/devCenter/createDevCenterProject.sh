@@ -8,7 +8,6 @@ subscriptionId="$2"
 devBoxResourceGroupName="$3"
 devCenterName="$4"
 description="Sample .NET Core reference application, powered by Microsoft"
-projectName="eShop"
 maxDevBoxesPerUser="10"
 
 # Functions
@@ -50,7 +49,7 @@ function createDevCenterProjects()
                     "Environment=Prod" \
                     "offer=Contoso-DevWorkstation-Service" \
                     "Team=Engineering" \
-                    "solution=eShop" \
+                    "solution=ContosoProjects" \
                     "businessUnit=e-Commerce"
 
         # Check the result of the previous command and exit if it failed
