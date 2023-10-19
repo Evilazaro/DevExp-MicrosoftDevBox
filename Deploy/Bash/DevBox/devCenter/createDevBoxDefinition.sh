@@ -10,6 +10,42 @@ galleryName="$5"         # gallery name
 imageName="$6"           # image name
 networkConnectionName="$7"     # network connection name
 
+# Function to create dev pools and dev boxes
+function createDevPoolsAndDevBoxes()
+{
+        local location="$1"
+        local devBoxDefinitionName="$2"
+        local networkConnectionName="$3"
+        local poolName="$4"
+        local devBoxResourceGroupName="$5"
+        local devBoxName="$6"
+        local devCenterName="$7"
+
+        declare -A projects
+
+        projects["eShop"]="eShop"
+        projects["Contoso"]="Contoso"
+        projects["Fabrikam"]="Fabrikam"
+        projects["Tailwind"]="Tailwind"
+        
+        for projectName in "${!projects[@]}"; do
+
+                 # Creating DevBox Pools with added echo for step tracking
+                echo "Creating DevBox Pools..."
+                ./devBox/devCenter/createDevBoxPools.sh "$location" "$devBoxDefinitionName" "$networkConnectionName" "$poolName" "${projects[$projectName]}" "$devBoxResourceGroupName"
+                echo "DevBox Pools created successfully."
+
+                if ${projects[$projectName]} -eq "eShop" then
+                        # Creating DevBox for Engineers with added echo for step tracking
+                        echo "Creating DevBox for Engineers..."
+                        ./devBox/devCenter/createDevBoxforEngineers.sh "$poolName" "$devBoxName" "$devCenterName" "${projects[$projectName]}"
+                        echo "DevBox for Engineers created successfully."
+                fi
+
+        done
+
+}
+
 # Inform the user about the initialization step
 echo "Initializing script with subscriptionId: $subscriptionId, location: $location, devBoxResourceGroupName: $devBoxResourceGroupName, devCenterName: $devCenterName, galleryName: $galleryName, and imageName: $imageName."
 
@@ -42,12 +78,4 @@ az devcenter admin devbox-definition create --location "$location" \
 
 echo "DevBox definition created successfully."
 
-# Creating DevBox Pools with added echo for step tracking
-echo "Creating DevBox Pools..."
-./devBox/devCenter/createDevBoxPools.sh "$location" "$devBoxDefinitionName" "$networkConnectionName" "$poolName" "$projectName" "$devBoxResourceGroupName"
-echo "DevBox Pools created successfully."
-
-# Creating DevBox for Engineers with added echo for step tracking
-echo "Creating DevBox for Engineers..."
-./devBox/devCenter/createDevBoxforEngineers.sh "$poolName" "$devBoxName" "$devCenterName" "$projectName"
-echo "DevBox for Engineers created successfully."
+createDevPoolsAndDevBoxes "$location" "$devBoxDefinitionName" "$networkConnectionName" "$poolName" "$devBoxResourceGroupName" "$devBoxName" "$devCenterName"
