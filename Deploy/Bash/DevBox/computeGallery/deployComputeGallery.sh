@@ -24,12 +24,12 @@ az sig create \
     --gallery-name "$computeGalleryName" \
     --resource-group "$galleryResourceGroupName" \
     --location "$location" \
-    --tags  "Division=Contoso-Platform" \
+    --tags  "division=Contoso-Platform" \
             "Environment=Prod" \
-            "Offer=Contoso-DevWorkstation-Service" \
+            "offer=Contoso-DevWorkstation-Service" \
             "Team=Engineering" \
-            "Solution=eShop" \
-            "BusinessUnit=e-Commerce"
+            "solution=ContosoProjects" \
+            "businessUnit=e-Commerce"
 
 # Confirming the successful creation of the resource
 echo "Shared Image Gallery '$computeGalleryName' successfully created in resource group '$galleryResourceGroupName' located in '$location'."

@@ -33,7 +33,7 @@
                 "businessUnit": "e-Commerce",
                 "division": "Contoso-Platform",
                 "offer": "Contoso-DevWorkstation-Service",
-                "solution": "eShop"
+                "solution": "ContosoProjects"
             },
             "identity": {
                 "type": "UserAssigned",
@@ -54,7 +54,7 @@
                         "type": "PowerShell",
                         "name": "Installing Ubuntu WSL",
                         "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/eShopBackEnd-InstallWSL.ps1'));"
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/BackEnd-InstallWSL.ps1'));"
                         ],
                         "validExitCodes": [
                             0,
@@ -71,9 +71,9 @@
                     },
                     {
                         "type": "PowerShell",
-                        "name": "Installing eShop Dependencies and Customizations",
+                        "name": "Installing Dependencies and Customizations",
                         "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/eShopBackEnd-Customizations.ps1'));"
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/BackEnd-Customizations.ps1'));"
                         ]
                     },
                     {
@@ -94,7 +94,7 @@
                             "businessUnit": "e-Commerce",
                             "division": "Contoso-Platform",
                             "offer": "Contoso-DevWorkstation-Service",
-                            "solution": "eShop"
+                            "solution": "ContosoProjects"
                         },
                         "excludeFromLatest": false,
                         "galleryImageId": "[concat(parameters('imageGalleryId'), concat('/images/', parameters('imgName'), 'def'))]",
