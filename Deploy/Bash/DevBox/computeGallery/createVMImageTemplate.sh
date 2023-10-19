@@ -52,7 +52,7 @@ az sig image-definition create \
             "Environment=Prod" \
             "offer=Contoso-DevWorkstation-Service" \
             "Team=Engineering" \
-            "solution=ContosoProjects" \
+            "solution=ContosoFabricDevWorkstation" \
             "businessUnit=e-Commerce"
 
 # Log the step being executed

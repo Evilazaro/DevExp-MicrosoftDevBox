@@ -45,7 +45,7 @@ az network vnet create \
             "offer=Contoso-DevWorkstation-Service" \
             "Team=Engineering" \
             "division=Contoso-Platform" \
-            "solution=ContosoProjects"
+            "solution=ContosoFabricDevWorkstation"
 
 # Inform the user that the resources have been created successfully.
 echo "Virtual Network $vnetName and Subnet $subnetName have been created successfully in Resource Group $resourceGroupName with tags $tags."

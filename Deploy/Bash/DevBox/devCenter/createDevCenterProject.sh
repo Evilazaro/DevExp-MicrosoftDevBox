@@ -49,7 +49,7 @@ function createDevCenterProjects()
                     "Environment=Prod" \
                     "offer=Contoso-DevWorkstation-Service" \
                     "Team=Engineering" \
-                    "solution=ContosoProjects" \
+                    "solution=${projects[$projectName]}" \
                     "businessUnit=e-Commerce"
 
         # Check the result of the previous command and exit if it failed

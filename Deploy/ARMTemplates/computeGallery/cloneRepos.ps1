@@ -12,7 +12,23 @@ $repositories = @(
         Url = 'https://github.com/Evilazaro/eShopAPIM.git'
         Destination = 'c:\eShopAPIM'
         Description = 'eShopOnContainers APIs Repository'
+    },
+    @{
+        Url = 'https://github.com/Evilazaro/TailwindTraders-Website.git'
+        Destination = 'c:\TailwindTraders-Website'
+        Description = 'TailwindTraders-Website Repository'
+    },
+    @{
+        Url = 'https://github.com/Evilazaro/TailwindTraders-Backend.git'
+        Destination = 'c:\TailwindTraders-Backend'
+        Description = 'TailwindTraders-Backend Repository'
+    },
+    @{
+        Url = 'https://github.com/mspnp/aks-fabrikam-dronedelivery.git'
+        Destination = 'c:\aks-fabrikam-dronedelivery'
+        Description = 'Azure Kubernetes Service (AKS) Fabrikam Drone Delivery'
     }
+
 )
 
 function Clone-Repositories {

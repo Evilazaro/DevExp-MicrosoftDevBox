@@ -28,7 +28,7 @@ az sig create \
             "Environment=Prod" \
             "offer=Contoso-DevWorkstation-Service" \
             "Team=Engineering" \
-            "solution=ContosoProjects" \
+            "solution=ContosoFabricDevWorkstation" \
             "businessUnit=e-Commerce"
 
 # Confirming the successful creation of the resource

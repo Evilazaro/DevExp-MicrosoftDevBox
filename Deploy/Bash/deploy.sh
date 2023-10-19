@@ -65,7 +65,7 @@ function createResourceGroup {
                 "offer=Contoso-DevWorkstation-Service" \
                 "Team=Engineering" \
                 "division=Contoso-Platform" \
-                "solution=ContosoProjects"
+                "solution=ContosoFabricDevWorkstation"
 
     # Echo successful creation
     echo "Resource group '$resourceGroupName' created successfully."

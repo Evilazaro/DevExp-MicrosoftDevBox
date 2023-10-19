@@ -42,7 +42,7 @@ function createDevCenterAdminPool() {
                "Environment=Prod" \
                "Offer=Contoso-DevWorkstation-Service" \
                "Team=Engineering" \
-               "solution=ContosoProjects" \
+               "solution=$projectName" \
                "BusinessUnit=e-Commerce"
                
     # Check the exit status of the last command and echo a message accordingly

@@ -36,7 +36,6 @@ function installAzureADModules{
 
 # Execute Functions
 try {
-    .\cloneRepos.ps1
     Install-DockerDesktop
     Write-Output "Script completed successfully"
 } catch {

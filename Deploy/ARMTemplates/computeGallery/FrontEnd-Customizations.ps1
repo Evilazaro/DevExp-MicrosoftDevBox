@@ -15,7 +15,6 @@ Set-ExecutionPolicy Bypass -Scope Process -Force
 
 # Execute Functions
 try {
-    .\cloneRepos.ps1
     Write-Output "Script completed successfully"
 } catch {
     Write-Error $_.Exception.Message
