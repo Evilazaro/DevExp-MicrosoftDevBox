@@ -1,34 +1,29 @@
 #!/bin/bash
 
-# This script creates a devcenter admin project in Azure, applying several tags.
+# This script creates a devCenter admin project in Azure, applying several tags.
 
-# Define variables
-location="$1"
-subscriptionId="$2"
-devBoxResourceGroupName="$3"
-devCenterName="$4"
-description="Sample .NET Core reference application, powered by Microsoft"
-maxDevBoxesPerUser="10"
+# Print usage if not enough arguments are provided
+function printUsage() {
+    echo "Usage: $0 <location> <subscriptionId> <devBoxResourceGroupName> <devCenterName>"
+}
 
-# Functions
-
-function createDevCenterProjects()
-{
+# Create devCenter projects in Azure
+function createDevCenterProjects() {
     local location="$1"
     local description="$2"
     local devCenterId="$3"
     local devBoxResourceGroupName="$4"
     local maxDevBoxesPerUser="$5"
 
-    declare -A projects
-    projects["eShop"]="eShop"
-    projects["Contoso"]="Contoso"
-    projects["Fabrikam"]="Fabrikam"
-    projects["Tailwind"]="Tailwind"
+    declare -A projects=(
+        ["eShop"]="eShop"
+        ["Contoso"]="Contoso"
+        ["Fabrikam"]="Fabrikam"
+        ["Tailwind"]="Tailwind"
+    )
 
     for projectName in "${!projects[@]}"; do
-        # Inform the user about the action to be performed
-        echo "Creating a new devcenter admin project in Azure..."
+        echo "Creating a new devCenter admin project in Azure..."
         echo "Location: $location"
         echo "Subscription ID: $subscriptionId"
         echo "Resource Group Name: $devBoxResourceGroupName"
@@ -37,7 +32,6 @@ function createDevCenterProjects()
         echo "Project Name: ${projects[$projectName]}"
         echo "Max Dev Boxes Per User: $maxDevBoxesPerUser"
 
-        # Run the Azure CLI command to create a devcenter admin project
         az devcenter admin project create \
             --location "$location" \
             --description "$description" \
@@ -52,29 +46,27 @@ function createDevCenterProjects()
                     "solution=${projects[$projectName]}" \
                     "businessUnit=e-Commerce"
 
-        # Check the result of the previous command and exit if it failed
         if [ $? -eq 0 ]; then
-            echo "Devcenter admin project '$projectName' has been created successfully!"
+            echo "DevCenter admin project '$projectName' has been created successfully!"
         else
-            echo "Failed to create devcenter admin project '$projectName'." >&2
+            echo "Failed to create devCenter admin project '$projectName'." >&2
             exit 2
         fi
     done
 }
 
-# Print usage information if not enough arguments are provided
+# Main script execution starts here
 if [ "$#" -ne 4 ]; then
-    echo "Usage: $0 <location> <subscriptionId> <devBoxResourceGroupName> <devCenterName>"
+    printUsage
     exit 1
 fi
 
-# Construct the dev-center-id
-devCenterId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName"
+location="$1"
+subscriptionId="$2"
+devBoxResourceGroupName="$3"
+devCenterName="$4"
+description="Sample .NET Core reference application, powered by Microsoft"
+maxDevBoxesPerUser="10"
+devCenterId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devCenters/$devCenterName"
 
-# Create the devcenter admin project
 createDevCenterProjects "$location" "$description" "$devCenterId" "$devBoxResourceGroupName" "$maxDevBoxesPerUser"
-
-
-
-
-

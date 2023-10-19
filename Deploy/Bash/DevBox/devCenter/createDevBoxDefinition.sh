@@ -1,81 +1,87 @@
 #!/bin/bash
-# Best Practices Revised Bash Script
 
-# Assigning input arguments to variables with more descriptive, camelCase names
-subscriptionId="$1"      # subscription ID
-location="$2"            # location
-devBoxResourceGroupName="$3"   # resource group name
-devCenterName="$4"       # development center name
-galleryName="$5"         # gallery name
-imageName="$6"           # image name
-networkConnectionName="$7"     # network connection name
+# Check if all required arguments are provided
+if [[ $# -lt 7 ]]; then
+    echo "Usage: $0 <subscriptionId> <location> <devBoxResourceGroupName> <devCenterName> <galleryName> <imageName> <networkConnectionName>"
+    exit 1
+fi
 
-# Function to create dev pools and dev boxes
-function createDevPoolsAndDevBoxes()
-{
-        local location="$1"
-        local devBoxDefinitionName="$2"
-        local networkConnectionName="$3"
-        local poolName="$4"
-        local devBoxResourceGroupName="$5"
-        local devBoxName="$6"
-        local devCenterName="$7"
+# Assign input arguments to camelCase variables
+subscriptionId="$1"
+location="$2"
+devBoxResourceGroupName="$3"
+devCenterName="$4"
+galleryName="$5"
+imageName="$6"
+networkConnectionName="$7"
 
-        declare -A projects
+# Function to create development pools and boxes
+createDevPoolsAndDevBoxes() {
+    local location="$1"
+    local devBoxDefinitionName="$2"
+    local networkConnectionName="$3"
+    local poolName="$4"
+    local devBoxResourceGroupName="$5"
+    local devBoxName="$6"
+    local devCenterName="$7"
 
-        projects["eShop"]="eShop"
-        projects["Contoso"]="Contoso"
-        projects["Fabrikam"]="Fabrikam"
-        projects["Tailwind"]="Tailwind"
-        
-        for projectName in "${!projects[@]}"; do
+    declare -A projects=(
+        ["eShop"]="eShop"
+        ["Contoso"]="Contoso"
+        ["Fabrikam"]="Fabrikam"
+        ["Tailwind"]="Tailwind"
+    )
 
-                 # Creating DevBox Pools with added echo for step tracking
-                echo "Creating DevBox Pools..."
-                ./devBox/devCenter/createDevBoxPools.sh "$location" "$devBoxDefinitionName" "$networkConnectionName" "$poolName" "${projects[$projectName]}" "$devBoxResourceGroupName"
-                echo "DevBox Pools created successfully."
+    for projectName in "${!projects[@]}"; do
+        # Creating DevBox Pools
+        echo "Creating DevBox Pools for $projectName..."
+        ./devBox/devCenter/createDevBoxPools.sh "$location" "$devBoxDefinitionName" "$networkConnectionName" "$poolName" "${projects[$projectName]}" "$devBoxResourceGroupName"
+        echo "DevBox Pools for $projectName created successfully."
 
-                if ${projects[$projectName]} -eq "eShop" then
-                        # Creating DevBox for Engineers with added echo for step tracking
-                        echo "Creating DevBox for Engineers..."
-                        ./devBox/devCenter/createDevBoxforEngineers.sh "$poolName" "$devBoxName" "$devCenterName" "${projects[$projectName]}"
-                        echo "DevBox for Engineers created successfully."
-                fi
-
-        done
-
+        # Condition to create a DevBox for Engineers specifically for "eShop"
+        if [[ "${projects[$projectName]}" == "eShop" ]]; then
+            echo "Creating DevBox for Engineers for $projectName..."
+            ./devBox/devCenter/createDevBoxforEngineers.sh "$poolName" "$devBoxName" "$devCenterName" "${projects[$projectName]}"
+            echo "DevBox for Engineers for $projectName created successfully."
+        fi
+    done
 }
 
 # Inform the user about the initialization step
-echo "Initializing script with subscriptionId: $subscriptionId, location: $location, devBoxResourceGroupName: $devBoxResourceGroupName, devCenterName: $devCenterName, galleryName: $galleryName, and imageName: $imageName."
+echo "Initializing script with:
+subscriptionId: $subscriptionId
+location: $location
+devBoxResourceGroupName: $devBoxResourceGroupName
+devCenterName: $devCenterName
+galleryName: $galleryName
+imageName: $imageName."
 
-# Construct necessary variables with camelCase naming conventions
+# Construct necessary variables
 imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/${galleryName}/images/${imageName}Def/versions/1.0.0"
 devBoxDefinitionName="devBox-$imageName"
-projectName="eShop"
 poolName="$imageName-pool"
 devBoxName="$imageName-devbox"
 
-# Echo the constructed variables
+# Display constructed variables
 echo "Constructed variables:
 imageReferenceId: $imageReferenceId
 devBoxDefinitionName: $devBoxDefinitionName
 networkConnectionName: $networkConnectionName
-projectName: $projectName
 poolName: $poolName
 devBoxName: $devBoxName
 imageName: $imageName"
 
-# Creating a DevBox definition with camelCase variable names and added echo for step tracking
+# Create a DevBox definition
 echo "Creating DevBox definition..."
 az devcenter admin devbox-definition create --location "$location" \
-        --image-reference id="$imageReferenceId" \
-        --os-storage-type "ssd_256gb" \
-        --sku name="general_i_8c32gb256ssd_v2" \
-        --name "$devBoxDefinitionName" \
-        --dev-center-name "$devCenterName" \
-        --resource-group "$devBoxResourceGroupName"
+    --image-reference id="$imageReferenceId" \
+    --os-storage-type "ssd_256gb" \
+    --sku name="general_i_8c32gb256ssd_v2" \
+    --name "$devBoxDefinitionName" \
+    --dev-center-name "$devCenterName" \
+    --resource-group "$devBoxResourceGroupName"
 
 echo "DevBox definition created successfully."
 
+# Invoke the function to create development pools and boxes
 createDevPoolsAndDevBoxes "$location" "$devBoxDefinitionName" "$networkConnectionName" "$poolName" "$devBoxResourceGroupName" "$devBoxName" "$devCenterName"

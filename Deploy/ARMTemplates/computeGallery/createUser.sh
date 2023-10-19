@@ -1,31 +1,50 @@
 #!/bin/bash
 
 set -euo pipefail
-DIR_ME=$(realpath $(dirname $0))
-# this script is called by root an must fail if no user is provided
-. ${DIR_ME}/installUtils.sh
-setUserName ${1-""}
-OS_TYPE=${2-"ubuntu"}
 
-createMainUser () {
-  verifyUserName
-  if [[ $(cat /etc/passwd | grep ${USERNAME} | wc -l) == 0 ]]; then
-    useradd -m -s /bin/bash ${USERNAME}
+scriptDir=$(realpath $(dirname $0))
+# Source the installUtils.sh script. The "." is equivalent to "source" command.
+. ${scriptDir}/installUtils.sh
+
+userName=${1:-""}
+osType=${2:-"ubuntu"}
+
+verifyUserNameValidity() {
+  if [[ -z "${userName}" ]]; then
+    echo "Error: User name is not provided."
+    exit 1
   fi
-
-  # add to sudo group
-  if [[ "${OS_TYPE}" == "ubuntu" ]]; then
-    usermod -aG sudo ${USERNAME}
-  fi
-
-  if [[ ! -d ${HOMEDIR}/Downloads ]]; then
-      mkdir ${HOMEDIR}/Downloads
-      chown ${USERNAME}:${USERNAME} ${HOMEDIR}/Downloads
-  fi
-
-  # ensure no password is set
-  passwd -d ${USERNAME}
 }
-createMainUser
 
+createMainUser() {
+  verifyUserNameValidity
+
+  if ! id "${userName}" &>/dev/null; then
+    userAdd -m -s /bin/bash ${userName}
+  fi
+
+  addToSudoGroupIfUbuntu
+
+  createDownloadsDirectory
+
+  # Ensure no password is set
+  passwd -d ${userName}
+}
+
+addToSudoGroupIfUbuntu() {
+  if [[ "${osType}" == "ubuntu" ]]; then
+    usermod -aG sudo ${userName}
+  fi
+}
+
+createDownloadsDirectory() {
+  homeDir=$(eval echo ~${userName})
+
+  if [[ ! -d ${homeDir}/Downloads ]]; then
+    mkdir ${homeDir}/Downloads
+    chown ${userName}:${userName} ${homeDir}/Downloads
+  fi
+}
+
+createMainUser
 modifyWslConf

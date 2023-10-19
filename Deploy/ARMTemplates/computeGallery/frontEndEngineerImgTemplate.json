@@ -58,13 +58,6 @@
                         ]
                     },
                     {
-                        "type": "PowerShell",
-                        "name": "Installing Dependencies and Customizations",
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/FrontEnd-Customizations.ps1'));"
-                        ]
-                    },
-                    {
                         "type": "WindowsRestart",
                         "restartCheckCommand": "powershell.exe -Command Write-Host 'VM has been restarted succesfuly'"
                     },

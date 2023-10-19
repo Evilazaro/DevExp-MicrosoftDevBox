@@ -18,13 +18,12 @@ location='WestUS3'
 identityName='ContosoFabricDevBoxImgBldId'
 customRoleName='ContosoFabricBuilderRole'
 
-# Function to delete a resource group
-function deleteResourceGroup() {
+# Delete Resource Group
+deleteResourceGroup() {
     local resourceGroupName="$1"
+    local groupExists=$(az group exists --name "$resourceGroupName")
 
-    output=$(az group exists --name "$resourceGroupName")
-
-    if $output; then
+    if $groupExists; then
         echo "Deleting resource group: $resourceGroupName..."
         az group delete --name "$resourceGroupName" --yes --no-wait
         echo "Resource group $resourceGroupName deletion initiated."
@@ -33,25 +32,24 @@ function deleteResourceGroup() {
     fi
 }
 
-# Function to remove a role
-function removeRole() {
-    local customRoleName=$1
+# Remove Role
+removeRole() {
+    local roleName="$1"
+    local roleDefinition=$(az role definition list --name "$roleName")
 
-    output=$(az role definition list --name "$customRoleName")
-
-    if [[ -z "$output" || "$output" == "[]" ]]; then
-        echo "'$customRoleName' role does not exist. Skipping deletion."
+    if [[ -z "$roleDefinition" || "$roleDefinition" == "[]" ]]; then
+        echo "'$roleName' role does not exist. Skipping deletion."
     else   
-        echo "Deleting the '$customRoleName' role..."
-        az role definition delete --name "$customRoleName"
-        echo "'$customRoleName' role successfully deleted." 
+        echo "Deleting the '$roleName' role..."
+        az role definition delete --name "$roleName"
+        echo "'$roleName' role successfully deleted." 
     fi
 }
 
-# Function to remove a role assignment
-function removeRoleAssignment() {
-    local roleId=$1
-    local subscriptionId=$2
+# Remove Role Assignment
+removeRoleAssignment() {
+    local roleId="$1"
+    local subscription="$2"
 
     echo "Checking the role assignments for the identity..."
 
@@ -60,22 +58,23 @@ function removeRoleAssignment() {
         return
     fi
 
-    output=$(az role assignment list --role "$roleId" --scope /subscriptions/"$subscriptionId")
+    local assignmentExists=$(az role assignment list --role "$roleId" --scope /subscriptions/"$subscription")
 
-    if [[ -z "$output" || "$output" == "[]" ]]; then
+    if [[ -z "$assignmentExists" || "$assignmentExists" == "[]" ]]; then
         echo "'$roleId' role assignment does not exist. Skipping deletion."
     else
         echo "Removing '$roleId' role assignment from the identity..."   
-        az role assignment delete --role "$roleId" --scope /subscriptions/"$subscriptionId"
+        az role assignment delete --role "$roleId" --scope /subscriptions/"$subscription"
         echo "'$roleId' role assignment successfully removed."
     fi
 }
+
+# Main Execution
 
 # Deleting role assignments and role definitions
 for roleName in 'Owner' 'Managed Identity Operator' 'Reader' 'DevCenter Dev Box User' "$customRoleName"; do
     echo "Getting the role ID for '$roleName'..."
     roleId=$(az role definition list --name "$roleName" --query [].name --output tsv)
-
     removeRoleAssignment "$roleId" "$subscriptionId"
 done
 

@@ -1,83 +1,85 @@
-Set-ExecutionPolicy Bypass -Scope Process -Force;
+Set-ExecutionPolicy Bypass -Scope Process -Force
 
-Write-Host "Starging WSL Ubuntu installation at $(Get-Date)"
+function WriteTimestampedMessage {
+    param (
+        [string]$message
+    )
+
+    $currentTime = Get-Date
+    Write-Host "$message at $($currentTime.ToLongTimeString())"
+}
+
+function EnsureDirectory {
+    param (
+        [string]$path
+    )
+
+    if (-not (Test-Path $path)) {
+        New-Item -Path $path -ItemType Directory | Out-Null
+    }
+}
+
+function DownloadScript {
+    param (
+        [string]$uri,
+        [string]$destinationPath
+    )
+
+    Invoke-WebRequest -Uri $uri -OutFile $destinationPath
+}
+
+# Main Script Execution
+
+WriteTimestampedMessage "Starting WSL Ubuntu installation"
 
 $automaticInstall = $true
 $wslRootPath = "c:\WSL2"
-$wslTempPath = $wslRootPath+"\temp"
-$wslStagingPath = $wslTempPath+"\staging"
-$wslScriptsPth = $wslRootPath+"\scripts"
+$wslTempPath = Join-Path $wslRootPath "temp"
+$wslStagingPath = Join-Path $wslTempPath "staging"
+$wslScriptsPath = Join-Path $wslRootPath "scripts"
 
 Write-Host "Creating Directories"
-
-mkdir $wslRootPath
-mkdir $wslTempPath
-mkdir $wslStagingPath
-mkdir $wslScriptsPth
-
+EnsureDirectory $wslRootPath
+EnsureDirectory $wslTempPath
+EnsureDirectory $wslStagingPath
+EnsureDirectory $wslScriptsPath
 Write-Host "Directories Created"
 
-$wslIntalled = $false
-Write-Host "Checking if WSL is installed"
-if (Get-Command wsl.exe -ErrorAction SilentlyContinue) {
-    $wslIntalled = $true
-    Write-Host "WSL is Intalled"
-}
+$wslInstalled = (Get-Command wsl.exe -ErrorAction SilentlyContinue) -ne $null
 
-if (!$wslIntalled) {
-    Write-Error "WSL not detected! WSL is needed to install $($packageArgs.softwareName)"
+if ($wslInstalled) {
+    Write-Host "WSL is Installed"
+} else {
+    Write-Error "WSL not detected! WSL is needed to install."
     exit 1
 }
 
-
 Write-Host "Downloading Scripts"
-Invoke-WebRequest -Uri $("https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/createUser.sh") -OutFile $($wslScriptsPth+"\createUser.sh")
-Invoke-WebRequest -Uri $("https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/installUtils.sh") -OutFile $($wslScriptsPth+"\installUtils.sh")
-Write-Host "Scripts downloaded to $($wslScriptsPth)"
+DownloadScript "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/createUser.sh" (Join-Path $wslScriptsPath "createUser.sh")
+DownloadScript "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/installUtils.sh" (Join-Path $wslScriptsPath "installUtils.sh")
+Write-Host "Scripts downloaded to $wslScriptsPath"
 
 if ($automaticInstall) {
     $wslName = 'Ubuntu'
     $wslInstallationPath = "C:\Users\Default\AppData\Local\WSL2\$wslName"
     $wslUsername = "vmadmin"
 
-   
-    $date = Get-Date
-    $date = $date.ToLongTimeString()
-    Write-Host "Installing Ubuntu at $($date)"
+    WriteTimestampedMessage "Installing Ubuntu"
     wsl --install -d Ubuntu -u root -y
-    Write-Host "Ubuntu installed succesfuly at $($date)"
+    WriteTimestampedMessage "Ubuntu installed successfully"
 
-    # $date = Get-Date
-    # $date = $date.ToLongTimeString()
-    # Write-Host "Ubuntu 22.04 LTS for WSL Installed at $($date)"
-
-    # $date = Get-Date
-    # $date = $date.ToLongTimeString()
-    
-    # Write-Host "Creating Ubuntu User at $($date)"
+    # Commented out sections can be uncommented if needed.
+    # WriteTimestampedMessage "Creating Ubuntu User"
     # wsl -d $wslName -u root bash -ic "/mnt/c/WSL2/scripts/createUser.sh $wslUsername ubuntu"
-    
-    # $date = Get-Date
-    # $date = $date.ToLongTimeString()
-    # Write-Host "Ubuntu User Created at $($date)"
-
-    # $date = Get-Date
-    # $date = $date.ToLongTimeString()
-    # Write-Host "Updating Ubuntu Use at $($date)"
-    
-    # wsl -d $wslName -u root bash -ic "/mnt/c/temp/configureUbuntuFrontEnd.sh" 
+    # WriteTimestampedMessage "Ubuntu User Created"
+    # WriteTimestampedMessage "Updating Ubuntu User"
+    # wsl -d $wslName -u root bash -ic "/mnt/c/temp/configureUbuntuFrontEnd.sh"
     # wsl -d $wslName -u root bash -ic "DEBIAN_FRONTEND=noninteractive /mnt/c/temp/updateUbuntu.sh"
-
-    # $date = Get-Date
-    # $date = $date.ToLongTimeString()
-    # Write-Host "Ubuntu Updated at $($date)"
-    
+    # WriteTimestampedMessage "Ubuntu Updated"
     # Write-Host "Restarting WSL Distro"
     # wsl -t $wslName
-    # write-host "WSL Distro Restarted"
-
-    Write-Host "Finishing WSL Ubuntu installation at $(Get-Date)"
-}
-else {
+    # Write-Host "WSL Distro Restarted"
+    WriteTimestampedMessage "Finishing WSL Ubuntu installation"
+} else {
     Add-AppxPackage $packageArgs.fileFullPath
 }

@@ -1,18 +1,18 @@
 #!/bin/bash
 
 # Define the usage of the script to inform users about expected parameters
-usage() {
+showUsage() {
     echo "Usage: $0 <location> <devBoxDefinitionName> <networkConnectionName> <poolName> <projectName> <devBoxResourceGroupName>"
 }
 
 # Validate the number of arguments passed to the script
 if [ "$#" -ne 6 ]; then
     echo "Error: Incorrect number of arguments"
-    usage
+    showUsage
     exit 1
 fi
 
-# Assign arguments to variables with meaningful names in camelCase
+# Assign arguments to camelCase variables with meaningful names
 location="$1"
 devBoxDefinitionName="$2"
 networkConnectionName="$3"
@@ -21,7 +21,7 @@ projectName="$5"
 devBoxResourceGroupName="$6"
 
 # Function to create a DevCenter admin pool
-function createDevCenterAdminPool() {
+createDevCenterAdminPool() {
     echo "Creating DevCenter admin pool with the following parameters:"
     echo "Location: $location"
     echo "DevBox Definition Name: $devBoxDefinitionName"
@@ -42,7 +42,7 @@ function createDevCenterAdminPool() {
                "Environment=Prod" \
                "Offer=Contoso-DevWorkstation-Service" \
                "Team=Engineering" \
-               "solution=$projectName" \
+               "Solution=$projectName" \
                "BusinessUnit=e-Commerce"
                
     # Check the exit status of the last command and echo a message accordingly

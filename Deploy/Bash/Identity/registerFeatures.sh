@@ -4,8 +4,8 @@ set -e
 set -o nounset
 set -o pipefail
 
-# Function to check the installation of Azure CLI
-function checkAzCli() {
+# Check if Azure CLI is installed.
+checkAzureCli() {
     if ! command -v az &> /dev/null; then
         echo "Error: 'az' command is not found. Please ensure Azure CLI is installed."
         exit 1
@@ -14,42 +14,41 @@ function checkAzCli() {
     fi
 }
 
-# Function to register an Azure provider and display a corresponding message.
-function registerProvider() {
+# Register a given Azure provider.
+registerAzureProvider() {
     local providerName="$1"
-    local description="$2"
+    local providerDescription="$2"
     
-    echo "Starting registration for $description..."
+    echo "Starting registration for $providerDescription..."
     
     if az provider register -n "$providerName"; then
-        echo "Successfully registered $description."
+        echo "Successfully registered $providerDescription."
     else
-        echo "Failed to register $description."
+        echo "Failed to register $providerDescription."
         exit 1
     fi
 }
 
-echo "Beginning Azure Resource Providers registration..."
+main() {
+    echo "Beginning Azure Resource Providers registration..."
+    
+    # Check Azure CLI installation
+    checkAzureCli
 
-# Check Azure CLI installation
-checkAzCli
+    # Define providers and their descriptions
+    local azureProviders=("Microsoft.VirtualMachineImages" "Microsoft.Compute" "Microsoft.KeyVault" "Microsoft.Storage" "Microsoft.Network" "Microsoft.DevCenter")
+    local providerDescriptions=("Azure Resource Provider for Virtual Machine Images" "Azure Resource Provider for Compute" "Azure Resource Provider for Key Vault" "Azure Resource Provider for Storage" "Azure Resource Provider for Network" "Azure Resource Provider for Dev Center")
 
-# Define an array with providers and their descriptions
-providers=(
-    "Microsoft.VirtualMachineImages|Azure Resource Provider for Virtual Machine Images"
-    "Microsoft.Compute|Azure Resource Provider for Compute"
-    "Microsoft.KeyVault|Azure Resource Provider for Key Vault"
-    "Microsoft.Storage|Azure Resource Provider for Storage"
-    "Microsoft.Network|Azure Resource Provider for Network"
-    "Microsoft.DevCenter|Azure Resource Provider for Dev Center"
-)
+    # Register each provider
+    for index in "${!azureProviders[@]}"; do
+        registerAzureProvider "${azureProviders[$index]}" "${providerDescriptions[$index]}"
+    done
 
-# Loop through each provider and initiate the registration process
-for provider in "${providers[@]}"; do
-    IFS='|' read -ra parts <<< "$provider"
-    registerProvider "${parts[0]}" "${parts[1]}"
-done
+    # Add devcenter extension
+    az extension add --name devcenter
 
-az extension add --name devcenter
+    echo "Azure Resource Providers registration process completed."
+}
 
-echo "Azure Resource Providers registration process completed."
+# Execute the main function
+main

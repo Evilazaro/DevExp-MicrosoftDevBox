@@ -1,50 +1,67 @@
-# Set the execution policy
-Set-ExecutionPolicy Bypass -Scope Process -Force
+# Checks and sets the execution policy if needed
+function initializeEnvironment {
+    # Get current execution policy
+    $currentPolicy = Get-ExecutionPolicy -Scope Process
 
-# Define repositories to clone
-$repositories = @(
-    @{
-        Url = 'https://github.com/Evilazaro/eShop.git'
-        Destination = 'c:\eShop'
-        Description = 'eShopOnContainers Repository'
-    },
-    @{
-        Url = 'https://github.com/Evilazaro/eShopAPIM.git'
-        Destination = 'c:\eShopAPIM'
-        Description = 'eShopOnContainers APIs Repository'
-    },
-    @{
-        Url = 'https://github.com/Evilazaro/TailwindTraders-Website.git'
-        Destination = 'c:\TailwindTraders-Website'
-        Description = 'TailwindTraders-Website Repository'
-    },
-    @{
-        Url = 'https://github.com/Evilazaro/TailwindTraders-Backend.git'
-        Destination = 'c:\TailwindTraders-Backend'
-        Description = 'TailwindTraders-Backend Repository'
-    },
-    @{
-        Url = 'https://github.com/mspnp/aks-fabrikam-dronedelivery.git'
-        Destination = 'c:\aks-fabrikam-dronedelivery'
-        Description = 'Azure Kubernetes Service (AKS) Fabrikam Drone Delivery'
+    # Set execution policy if it's more restrictive than 'Bypass'
+    if ($currentPolicy -ne 'Bypass') {
+        Set-ExecutionPolicy Bypass -Scope Process -Force
     }
+}
 
-)
-
-function Clone-Repositories {
+# Clones repositories based on given array of repository info
+function cloneRepositories {
     param (
         [Parameter(Mandatory = $true)]
-        [Array]$Repositories
+        [Array]$reposToClone
     )
 
-    foreach ($repo in $Repositories) {
-        Write-Output "Cloning $($repo.Description)"
+    foreach ($repo in $reposToClone) {
+        Write-Output "Cloning $($repo.description)"
+
         try {
-            git clone $repo.Url $repo.Destination
+            git clone $repo.url $repo.destination
         } catch {
-            throw "Failed to clone $($repo.Description) from $($repo.Url) to $($repo.Destination)"
+            throw "Failed to clone $($repo.description) from $($repo.url) to $($repo.destination)"
         }
     }
 }
 
-Clone-Repositories -Repositories $repositories
+# Main script execution
+function main {
+    initializeEnvironment
+
+    # Define repositories to clone
+    $repositories = @(
+        @{
+            url = 'https://github.com/Evilazaro/eShop.git'
+            destination = 'c:\eShop'
+            description = 'eShopOnContainers Repository'
+        },
+        @{
+            url = 'https://github.com/Evilazaro/eShopAPIM.git'
+            destination = 'c:\eShopAPIM'
+            description = 'eShopOnContainers APIs Repository'
+        },
+        @{
+            url = 'https://github.com/Evilazaro/TailwindTraders-Website.git'
+            destination = 'c:\TailwindTraders-Website'
+            description = 'TailwindTraders-Website Repository'
+        },
+        @{
+            url = 'https://github.com/Evilazaro/TailwindTraders-Backend.git'
+            destination = 'c:\TailwindTraders-Backend'
+            description = 'TailwindTraders-Backend Repository'
+        },
+        @{
+            url = 'https://github.com/mspnp/aks-fabrikam-dronedelivery.git'
+            destination = 'c:\aks-fabrikam-dronedelivery'
+            description = 'Azure Kubernetes Service (AKS) Fabrikam Drone Delivery'
+        }
+    )
+
+    cloneRepositories -reposToClone $repositories
+}
+
+# Call the main function to run the script
+main

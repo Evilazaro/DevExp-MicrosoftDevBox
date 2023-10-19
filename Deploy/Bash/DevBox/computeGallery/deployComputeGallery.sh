@@ -3,33 +3,51 @@
 # Exit immediately if a command exits with a non-zero status, and treat unset variables as an error.
 set -euo pipefail
 
-# Check if the correct number of arguments are passed, if not, exit with an error message
-if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 <ComputeGalleryName> <Location> <GalleryResourceGroupName>"
-    exit 1
-fi
+function displayUsage() {
+    echo "Usage: $0 <computeGalleryName> <location> <galleryResourceGroupName>"
+}
 
-# Assigning input arguments to descriptive variable names for better clarity and readability
-computeGalleryName="$1"
-location="$2"
-galleryResourceGroupName="$3"
+function validateArgs() {
+    if [ "$#" -ne 3 ]; then
+        displayUsage
+        exit 1
+    fi
+}
 
-# Informing the user about the start of resource creation
-echo "Initializing the creation of a Shared Image Gallery named '$computeGalleryName' in resource group '$galleryResourceGroupName' located in '$location'."
+function assignArgumentsToVariables() {
+    computeGalleryName="$1"
+    location="$2"
+    galleryResourceGroupName="$3"
+}
 
-# Execute the Azure command to create the resource, with tags for better resource categorization and management
-# Echoing the command before running it for better user awareness
-echo "Executing Azure CLI command to create the Shared Image Gallery..."
-az sig create \
-    --gallery-name "$computeGalleryName" \
-    --resource-group "$galleryResourceGroupName" \
-    --location "$location" \
-    --tags  "division=Contoso-Platform" \
-            "Environment=Prod" \
-            "offer=Contoso-DevWorkstation-Service" \
-            "Team=Engineering" \
-            "solution=ContosoFabricDevWorkstation" \
-            "businessUnit=e-Commerce"
+function informUserAboutInitialization() {
+    echo "Initializing the creation of a Shared Image Gallery named '$computeGalleryName' in resource group '$galleryResourceGroupName' located in '$location'."
+}
 
-# Confirming the successful creation of the resource
-echo "Shared Image Gallery '$computeGalleryName' successfully created in resource group '$galleryResourceGroupName' located in '$location'."
+function executeAzureCommand() {
+    echo "Executing Azure CLI command to create the Shared Image Gallery..."
+    az sig create \
+        --gallery-name "$computeGalleryName" \
+        --resource-group "$galleryResourceGroupName" \
+        --location "$location" \
+        --tags  "division=Contoso-Platform" \
+                "Environment=Prod" \
+                "offer=Contoso-DevWorkstation-Service" \
+                "Team=Engineering" \
+                "solution=ContosoFabricDevWorkstation" \
+                "businessUnit=e-Commerce"
+}
+
+function confirmCreation() {
+    echo "Shared Image Gallery '$computeGalleryName' successfully created in resource group '$galleryResourceGroupName' located in '$location'."
+}
+
+function main() {
+    validateArgs "$@"
+    assignArgumentsToVariables "$@"
+    informUserAboutInitialization
+    executeAzureCommand
+    confirmCreation
+}
+
+main "$@"

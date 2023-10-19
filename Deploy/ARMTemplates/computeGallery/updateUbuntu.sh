@@ -2,9 +2,14 @@
 
 set -euo pipefail
 
-function updateUbuntu
-{
+# Update the Ubuntu package list and upgrade the packages
+updateUbuntu() {
     sudo apt-get update && sudo apt-get upgrade -y
 }
 
-updateUbuntu
+main() {
+    updateUbuntu
+}
+
+# Call the main function to initiate the script
+main
