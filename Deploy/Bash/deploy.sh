@@ -73,7 +73,134 @@ createResourceGroup() {
     echo "Resource group '$resourceGroupName' created successfully."
 }
 
-# ... Other functions remain mostly the same ...
+function createIdentity {
+    local identityName=$1
+    local resourceGroupName=$2
+    local subscriptionId=$3
+    local customRoleName=$4
+    local location=$5
+
+    # Validate the presence of all parameters
+    if [[ -z $identityName || -z $resourceGroupName || -z $subscriptionId || -z $customRoleName || -z $location ]]; then
+        echo "Error: Missing required parameters."
+        echo "Usage: createIdentity <identityName> <resourceGroupName> <subscriptionId> <customRoleName> <location>"
+        return 1
+    fi
+    
+    ./identity/createIdentity.sh "$resourceGroupName" "$location" "$identityName"
+    ./identity/registerFeatures.sh
+    ./identity/createUserAssignedManagedIdentity.sh "$resourceGroupName" "$subscriptionId" "$identityName" "$customRoleName"
+    
+} 
+
+function deploynetwork() {
+    # Local variables to store function arguments
+    local vnetName="$1"
+    local subNetName="$2"
+    local networkConnectionName="$3"
+    local resourceGroupName="$4"
+    local subscriptionId="$5"
+    local location="$6"
+
+    # Check if the deployVnet.sh script exists before attempting to execute it
+    if [ ! -f "./network/deployVnet.sh" ]; then
+        echo "Error: deployVnet.sh script not found."
+        return 1
+    fi
+
+    # Execute the deployVnet.sh script with the passed parameters and capture its exit code
+    ./network/deployVnet.sh "$resourceGroupName" "$location" "$vnetName" "$subNetName"
+    ./network/createNetWorkConnection.sh "$location" "$resourceGroupName" "$vnetName" "$subNetName" "$networkConnectionName"
+    local exitCode="$?"
+
+    # Check the exit code of the deployVnet.sh script and echo appropriate message
+    if [ "$exitCode" -ne 0 ]; then
+        echo "Error: Deployment of Vnet failed with exit code $exitCode."
+        return 1
+    fi
+}
+
+# This function deploys a Compute Gallery to a specified location and resource group.
+# It receives three parameters: 
+# 1. imageGalleryName: The name of the Compute Gallery
+# 2. location: The Azure region where the Compute Gallery will be deployed
+# 3. galleryResourceGroupName: The name of the resource group where the Compute Gallery will be placed
+
+function deployComputeGallery {
+    local imageGalleryName="$1"  # The name of the Compute Gallery to deploy
+    local location="$2"            # The Azure location (region) where the Compute Gallery will be deployed
+    local galleryResourceGroupName="$3"  # The resource group where the Compute Gallery will reside
+
+    # The actual deployment command. Using a relative path to the deployment script
+    ./devBox/computeGallery/deployComputeGallery.sh "$imageGalleryName" "$location" "$galleryResourceGroupName"
+}
+
+# Function to deploy Dev Center
+function deployDevCenter() {
+    local devCenterName="$1"
+    local networkConnectionName="$2"
+    local imageGalleryName="$3"
+    local location="$4"
+    local identityName="$5"
+    local devBoxResourceGroupName="$6"
+    local networkResourceGroupName="$7"
+    local identityResourceGroupName="$8"
+    local imageGalleryResourceGroupName="$9"
+
+    # Validate that all required parameters are provided
+    if [ -z "$devCenterName" ] || [ -z "$networkConnectionName" ] || [ -z "$imageGalleryName" ] || [ -z "$location" ] || [ -z "$identityName" ] || [ -z "$devBoxResourceGroupName" ] || [ -z "$networkResourceGroupName" ] || [ -z "$identityResourceGroupName" ] || [ -z "$imageGalleryResourceGroupName" ]; then
+        echo "Error: Missing required parameters."
+        return 1 # Return with error code
+    fi
+    
+    # Execute the deployDevCenter.sh script with the provided parameters and capture its exit code
+    ./devBox/devCenter/deployDevCenter.sh "$devCenterName" "$networkConnectionName" "$imageGalleryName" "$location" "$identityName" "$devBoxResourceGroupName" "$networkResourceGroupName" "$identityResourceGroupName" "$imageGalleryResourceGroupName"
+
+}
+
+function createDevCenterProject() {
+    local location="$1"
+    local subscriptionId="$2"
+    local resourceGroupName="$3"
+    local devCenterName="$4"
+    
+    # Check if the necessary parameters are provided
+    if [[ -z "$location" || -z "$subscriptionId" || -z "$resourceGroupName" || -z "$devCenterName" ]]; then
+        echo "Error: Missing required parameters."
+        echo "Usage: createDevCenterProject <location> <subscriptionId> <resourceGroupName> <devCenterName>"
+        return 1
+    fi
+    
+    # Validate if the createDevCenterProject.sh script exists before executing
+    if [[ ! -f "./devBox/devCenter/createDevCenterProject.sh" ]]; then
+        echo "Error: createDevCenterProject.sh script not found!"
+        return 1
+    fi
+    
+    ./devBox/devCenter/createDevCenterProject.sh "$location" "$subscriptionId" "$resourceGroupName" "$devCenterName"
+}
+
+function buildImage
+{
+    local subscriptionId="$1"
+    local imageGalleryResourceGroupName="$2"
+    local location="$3"
+    local identityName="$4"
+    local galleryName="$5"
+    local identityResourceGroupName="$6"
+    local devBoxResourceGroupName="$7"
+    local networkConnectionName="$8"
+
+    declare -A image_params
+    image_params["FrontEnd-Docker-Img"]="VSCode-FrontEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/FrontEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/computeGallery/frontEndEngineerImgTemplate.json Contoso"
+    image_params["BackEnd-Docker-Img"]="VS22-BackEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/computeGallery/backEndEngineerImgTemplate.json Contoso"
+
+    for imageName in "${!image_params[@]}"; do
+        IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${image_params[$imageName]}"
+        ./devBox/computeGallery/createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$imageGalleryResourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher" "$identityResourceGroupName"
+        ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$location" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName"
+    done
+}
 
 main() {
     clear
@@ -97,7 +224,23 @@ main() {
     createResourceGroup "$networkResourceGroupName" "$location"
     createResourceGroup "$managementResourceGroupName" "$location"
 
-    # ... Other function calls ...
+    # Deploy Identity
+    createIdentity $identityName $identityResourceGroupName $subscriptionId $customRoleName $location
+
+    # Deploy network
+    deploynetwork $vnetName $subNetName $networkConnectionName $networkResourceGroupName $subscriptionId $location
+
+    # Deploy Compute Gallery
+    deployComputeGallery $imageGalleryName $location $imageGalleryResourceGroupName
+
+    # Deploy Dev Center
+    deployDevCenter $devCenterName $networkConnectionName $imageGalleryName $location $identityName $devBoxResourceGroupName $networkResourceGroupName $identityResourceGroupName $imageGalleryResourceGroupName
+
+    # Creating Dev Center Project
+    createDevCenterProject $location $subscriptionId $devBoxResourceGroupName $devCenterName
+
+    # Building Images
+    buildImage $subscriptionId $imageGalleryResourceGroupName $location $identityName $imageGalleryName $identityResourceGroupName $devBoxResourceGroupName $networkConnectionName
 
     echo "Deployment Completed Successfully!"
 }

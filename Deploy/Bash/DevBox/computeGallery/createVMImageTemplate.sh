@@ -85,9 +85,8 @@ invokeActionOnResource() {
 
     az resource invoke-action \
         --ids $(az resource show --name "${imageName}" --resource-group "${resourceGroupName}" --resource-type "Microsoft.VirtualMachineImages/imageTemplates" --query id --output tsv) \
-        --action "Run" \
-        --request-body '{}' \
-        --query properties.outputs}
+        --action "Run"
+}
 
 main() {
     parseArguments "$@"

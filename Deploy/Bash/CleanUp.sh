@@ -6,17 +6,17 @@ clear
 
 # Resources Organization
 subscriptionId=$(az account show --query id --output tsv)
-devBoxResourceGroupName='ContosoFabric-DevBox-RG'
-imageGalleryResourceGroupName='ContosoFabric-ImageGallery-RG'
-identityResourceGroupName='ContosoFabric-Identity-DevBox-RG'
-networkResourceGroupName='ContosoFabric-Network-Connectivity-RG'
-managementResourceGroupName='ContosoFabric-DevBox-Management-RG'
-networkWatcherResourceGroupName='NetworkWatcherRG'
+# Azure Resource Group Names
+devBoxResourceGroupName="contosoFabricDevBoxRG"
+imageGalleryResourceGroupName="contosoFabricImageGalleryRG"
+identityResourceGroupName="contosoFabricIdentityDevBoxRG"
+networkResourceGroupName="contosoFabricNetworkConnectivityRG"
+managementResourceGroupName="contosoFabricDevBoxManagementRG"
 location='WestUS3'
 
 # Identity
-identityName='ContosoFabricDevBoxImgBldId'
-customRoleName='ContosoFabricBuilderRole'
+identityName='contosoFabricDevBoxImgBldId'
+customRoleName='contosoFabricBuilderRole'
 
 # Delete Resource Group
 deleteResourceGroup() {
@@ -86,6 +86,6 @@ deleteResourceGroup "$imageGalleryResourceGroupName"
 deleteResourceGroup "$identityResourceGroupName"
 deleteResourceGroup "$networkResourceGroupName"
 deleteResourceGroup "$managementResourceGroupName"
-deleteResourceGroup "$networkWatcherResourceGroupName"
+deleteResourceGroup "NetworkWatcherRG"
 deleteResourceGroup "Default-ActivityLogAlerts"
 deleteResourceGroup "DefaultResourceGroup-WUS2"

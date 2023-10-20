@@ -15,7 +15,7 @@ getSubnetId() {
     local subNetName="$3"
 
     echo "Retrieving Subnet ID for $subNetName..."
-    local subnetId=$(az network vnet subnet show \
+    subnetId=$(az network vnet subnet show \
         --resource-group "$networkResourceGroupName" \
         --vnet-name "$vnetName" \
         --name "$subNetName" \
@@ -62,10 +62,12 @@ networkResourceGroupName="$2"
 vnetName="$3"
 subNetName="$4"
 networkConnectionName="$5"
+subnetId=""
 
 echo "Initiating the deployment in the resource group: $networkResourceGroupName, location: $location."
 
-subnetId=$(getSubnetId "$networkResourceGroupName" "$vnetName" "$subNetName")
+
+getSubnetId "$networkResourceGroupName" "$vnetName" "$subNetName"
 deployNetworkConnection "$location" "$subnetId" "$networkConnectionName" "$networkResourceGroupName"
 
 # Exit normally

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+branch="main"
+
 # Parameters
 identityResourceGroupName="$1"
 subscriptionId="$2"

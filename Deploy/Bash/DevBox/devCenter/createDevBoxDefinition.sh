@@ -39,7 +39,7 @@ createDevPoolsAndDevBoxes() {
         echo "DevBox Pools for $projectName created successfully."
 
         # Condition to create a DevBox for Engineers specifically for "eShop"
-        if [[ "${projects[$projectName]}" == "eShop" ]]; then
+        if [[ "${projects[$projectName]}" -eq "eShop" ]]; then
             echo "Creating DevBox for Engineers for $projectName..."
             ./devBox/devCenter/createDevBoxforEngineers.sh "$poolName" "$devBoxName" "$devCenterName" "${projects[$projectName]}"
             echo "DevBox for Engineers for $projectName created successfully."

@@ -74,7 +74,7 @@ displayDeploymentParameters
 
 # Constants
 branch="main"
-templateFileUri="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/devBox/devCenterTemplate.json"
+templateFileUri="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/devBox/devCentertemplate.json"
 
 fetchNetworkConnectionId
 fetchComputeGalleryId
