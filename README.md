@@ -20,16 +20,34 @@ Contoso is a fictitious company utilizing Microsoft's DevBox to streamline the d
 
 Before you delve into the project, ensure you have:
 
-### 1. Environment
-- The script should be executed on a Unix-like operating system with a Bash shell.
-  
-### 2. Required Software:
+## 1. Environment
+- This script should be executed within a Bash shell environment.
+
+### Required Software:
+
+#### All Environments:
 - **Azure CLI**: The script uses the Azure Command-Line Interface (`az`) for many of its operations. Ensure that you have the Azure CLI installed and updated to the latest version. You can check its installation with `az --version`.
+  - [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
-### 3. Required Permissions:
-- **Azure Subscription Access**: The user executing this script must have sufficient permissions on the target Azure subscription. This includes permissions for creating resource groups, deploying resources, and managing Azure AD identities.
+#### For Windows:
+- **Windows Subsystem for Linux (WSL)**: To run Bash scripts on Windows, it's recommended to use WSL. This provides a Linux-compatible kernel interface on Windows.
+  - [Install WSL](https://docs.microsoft.com/en-us/windows/wsl/install)
+- **Git Bash**: Another option for running Bash scripts on Windows is Git Bash.
+  - [Download Git for Windows (includes Git Bash)](https://gitforwindows.org/)
 
-### 4. Required Directory Structure:
+#### For MacOS:
+- **Terminal**: MacOS comes with a built-in terminal which supports Bash by default. No additional software is necessary to run Bash scripts. However, ensure that your MacOS version supports Bash. Starting from macOS Catalina, `zsh` is the default shell, but Bash can still be used.
+- **Homebrew**: This is a package manager for MacOS, which can be handy to install additional software.
+  - [Install Homebrew](https://brew.sh/)
+
+### 2. Required Permissions:
+- **Azure Subscription Access**: The user executing this script must have sufficient permissions on the target Azure subscription. This includes permissions for creating resource groups, deploying resources, and managing Azure AD identities. Typically, this might require an Azure role like 'Contributor' or 'Owner'. 
+  - [Understand Azure RBAC roles](https://docs.microsoft.com/en-us/azure/role-based-access-control/overview)
+
+### 3. Required Directory Structure:
+The script assumes the existence of several other scripts in a specific directory structure. Ensure these scripts exist and are executable. If these are part of a repository, clone or download the repository first.
+
+#### 4. Required Directory Structure:
 The script assumes the existence of several other scripts in a specific directory structure. Ensure these scripts exist and are executable:
   
 - `./identity/login.sh`
