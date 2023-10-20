@@ -1,5 +1,7 @@
 #!/bin/bash
 
+currentAzureUserId=""
+
 # Functions
 
 checkArguments() {
@@ -24,7 +26,6 @@ assignCommandLineArguments() {
 
 retrieveAzureUserInfo() {
     local currentUserName
-    local currentAzureLoggedUserID
 
     echo "Retrieving current Azure logged user information..."
     currentUserName=$(az account show --query user.name -o tsv)
@@ -36,16 +37,16 @@ retrieveAzureUserInfo() {
 
     echo "Current Azure User Name: $currentUserName"
 
-    currentAzureLoggedUserID=$(az ad user show --id "$currentUserName" --query id -o tsv)
+    currentAzureUserId=$(az ad user show --id "$currentUserName" --query id -o tsv)
 
-    if [ -z "$currentAzureLoggedUserID" ]; then
+    if [ -z "$currentAzureUserId" ]; then
         echo "Error: Couldn't retrieve the current Azure user ID. Exiting."
         exit 1
     fi
 
-    echo "Current Azure User ID: $currentAzureLoggedUserID"
+    echo "Current Azure User ID: $currentAzureUserId"
 
-    echo "$currentAzureLoggedUserID"
+    echo "$currentAzureUserId"
 }
 
 createDevBox() {
@@ -75,5 +76,5 @@ createDevBox() {
 
 checkArguments "$@"
 assignCommandLineArguments "$@"
-currentAzureUserId=$(retrieveAzureUserInfo)
+retrieveAzureUserInfo
 createDevBox "$1" "$2" "$3" "$4" "$currentAzureUserId"
