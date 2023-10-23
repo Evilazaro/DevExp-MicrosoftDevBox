@@ -28,19 +28,38 @@ function installDockerDesktop {
     }
 }
 
-function installAzureADModules {
+function installKubernetesTools {
+    
+    param (
+        [string]$lensDownloadUrl = 'https://api.k8slens.dev/binaries/Lens%20Setup%202023.10.181418-latest.exe',
+        [string]$lensTempFolderPath = 'c:\DockerTemp',
+        [string]$installerFileName = 'lensInstall.exe'
+    )
+    
     try {
-        Write-Output "Installing Azure AD Modules"
-        Install-Module -Name AzureAD -Force -SkipPublisherCheck
+        Write-Output "Installing Kubernetes Tools"
+        
+        if (-not (Test-Path $lensTempFolderPath)) {
+            New-Item -ItemType Directory -Path $lensTempFolderPath
+        }
+
+        $installerFullPath = Join-Path $lensTempFolderPath $installerFileName
+
+        $webClient = New-Object System.Net.WebClient
+        $webClient.DownloadFile($lensDownloadUrl, $installerFullPath)
+
+        & $installerFullPath install --wait --quiet --accept-license /S /allusers
+
+        Write-Output "Kubernetes Tools installed successfully"
     } catch {
-        throw "Failed to install Azure AD Modules: $_"
+        throw "Failed to install Kubernetes Tools: $_"
     }
 }
 
 # Execute Functions
 try {
     installDockerDesktop
-    installAzureADModules
+    installKubernetesTools
     Write-Output "Script completed successfully"
 } catch {
     Write-Error $_.Exception.Message
