@@ -20,7 +20,7 @@ function installDockerDesktop {
         $webClient = New-Object System.Net.WebClient
         $webClient.DownloadFile($dockerDownloadUrl, $installerFullPath)
 
-        & $installerFullPath install --wait --quiet --accept-license
+        & $installerFullPath install --wait --quiet --accept-license /S /allusers
 
         Write-Output "Docker Desktop installed successfully"
     } catch {
