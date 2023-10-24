@@ -38,10 +38,6 @@ createDevPoolsAndDevBoxes() {
         ./devBox/devCenter/createDevBoxPools.sh "$location" "$devBoxDefinitionName" "$networkConnectionName" "$poolName" "${projects[$projectName]}" "$devBoxResourceGroupName"
         echo "DevBox Pools for $projectName created successfully."
     done
-
-    echo "Creating DevBox for Engineers for eShop..."
-    ./devBox/devCenter/createDevBoxforEngineers.sh "$poolName" "$devBoxName" "$devCenterName" "eShop"
-    echo "DevBox for Engineers for eShop created successfully."
 }
 
 # Inform the user about the initialization step
