@@ -35,7 +35,7 @@ createDevPoolsAndDevBoxes() {
     for projectName in "${!projects[@]}"; do
         # Creating DevBox Pools
         echo "Creating DevBox Pools for $projectName..."
-        ./devBox/devCenter/createDevBoxPools.sh "$location" "$devBoxDefinitionName" "$networkConnectionName" "$poolName" "${projects[$projectName]}" "$devBoxResourceGroupName"
+        ./devBox/devCenter/createDevBoxPools.sh "$location" "$devBoxDefinitionName" "$networkConnectionName" "$poolName" "$projectName" "$devBoxResourceGroupName"
         echo "DevBox Pools for $projectName created successfully."
     done
 }
