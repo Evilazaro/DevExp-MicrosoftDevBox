@@ -11,6 +11,7 @@ customRoleName="$4"
 # Constants
 outputFilePath="./downloadedTempTemplates/identity/aibRoleImageCreation-template.json"
 windows365IdentityName="0af06dc6-e4b5-4f28-818e-e78e62d137a5"
+
 branch="main"
 templateUrl="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/identity/aibRoleImageCreation-template.json"
 
