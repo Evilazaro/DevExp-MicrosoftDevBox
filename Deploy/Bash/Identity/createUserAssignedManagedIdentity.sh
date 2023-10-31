@@ -56,10 +56,11 @@ assignRole() {
     local id=$1
     local roleName=$2
     local subId=$3
+    local idType=$4
 
     echo "Assigning '$roleName' role to ID $id..."
     
-    if az role assignment create --assignee-object-id "$id" --assignee-principal-type 'ServicePrincipal' --role "$roleName" --scope /subscriptions/"$subId"; then
+    if az role assignment create --assignee-object-id "$id" --assignee-principal-type $idType --role "$roleName" --scope /subscriptions/"$subId"; then
         echo "Role '$roleName' assigned."
     else
         echo "Error assigning '$roleName'."
@@ -73,15 +74,15 @@ echo "Script started."
 createCustomRole "$subscriptionId" "$identityResourceGroupName" "$outputFilePath" "$customRoleName"
 
 # Assign roles
-assignRole "$identityId" "Virtual Machine Contributor" "$subscriptionId"
-assignRole "$identityId" "Desktop Virtualization Contributor" "$subscriptionId"
-assignRole "$identityId" "Desktop Virtualization Virtual Machine Contributor" "$subscriptionId"
-assignRole "$identityId" "Desktop Virtualization Workspace Contributor" "$subscriptionId"
-assignRole "$identityId" "Compute Gallery Sharing Admin" "$subscriptionId"
-assignRole "$identityId" "Virtual Machine Local User Login" "$subscriptionId"
-assignRole "$identityId" "Managed Identity Operator" "$subscriptionId"
-assignRole "$identityId" "$customRoleName" "$subscriptionId"
-assignRole "$windows365IdentityName" "Reader" "$subscriptionId"
-assignRole "$currentAzureUserId" "DevCenter Dev Box User" "$subscriptionId"
+assignRole "$identityId" "Virtual Machine Contributor" "$subscriptionId" ServicePrincipal
+assignRole "$identityId" "Desktop Virtualization Contributor" "$subscriptionId" ServicePrincipal
+assignRole "$identityId" "Desktop Virtualization Virtual Machine Contributor" "$subscriptionId" ServicePrincipal
+assignRole "$identityId" "Desktop Virtualization Workspace Contributor" "$subscriptionId" ServicePrincipal
+assignRole "$identityId" "Compute Gallery Sharing Admin" "$subscriptionId" ServicePrincipal
+assignRole "$identityId" "Virtual Machine Local User Login" "$subscriptionId" ServicePrincipal
+assignRole "$identityId" "Managed Identity Operator" "$subscriptionId" ServicePrincipal
+assignRole "$identityId" "$customRoleName" "$subscriptionId" ServicePrincipal
+assignRole "$windows365IdentityName" "Reader" "$subscriptionId" ServicePrincipal
+assignRole "$currentAzureUserId" "DevCenter Dev Box User" "$subscriptionId" User
 
 echo "Script completed."
