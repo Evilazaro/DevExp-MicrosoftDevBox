@@ -72,7 +72,7 @@ removeRoleAssignment() {
 # Main Execution
 
 # Deleting role assignments and role definitions
-for roleName in 'Owner' 'Managed Identity Operator' 'Reader' 'DevCenter Dev Box User' "$customRoleName"; do
+for roleName in 'Owner' 'Managed Identity Operator' 'DevCenter Dev Box User' "$customRoleName"; do
     echo "Getting the role ID for '$roleName'..."
     roleId=$(az role definition list --name "$roleName" --query [].name --output tsv)
     removeRoleAssignment "$roleId" "$subscriptionId"
