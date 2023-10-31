@@ -59,7 +59,7 @@ assignRole() {
 
     echo "Assigning '$roleName' role to ID $id..."
     
-    if az role assignment create --assignee "$id" --role "$roleName" --scope /subscriptions/"$subId"; then
+    if az role assignment create --assignee-object-id "$id" --assignee-principal-type 'ServicePrincipal' --role "$roleName" --scope /subscriptions/"$subId"; then
         echo "Role '$roleName' assigned."
     else
         echo "Error assigning '$roleName'."
