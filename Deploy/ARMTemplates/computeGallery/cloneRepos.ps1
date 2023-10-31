@@ -16,6 +16,9 @@ function cloneRepositories {
         [Array]$reposToClone
     )
 
+    mkdir c:\projects
+    icacls c:\projects /grant "Everyone:(OI)(CI)F" /T
+
     foreach ($repo in $reposToClone) {
         Write-Output "Cloning $($repo.description)"
 
@@ -35,27 +38,27 @@ function main {
     $repositories = @(
         @{
             url = 'https://github.com/Evilazaro/eShop.git'
-            destination = 'c:\eShop'
+            destination = 'c:\projects\eShop'
             description = 'eShopOnContainers Repository'
         },
         @{
             url = 'https://github.com/Evilazaro/eShopAPIM.git'
-            destination = 'c:\eShopAPIM'
+            destination = 'c:\projects\eShopAPIM'
             description = 'eShopOnContainers APIs Repository'
         },
         @{
             url = 'https://github.com/Evilazaro/TailwindTraders-Website.git'
-            destination = 'c:\TailwindTraders-Website'
+            destination = 'c:\projects\TailwindTraders-Website'
             description = 'TailwindTraders-Website Repository'
         },
         @{
             url = 'https://github.com/Evilazaro/TailwindTraders-Backend.git'
-            destination = 'c:\TailwindTraders-Backend'
+            destination = 'c:\projects\TailwindTraders-Backend'
             description = 'TailwindTraders-Backend Repository'
         },
         @{
             url = 'https://github.com/mspnp/aks-fabrikam-dronedelivery.git'
-            destination = 'c:\aks-fabrikam-dronedelivery'
+            destination = 'c:\projects\aks-fabrikam-dronedelivery'
             description = 'Azure Kubernetes Service (AKS) Fabrikam Drone Delivery'
         }
     )
