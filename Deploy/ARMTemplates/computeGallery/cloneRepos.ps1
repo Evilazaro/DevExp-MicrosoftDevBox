@@ -25,6 +25,7 @@ function cloneRepositories {
 
         try {
             git clone $repo.url $repo.destination
+            git config --global --add safe.directory $repo.destination
         } catch {
             throw "Failed to clone $($repo.description) from $($repo.url) to $($repo.destination)"
         }
