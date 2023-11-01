@@ -18,6 +18,7 @@ function cloneRepositories {
 
     mkdir c:\projects
     icacls c:\projects /grant "Everyone:(OI)(CI)F" /T
+    git config --global --add safe.directory C:/projects/
 
     foreach ($repo in $reposToClone) {
         Write-Output "Cloning $($repo.description)"
