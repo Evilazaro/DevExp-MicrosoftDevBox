@@ -39,7 +39,7 @@ function main {
     # Define repositories to clone
     $repositories = @(
         @{
-            url = 'https://github.com/Evilazaro/eShop.git'
+            url = 'https://github.com/Evilazaro/eShopOnContainers'
             destination = 'c:\projects\eShop'
             description = 'eShopOnContainers Repository'
         },
