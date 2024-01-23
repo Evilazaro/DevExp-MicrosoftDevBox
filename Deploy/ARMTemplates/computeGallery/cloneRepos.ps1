@@ -39,14 +39,14 @@ function main {
     # Define repositories to clone
     $repositories = @(
         @{
-            url = 'https://github.com/Evilazaro/eShop-Cloud-Native'
-            destination = 'c:\projects\eShop'
-            description = 'eShopOnContainers Repository'
+            url = 'https://github.com/Evilazaro/TechExcel-Implementing-DevOps-practices-to-accelerate-developer-productivity-code.git DevOpsWorkShopApp'
+            destination = 'c:\projects\TeamMessagingSystem'
+            description = 'TeamMessagingSystemOnContainers Repository'
         },
         @{
-            url = 'https://github.com/Evilazaro/eShopAPI'
-            destination = 'c:\projects\eShopAPIM'
-            description = 'eShopOnContainers APIs Repository'
+            url = 'https://github.com/Evilazaro/TeamMessagingSystem-Cloud-Native'
+            destination = 'c:\projects\TeamMessagingSystem'
+            description = 'TeamMessagingSystemOnContainers Repository'
         },
         @{
             url = 'https://github.com/Evilazaro/TailwindTraders-Website.git'
