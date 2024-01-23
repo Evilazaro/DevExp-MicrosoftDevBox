@@ -39,12 +39,12 @@ function main {
     # Define repositories to clone
     $repositories = @(
         @{
-            url = 'https://github.com/Evilazaro/eShopOnContainers'
+            url = 'https://github.com/Evilazaro/eShop-Cloud-Native'
             destination = 'c:\projects\eShop'
             description = 'eShopOnContainers Repository'
         },
         @{
-            url = 'https://github.com/Evilazaro/eShopAPIM.git'
+            url = 'https://github.com/Evilazaro/eShopAPI'
             destination = 'c:\projects\eShopAPIM'
             description = 'eShopOnContainers APIs Repository'
         },
