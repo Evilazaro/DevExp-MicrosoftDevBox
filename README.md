@@ -46,13 +46,13 @@ Before you delve into the project, ensure you have:
 
 ### 3. Cloning the repo
 
-```
+
 Bash
+```sh
 
 git clone https://github.com/Evilazaro/MicrosoftDevBox devBox
 
 ```
-
 ### 3.1 Required Directory Structure:
 After cloning the repo, you will find the following Directory and Files structure. Ensure these scripts exist and are executable:
   
