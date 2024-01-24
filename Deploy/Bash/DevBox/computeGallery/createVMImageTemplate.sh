@@ -46,9 +46,9 @@ createImageDefinition() {
         --hyper-v-generation V2 \
         --features "${features}" \
         --location "${location}" \
-        --tags  "division=Contoso-Platform" \
+        --tags  "division=Pet-Platform" \
                 "Environment=Prod" \
-                "offer=Contoso-DevWorkstation-Service" \
+                "offer=Pet-DevWorkstation-Service" \
                 "Team=Engineering" \
                 "solution=ContosoFabricDevWorkstation" \
                 "businessUnit=e-Commerce"

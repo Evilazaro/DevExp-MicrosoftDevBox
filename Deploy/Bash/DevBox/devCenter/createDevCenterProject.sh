@@ -39,9 +39,9 @@ function createDevCenterProjects() {
             --name "${projects[$projectName]}" \
             --resource-group "$devBoxResourceGroupName" \
             --max-dev-boxes-per-user "$maxDevBoxesPerUser" \
-            --tags  "division=Contoso-Platform" \
+            --tags  "division=Pet-Platform" \
                     "Environment=Prod" \
-                    "offer=Contoso-DevWorkstation-Service" \
+                    "offer=Pet-DevWorkstation-Service" \
                     "Team=Engineering" \
                     "solution=${projects[$projectName]}" \
                     "businessUnit=e-Commerce"

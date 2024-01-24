@@ -30,9 +30,9 @@ function executeAzureCommand() {
         --gallery-name "$computeGalleryName" \
         --resource-group "$galleryResourceGroupName" \
         --location "$location" \
-        --tags  "division=Contoso-Platform" \
+        --tags  "division=Pet-Platform" \
                 "Environment=Prod" \
-                "offer=Contoso-DevWorkstation-Service" \
+                "offer=Pet-DevWorkstation-Service" \
                 "Team=Engineering" \
                 "solution=ContosoFabricDevWorkstation" \
                 "businessUnit=e-Commerce"

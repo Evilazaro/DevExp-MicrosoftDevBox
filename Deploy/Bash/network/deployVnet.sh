@@ -38,9 +38,9 @@ createVirtualNetworkAndSubnet() {
         --address-prefix "$vnetAddressPrefix" \
         --subnet-name "$subnetName" \
         --subnet-prefix "$subnetAddressPrefix" \
-        --tags "division=Contoso-Platform" \
+        --tags "division=Pet-Platform" \
                 "Environment=Prod" \
-                "offer=Contoso-DevWorkstation-Service" \
+                "offer=Pet-DevWorkstation-Service" \
                 "Team=Engineering" \
                 "solution=ContosoFabricDevWorkstation"
     

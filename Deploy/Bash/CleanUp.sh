@@ -7,11 +7,11 @@ clear
 # Resources Organization
 subscriptionId=$(az account show --query id --output tsv)
 # Azure Resource Group Names
-devBoxResourceGroupName="contosoFabricDevBoxRG"
-imageGalleryResourceGroupName="contosoFabricImageGalleryRG"
-identityResourceGroupName="contosoFabricIdentityDevBoxRG"
-networkResourceGroupName="contosoFabricNetworkConnectivityRG"
-managementResourceGroupName="contosoFabricDevBoxManagementRG"
+devBoxResourceGroupName="petDevBox-rg"
+imageGalleryResourceGroupName="petImageGalleryRG"
+identityResourceGroupName="petIdentityDevBoxRG"
+networkResourceGroupName="petNetworkConnectivityRG"
+managementResourceGroupName="petDevBoxManagementRG"
 location='WestUS3'
 
 # Identity

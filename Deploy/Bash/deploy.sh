@@ -5,25 +5,25 @@ branch="main"
 location="WestUS3"
 
 # Azure Resource Group Names
-devBoxResourceGroupName="contosoFabricDevBoxRG"
-imageGalleryResourceGroupName="contosoFabricImageGalleryRG"
-identityResourceGroupName="contosoFabricIdentityDevBoxRG"
-networkResourceGroupName="contosoFabricNetworkConnectivityRG"
-managementResourceGroupName="contosoFabricDevBoxManagementRG"
+devBoxResourceGroupName="petDevBox-rg"
+imageGalleryResourceGroupName="petImageGalleryRG"
+identityResourceGroupName="petIdentityDevBoxRG"
+networkResourceGroupName="petNetworkConnectivityRG"
+managementResourceGroupName="petDevBoxManagementRG"
 
 # Identity Variables
-identityName="contosoFabricDevBoxImgBldId"
-customRoleName="contosoFabricBuilderRole"
+identityName="petDevBoxImgBldId"
+customRoleName="petBuilderRole"
 
 # Image and DevCenter Names
-imageGalleryName="contosoFabricImageGallery"
+imageGalleryName="petImageGallery"
 frontEndImageName="frontEndVm"
 backEndImageName="backEndVm"
 devCenterName="devBoxDevCenter"
 
 # Network Variables
-vnetName="contosoFabricVnet"
-subNetName="contosoFabricSubNet"
+vnetName="petVnet"
+subNetName="petSubNet"
 networkConnectionName="devBoxNetworkConnection"
 
 # Functions
@@ -69,7 +69,7 @@ createResourceGroup() {
     echo "Resource Group Name: $resourceGroupName"
     echo "Location: $location"
 
-    az group create --name "$resourceGroupName" --location "$location" --tags "division=Contoso-Platform" "Environment=Prod" "offer=Contoso-DevWorkstation-Service" "Team=Engineering" "division=Contoso-Platform" "solution=ContosoFabricDevWorkstation"
+    az group create --name "$resourceGroupName" --location "$location" --tags "division=Pet-Platform" "Environment=Prod" "offer=Pet-DevWorkstation-Service" "Team=Engineering" "division=Pet-Platform" "solution=ContosoFabricDevWorkstation"
     echo "Resource group '$resourceGroupName' created successfully."
 }
 
@@ -192,8 +192,8 @@ function buildImage
     local networkConnectionName="$8"
 
     declare -A image_params
-    image_params["FrontEnd-Docker-Img"]="VSCode-FrontEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/FrontEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/computeGallery/frontEndEngineerImgTemplate.json Contoso"
-    image_params["BackEnd-Docker-Img"]="VS22-BackEnd-Docker Contoso-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/computeGallery/backEndEngineerImgTemplate.json Contoso"
+    image_params["FrontEnd-Docker-Img"]="VSCode-FrontEnd-Docker Pet-Fabric ./DownloadedTempTemplates/FrontEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/computeGallery/frontEndEngineerImgTemplate.json Contoso"
+    image_params["BackEnd-Docker-Img"]="VS22-BackEnd-Docker Pet-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/computeGallery/backEndEngineerImgTemplate.json Contoso"
 
     for imageName in "${!image_params[@]}"; do
         IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${image_params[$imageName]}"

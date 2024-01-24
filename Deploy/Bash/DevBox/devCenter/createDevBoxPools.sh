@@ -38,9 +38,9 @@ createDevCenterAdminPool() {
         --project-name "$projectName" \
         --resource-group "$devBoxResourceGroupName" \
         --local-administrator "Enabled" \
-        --tags "Division=Contoso-Platform" \
+        --tags "Division=Pet-Platform" \
                "Environment=Prod" \
-               "Offer=Contoso-DevWorkstation-Service" \
+               "Offer=Pet-DevWorkstation-Service" \
                "Team=Engineering" \
                "Solution=$projectName" \
                "BusinessUnit=e-Commerce"
