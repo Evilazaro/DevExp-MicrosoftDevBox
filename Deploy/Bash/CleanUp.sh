@@ -7,11 +7,11 @@ clear
 # Resources Organization
 subscriptionId=$(az account show --query id --output tsv)
 # Azure Resource Group Names
-devBoxResourceGroupName="petDevBox-rg"
-imageGalleryResourceGroupName="petImageGalleryRG"
-identityResourceGroupName="petIdentityDevBoxRG"
-networkResourceGroupName="petNetworkConnectivityRG"
-managementResourceGroupName="petDevBoxManagementRG"
+devBoxResourceGroupName="petv2DevBox-rg"
+imageGalleryResourceGroupName="petv2ImageGalleryRG"
+identityResourceGroupName="petv2IdentityDevBoxRG"
+networkResourceGroupName="petv2NetworkConnectivityRG"
+managementResourceGroupName="petv2DevBoxManagementRG"
 location='WestUS3'
 
 # Identity

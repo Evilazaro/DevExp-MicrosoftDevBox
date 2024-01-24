@@ -38,9 +38,9 @@ createDevCenterAdminPool() {
         --project-name "$projectName" \
         --resource-group "$devBoxResourceGroupName" \
         --local-administrator "Enabled" \
-        --tags "Division=Pet-Platform" \
+        --tags "Division=petv2-Platform" \
                "Environment=Prod" \
-               "Offer=Pet-DevWorkstation-Service" \
+               "Offer=petv2-DevWorkstation-Service" \
                "Team=Engineering" \
                "Solution=$projectName" \
                "BusinessUnit=e-Commerce"

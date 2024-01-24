@@ -39,9 +39,9 @@ function createDevCenterProjects() {
             --name "${projects[$projectName]}" \
             --resource-group "$devBoxResourceGroupName" \
             --max-dev-boxes-per-user "$maxDevBoxesPerUser" \
-            --tags  "division=Pet-Platform" \
+            --tags  "division=petv2-Platform" \
                     "Environment=Prod" \
-                    "offer=Pet-DevWorkstation-Service" \
+                    "offer=petv2-DevWorkstation-Service" \
                     "Team=Engineering" \
                     "solution=${projects[$projectName]}" \
                     "businessUnit=e-Commerce"

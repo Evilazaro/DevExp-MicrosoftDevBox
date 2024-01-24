@@ -31,8 +31,8 @@
                 "Role": "Front-End-Engineer",
                 "Team": "Engineering",
                 "businessUnit": "e-Commerce",
-                "division": "Pet-Platform",
-                "offer": "Pet-DevWorkstation-Service",
+                "division": "petv2-Platform",
+                "offer": "petv2-DevWorkstation-Service",
                 "solution": "ContosoProjects"
             },
             "identity": {
@@ -96,8 +96,8 @@
                             "Role": "Front-End-Engineer",
                             "Team": "Engineering",
                             "businessUnit": "e-Commerce",
-                            "division": "Pet-Platform",
-                            "offer": "Pet-DevWorkstation-Service",
+                            "division": "petv2-Platform",
+                            "offer": "petv2-DevWorkstation-Service",
                             "solution": "ContosoProjects"
                         },
                         "excludeFromLatest": false,
