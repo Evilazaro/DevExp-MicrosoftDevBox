@@ -14,9 +14,9 @@ networkResourceGroupName="petv2NetworkConnectivityRG"
 managementResourceGroupName="petv2DevBoxManagementRG"
 location='WestUS3'
 
-# Identity
-identityName='contosoFabricDevBoxImgBldId'
-customRoleName='contosoFabricBuilderRole'
+# Identity Variables
+identityName="petv2DevBoxImgBldId"
+customRoleName="petv2BuilderRole"
 
 # Delete Resource Group
 deleteResourceGroup() {
