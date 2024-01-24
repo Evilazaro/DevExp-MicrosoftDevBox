@@ -50,33 +50,68 @@ The script assumes the existence of several other scripts in a specific director
 #### 4. Required Directory Structure:
 The script assumes the existence of several other scripts in a specific directory structure. Ensure these scripts exist and are executable:
   
-- `./identity/login.sh`
-- `./identity/createIdentity.sh`
-- `./identity/registerFeatures.sh`
-- `./identity/createUserAssignedManagedIdentity.sh`
-- `./network/deployVnet.sh`
-- `./network/createNetWorkConnection.sh`
-- `./devBox/computeGallery/deployComputeGallery.sh`
-- `./devBox/devCenter/deployDevCenter.sh`
-- `./devBox/devCenter/createDevCenterProject.sh`
-- `./devBox/computeGallery/createVMImageTemplate.sh`
-- `./devBox/devCenter/createDevBoxDefinition.sh`
+- [Login to Azure - File: ./Deploy/Bash/Identity/login.sh](./Deploy/Bash/Identity/login.md)
+- [Managed Identity account creation - File: `./Deploy/Bash/Identity/createIdentity.sh`](./Deploy/Bash/Identity/createIdentity.sh)
+- [Azure Features Registering - File: `./Deploy/Bash/Identity/registerFeatures.sh`](./Deploy/Bash/Identity/registerFeatures.sh)
+- [text - File: `./Deploy/Bash/Identity/createUserAssignedManagedIdentity.sh`](./Deploy/Bash/Identity/createUserAssignedManagedIdentity.sh)
+- [Vnet Deployment - File: `./Deploy/Bash/network/deployVnet.sh`](./Deploy/Bash/network/deployVnet.sh)
+- [Networking Connection Deployment - File: `./Deploy/Bash/network/createNetWorkConnection.sh`](./Deploy/Bash/network/createNetWorkConnection.sh)
+- [Compute Galery Deployment - File: `./Deploy/Bash/devBox/computeGallery/deployComputeGallery.sh`](./Deploy/Bash/devBox/computeGallery/deployComputeGallery.sh)
+- [Dev Center Deployment - File: `./Deploy/Bash/devBox/devCenter/deployDevCenter.sh`](./Deploy/Bash/devBox/devCenter/deployDevCenter.sh)
+- [Dev Center Projects Creation - File: `./Deploy/Bash/devBox/devCenter/createDevCenterProject.sh`](./Deploy/Bash/devBox/devCenter/createDevCenterProject.sh)
+- [Custom VM Image Template deployment - File: `./Deploy/Bash/devBox/computeGallery/createVMImageTemplate.sh`](./Deploy/Bash/devBox/computeGallery/createVMImageTemplate.sh)
+- [Dev Box Definition Creation - File: `./Deploy/Bash/devBox/devCenter/createDevBoxDefinition.sh`](./Deploy/Bash/devBox/devCenter/createDevBoxDefinition.sh)
 
 ### 5. Configuration:
-- **Variables**: At the beginning of the script, several variables are defined (like `branch`, `location`, etc.). Review and adjust these values if necessary to match your Azure environment and naming conventions.
+
+In this section, we will explain the configuration part of the Bash script. This part of the script defines various variables and functions related to Azure resource management, identity, network, and image gallery.
+
+### 5.1 Variables
+
+The script starts by defining several variables that are used throughout the configuration process:
+
+- `branch`: Specifies the branch to be used (default is "main").
+- `location`: Specifies the Azure region (default is "WestUS3").
+
+Next, the script defines various Azure Resource Group Names and Identity Variables used in resource management:
+
+- `devBoxResourceGroupName`: Azure Resource Group for DevBox.
+- `imageGalleryResourceGroupName`: Azure Resource Group for Image Gallery.
+- `identityResourceGroupName`: Azure Resource Group for Identity.
+- `networkResourceGroupName`: Azure Resource Group for Network Connectivity.
+- `managementResourceGroupName`: Azure Resource Group for DevBox Management.
+
+- `identityName`: Name of the identity used for image building.
+- `customRoleName`: Name of the custom role assigned for image building.
+
+Following that, the script sets the names for Image Gallery and various images within the gallery:
+
+- `imageGalleryName`: Name of the Azure Image Gallery.
+- `frontEndImageName`: Name of the FrontEnd image in the gallery.
+- `backEndImageName`: Name of the BackEnd image in the gallery.
+- `devCenterName`: Name of the Dev Center.
+
+Finally, the script defines Network Variables:
+
+- `vnetName`: Name of the Virtual Network.
+- `subNetName`: Name of the Subnet.
+- `networkConnectionName`: Name of the Network Connection.
 
 ## Architecture
 
-Provide a brief description or diagram about the architecture. Consider using diagrams or flowcharts to better illustrate the architecture. Add the link or embed the image here.
+**Working in progress..**
 
 ## Projects
 
 This repository is structured around multiple projects:
 
-1. **eShop** - A reference .NET application implementing an eCommerce web site using a services-based architecture.
-2. **Contoso** - Contoso is a fictional company often used in Microsoft's documentation, training materials, and demonstrations. It is not a real company but serves as an example organization in various Microsoft products and services to illustrate how their software and solutions can be used in a business context. Contoso is used to create sample scenarios and data for educational purposes in the Microsoft ecosystem.
-3. **Fabrikam** - This reference implementation shows a set of best practices for building and running a microservices architecture on Microsoft Azure. This content is built on top of the AKS Secure Baseline, which is the recommended starting (baseline) infrastructure architecture for an AKS cluster.
-4. **TailWind** - A fictitious retail company showcasing the future of intelligent application experiences. These reference apps are all are powered by the Azure cloud, built with best-in-class tools, and made smarter through data and AI.
+1. **eShop**      - A reference .NET application implementing an eCommerce web site using a services-based architecture.
+
+2. **Contoso**    - Contoso is a fictional company often used in Microsoft's documentation, training materials, and demonstrations. It is not a real company but serves as an example organization in various Microsoft products and services to illustrate how their software and solutions can be used in a business context. Contoso is used to create sample scenarios and data for educational purposes in the Microsoft ecosystem.
+
+3. **Fabrikam**   - This reference implementation shows a set of best practices for building and running a microservices architecture on Microsoft Azure. This content is built on top of the AKS Secure Baseline, which is the recommended starting (baseline) infrastructure architecture for an AKS cluster.
+
+4. **TailWind**   - A fictitious retail company showcasing the future of intelligent application experiences. These reference apps are all powered by the Azure cloud, built with best-in-class tools, and made smarter through data and AI.
 
 ## How to Use the Scripts
 
