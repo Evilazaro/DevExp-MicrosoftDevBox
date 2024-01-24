@@ -50,7 +50,7 @@ galleryName: $galleryName
 imageName: $imageName."
 
 # Construct necessary variables
-imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/${galleryName}/images/${imageName}Def/versions/1.0.0"
+imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/${galleryName}/images/${imageName}/versions/1.0.0"
 devBoxDefinitionName="devBox-$imageName"
 poolName="$imageName-pool"
 devBoxName="$imageName-devbox"

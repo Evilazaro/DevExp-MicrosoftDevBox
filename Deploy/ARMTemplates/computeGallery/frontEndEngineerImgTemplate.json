@@ -85,7 +85,7 @@
                             "solution": "ContosoProjects"
                         },
                         "excludeFromLatest": false,
-                        "galleryImageId": "[concat(parameters('imageGalleryId'), concat('/images/', parameters('imgName'), 'def'))]",
+                        "galleryImageId": "[concat(parameters('imageGalleryId'), concat('/images/', parameters('imgName')))]",
                         "replicationRegions": [
                             "[parameters('location')]"
                         ],

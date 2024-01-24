@@ -29,7 +29,7 @@ parseArguments() {
 }
 
 createImageDefinition() {
-    local imageDefName="${imageName}Def"
+    local imageDefName="${imageName}"
     local features="SecurityType=TrustedLaunch IsHibernateSupported=true"
 
     echo "Creating image definition..."
