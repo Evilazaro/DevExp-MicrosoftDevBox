@@ -39,8 +39,8 @@ function main {
     # Define repositories to clone
     $repositories = @(
         @{
-            url = 'https://github.com/Evilazaro/TeamMessagingSystem-Cloud-Native'
-            destination = 'c:\projects\TeamMessagingSystem'
+            url = 'https://github.com/Evilazaro/eShop-Cloud-Native'
+            destination = 'c:\projects\eShop'
             description = 'TeamMessagingSystemOnContainers Repository'
         },
         @{
