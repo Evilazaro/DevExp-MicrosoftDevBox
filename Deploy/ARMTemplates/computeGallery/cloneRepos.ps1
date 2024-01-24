@@ -39,11 +39,6 @@ function main {
     # Define repositories to clone
     $repositories = @(
         @{
-            url = 'https://github.com/Evilazaro/TechExcel-Implementing-DevOps-practices-to-accelerate-developer-productivity-code.git DevOpsWorkShopApp'
-            destination = 'c:\projects\TeamMessagingSystem'
-            description = 'TeamMessagingSystemOnContainers Repository'
-        },
-        @{
             url = 'https://github.com/Evilazaro/TeamMessagingSystem-Cloud-Native'
             destination = 'c:\projects\TeamMessagingSystem'
             description = 'TeamMessagingSystemOnContainers Repository'
