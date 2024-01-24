@@ -44,11 +44,17 @@ Before you delve into the project, ensure you have:
 - **Azure Subscription Access**: The user executing this script must have sufficient permissions on the target Azure subscription. This includes permissions for creating resource groups, deploying resources, and managing Azure AD identities. Typically, this might require an Azure role like 'Contributor' or 'Owner'. 
   - [Understand Azure RBAC roles](https://docs.microsoft.com/en-us/azure/role-based-access-control/overview)
 
-### 3. Required Directory Structure:
-The script assumes the existence of several other scripts in a specific directory structure. Ensure these scripts exist and are executable. If these are part of a repository, clone or download the repository first.
+### 3. Cloning the repo
 
-#### 4. Required Directory Structure:
-The script assumes the existence of several other scripts in a specific directory structure. Ensure these scripts exist and are executable:
+```
+Bash
+
+git clone https://github.com/Evilazaro/MicrosoftDevBox devBox
+
+```
+
+### 3.1 Required Directory Structure:
+After cloning the repo, you will find the following Directory and Files structure. Ensure these scripts exist and are executable:
   
 - [Login to Azure - File: ./Deploy/Bash/Identity/login.sh](./Deploy/Bash/Identity/login.md)
 - [Managed Identity account creation - File: `./Deploy/Bash/Identity/createIdentity.sh`](./Deploy/Bash/Identity/createIdentity.sh)
