@@ -82,11 +82,16 @@ This repository is structured around multiple projects:
 
 To effectively utilize the scripts contained in this repository:
 
-1. **Step 1** - Description of the first step
-2. **Step 2** - Description of the second step
-3. ...
+```
+Bash
 
-> Remember to replace placeholders with actual steps and relevant commands.
+# Access the deploy.sh cript folder
+cd Deploy/Bash
+
+# Run the script passing the Subscription Name as parameter
+./deploy.sh <SubscriptionName>
+
+```
 
 ## Contributing
 
