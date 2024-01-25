@@ -51,17 +51,6 @@
                 },
                 "customize": [
                     {
-                        "type": "PowerShell",
-                        "name": "Cloning GitHub Repos",
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/cloneRepos.ps1'));"
-                        ]
-                    },
-                    {
-                        "type": "WindowsRestart",
-                        "restartCheckCommand": "powershell.exe -Command Write-Host 'VM has been restarted succesfuly'"
-                    },
-                    {
                         "type": "WindowsUpdate",
                         "searchCriteria": "IsInstalled=0",
                         "filters": [
@@ -69,8 +58,11 @@
                         ]
                     },
                     {
-                        "type": "WindowsRestart",
-                        "restartCheckCommand": "powershell.exe -Command Write-Host 'VM has been restarted succesfuly'"
+                        "type": "PowerShell",
+                        "name": "Cloning GitHub Repos",
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/cloneRepos.ps1'));"
+                        ]
                     }
                 ],
                 "distribute": [

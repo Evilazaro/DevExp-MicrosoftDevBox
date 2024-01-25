@@ -50,7 +50,14 @@
                     "version": "latest"
                 },
                 "customize": [
-                     {
+                    {
+                        "type": "WindowsUpdate",
+                        "searchCriteria": "IsInstalled=0",
+                        "filters": [
+                            "exclude:$_.Title -like '*Preview*'"
+                        ]
+                    },
+                    {
                         "type": "PowerShell",
                         "name": "Cloning GitHub Repos",
                         "inline": [
@@ -72,21 +79,6 @@
                             "Write-Host 'Adding current user to docker-users group';",
                             "Add-LocalGroupMember -Group 'docker-users' -Member 'Everyone';"
                         ]
-                    },
-                    {
-                        "type": "WindowsRestart",
-                        "restartCheckCommand": "powershell.exe -Command Write-Host 'VM has been restarted succesfuly'"
-                    },
-                    {
-                        "type": "WindowsUpdate",
-                        "searchCriteria": "IsInstalled=0",
-                        "filters": [
-                            "exclude:$_.Title -like '*Preview*'"
-                        ]
-                    },
-                    {
-                        "type": "WindowsRestart",
-                        "restartCheckCommand": "powershell.exe -Command Write-Host 'VM has been restarted succesfuly'"
                     }
                 ],
                 "distribute": [
