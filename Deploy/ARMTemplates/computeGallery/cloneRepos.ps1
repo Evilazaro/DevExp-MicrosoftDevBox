@@ -39,24 +39,14 @@ function main {
     # Define repositories to clone
     $repositories = @(
         @{
-            url = 'https://github.com/Evilazaro/eShop-Cloud-Native'
+            url = 'https://github.com/Evilazaro/eShopOnContainers.git'
             destination = 'c:\projects\eShop'
-            description = 'TeamMessagingSystemOnContainers Repository'
+            description = 'eShop running on containers'
         },
         @{
-            url = 'https://github.com/Evilazaro/TailwindTraders-Website.git'
-            destination = 'c:\projects\TailwindTraders-Website'
-            description = 'TailwindTraders-Website Repository'
-        },
-        @{
-            url = 'https://github.com/Evilazaro/TailwindTraders-Backend.git'
-            destination = 'c:\projects\TailwindTraders-Backend'
-            description = 'TailwindTraders-Backend Repository'
-        },
-        @{
-            url = 'https://github.com/mspnp/aks-fabrikam-dronedelivery.git'
-            destination = 'c:\projects\aks-fabrikam-dronedelivery'
-            description = 'Azure Kubernetes Service (AKS) Fabrikam Drone Delivery'
+            url = 'https://github.com/Evilazaro/eShopAPI.git'
+            destination = 'c:\projects\eShopAPI'
+            description = 'eShop API'
         }
     )
 
