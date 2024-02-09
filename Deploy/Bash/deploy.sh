@@ -3,13 +3,15 @@
 # Variables
 branch="main"
 location="WestUS3"
+locationComputeGallery="eastus"
+locationDevCenter="eastus2"
 
 # Azure Resource Group Names
 devBoxResourceGroupName="petv2DevBox-rg"
-imageGalleryResourceGroupName="petv2ImageGalleryRG"
-identityResourceGroupName="petv2IdentityDevBoxRG"
-networkResourceGroupName="petv2NetworkConnectivityRG"
-managementResourceGroupName="petv2DevBoxManagementRG"
+imageGalleryResourceGroupName="petv2ImageGallery-rg"
+identityResourceGroupName="petv2IdentityDevBox-rg"
+networkResourceGroupName="petv2NetworkConnectivity-rg"
+managementResourceGroupName="petv2DevBoxManagement-rg"
 
 # Identity Variables
 identityName="petv2DevBoxImgBldId"
@@ -192,13 +194,13 @@ function buildImage
     local networkConnectionName="$8"
 
     declare -A image_params
-    image_params["FrontEnd-Docker-Img"]="VSCode-FrontEnd-Docker petv2-Fabric ./DownloadedTempTemplates/FrontEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/computeGallery/frontEndEngineerImgTemplate.json Contoso"
+    #image_params["FrontEnd-Docker-Img"]="VSCode-FrontEnd-Docker petv2-Fabric ./DownloadedTempTemplates/FrontEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/computeGallery/frontEndEngineerImgTemplate.json Contoso"
     image_params["BackEnd-Docker-Img"]="VS22-BackEnd-Docker petv2-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/Deploy/ARMTemplates/computeGallery/backEndEngineerImgTemplate.json Contoso"
 
     for imageName in "${!image_params[@]}"; do
         IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${image_params[$imageName]}"
-        ./devBox/computeGallery/createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$imageGalleryResourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher" "$identityResourceGroupName"
-        ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$location" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName"
+        ./devBox/computeGallery/createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$imageGalleryResourceGroupName" "$locationComputeGallery" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher" "$identityResourceGroupName"
+        ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName"
     done
 }
 
@@ -231,16 +233,16 @@ main() {
     deploynetwork $vnetName $subNetName $networkConnectionName $networkResourceGroupName $subscriptionId $location
 
     # Deploy Compute Gallery
-    deployComputeGallery $imageGalleryName $location $imageGalleryResourceGroupName
+    deployComputeGallery $imageGalleryName $locationComputeGallery $imageGalleryResourceGroupName
 
     # Deploy Dev Center
-    deployDevCenter $devCenterName $networkConnectionName $imageGalleryName $location $identityName $devBoxResourceGroupName $networkResourceGroupName $identityResourceGroupName $imageGalleryResourceGroupName
+    deployDevCenter $devCenterName $networkConnectionName $imageGalleryName $locationDevCenter $identityName $devBoxResourceGroupName $networkResourceGroupName $identityResourceGroupName $imageGalleryResourceGroupName
 
     # Creating Dev Center Project
-    createDevCenterProject $location $subscriptionId $devBoxResourceGroupName $devCenterName
+    createDevCenterProject $locationDevCenter $subscriptionId $devBoxResourceGroupName $devCenterName
 
     # Building Images
-    buildImage $subscriptionId $imageGalleryResourceGroupName $location $identityName $imageGalleryName $identityResourceGroupName $devBoxResourceGroupName $networkConnectionName
+    buildImage $subscriptionId $imageGalleryResourceGroupName $locationComputeGallery $identityName $imageGalleryName $identityResourceGroupName $devBoxResourceGroupName $networkConnectionName
 
     echo "Deployment Completed Successfully!"
 }

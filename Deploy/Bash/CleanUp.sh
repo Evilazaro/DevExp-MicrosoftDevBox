@@ -8,10 +8,10 @@ clear
 subscriptionId=$(az account show --query id --output tsv)
 # Azure Resource Group Names
 devBoxResourceGroupName="petv2DevBox-rg"
-imageGalleryResourceGroupName="petv2ImageGalleryRG"
-identityResourceGroupName="petv2IdentityDevBoxRG"
-networkResourceGroupName="petv2NetworkConnectivityRG"
-managementResourceGroupName="petv2DevBoxManagementRG"
+imageGalleryResourceGroupName="petv2ImageGallery-rg"
+identityResourceGroupName="petv2IdentityDevBox-rg"
+networkResourceGroupName="petv2NetworkConnectivity-rg"
+managementResourceGroupName="petv2DevBoxManagement-rg"
 location='WestUS3'
 
 # Identity Variables
