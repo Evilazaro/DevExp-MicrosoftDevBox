@@ -28,38 +28,25 @@ function installDockerDesktop {
     }
 }
 
-function installKubernetesTools {
+function intallVSCode {
     
-    param (
-        [string]$lensDownloadUrl = 'https://api.k8slens.dev/binaries/Lens%20Setup%202023.10.181418-latest.exe',
-        [string]$lensTempFolderPath = 'c:\DockerTemp',
-        [string]$installerFileName = 'lensInstall.exe'
-    )
-    
+    Write-Output "Installing Visual Studio Code"   
     try {
-        Write-Output "Installing Kubernetes Tools"
         
-        if (-not (Test-Path $lensTempFolderPath)) {
-            New-Item -ItemType Directory -Path $lensTempFolderPath
-        }
+        Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+        
+        choco install vscode
 
-        $installerFullPath = Join-Path $lensTempFolderPath $installerFileName
-
-        $webClient = New-Object System.Net.WebClient
-        $webClient.DownloadFile($lensDownloadUrl, $installerFullPath)
-
-        & $installerFullPath install --wait --quiet --accept-license /S /allusers
-
-        Write-Output "Kubernetes Tools installed successfully"
+        Write-Output "Visual Studio Code installed successfully"
     } catch {
-        throw "Failed to install Kubernetes Tools: $_"
+        throw "Failed to install Visual Studio Code: $_"
     }
 }
 
 # Execute Functions
 try {
+    intallVSCode
     installDockerDesktop
-    installKubernetesTools
     Write-Output "Script completed successfully"
 } catch {
     Write-Error $_.Exception.Message
