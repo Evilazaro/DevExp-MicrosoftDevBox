@@ -47,6 +47,11 @@ function main {
             url = 'https://github.com/Evilazaro/eShopAPI.git'
             destination = 'c:\projects\eShopAPI'
             description = 'eShop API'
+        },
+        @{
+            url = 'https://github.com/dotnet-architecture/eShopOnBlazor.git'
+            destination = 'c:\projects\eShopOnBlazor'
+            description = 'eShop on Blazor WebAssembly'
         }
     )
 
