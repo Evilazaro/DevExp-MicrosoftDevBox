@@ -49,38 +49,6 @@
                     "type": "PlatformImage",
                     "version": "latest"
                 },
-                "customize": [
-                    {
-                        "type": "WindowsUpdate",
-                        "searchCriteria": "IsInstalled=0",
-                        "filters": [
-                            "exclude:$_.Title -like '*Preview*'"
-                        ]
-                    },
-                    {
-                        "type": "PowerShell",
-                        "name": "Cloning GitHub Repos",
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/cloneRepos.ps1'));"
-                        ]
-                    },
-                    {
-                        "type": "PowerShell",
-                        "name": "Installing Dependencies and Customizations",
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/BackEnd-Customizations.ps1'));"
-                        ]
-                    },
-                    {
-                        "type": "PowerShell",
-                        "name": "Adding current user to docker-users group",
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "Write-Host 'Adding current user to docker-users group';",
-                            "Add-LocalGroupMember -Group 'docker-users' -Member 'Everyone';"
-                        ]
-                    }
-                ],
                 "distribute": [
                     {
                         "artifactTags": {
