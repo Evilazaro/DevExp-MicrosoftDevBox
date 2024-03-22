@@ -86,17 +86,6 @@
                             "Write-Host 'Adding current user to docker-users group';",
                             "Add-LocalGroupMember -Group 'docker-users' -Member 'Everyone';"
                         ]
-                    },
-                    {
-                        "type": "WindowsUpdate",
-                        "searchCriteria": "IsInstalled=0",
-                        "filters": [
-                            "exclude:$_.Title -like '*Preview*'"
-                        ]
-                    },
-                    {
-                        "type": "WindowsRestart",
-                        "name": "Rebooting VM after updates"
                     }
                 ],
                 "distribute": [

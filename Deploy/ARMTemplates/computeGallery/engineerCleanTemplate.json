@@ -49,6 +49,15 @@
                     "type": "PlatformImage",
                     "version": "latest"
                 },
+                "customize": [
+                    {
+                        "type": "WindowsUpdate",
+                        "searchCriteria": "IsInstalled=0",
+                        "filters": [
+                            "exclude:$_.Title -like '*Preview*'"
+                        ]
+                    }
+                ],
                 "distribute": [
                     {
                         "artifactTags": {
