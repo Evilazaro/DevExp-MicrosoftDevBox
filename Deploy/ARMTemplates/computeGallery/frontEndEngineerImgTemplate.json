@@ -59,10 +59,28 @@
                     },
                     {
                         "type": "PowerShell",
+                        "name": "Installing VS Code",
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'));choco install vscode -y;"
+                        ]
+                    },
+                    {
+                        "type": "PowerShell",
                         "name": "Cloning GitHub Repos",
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Deploy/ARMTemplates/computeGallery/cloneRepos.ps1'));"
                         ]
+                    },
+                    {
+                        "type": "WindowsUpdate",
+                        "searchCriteria": "IsInstalled=0",
+                        "filters": [
+                            "exclude:$_.Title -like '*Preview*'"
+                        ]
+                    },
+                    {
+                        "type": "WindowsRestart",
+                        "name": "Rebotting VM after updates"
                     }
                 ],
                 "distribute": [
