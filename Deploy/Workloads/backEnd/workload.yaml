@@ -1,14 +1,43 @@
 $schema: "1.0"
 name: "backend-devbox-customization"
 tasks:
+  - name: update-dependencies
+    description: Update the package list
+  - name: install-docker
+    description: Install Docker Desktop for the Back End Developer
   - name: choco
     parameters:
       package: vscode
-  - name: choco
+  - name: install-vs-extension
+    description: Install the Remote - WSL extension for Visual Studio Code
     parameters:
-      package: nodejs
+      extension: ms-vscode-remote.remote-wsl
+  - name: install-vs-extension
+    description: Install the Azure Tools extension for Visual Studio Code
+    parameters:
+      extension: ms-vscode.vscode-node-azure-pack
+  - name: install-vs-extension
+    description: Install the Azure CLI Tools extension for Visual Studio Code
+    parameters:
+      extension: ms-vscode.azurecli
+  - name: install-vs-extension
+    description: Install the Azure Dev Tools extension for Visual Studio Code
+    parameters:
+      extension: ms-azuretools.azure-dev
+  - name: install-vs-extension
+    description: Install the Docker Tools extension for Visual Studio Code
+    parameters:
+      extension: ms-azuretools.vscode-docker
+  - name: install-vs-extension
+    description: Install the Kubernetes Tools extension for Visual Studio Code
+    parameters:
+      extension: ms-kubernetes-tools.vscode-kubernetes-tools
+  - name: install-vs-extension
+    description: Install the AKS Tools extension for Visual Studio Code
+    parameters:
+      extension: ms-kubernetes-tools.vscode-aks-tools	
   - name: git-clone
-    description: Clone this repository into C:\Workspaces
+    description: Clone eShopOnContainers repository into C:\Workspaces
     parameters:
-      repositoryUrl: https://github.com/OrchardCMS/OrchardCore.git
+      repositoryUrl: https://github.com/Evilazaro/eShopOnContainers.git
       directory: C:\Workspaces
