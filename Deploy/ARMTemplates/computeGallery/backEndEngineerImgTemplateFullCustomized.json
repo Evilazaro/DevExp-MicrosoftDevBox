@@ -28,7 +28,7 @@
             "location": "[parameters('location')]",
             "tags": {
                 "Environment": "Prod",
-                "Role": "Back-End-Engineer",
+                "Role": "Engineer",
                 "Team": "Engineering",
                 "businessUnit": "e-Commerce",
                 "division": "petv2-Platform",
@@ -62,7 +62,7 @@
                     {
                         "artifactTags": {
                             "Environment": "Prod",
-                            "Role": "Back-End-Engineer",
+                            "Role": "Engineer",
                             "Team": "Engineering",
                             "businessUnit": "e-Commerce",
                             "division": "petv2-Platform",
