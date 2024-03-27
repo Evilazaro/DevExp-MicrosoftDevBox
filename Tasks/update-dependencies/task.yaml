@@ -1,0 +1,7 @@
+# This is a Visual Studio extension installation task for Dev Box.
+
+$schema: 1.0
+name: update-dependencies
+description: Updates the dependencies for the DevBox
+author: Microsoft Corporation
+command: ".\\update-dependencies.ps1"
