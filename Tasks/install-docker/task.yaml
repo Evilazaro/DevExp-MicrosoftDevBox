@@ -1,0 +1,7 @@
+# This is a Visual Studio extension installation task for Dev Box.
+
+$schema: 1.0
+name: install-docker
+description: Installs Docker Desktop for the Back End Engineers
+author: Microsoft Corporation
+command: ".\\install-docker.ps1"

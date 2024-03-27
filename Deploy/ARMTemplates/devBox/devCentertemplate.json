@@ -55,24 +55,9 @@
             ],
             "properties": {
                 "gitHub": {
-                    "uri": "https://github.com/microsoft/devcenter-catalog.git",
+                    "uri": "https://github.com/Evilazaro/MicrosoftDevBox.git",
                     "branch": "main",
                     "path": "Tasks"
-                }
-            }
-        },
-        {
-            "type": "Microsoft.DevCenter/devcenters/catalogs",
-            "apiVersion": "2023-10-01-preview",
-            "name": "[concat(parameters('devCenterName'), '/quickstart-environment-definitions')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.DevCenter/devcenters', parameters('devCenterName'))]"
-            ],
-            "properties": {
-                "gitHub": {
-                    "uri": "https://github.com/microsoft/devcenter-catalog.git",
-                    "branch": "main",
-                    "path": "Environment-Definitions"
                 }
             }
         },
