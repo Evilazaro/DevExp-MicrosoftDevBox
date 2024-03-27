@@ -18,8 +18,6 @@ function createDevCenterProjects() {
     declare -A projects=(
         ["eShop"]="eShop"
         ["Contoso"]="Contoso"
-        ["Fabrikam"]="Fabrikam"
-        ["Tailwind"]="Tailwind"
     )
 
     for projectName in "${!projects[@]}"; do
