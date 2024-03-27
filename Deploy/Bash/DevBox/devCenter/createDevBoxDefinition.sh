@@ -15,6 +15,9 @@ galleryName="$5"
 imageName="$6"
 networkConnectionName="$7"
 
+echo "Updating DevCEnter..."
+sleep 15
+
 # Function to create development pools and boxes
 createDevPoolsAndDevBoxes() {
     local location="$1"
