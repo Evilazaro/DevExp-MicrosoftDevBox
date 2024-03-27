@@ -1,0 +1,14 @@
+$schema: "1.0"
+name: "frontend-devbox-customization"
+tasks:
+  - name: choco
+    parameters:
+      package: vscode
+  - name: choco
+    parameters:
+      package: nodejs
+  - name: git-clone
+    description: Clone this repository into C:\Workspaces
+    parameters:
+      repositoryUrl: https://github.com/OrchardCMS/OrchardCore.git
+      directory: C:\Workspaces
