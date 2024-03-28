@@ -5,3 +5,8 @@ name: install-docker
 description: Installs Docker Desktop for the Back End Engineers
 author: Microsoft Corporation
 command: ".\\install-docker.ps1"
+documentation:
+  notes: This task is used to install a the Docker Desktop in the DevBox.
+  examples:
+    - name: install-docker
+      description: Install Docker Desktop
