@@ -31,7 +31,8 @@ function installDockerDesktop {
 # Execute Functions
 try {
     installDockerDesktop
-    net localgroup docker-users "NT AUTHORITY\Authenticated Users" /ADD
+    Write-Host 'Adding current user to docker-users group';
+    Add-LocalGroupMember -Group 'docker-users' -Member 'Everyone';
     Write-Output "Script completed successfully"
 } catch {
     Write-Error $_.Exception.Message
