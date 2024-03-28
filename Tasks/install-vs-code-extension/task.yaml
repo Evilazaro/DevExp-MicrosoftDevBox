@@ -5,3 +5,18 @@ name: install-vs-code-extension
 description: Installs a Visual Studio extension
 author: Microsoft Corporation
 command: ".\\Install-VSIXExtension.ps1 -MarketplaceItemName {{marketplaceItemName}}"
+parameters:
+  marketplaceItemName:
+    type: string
+    required: true
+    description: |
+      The name of the Visual Studio extension to install.
+      Visit https://marketplace.visualstudio.com to learn
+      more about Visual Studio extensions.
+documentation:
+  notes: This task is used to install a Visual Studio extension.
+  examples:
+    - name: install-vs-extension
+      description: Install GitHub Copilot
+      parameters:
+        marketplaceItemName: GitHub.copilotvs
