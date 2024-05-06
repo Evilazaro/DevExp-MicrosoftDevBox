@@ -105,7 +105,7 @@ Finally, the script defines Network Variables:
 
 ## Architecture
 
-**Working in progress..**
+![Solution Architecture](./images/ContosoDevBox.png)
 
 ## Projects
 
