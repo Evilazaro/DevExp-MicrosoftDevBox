@@ -36,8 +36,8 @@ main() {
     checkAzureCli
 
     # Define providers and their descriptions
-    local azureProviders=("Microsoft.VirtualMachineImages" "Microsoft.Compute" "Microsoft.KeyVault" "Microsoft.Storage" "Microsoft.Network" "Microsoft.DevCenter")
-    local providerDescriptions=("Azure Resource Provider for Virtual Machine Images" "Azure Resource Provider for Compute" "Azure Resource Provider for Key Vault" "Azure Resource Provider for Storage" "Azure Resource Provider for Network" "Azure Resource Provider for Dev Center")
+    local azureProviders=("Microsoft.VirtualMachineImages" "Microsoft.Compute" "Microsoft.KeyVault" "Microsoft.Storage" "Microsoft.Network" "Microsoft.DevCenter" "Microsoft.ContainerInstance")
+    local providerDescriptions=("Azure Resource Provider for Virtual Machine Images" "Azure Resource Provider for Compute" "Azure Resource Provider for Key Vault" "Azure Resource Provider for Storage" "Azure Resource Provider for Network" "Azure Resource Provider for Dev Center" "Azure Resource Provider for Container Instance")
 
     # Register each provider
     for index in "${!azureProviders[@]}"; do
