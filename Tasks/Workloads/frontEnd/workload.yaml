@@ -6,31 +6,31 @@ tasks:
   - name: choco
     parameters:
       package: vscode
-  - name: install-vs-extension
+  - name: install-vs-code-extension
     description: Install the Remote - WSL extension for Visual Studio Code
     parameters:
       marketplaceItemName: ms-vscode-remote.remote-wsl
-  - name: install-vs-extension
+  - name: install-vs-code-extension
     description: Install the Azure Tools extension for Visual Studio Code
     parameters:
       marketplaceItemName: ms-vscode.vscode-node-azure-pack
-  - name: install-vs-extension
+  - name: install-vs-code-extension
     description: Install the Azure CLI Tools extension for Visual Studio Code
     parameters:
       marketplaceItemName: ms-vscode.azurecli
-  - name: install-vs-extension
+  - name: install-vs-code-extension
     description: Install the Azure Dev Tools extension for Visual Studio Code
     parameters:
       marketplaceItemName: ms-azuretools.azure-dev
-  - name: install-vs-extension
+  - name: install-vs-code-extension
     description: Install the Docker Tools extension for Visual Studio Code
     parameters:
       marketplaceItemName: ms-azuretools.vscode-docker
-  - name: install-vs-extension
+  - name: install-vs-code-extension
     description: Install the Kubernetes Tools extension for Visual Studio Code
     parameters:
       marketplaceItemName: ms-kubernetes-tools.vscode-kubernetes-tools
-  - name: install-vs-extension
+  - name: install-vs-code-extension
     description: Install the AKS Tools extension for Visual Studio Code
     parameters:
       marketplaceItemName: ms-kubernetes-tools.vscode-aks-tools	
