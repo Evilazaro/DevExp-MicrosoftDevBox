@@ -215,11 +215,13 @@ main() {
 
     local subscriptionName="$1"
     local subscriptionId
-    subscriptionId=$(az account show --query id --output tsv)
 
     echo "Starting Deployment..."
 
     azureLogin "$subscriptionName"
+
+    subscriptionId=$(az account show --query id --output tsv)
+    
     createResourceGroup "$devBoxResourceGroupName" "$location"
     createResourceGroup "$imageGalleryResourceGroupName" "$location"
     createResourceGroup "$identityResourceGroupName" "$location"

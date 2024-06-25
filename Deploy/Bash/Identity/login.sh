@@ -10,7 +10,7 @@ function usage() {
 
 function logIntoAzure() {
     echo "Attempting to log into Azure..."
-    az login
+    az login --use-device-code
     echo "Successfully logged into Azure."
 }
 
