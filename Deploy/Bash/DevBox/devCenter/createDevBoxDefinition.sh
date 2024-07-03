@@ -14,6 +14,7 @@ devCenterName="$4"
 galleryName="$5"
 imageName="$6"
 networkConnectionName="$7"
+buildImage="$8"
 
 echo "Updating DevCEnter..."
 sleep 15
@@ -51,7 +52,13 @@ galleryName: $galleryName
 imageName: $imageName."
 
 # Construct necessary variables
-imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/${galleryName}/images/${imageName}/versions/1.0.0"
+if ("$buildImage" == "true"); then
+    imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/${galleryName}/images/${imageName}/versions/1.0.0"
+else
+    imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/Default/images/${imageName}"
+fi
+
+
 devBoxDefinitionName="devBox-$imageName"
 poolName="$imageName-pool"
 devBoxName="$imageName-devbox"

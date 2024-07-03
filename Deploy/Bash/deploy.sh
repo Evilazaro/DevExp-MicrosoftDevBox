@@ -27,6 +27,7 @@ devCenterName="petv2DevCenter"
 vnetName="petv2Vnet"
 subNetName="petv2SubNet"
 networkConnectionName="devBoxNetworkConnection"
+buildImage=$2
 
 # Functions
 azureLogin() {
@@ -244,8 +245,16 @@ main() {
     createDevCenterProject $locationDevCenter $subscriptionId $devBoxResourceGroupName $devCenterName
 
     # Building Images
-    buildImage $subscriptionId $imageGalleryResourceGroupName $locationComputeGallery $identityName $imageGalleryName $identityResourceGroupName $devBoxResourceGroupName $networkConnectionName
-
+    # Execute this function only if the buildImage parameter is true    
+    if [[ "$buildImage" == "true" ]]; then
+        buildImage $subscriptionId $imageGalleryResourceGroupName $locationComputeGallery $identityName $imageGalleryName $identityResourceGroupName $devBoxResourceGroupName $networkConnectionName
+    else
+        echo "Skipping image build..."
+        imageName="vs-2022-ent-general-win11-m365-gen2"
+        galleryName=$devCenterName
+        ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName"
+    fi
+    
     echo "Deployment Completed Successfully!"
 }
 
