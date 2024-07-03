@@ -35,7 +35,12 @@ tasks:
     parameters:
       marketplaceItemName: ms-kubernetes-tools.vscode-aks-tools	
   - name: git-clone
-    description: Clone eShopOnContainers repository into C:\Workspaces
+    description: Clone Microsoft DevBox repository into C:\Workspaces
     parameters:
-      repositoryUrl: https://github.com/Evilazaro/eShopOnContainers.git
+      repositoryUrl: https://github.com/Evilazaro/MicrosoftDevBox.git
+      directory: C:\Workspaces
+  - name: git-clone
+    description: Clone eShop source code into C:\Workspaces
+    parameters:
+      repositoryUrl: https://github.com/dotnet/eShop.git
       directory: C:\Workspaces
