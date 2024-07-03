@@ -63,7 +63,7 @@
         },
         {
             "type": "Microsoft.DevCenter/devcenters/attachednetworks",
-            "apiVersion": "2023-04-01",
+            "apiVersion": "2024-05-01-preview",
             "name": "[concat(parameters('devCenterName'), '/', parameters('networkConnectionName'))]",
             "dependsOn": [
                 "[resourceId('Microsoft.DevCenter/devcenters', parameters('devCenterName'))]"
@@ -74,7 +74,18 @@
         },
         {
             "type": "Microsoft.DevCenter/devcenters/galleries",
-            "apiVersion": "2023-04-01",
+            "apiVersion": "2024-05-01-preview",
+            "name": "[concat(parameters('devCenterName'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DevCenter/devcenters', parameters('devCenterName'))]"
+            ],
+            "properties": {
+                "galleryResourceId": "[resourceId('Microsoft.DevCenter/devcenters/galleries', parameters('devCenterName'), 'Default')]"
+            }
+        },
+        {
+            "type": "Microsoft.DevCenter/devcenters/galleries",
+            "apiVersion": "2024-05-01-preview",
             "name": "[concat(parameters('devCenterName'), '/', parameters('computeGalleryImageName'))]",
             "dependsOn": [
                 "[resourceId('Microsoft.DevCenter/devcenters', parameters('devCenterName'))]"
