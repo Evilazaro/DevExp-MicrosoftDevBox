@@ -250,8 +250,13 @@ main() {
         buildImage $subscriptionId $imageGalleryResourceGroupName $locationComputeGallery $identityName $imageGalleryName $identityResourceGroupName $devBoxResourceGroupName $networkConnectionName
     else
         echo "Skipping image build..."
-        imageName="vs-2022-ent-general-win11-m365-gen2"
+        echo "Creating DevBox Definition for Back End Developers with Visual Studio 2022"
+        imageName="microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2"
         galleryName=$devCenterName
+        ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" "$buildImage"
+
+        echo "Creating DevBox Definition for Front End Developers"
+        imageName="microsoftvisualstudio_windowsplustools_base-win11-gen2"
         ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" "$buildImage"
     fi
     

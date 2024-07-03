@@ -17,7 +17,40 @@ networkConnectionName="$7"
 buildImage="$8"
 
 echo "Updating DevCEnter..."
-sleep 15
+
+#!/bin/bash
+
+# List of DevOps best practices adjectives
+adjectives=("Automated" "Continuous" "Integrated" "Scalable" "Efficient" "Resilient" "Reliable" "Secure" "Optimized" "Collaborative"
+            "Agile" "Adaptive" "Dynamic" "Flexible" "Innovative" "Proactive" "Robust" "Streamlined" "Unified" "Versatile"
+            "Responsive" "Compliant" "Consistent" "Effective" "Expandable" "Maintainable" "Portable" "Scalable" "Automated"
+            "Efficient" "Interoperable" "Modular" "Robust" "Streamlined" "Sustainable" "Unified" "Versatile" "Resilient" 
+            "Optimized" "Collaborative" "Agile" "Adaptive" "Dynamic" "Flexible" "Innovative" "Proactive" "Reliable")
+
+# List of software development terms
+terms=("Developer" "Architect" "Engineer" "Coder" "Programmer" "Hacker" "Debugger" "Designer" "Analyst" "Tester"
+       "SysAdmin" "DevOps" "ScrumMaster" "ProductOwner" "TechLead" "TeamLead" "Backend" "Frontend" "FullStack" "Database"
+       "Administrator" "CloudSpecialist" "SRE" "NetworkEngineer" "SecurityAnalyst" "QAEngineer" "DataScientist" "AIEngineer" 
+       "MachineLearning" "Consultant" "AutomationSpecialist" "BuildMaster" "ReleaseManager" "ProjectManager" "BusinessAnalyst"
+       "SupportEngineer" "SystemArchitect" "IntegrationSpecialist" "SolutionArchitect" "TechSupport" "InfrastructureEngineer"
+       "PlatformEngineer" "ServiceManager" "ITManager" "SoftwareConsultant" "CloudEngineer" "ITConsultant" "OperationsManager"
+       "DevSecOps")
+
+# Function to generate a random name
+generate_random_name() {
+  local random_adjective=${adjectives[$RANDOM % ${#adjectives[@]}]}
+  local random_term=${terms[$RANDOM % ${#terms[@]}]}
+  local random_number=$((RANDOM % 1000))
+  echo "${random_adjective}${random_term}${random_number}"
+}
+
+# Function to get the content before the underscore
+get_before_underscore() {
+  local input_string="$1"
+  # Use parameter expansion to extract the content before the underscore
+  local result="${input_string%%_*}"
+  echo "$result"
+}
 
 # Function to create development pools and boxes
 createDevPoolsAndDevBoxes() {
@@ -53,15 +86,14 @@ imageName: $imageName."
 
 # Construct necessary variables
 if ("$buildImage" == "true"); then
-    imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/${galleryName}/images/${imageName}/versions/1.0.0"
+    imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/${galleryName}/images/${imageName}/versions/1.0.0"   
 else
     imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/Default/images/${imageName}"
 fi
 
-
-devBoxDefinitionName="devBox-$imageName"
-poolName="$imageName-pool"
-devBoxName="$imageName-devbox"
+devBoxDefinitionName="devBox-$(generate_random_name)"
+poolName="$(generate_random_name)-pool"
+devBoxName="$(generate_random_name)-devbox"
 
 # Display constructed variables
 echo "Constructed variables:
