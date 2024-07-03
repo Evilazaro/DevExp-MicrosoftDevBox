@@ -41,3 +41,8 @@ tasks:
     parameters:
       repositoryUrl: https://github.com/Evilazaro/MicrosoftDevBox.git
       directory: C:\Workspaces
+  - name: git-clone
+    description: Clone eShop source code into C:\Workspaces
+    parameters:
+      repositoryUrl: https://github.com/dotnet/eShop.git
+      directory: C:\Workspaces

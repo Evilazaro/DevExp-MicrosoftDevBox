@@ -27,6 +27,7 @@ devCenterName="petv2DevCenter"
 vnetName="petv2Vnet"
 subNetName="petv2SubNet"
 networkConnectionName="devBoxNetworkConnection"
+buildImage=$2
 
 # Functions
 azureLogin() {
@@ -200,7 +201,7 @@ function buildImage
     for imageName in "${!image_params[@]}"; do
         IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${image_params[$imageName]}"
         ./devBox/computeGallery/createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$imageGalleryResourceGroupName" "$locationComputeGallery" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher" "$identityResourceGroupName"
-        ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName"
+        ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" "$buildImage"
     done
 }
 
@@ -244,8 +245,21 @@ main() {
     createDevCenterProject $locationDevCenter $subscriptionId $devBoxResourceGroupName $devCenterName
 
     # Building Images
-    buildImage $subscriptionId $imageGalleryResourceGroupName $locationComputeGallery $identityName $imageGalleryName $identityResourceGroupName $devBoxResourceGroupName $networkConnectionName
+    # Execute this function only if the buildImage parameter is true    
+    if [[ "$buildImage" == "true" ]]; then
+        buildImage $subscriptionId $imageGalleryResourceGroupName $locationComputeGallery $identityName $imageGalleryName $identityResourceGroupName $devBoxResourceGroupName $networkConnectionName
+    else
+        echo "Skipping image build..."
+        echo "Creating DevBox Definition for Back End Developers with Visual Studio 2022"
+        imageName="microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2"
+        galleryName=$devCenterName
+        ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" "$buildImage"
 
+        echo "Creating DevBox Definition for Front End Developers"
+        imageName="microsoftvisualstudio_windowsplustools_base-win11-gen2"
+        ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" "$buildImage"
+    fi
+    
     echo "Deployment Completed Successfully!"
 }
 
