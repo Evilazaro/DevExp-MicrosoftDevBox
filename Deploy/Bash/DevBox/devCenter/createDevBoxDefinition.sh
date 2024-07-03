@@ -45,10 +45,10 @@ generate_random_name() {
 }
 
 # Function to get the content before the underscore
-get_before_underscore() {
+get_before_hyphen() {
   local input_string="$1"
   # Use parameter expansion to extract the content before the underscore
-  local result="${input_string%%_*}"
+  local result="${input_string%%-*}"
   echo "$result"
 }
 
@@ -91,9 +91,9 @@ else
     imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/Default/images/${imageName}"
 fi
 
-devBoxDefinitionName="devBox-$(generate_random_name)"
-poolName="$(generate_random_name)-pool"
-devBoxName="$(generate_random_name)-devbox"
+devBoxDefinitionName="$(generate_random_name)-def"
+poolName="$(get_before_hyphen $devBoxDefinitionName)-pool"
+devBoxName="$(get_before_hyphen $devBoxDefinitionName)-devbox"
 
 # Display constructed variables
 echo "Constructed variables:
