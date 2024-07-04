@@ -43,9 +43,9 @@
             },
             "properties": {
                 "source": {
-                    "offer": "windowsplustools",
+                    "offer": "visualstudioplustools",
                     "publisher": "microsoftvisualstudio",
-                    "sku": "base-win11-gen2",
+                    "sku": "vs-2022-ent-general-win11-m365-gen2",
                     "type": "PlatformImage",
                     "version": "latest"
                 },
@@ -56,6 +56,16 @@
                         "filters": [
                             "exclude:$_.Title -like '*Preview*'"
                         ]
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "Updating Dependencies",
+                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Tasks/install-docker/update-dependencies.ps1"
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "Installing Docker-Desktop",
+                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Tasks/install-docker/install-docker.ps1"
                     }
                 ],
                 "distribute": [
