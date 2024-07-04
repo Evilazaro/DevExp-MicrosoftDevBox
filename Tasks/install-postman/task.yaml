@@ -1,0 +1,12 @@
+# This is a Visual Studio extension installation task for Dev Box.
+
+$schema: 1.0
+name: install-postman
+description: Installs Postman for Windows
+author: Postman
+command: ".\\install-postman.ps1"
+documentation:
+  notes: This task is used to install Postman in the DevBox.
+  examples:
+    - name: install-postman
+      description: Install Postman for Windows

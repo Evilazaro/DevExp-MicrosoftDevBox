@@ -46,3 +46,5 @@ tasks:
     parameters:
       repositoryUrl: https://github.com/dotnet/eShop.git
       directory: C:\Workspaces
+  - name: install-postman
+    description: Install Postman for Windows
