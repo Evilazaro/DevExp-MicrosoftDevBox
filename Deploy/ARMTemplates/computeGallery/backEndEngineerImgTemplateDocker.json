@@ -66,6 +66,18 @@
                         "type": "PowerShell",
                         "name": "Installing Docker-Desktop",
                         "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Tasks/install-docker/install-docker.ps1"
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "Installing Postman",
+                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Tasks/install-postman/install-postman.ps1"
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "Clone eShop GitHub Repo",
+                        "inline": [
+                            "git clone https://github.com/dotnet/eShop.git c:\\workspaces"
+                        ]
                     }
                 ],
                 "distribute": [
