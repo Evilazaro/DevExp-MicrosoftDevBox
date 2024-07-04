@@ -60,7 +60,7 @@
                     {
                         "type": "PowerShell",
                         "name": "Updating Dependencies",
-                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Tasks/install-docker/update-dependencies.ps1"
+                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Tasks/update-dependencies/update-dependencies.ps1"
                     },
                     {
                         "type": "PowerShell",
