@@ -72,17 +72,17 @@
                 "networkConnectionId": "[parameters('networkConnectionId')]"
             }
         },
-        {
-            "type": "Microsoft.DevCenter/devcenters/galleries",
-            "apiVersion": "2024-05-01-preview",
-            "name": "[concat(parameters('devCenterName'), '/Default')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.DevCenter/devcenters', parameters('devCenterName'))]"
-            ],
-            "properties": {
-                "galleryResourceId": "[resourceId('Microsoft.DevCenter/devcenters/galleries', parameters('devCenterName'), 'Default')]"
-            }
-        },
+        // {
+        //     "type": "Microsoft.DevCenter/devcenters/galleries",
+        //     "apiVersion": "2024-05-01-preview",
+        //     "name": "[concat(parameters('devCenterName'), '/Default')]",
+        //     "dependsOn": [
+        //         "[resourceId('Microsoft.DevCenter/devcenters', parameters('devCenterName'))]"
+        //     ],
+        //     "properties": {
+        //         "galleryResourceId": "[resourceId('Microsoft.DevCenter/devcenters/galleries', parameters('devCenterName'), 'Default')]"
+        //     }
+        // },
         {
             "type": "Microsoft.DevCenter/devcenters/galleries",
             "apiVersion": "2024-05-01-preview",
