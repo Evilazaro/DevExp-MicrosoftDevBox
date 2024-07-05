@@ -2,16 +2,10 @@ Set-ExecutionPolicy Bypass -Scope Process -Force;
 
 # This function updates the AzureRM module
 function Update-AzureRM {
-    # Check if AzureRM module is installed
-    if (Get-Module -ListAvailable -Name AzureRM) {
-        # Update AzureRM module
-        Update-Module -Name Az -Force
-        Write-Host "AzureRM module has been updated successfully."
-    }
-    else {
-        Write-Host "AzureRM module is not installed. Installing it now."
-        Install-Module -Name Az -Force -AllowClobber -Scope AllUsers -AcceptLicense
-    }
+    
+    Install-Module -Name Az -Force -AllowClobber -Scope AllUsers -AcceptLicense    
+    Write-Host "AzureRM module has been updated successfully."
+
 }
 
 # This function updates the GitHub CLI
@@ -31,7 +25,7 @@ function Update-GitHubCLI {
 # This function updates the Azure Developer CLI
 function Update-AzureDeveloperCLI {
     # Check if Azure Developer CLI is installed
-    if (Get-Command azdev -ErrorAction SilentlyContinue) {
+    if (Get-Command azd -ErrorAction SilentlyContinue) {
         # Update Azure Developer CLI
         winget upgrade --id Microsoft.Azd -e --silent --accept-package-agreements --accept-source-agreements
         Write-Host "Azure Developer CLI has been updated successfully."
@@ -44,7 +38,7 @@ function Update-AzureDeveloperCLI {
 
 function Update-DotNet {
     Write-Host "Start to update .NET"
-    dotnet workload update --all
+    dotnet workload update
     Write-Host "End to update .NET"
 }
 

@@ -3,7 +3,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force;
 # This function uninstalls the AzureRM module
 function Uninstall-AzureRM {
     # Check if AzureRM module is installed
-    if (Get-Module -ListAvailable -Name AzureRM) {
+    if (Get-Command az -ErrorAction SilentlyContinue) {
         # Uninstall AzureRM module
         Uninstall-Module -Name Az -Force
         Write-Host "AzureRM module has been uninstalled successfully."
