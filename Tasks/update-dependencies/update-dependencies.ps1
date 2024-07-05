@@ -48,6 +48,17 @@ function Update-DotNet {
     Write-Host "End to update .NET"
 }
 
+function Install-WinGet {
+    # Check if WinGet is installed
+    if (Get-Command winget -ErrorAction SilentlyContinue) {
+        Write-Host "WinGet is already installed."
+    }
+    else {
+        Write-Host "WinGet is not installed. Installing it now."
+        Invoke-Expression .\winget\main.ps1
+    }
+}
+
 # This function updates all the dependencies
 function Update-Dependencies {
     Install-WinGet
