@@ -49,7 +49,9 @@ function Install-WinGet {
     }
     else {
         Write-Host "WinGet is not installed. Installing it now."
-        Invoke-Expression .\Tasks\winget\main.ps1
+        $scriptUrl = "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Tasks/winget/main.ps1"
+
+        Invoke-RestMethod -Uri $scriptUrl | Invoke-Expression
     }
 }
 
