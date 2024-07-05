@@ -5,11 +5,12 @@ function Update-AzureRM {
     # Check if AzureRM module is installed
     if (Get-Module -ListAvailable -Name AzureRM) {
         # Update AzureRM module
-        Install-Module -Name Az -Force -AllowClobber -Scope CurrentUser
+        Update-Module -Name Az -Force
         Write-Host "AzureRM module has been updated successfully."
     }
     else {
-        Write-Host "AzureRM module is not installed. Please install it before running this function."
+        Write-Host "AzureRM module is not installed. Installing it now."
+        Install-Module -Name Az -Force -AllowClobber -Scope AllUsers -AcceptLicense
     }
 }
 
@@ -18,11 +19,12 @@ function Update-GitHubCLI {
     # Check if GitHub CLI is installed
     if (Get-Command gh -ErrorAction SilentlyContinue) {
         # Update GitHub CLI
-        gh upgrade --yes
+        winget upgrade --id GitHub.cli -e --silent --accept-package-agreements --accept-source-agreements
         Write-Host "GitHub CLI has been updated successfully."
     }
     else {
-        Write-Host "GitHub CLI is not installed. Please install it before running this function."
+        Write-Host "GitHub CLI is not installed. Installing it now."
+        winget install --id GitHub.cli -e --silent --accept-package-agreements --accept-source-agreements
     }
 }
 
@@ -31,16 +33,13 @@ function Update-AzureDeveloperCLI {
     # Check if Azure Developer CLI is installed
     if (Get-Command azdev -ErrorAction SilentlyContinue) {
         # Update Azure Developer CLI
-        azdev upgrade --yes
+        winget upgrade --id Microsoft.Azure.DeveloperCLI -e --silent --accept-package-agreements --accept-source-agreements
         Write-Host "Azure Developer CLI has been updated successfully."
     }
     else {
-        Write-Host "Azure Developer CLI is not installed. Please install it before running this function."
+        Write-Host "Azure Developer CLI is not installed. Installing it now."
+        winget install --id Microsoft.Azure.DeveloperCLI -e --silent --accept-package-agreements --accept-source-agreements
     }
-}
-function Install-WinGet {
-    Write-Host "Start to install WinGet"
-
 }
 
 function Update-DotNet {
@@ -51,9 +50,9 @@ function Update-DotNet {
 
 # This function updates all the dependencies
 function Update-Dependencies {
-    Update-DotNet
     Install-WinGet
-    Update-AzureCLI
+    Update-DotNet    
+    Update-AzureDeveloperCLI
     Update-AzureRM
     Update-GitHubCLI
     Update-AzureDeveloperCLI
