@@ -11,7 +11,7 @@ $installerPath = "c:\Downloads\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.Msixb
 Invoke-WebRequest -Uri "https://aka.ms/Microsoft-DesktopAppInstaller" -OutFile $installerPath
 
 # Install the App Installer package
-Add-AppxPackage -Path $installerPath
+Add-AppxPackage -Path $installerPath -ForceApplicationShutdown -DisableDevelopmentMode -ForceTargetApplicationShutdown
 
 # Verify the installation
 winget --version
