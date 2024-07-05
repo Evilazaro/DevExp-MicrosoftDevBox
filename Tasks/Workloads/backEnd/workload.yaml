@@ -3,8 +3,6 @@ name: "backend-devbox-customization"
 tasks:
   - name: update-dependencies
     description: Update the package list
-  - name: winget
-    description: Install the Windows Package Manager Winget
   - name: install-postman
     description: Install Postman for Windows  
   - name: install-docker

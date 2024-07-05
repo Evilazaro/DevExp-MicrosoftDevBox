@@ -64,8 +64,8 @@
                     },
                     {
                         "type": "PowerShell",
-                        "name": "Installing Winget",
-                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Tasks/winget/main.ps1"
+                        "name": "Installing Visual Studio Code",
+                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Tasks/install-vscode/install-vscode.ps1"
                     },
                     {
                         "type": "PowerShell",
@@ -81,7 +81,7 @@
                         "type": "PowerShell",
                         "name": "Clone eShop GitHub Repo",
                         "inline": [
-                            "git clone https://github.com/dotnet/eShop.git c:\\workspaces"
+                            "git clone https://github.com/dotnet/eShop.git c:\\workspaces\\eShop"
                         ]
                     }
                 ],
