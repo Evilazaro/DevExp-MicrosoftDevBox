@@ -49,7 +49,7 @@ function Install-WinGet {
     }
     else {
         Write-Host "WinGet is not installed. Installing it now."
-        Invoke-Expression .\winget\main.ps1
+        Invoke-Expression .\Tasks\winget\main.ps1
     }
 }
 
