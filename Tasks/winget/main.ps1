@@ -1,37 +1,18 @@
 
+Set-ExecutionPolicy Bypass -Scope Process -Force;
+
 function Install-WinGet {
-    $actionTaken = $false
+    $progressPreference = 'silentlyContinue'
+    $oFile = "c:\Downloads\"
 
-    Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Scope AllUsers
-    Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
-
-    # check if the Microsoft.Winget.Client module is installed
-    if (!(Get-Module -ListAvailable -Name Winget)) {
-        Write-Host "Installing Winget"        
-
-        Install-Module WinGet -Scope AllUsers -Force
-
-        Write-Host "Done Installing Winget"
-        $actionTaken = $true
-    }
-    else
-    {
-        Write-Host "Winget is already installed"
-    }
-
-    if (!(Get-Module -ListAvailable -Name Microsoft.Winget.Client)) {
-        Write-Host "Installing Microsoft.Winget.Client"
-        
-        Install-Module Microsoft.WinGet.Client -Scope AllUsers -Force
-
-        Write-Host "Done Installing Microsoft.Winget.Client"
-        $actionTaken = $true
-    }
-    else {
-        Write-Host "Microsoft.Winget.Client is already installed"
-    }
-
-    return $actionTaken
+    mkdir $oFile
+    Write-Information "Downloading WinGet and its dependencies..."
+    Invoke-WebRequest -Uri https://aka.ms/getwinget -OutFile $oFile"Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
+    Invoke-WebRequest -Uri https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile $oFile"Microsoft.VCLibs.x64.14.00.Desktop.appx"
+    Invoke-WebRequest -Uri https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.6/Microsoft.UI.Xaml.2.8.x64.appx -OutFile $oFile"Microsoft.UI.Xaml.2.8.x64.appx"
+    Add-AppxPackage $oFile"Microsoft.VCLibs.x64.14.00.Desktop.appx" 
+    Add-AppxPackage $oFile"Microsoft.UI.Xaml.2.8.x64.appx"
+    Add-AppxPackage $oFile"Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
 }
 
 Install-WinGet

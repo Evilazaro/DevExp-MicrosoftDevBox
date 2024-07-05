@@ -45,7 +45,8 @@ function Uninstall-WinGet {
     # Check if WinGet is installed
     if (Get-Command winget -ErrorAction SilentlyContinue) {
         Write-Host "WinGet is installed. Uninstalling it now."
-        winget uninstall --id Microsoft.Winget.Client -e --silent 
+        Remove-Module -Name Winget -Force
+        Remove-Module -Name Microsoft.Winget.Client -Force
     }
     else {
         Write-Host "WinGet is not installed."
