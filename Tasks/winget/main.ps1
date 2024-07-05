@@ -134,6 +134,7 @@ function InstallWinGet {
         Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Scope AllUsers
         Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 
+        Install-Module WinGet -Scope AllUsers -Force
         Install-Module Microsoft.WinGet.Client -Scope AllUsers -Force
 
         Write-Host "Done Installing Microsoft.Winget.Client"
