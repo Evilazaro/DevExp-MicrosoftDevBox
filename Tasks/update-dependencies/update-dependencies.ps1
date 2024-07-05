@@ -60,6 +60,5 @@ function Update-Dependencies {
 }
 
 # The main function that updates all dependencies
-function main {
-    Update-Dependencies
-}
+
+Update-Dependencies
