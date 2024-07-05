@@ -18,7 +18,7 @@ function Update-GitHubCLI {
     }
     else {
         Write-Host "GitHub CLI is not installed. Installing it now."
-        winget install --id GitHub.cli -e --silent --accept-package-agreements --accept-source-agreements
+        winget install --id GitHub.cli -e --silent --accept-package-agreements --accept-source-agreements --location "US"
     }
 }
 
@@ -32,7 +32,7 @@ function Update-AzureDeveloperCLI {
     }
     else {
         Write-Host "Azure Developer CLI is not installed. Installing it now."
-        winget install --id Microsoft.Azd -e --silent --accept-package-agreements --accept-source-agreements
+        winget install --id Microsoft.Azd -e --silent --accept-package-agreements --accept-source-agreements --location "US"
     }
 }
 

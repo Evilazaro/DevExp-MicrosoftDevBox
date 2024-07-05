@@ -141,7 +141,7 @@ if (!(Get-Command git -ErrorAction SilentlyContinue)) {
     # if winget is available, use it to install git
     if (Get-Command winget -ErrorAction SilentlyContinue) {
         Write-Host "Installing git with winget"
-        winget install --id Git.Git -e --source winget
+        winget install --id Git.Git -e --source winget --location "US"
         $installExitCode = $LASTEXITCODE
         Write-Host "'winget install --id Git.Git -e --source winget' exited with code: $($installExitCode)"
         if ($installExitCode -eq 0) {
