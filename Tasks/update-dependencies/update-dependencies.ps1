@@ -33,18 +33,18 @@ function Update-AzureDeveloperCLI {
     # Check if Azure Developer CLI is installed
     if (Get-Command azdev -ErrorAction SilentlyContinue) {
         # Update Azure Developer CLI
-        winget upgrade --id Microsoft.Azure.DeveloperCLI -e --silent --accept-package-agreements --accept-source-agreements
+        winget upgrade --id Microsoft.Azd -e --silent --accept-package-agreements --accept-source-agreements
         Write-Host "Azure Developer CLI has been updated successfully."
     }
     else {
         Write-Host "Azure Developer CLI is not installed. Installing it now."
-        winget install --id Microsoft.Azure.DeveloperCLI -e --silent --accept-package-agreements --accept-source-agreements
+        winget install --id Microsoft.Azd -e --silent --accept-package-agreements --accept-source-agreements
     }
 }
 
 function Update-DotNet {
     Write-Host "Start to update .NET"
-    dotnet workload update --ignore-failed-sources --from-previous-sdk
+    dotnet workload update --all
     Write-Host "End to update .NET"
 }
 
