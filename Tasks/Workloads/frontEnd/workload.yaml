@@ -3,6 +3,8 @@ name: "backend-devbox-customization"
 tasks:
   - name: update-dependencies
     description: Update the package list
+  - name: winget
+    description: Install the Windows Package Manager Winget
   - name: choco
     parameters:
       package: vscode
@@ -44,3 +46,5 @@ tasks:
     parameters:
       repositoryUrl: https://github.com/dotnet/eShop.git
       directory: C:\Workspaces
+  - name: install-postman
+    description: Install Postman for Windows

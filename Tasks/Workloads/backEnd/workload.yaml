@@ -3,11 +3,14 @@ name: "backend-devbox-customization"
 tasks:
   - name: update-dependencies
     description: Update the package list
+  - name: winget
+    description: Install the Windows Package Manager Winget
+  - name: install-postman
+    description: Install Postman for Windows  
   - name: install-docker
     description: Install Docker Desktop for the Back End Developer
-  - name: choco
-    parameters:
-      package: vscode
+  - name: install-vscode
+    description: Install Visual Studio Code for the Back End Developer
   - name: install-vs-code-extension
     description: Install the Remote - WSL extension for Visual Studio Code
     parameters:
@@ -46,5 +49,3 @@ tasks:
     parameters:
       repositoryUrl: https://github.com/dotnet/eShop.git
       directory: C:\Workspaces
-  - name: install-postman
-    description: Install Postman for Windows

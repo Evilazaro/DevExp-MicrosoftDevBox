@@ -38,9 +38,21 @@ function Update-AzureDeveloperCLI {
         Write-Host "Azure Developer CLI is not installed. Please install it before running this function."
     }
 }
+function Install-WinGet {
+    Write-Host "Start to install WinGet"
+
+}
+
+function Update-DotNet {
+    Write-Host "Start to update .NET"
+    dotnet workload update --ignore-failed-sources --from-previous-sdk
+    Write-Host "End to update .NET"
+}
 
 # This function updates all the dependencies
 function Update-Dependencies {
+    Update-DotNet
+    Install-WinGet
     Update-AzureCLI
     Update-AzureRM
     Update-GitHubCLI

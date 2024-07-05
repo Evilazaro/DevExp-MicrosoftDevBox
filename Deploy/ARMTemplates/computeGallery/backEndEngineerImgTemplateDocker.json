@@ -64,6 +64,11 @@
                     },
                     {
                         "type": "PowerShell",
+                        "name": "Installing Winget",
+                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Tasks/winget/main.ps1"
+                    },
+                    {
+                        "type": "PowerShell",
                         "name": "Installing Docker-Desktop",
                         "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Tasks/install-docker/install-docker.ps1"
                     },
