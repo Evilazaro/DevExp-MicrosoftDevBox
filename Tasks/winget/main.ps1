@@ -134,29 +134,13 @@ function InstallWinGet {
         Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Scope AllUsers
         Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 
-        Install-Module Microsoft.WinGet.Client -Scope AllUsers
+        Install-Module Microsoft.WinGet.Client -Scope AllUsers -Force
 
         Write-Host "Done Installing Microsoft.Winget.Client"
         $actionTaken = $true
     }
     else {
         Write-Host "Microsoft.Winget.Client is already installed"
-    }
-
-    # check if the Microsoft.WinGet.Configuration module is installed
-    if (!(Get-Module -ListAvailable -Name Microsoft.WinGet.Configuration)) {
-        Write-Host "Installing Microsoft.WinGet.Configuration"
-        Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Scope AllUsers
-        Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
-
-        pwsh.exe -MTA -Command "Install-Module Microsoft.WinGet.Configuration -AllowPrerelease -Scope AllUsers"
-        pwsh.exe -MTA -Command "Install-Module winget -Scope AllUsers"
-        
-        Write-Host "Done Installing Microsoft.WinGet.Configuration"
-        $actionTaken = $true
-    }
-    else {
-        Write-Host "Microsoft.WinGet.Configuration is already installed"
     }
 
     return $actionTaken
