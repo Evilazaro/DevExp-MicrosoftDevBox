@@ -52,7 +52,6 @@ function Update-DotNet {
 function Update-Dependencies {
     Install-WinGet
     Update-DotNet    
-    Update-AzureDeveloperCLI
     Update-AzureRM
     Update-GitHubCLI
     Update-AzureDeveloperCLI
