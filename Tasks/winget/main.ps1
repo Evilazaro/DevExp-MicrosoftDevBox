@@ -1,19 +1,23 @@
-Set-ExecutionPolicy Bypass -Scope Process -Force;
 
-# Install the Windows Package Manager
-Write-Host "Installing the Windows Package Manager..."
+function Install-WinGet {
+    $actionTaken = $false
+    # check if the Microsoft.Winget.Client module is installed
+    if (!(Get-Module -ListAvailable -Name Microsoft.Winget.Client)) {
+        Write-Host "Installing Microsoft.Winget.Client"
+        Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Scope AllUsers
+        Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 
-mkdir "c:\Downloads"
-# Set the path for the installer
-$installerPath = "c:\Downloads\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.Msixbundle"
+        Install-Module WinGet -Scope AllUsers -Force
+        Install-Module Microsoft.WinGet.Client -Scope AllUsers -Force
 
-# Download the App Installer package
-Invoke-WebRequest -Uri "https://aka.ms/Microsoft-DesktopAppInstaller" -OutFile $installerPath
+        Write-Host "Done Installing Microsoft.Winget.Client"
+        $actionTaken = $true
+    }
+    else {
+        Write-Host "Microsoft.Winget.Client is already installed"
+    }
 
-# Install the App Installer package
-Add-AppxPackage -Path $installerPath -ForceApplicationShutdown -DisableDevelopmentMode -ForceTargetApplicationShutdown
+    return $actionTaken
+}
 
-# Verify the installation
-winget --version
-
-Write-Host "Windows Package Manager installed successfully!"
+Install-WinGet
