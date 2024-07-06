@@ -53,6 +53,7 @@
                     {
                         "type": "WindowsUpdate",
                         "searchCriteria": "IsInstalled=0",
+                        "rebootAfterInstall": "true",
                         "filters": [
                             "exclude:$_.Title -like '*Preview*'"
                         ]

@@ -47,22 +47,106 @@ function Update-DotNet {
 }
 
 function Install-WinGet {
-    # Check if WinGet is installed
-    if (Get-Command winget -ErrorAction SilentlyContinue) {
-        Write-Host "WinGet is already installed."
+  
+    $PsInstallScope = "CurrentUser"
+    if ($(whoami.exe) -eq "nt authority\system") {
+        $PsInstallScope = "AllUsers"
+    }
+
+    Write-Host "Installing powershell modules in scope: $PsInstallScope"
+
+    # ensure NuGet provider is installed
+    if (!(Get-PackageProvider | Where-Object { $_.Name -eq "NuGet" -and $_.Version -gt "2.8.5.201" })) {
+        Write-Host "Installing NuGet provider"
+        Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Scope $PsInstallScope
+        Write-Host "Done Installing NuGet provider"
     }
     else {
-        Write-Host "WinGet is not installed. Installing it now."
-        $progressPreference = 'silentlyContinue'
-        Write-Information "Downloading WinGet and its dependencies..."
-        Invoke-WebRequest -Uri https://aka.ms/getwinget -OutFile Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
-        Invoke-WebRequest -Uri https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx
-        Invoke-WebRequest -Uri https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.6/Microsoft.UI.Xaml.2.8.x64.appx -OutFile Microsoft.UI.Xaml.2.8.x64.appx
-        Add-AppxPackage Microsoft.VCLibs.x64.14.00.Desktop.appx
-        Add-AppxPackage Microsoft.UI.Xaml.2.8.x64.appx
-        Add-AppxPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
-        Write-Host "WinGet has been installed successfully."
+        Write-Host "NuGet provider is already installed"
     }
+
+    # Set PSGallery installation policy to trusted
+    Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
+    pwsh.exe -MTA -Command "Set-PSRepository -Name PSGallery -InstallationPolicy Trusted"
+
+    # check if the Microsoft.Winget.Client module is installed
+    if (!(Get-Module -ListAvailable -Name Microsoft.Winget.Client)) {
+        Write-Host "Installing Microsoft.Winget.Client"
+        Install-Module Microsoft.WinGet.Client -Scope $PsInstallScope
+        pwsh.exe -MTA -Command "Install-Module Microsoft.WinGet.Client -Scope $PsInstallScope"
+        Write-Host "Done Installing Microsoft.Winget.Client"
+    }
+    else {
+        Write-Host "Microsoft.Winget.Client is already installed"
+    }
+
+    # check if the Microsoft.WinGet.Configuration module is installed
+    if (!(Get-Module -ListAvailable -Name Microsoft.WinGet.Configuration)) {
+        Write-Host "Installing Microsoft.WinGet.Configuration"
+        pwsh.exe -MTA -Command "Install-Module Microsoft.WinGet.Configuration -AllowPrerelease -Scope $PsInstallScope"
+        Write-Host "Done Installing Microsoft.WinGet.Configuration"
+    }
+    else {
+        Write-Host "Microsoft.WinGet.Configuration is already installed"
+    }
+
+    Write-Host "Updating WinGet"
+    try {
+        Write-Host "Attempting to repair WinGet Package Manager"
+        Repair-WinGetPackageManager -Latest -Force
+        Write-Host "Done Reparing WinGet Package Manager"
+    }
+    catch {
+        Write-Host "Failed to repair WinGet Package Manager"
+        Write-Error $_
+    }
+
+    if ($PsInstallScope -eq "CurrentUser") {
+        $msUiXamlPackage = Get-AppxPackage -Name "Microsoft.UI.Xaml.2.8" | Where-Object { $_.Version -ge "8.2310.30001.0" }
+        if (!($msUiXamlPackage)) {
+            # instal Microsoft.UI.Xaml
+            try {
+                Write-Host "Installing Microsoft.UI.Xaml"
+                $architecture = "x64"
+                if ($env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
+                    $architecture = "arm64"
+                }
+                $MsUiXaml = "$env:TEMP\$([System.IO.Path]::GetRandomFileName())-Microsoft.UI.Xaml.2.8.6"
+                $MsUiXamlZip = "$($MsUiXaml).zip"
+                Invoke-WebRequest -Uri "https://www.nuget.org/api/v2/package/Microsoft.UI.Xaml/2.8.6" -OutFile $MsUiXamlZip
+                Expand-Archive $MsUiXamlZip -DestinationPath $MsUiXaml
+                Add-AppxPackage -Path "$($MsUiXaml)\tools\AppX\$($architecture)\Release\Microsoft.UI.Xaml.2.8.appx" -ForceApplicationShutdown
+                Write-Host "Done Installing Microsoft.UI.Xaml"
+            } catch {
+                Write-Host "Failed to install Microsoft.UI.Xaml"
+                Write-Error $_
+            }
+        }
+
+        $desktopAppInstallerPackage = Get-AppxPackage -Name "Microsoft.DesktopAppInstaller"
+        if (!($desktopAppInstallerPackage) -or ($desktopAppInstallerPackage.Version -lt "1.22.0.0")) {
+            # install Microsoft.DesktopAppInstaller
+            try {
+                Write-Host "Installing Microsoft.DesktopAppInstaller"
+                $DesktopAppInstallerAppx = "$env:TEMP\$([System.IO.Path]::GetRandomFileName())-DesktopAppInstaller.appx"
+                Invoke-WebRequest -Uri "https://aka.ms/getwinget" -OutFile $DesktopAppInstallerAppx
+                Add-AppxPackage -Path $DesktopAppInstallerAppx -ForceApplicationShutdown
+                Write-Host "Done Installing Microsoft.DesktopAppInstaller"
+            }
+            catch {
+                Write-Host "Failed to install DesktopAppInstaller appx package"
+                Write-Error $_
+            }
+        }
+
+        Add-AppxPackage -RegisterByFamilyName -MainPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe
+        $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+        Write-Host "WinGet version: $(winget -v)"
+    }
+
+    # Revert PSGallery installation policy to untrusted
+    Set-PSRepository -Name "PSGallery" -InstallationPolicy Untrusted
+    pwsh.exe -MTA -Command "Set-PSRepository -Name PSGallery -InstallationPolicy Untrusted"
 }
 
 # This function updates all the dependencies
