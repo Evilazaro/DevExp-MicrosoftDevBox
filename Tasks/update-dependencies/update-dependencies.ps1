@@ -68,10 +68,10 @@ function Install-WinGet {
 # This function updates all the dependencies
 function Update-Dependencies {
     Install-WinGet
-    Update-DotNet    
     Update-AzureRM
     Update-GitHubCLI
     Update-AzureDeveloperCLI
+    Update-DotNet    
 }
 
 # The main function that updates all dependencies
