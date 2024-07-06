@@ -14,7 +14,7 @@ function Update-GitHubCLI {
     if (Get-Command gh -ErrorAction SilentlyContinue) {
         # Update GitHub CLI
         Write-Host "GitHub CLI is already installed. Updating it now."
-        winget upgrade --id GitHub.cli -e --silent --accept-package-agreements --accept-source-agreements --location "US"
+        winget install --id GitHub.cli -e --silent --accept-package-agreements --accept-source-agreements --location "US"
         Write-Host "GitHub CLI has been updated successfully."
     }
     else {
@@ -30,7 +30,7 @@ function Update-AzureDeveloperCLI {
     if (Get-Command azd -ErrorAction SilentlyContinue) {
         # Update Azure Developer CLI
         Write-Host "Azure Developer CLI is already installed. Updating it now."
-        winget upgrade --id Microsoft.Azd -e --silent --accept-package-agreements --accept-source-agreements --location "US"
+        winget install --id Microsoft.Azd -e --silent --accept-package-agreements --accept-source-agreements --location "US"
         Write-Host "Azure Developer CLI has been updated successfully."
     }
     else {
@@ -71,7 +71,7 @@ function Update-Dependencies {
     Update-AzureRM
     Update-GitHubCLI
     Update-AzureDeveloperCLI
-    Update-DotNet    
+    #Update-DotNet    
 }
 
 # The main function that updates all dependencies
