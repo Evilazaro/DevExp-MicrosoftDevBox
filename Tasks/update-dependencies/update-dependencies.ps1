@@ -93,7 +93,7 @@ function Install-WinGet {
     Write-Host "Updating WinGet"
     try {
         Write-Host "Attempting to repair WinGet Package Manager"
-        Repair-WinGetPackageManager -Latest -Force
+        Repair-WinGetPackageManager -Latest -Force --silent
         Write-Host "Done Reparing WinGet Package Manager"
     }
     catch {
@@ -154,8 +154,7 @@ function Update-Dependencies {
     Install-WinGet
     Update-AzureRM
     Update-GitHubCLI
-    Update-AzureDeveloperCLI
-    #Update-DotNet    
+    Update-DotNet    
 }
 
 # The main function that updates all dependencies
