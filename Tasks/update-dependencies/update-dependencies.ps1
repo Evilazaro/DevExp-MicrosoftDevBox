@@ -93,7 +93,7 @@ function Install-WinGet {
     Write-Host "Updating WinGet"
     try {
         Write-Host "Attempting to repair WinGet Package Manager"
-        Repair-WinGetPackageManager -Latest -Force --silent
+        Repair-WinGetPackageManager -Latest -Force
         Write-Host "Done Reparing WinGet Package Manager"
     }
     catch {
