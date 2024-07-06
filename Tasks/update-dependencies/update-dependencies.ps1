@@ -13,12 +13,14 @@ function Update-GitHubCLI {
     # Check if GitHub CLI is installed
     if (Get-Command gh -ErrorAction SilentlyContinue) {
         # Update GitHub CLI
-        winget upgrade --id GitHub.cli -e --silent --accept-package-agreements --accept-source-agreements
+        Write-Host "GitHub CLI is already installed. Updating it now."
+        winget upgrade --id GitHub.cli -e --silent --accept-package-agreements --accept-source-agreements --location "US"
         Write-Host "GitHub CLI has been updated successfully."
     }
     else {
         Write-Host "GitHub CLI is not installed. Installing it now."
         winget install --id GitHub.cli -e --silent --accept-package-agreements --accept-source-agreements --location "US"
+        Write-Host "GitHub CLI has been installed successfully."
     }
 }
 
@@ -27,12 +29,14 @@ function Update-AzureDeveloperCLI {
     # Check if Azure Developer CLI is installed
     if (Get-Command azd -ErrorAction SilentlyContinue) {
         # Update Azure Developer CLI
-        winget upgrade --id Microsoft.Azd -e --silent --accept-package-agreements --accept-source-agreements
+        Write-Host "Azure Developer CLI is already installed. Updating it now."
+        winget upgrade --id Microsoft.Azd -e --silent --accept-package-agreements --accept-source-agreements --location "US"
         Write-Host "Azure Developer CLI has been updated successfully."
     }
     else {
         Write-Host "Azure Developer CLI is not installed. Installing it now."
         winget install --id Microsoft.Azd -e --silent --accept-package-agreements --accept-source-agreements --location "US"
+        Write-Host "Azure Developer CLI has been installed successfully."
     }
 }
 
