@@ -24,21 +24,6 @@ function Update-GitHubCLI {
     }
 }
 
-# This function updates the Azure Developer CLI
-function Update-AzureDeveloperCLI {
-    # Check if Azure Developer CLI is installed
-    if (Get-Command azd -ErrorAction SilentlyContinue) {
-        # Update Azure Developer CLI
-        Write-Host "Azure Developer CLI is already installed. Updating it now."
-        winget install --id Microsoft.Azd -e --silent --accept-package-agreements --accept-source-agreements --location "US"
-        Write-Host "Azure Developer CLI has been updated successfully."
-    }
-    else {
-        Write-Host "Azure Developer CLI is not installed. Installing it now."
-        winget install --id Microsoft.Azd -e --silent --accept-package-agreements --accept-source-agreements --location "US"
-        Write-Host "Azure Developer CLI has been installed successfully."
-    }
-}
 
 function Update-DotNet {
     Write-Host "Start to update .NET"
