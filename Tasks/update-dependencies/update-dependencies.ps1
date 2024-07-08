@@ -111,10 +111,50 @@ function Install-WinGet {
     pwsh.exe -MTA -Command "Set-PSRepository -Name PSGallery -InstallationPolicy Untrusted"
 }
 
+function Update-GitHubCLI {
+    Write-Host "Updating GitHub CLI"
+    if (!(Get-Command gh -ErrorAction SilentlyContinue)) {
+        Write-Host "GitHub CLI is not installed. Installing GitHub CLI"
+        winget install GitHub.cli --silent --accept-package-agreements --accept-source-agreements --source winget --location "US"
+        Write-Host "GitHub CLI has been installed successfully."
+    }
+    else {
+        Write-Host "GitHub CLI is already installed. Updating GitHub CLI"
+        winget upgrade GitHub.cli --silent --accept-package-agreements --accept-source-agreements --source winget --location "US"
+        Write-Host "GitHub CLI has been updated successfully."
+    }
+    
+    
+}
+
+# Update Azure CLI for Developers
+function Update-AzureCLI {
+    if (!(Get-Command Azd -ErrorAction SilentlyContinue)) {
+        Write-Host "Azure CLI is not installed. Installing Azure CLI"
+        winget install -e --id Microsoft.Azd --silent --accept-package-agreements --accept-source-agreements --source winget --location "US"
+        Write-Host "Azure CLI has been installed successfully."
+    }
+    else {
+        Write-Host "Azure CLI is already installed. Updating Azure CLI"
+        winget install -e --id Microsoft.Azd --silent --accept-package-agreements --accept-source-agreements --source winget --location "US"
+        Write-Host "Azure CLI has been updated successfully."
+    }
+}
+
+# Update dotnet frmeowrk
+function Update-DotNet {
+    Write-Host "Updating .NET Framework"
+    dotnet workload update
+    Write-Host ".NET Framework has been updated successfully."
+}
+
 # This function updates all the dependencies
 function Update-Dependencies {
     Install-WinGet
+    Update-AzureCLI
+    Update-GitHubCLI
     Update-AzureRM
+    Update-DotNet
 }
 
 # The main function that updates all dependencies

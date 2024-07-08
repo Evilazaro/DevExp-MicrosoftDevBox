@@ -8,7 +8,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force;
 # }
 Write-Host "Start to install docker desktop"
 #choco install docker-desktop -y --no-progress
-winget install -e --id Docker.DockerDesktop --silent --location "US" --accept-package-agreements --accept-source-agreements
+winget install -e --id Docker.DockerDesktop --silent --source winget --location "US" --accept-package-agreements --accept-source-agreements
 Write-Host "End to install docker desktop"
 
 #net localgroup docker-users "NT AUTHORITY\Authenticated Users" /ADD
