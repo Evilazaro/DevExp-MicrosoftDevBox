@@ -24,13 +24,6 @@ function Update-GitHubCLI {
     }
 }
 
-
-function Update-DotNet {
-    Write-Host "Start to update .NET"
-    dotnet workload update
-    Write-Host "End to update .NET"
-}
-
 function Install-WinGet {
   
     $PsInstallScope = "CurrentUser"
@@ -138,8 +131,7 @@ function Install-WinGet {
 function Update-Dependencies {
     Install-WinGet
     Update-AzureRM
-    Update-GitHubCLI
-    Update-DotNet    
+    Update-GitHubCLI  
 }
 
 # The main function that updates all dependencies
