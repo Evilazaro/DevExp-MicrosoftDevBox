@@ -8,22 +8,6 @@ function Update-AzureRM {
 
 }
 
-# This function updates the GitHub CLI
-function Update-GitHubCLI {
-    # Check if GitHub CLI is installed
-    if (Get-Command gh -ErrorAction SilentlyContinue) {
-        # Update GitHub CLI
-        Write-Host "GitHub CLI is already installed. Updating it now."
-        winget install --id GitHub.cli -e --silent --accept-package-agreements --accept-source-agreements --location "US"
-        Write-Host "GitHub CLI has been updated successfully."
-    }
-    else {
-        Write-Host "GitHub CLI is not installed. Installing it now."
-        winget install --id GitHub.cli -e --silent --accept-package-agreements --accept-source-agreements --location "US"
-        Write-Host "GitHub CLI has been installed successfully."
-    }
-}
-
 function Install-WinGet {
   
     $PsInstallScope = "CurrentUser"
@@ -131,7 +115,6 @@ function Install-WinGet {
 function Update-Dependencies {
     Install-WinGet
     Update-AzureRM
-    Update-GitHubCLI  
 }
 
 # The main function that updates all dependencies
