@@ -1,6 +1,12 @@
 Set-ExecutionPolicy Bypass -Scope Process -Force; 
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; 
 
+$Choco = "$Env:ProgramData/chocolatey/choco.exe"
+
+if(-not (Test-Path "$Choco")){
+    Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+}
+
 Write-Host "Start to install VS Code for Windows"
-winget install -e --id Microsoft.VisualStudioCode --silent --accept-package-agreements --accept-source-agreements --source winget 
+choco install vscode -y --ignore-checksums
 Write-Host "End to install VS Code for Windows"
