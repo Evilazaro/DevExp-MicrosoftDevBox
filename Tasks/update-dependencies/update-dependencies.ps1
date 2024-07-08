@@ -115,12 +115,12 @@ function Update-GitHubCLI {
     Write-Host "Updating GitHub CLI"
     if (!(Get-Command gh -ErrorAction SilentlyContinue)) {
         Write-Host "GitHub CLI is not installed. Installing GitHub CLI"
-        winget install GitHub.cli --silent --accept-package-agreements --accept-source-agreements --source winget --location "US"
+        winget install GitHub.cli --silent --accept-package-agreements --accept-source-agreements --source winget 
         Write-Host "GitHub CLI has been installed successfully."
     }
     else {
         Write-Host "GitHub CLI is already installed. Updating GitHub CLI"
-        winget upgrade GitHub.cli --silent --accept-package-agreements --accept-source-agreements --source winget --location "US"
+        winget upgrade GitHub.cli --silent --accept-package-agreements --accept-source-agreements --source winget 
         Write-Host "GitHub CLI has been updated successfully."
     }
     
@@ -131,12 +131,12 @@ function Update-GitHubCLI {
 function Update-AzureCLI {
     if (!(Get-Command Azd -ErrorAction SilentlyContinue)) {
         Write-Host "Azure CLI is not installed. Installing Azure CLI"
-        winget install -e --id Microsoft.Azd --silent --accept-package-agreements --accept-source-agreements --source winget --location "US"
+        winget install -e --id Microsoft.Azd --silent --accept-package-agreements --accept-source-agreements --source winget 
         Write-Host "Azure CLI has been installed successfully."
     }
     else {
         Write-Host "Azure CLI is already installed. Updating Azure CLI"
-        winget install -e --id Microsoft.Azd --silent --accept-package-agreements --accept-source-agreements --source winget --location "US"
+        winget install -e --id Microsoft.Azd --silent --accept-package-agreements --accept-source-agreements --source winget 
         Write-Host "Azure CLI has been updated successfully."
     }
 }
