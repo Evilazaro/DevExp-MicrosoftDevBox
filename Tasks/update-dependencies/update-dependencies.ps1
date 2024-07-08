@@ -151,8 +151,6 @@ function Update-DotNet {
 # This function updates all the dependencies
 function Update-Dependencies {
     Install-WinGet
-    Update-AzureCLI
-    Update-GitHubCLI
     Update-AzureRM
     Update-DotNet
 }
