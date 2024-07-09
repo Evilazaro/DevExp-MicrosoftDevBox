@@ -7,20 +7,23 @@
 			"Packages" : 
 			[
 				{
-					"PackageIdentifier" : "Docker.DockerDesktop"
-				},
-				{
-					"PackageIdentifier": "Postman.Postman"
-				},
-				{
-					"PackageIdentifier" : "Microsoft.VisualStudioCode"
+					"PackageIdentifier" : "Microsoft.DevHome"
 				},
 				{
 					"PackageIdentifier" : "Microsoft.WindowsTerminal"
 				},
 				{
 					"PackageIdentifier" : "Microsoft.PowerToys"
-				}
+				},
+				{
+					"PackageIdentifier" : "Microsoft.VisualStudioCode"
+				},
+				{
+					"PackageIdentifier": "Postman.Postman"
+				},
+				{
+					"PackageIdentifier" : "Docker.DockerDesktop"
+				}				
 			],
 
 			"SourceDetails" : 
