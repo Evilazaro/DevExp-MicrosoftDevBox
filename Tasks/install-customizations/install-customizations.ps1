@@ -1,12 +1,6 @@
 Set-ExecutionPolicy Bypass -Scope Process -Force;
-
+$PsInstallScope="AllUsers"
 function Install-WinGet {
-  
-    $PsInstallScope = "CurrentUser"
-    if ($(whoami.exe) -eq "nt authority\system") {
-        $PsInstallScope = "AllUsers"
-    }
-
     Write-Host "Installing powershell modules in scope: $PsInstallScope"
 
     # ensure NuGet provider is installed
@@ -55,7 +49,7 @@ function Install-WinGet {
         Write-Error $_
     }
 
-    if ($PsInstallScope -eq "CurrentUser") {
+    if ($PsInstallScope -eq "AllUsers") {
         $msUiXamlPackage = Get-AppxPackage -Name "Microsoft.UI.Xaml.2.8" | Where-Object { $_.Version -ge "8.2310.30001.0" }
         if (!($msUiXamlPackage)) {
             # instal Microsoft.UI.Xaml
@@ -103,11 +97,10 @@ function Install-WinGet {
     pwsh.exe -MTA -Command "Set-PSRepository -Name PSGallery -InstallationPolicy Untrusted"
 }
 
-# This function updates all the dependencies
-function Update-Dependencies {
+
+function Install-Customizations {
     Install-WinGet
+    #winget import -i .\customizations.json --ignore-unavailable --accept-package-agreements  --accept-source-agreements --verbose  --disable-interactivity 
 }
 
-# The main function that updates all dependencies
-
-Update-Dependencies
+Install-Customizations
