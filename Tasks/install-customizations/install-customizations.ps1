@@ -100,7 +100,11 @@ function Install-WinGet {
 
 function Install-Customizations {
     Install-WinGet
-    #winget import -i .\customizations.json --ignore-unavailable --accept-package-agreements  --accept-source-agreements --verbose  --disable-interactivity 
+    $customFileName = "customizations.json"
+    $folder = "c:\downloads"
+    mkdir -Force $folder
+    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Tasks/install-customizations/customizations.json" -OutFile "$folder\$customFileName"
+    winget import -i "$folder\$customFileName" --ignore-unavailable --accept-package-agreements  --accept-source-agreements --verbose  --disable-interactivity 
 }
 
 Install-Customizations
