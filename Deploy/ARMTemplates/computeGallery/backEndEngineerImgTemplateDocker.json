@@ -65,25 +65,13 @@
                     },
                     {
                         "type": "PowerShell",
-                        "name": "Installing Visual Studio Code",
-                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Tasks/install-vscode/install-vscode.ps1"
+                        "name": "Installing Customizations",
+                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Tasks/install-customizations/install-customizations.ps1"
                     },
                     {
-                        "type": "PowerShell",
-                        "name": "Installing Docker-Desktop",
-                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Tasks/install-docker/install-docker.ps1"
-                    },
-                    {
-                        "type": "PowerShell",
-                        "name": "Installing Postman",
-                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Tasks/install-postman/install-postman.ps1"
-                    },
-                    {
-                        "type": "PowerShell",
-                        "name": "Clone eShop GitHub Repo",
-                        "inline": [
-                            "git clone https://github.com/dotnet/eShop.git c:\\workspaces\\eShop"
-                        ]
+                        "type": "WindowsRestart",
+                        "restartCheckCommand": "powershell -command \"& {Get-Service -Name 'Wuauserv' | Select-Object -ExpandProperty Status}\"",
+                        "restartTimeout": "PT5M"
                     }
                 ],
                 "distribute": [
