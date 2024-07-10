@@ -60,13 +60,18 @@
                     },
                     {
                         "type": "PowerShell",
-                        "name": "Updating Dependencies",
-                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Tasks/update-dependencies/update-dependencies.ps1"
+                        "name": "Installing VS Code",
+                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/installVSCode.ps1"
                     },
                     {
                         "type": "PowerShell",
-                        "name": "Installing Customizations",
-                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/Tasks/install-customizations/install-customizations.ps1"
+                        "name": "Installing Docker Desktop",
+                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/installDocker.ps1"
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "Installing Postman",
+                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/installPostman.ps1"
                     },
                     {
                         "type": "WindowsRestart",
