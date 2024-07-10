@@ -9,10 +9,10 @@ identityName="$3"
 customRoleName="$4"
 
 # Constants
-outputFilePath="./downloadedTempTemplates/identity/aibRoleImageCreation-template.json"
+outputFilePath="./downloadedTempTemplates/identity/roleImage.json"
 
 branch="main"
-templateUrl="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy/ARMTemplates/identity/aibRoleImageCreation-template.json"
+templateUrl="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy/ARMTemplates/identity/roleImage.json"
 
 # Derive current user details
 currentUser=$(az account show --query user.name -o tsv)
