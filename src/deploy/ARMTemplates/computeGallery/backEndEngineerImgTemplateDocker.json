@@ -75,8 +75,7 @@
                     },
                     {
                         "type": "WindowsRestart",
-                        "restartCheckCommand": "powershell -command \"& {Get-Service -Name 'Wuauserv' | Select-Object -ExpandProperty Status}\"",
-                        "restartTimeout": "60M"
+                        "restartCheckCommand": "powershell -command \"& {Get-Service -Name 'Wuauserv' | Select-Object -ExpandProperty Status}\""
                     }
                 ],
                 "distribute": [
