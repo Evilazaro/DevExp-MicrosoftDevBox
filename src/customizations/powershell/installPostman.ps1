@@ -109,7 +109,7 @@ function Install-PostmanWithWinGet {
     try {
         Write-Host "Installing Postman using WinGet..."
         Install-WinGet
-        winget install -e --id Postman.Postman --silent --accept-source-agreements --accept-package-agreements
+        winget install -e --id Postman.Postman --source winget --silent --accept-source-agreements --accept-package-agreements
         Write-Host "Postman installed successfully."
     } catch {
         Write-Error "Failed to install Postman using WinGet: $_"
