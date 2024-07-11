@@ -1,13 +1,50 @@
-Set-ExecutionPolicy Bypass -Scope Process -Force; 
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; 
-
-$Choco = "$Env:ProgramData/chocolatey/choco.exe" 
-
-if(-not (Test-Path "$Choco")){
-    Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+# Set the execution policy for the current process to bypass (allows the script to run without restrictions)
+try {
+    Set-ExecutionPolicy Bypass -Scope Process -Force
+} catch {
+    Write-Error "Failed to set execution policy: $_"
+    exit 1
 }
 
+# Define the URL to download Postman (update this URL if necessary)
+$PostmanUrl = "https://dl.pstmn.io/download/latest/win64"
 
-Write-Host "Start to install Postman for Windows"
-choco install postman -y --no-progress --ignore-checksums
-Write-Host "End to install Postman for Windows"
+# Define the path where Postman will be downloaded
+$DownloadPath = Join-Path -Path $env:TEMP -ChildPath "Postman.exe"
+
+# Function to download Postman installer
+function Invoke-PostmanDownload {
+    param (
+        [string]$Url,
+        [string]$OutputPath
+    )
+    
+    try {
+        Write-Host "Downloading Postman from $Url..."
+        Invoke-WebRequest -Uri $Url -OutFile $OutputPath -ErrorAction Stop
+        Write-Host "Download completed successfully."
+    } catch {
+        Write-Error "Failed to download Postman: $_"
+        exit 1
+    }
+}
+
+# Function to install Postman silently
+function Install-Postman {
+    param (
+        [string]$InstallerPath
+    )
+    
+    try {
+        Write-Host "Installing Postman..."
+        Start-Process -FilePath $InstallerPath -ArgumentList "/S" -Wait -ErrorAction Stop
+        Write-Host "Postman installed successfully."
+    } catch {
+        Write-Error "Failed to install Postman: $_"
+        exit 1
+    }
+}
+
+# Main script execution
+Invoke-PostmanDownload -Url $PostmanUrl -OutputPath $DownloadPath
+Install-Postman -InstallerPath $DownloadPath
