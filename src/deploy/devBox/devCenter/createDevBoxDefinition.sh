@@ -107,8 +107,8 @@ imageName: $imageName"
 echo "Creating DevBox definition..."
 az devcenter admin devbox-definition create --location "$location" \
     --image-reference id="$imageReferenceId" \
-    --os-storage-type "ssd_256gb" \
-    --sku name="general_i_8c32gb256ssd_v2" \
+    --os-storage-type "ssd_512gb" \
+    --sku name="general_i_32c128gb512ssd_v2" \
     --name "$devBoxDefinitionName" \
     --dev-center-name "$devCenterName" \
     --resource-group "$devBoxResourceGroupName"
