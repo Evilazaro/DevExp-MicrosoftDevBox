@@ -1,5 +1,5 @@
 $schema: "1.0"
-name: devbox-customization
+name: backEnd-customization
 tasks:
   - name: install-docker
     description: "Install Docker"
@@ -8,3 +8,8 @@ tasks:
     parameters:
       - name: Package
         value: Postman.Postman
+  - name: winget
+    description: "Install Visual Studio Code"
+    parameters:
+      - package: Package
+        value: Microsoft.VisualStudioCode
