@@ -251,8 +251,10 @@ main() {
     # Building Images
     # Execute this function only if the buildImage parameter is true    
     if [[ "$buildImage" == "true" ]]; then
+        # Build the image
         buildImage $subscriptionId $imageGalleryResourceGroupName $locationComputeGallery $identityName $imageGalleryName $identityResourceGroupName $devBoxResourceGroupName $networkConnectionName
     else
+        # Skip image build
         echo "Skipping image build..."
         echo "Creating DevBox Definition for Back End Developers with Visual Studio 2022"
         imageName="microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2"
