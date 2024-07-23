@@ -198,9 +198,7 @@ function buildImage
 
     declare -A image_params
 
-    #image_params["Engineer-Clean-Img"]="Engineer-Clean petv2-Fabric ./DownloadedTempTemplates/engineerCleanTemplate-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy/ARMTemplates/computeGallery/engineerCleanTemplate.json Contoso"
     image_params["BackEnd-Docker-Img"]="VS22-BackEnd-Docker petv2-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy/ARMTemplates/computeGallery/backEndEngineerImgTemplateDocker.json Contoso"
-    #image_params["BackEnd-Clean-Img"]="VS22-BackEnd-Docker petv2-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy/ARMTemplates/computeGallery/backEndEngineerImgTemplateFullCustomized.json Contoso"
 
     for imageName in "${!image_params[@]}"; do
         IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${image_params[$imageName]}"
@@ -253,18 +251,18 @@ main() {
     if [[ "$buildImage" == "true" ]]; then
         # Build the image
         buildImage $subscriptionId $imageGalleryResourceGroupName $locationComputeGallery $identityName $imageGalleryName $identityResourceGroupName $devBoxResourceGroupName $networkConnectionName
-    else
-        # Skip image build
-        echo "Skipping image build..."
-        echo "Creating DevBox Definition for Back End Developers with Visual Studio 2022"
-        imageName="microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2"
-        galleryName=$devCenterName
-        ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" "$buildImage"
-
-        echo "Creating DevBox Definition for Front End Developers"
-        imageName="microsoftvisualstudio_windowsplustools_base-win11-gen2"
-        ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" "$buildImage"
     fi
+    
+    # Skip image build
+    echo "Skipping image build..."
+    echo "Creating DevBox Definition for Back End Developers with Visual Studio 2022"
+    imageName="microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2"
+    galleryName=$devCenterName
+    ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" "$buildImage"
+
+    echo "Creating DevBox Definition for Front End Developers"
+    imageName="microsoftvisualstudio_windowsplustools_base-win11-gen2"
+    ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" "$buildImage"
     
     echo "Deployment Completed Successfully!"
 }
