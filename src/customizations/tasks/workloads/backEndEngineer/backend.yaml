@@ -70,3 +70,11 @@ tasks:
     description: Installing RemoteDesktopClient
     parameters:
       package: Microsoft.RemoteDesktopClient
+  - name: git-clone
+    description: Cloning the Microsoft DevBox repository
+    parameters:
+      repositoryUrl: https://github.com/Evilazaro/MicrosoftDevBox
+  - name: git-clone
+    description: Cloning the eShop on Containers repository
+    parameters:
+      repositoryUrl: https://github.com/Evilazaro/eShopOnContainers
