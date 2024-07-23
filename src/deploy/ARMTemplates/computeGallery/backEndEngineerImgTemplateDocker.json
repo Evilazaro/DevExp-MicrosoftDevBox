@@ -67,12 +67,7 @@
                         "type": "PowerShell",
                         "name": "Installing VS Code",
                         "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/powershell/installVSCode.ps1"
-                    },
-                    {
-                        "type": "PowerShell",
-                        "name": "Update Dependencies",
-                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/dotnetCustomDeveloperMachineConfiguration/main/src/powershell/updateDependencies.ps1"
-                    },                    
+                    },             
                     {
                         "type": "PowerShell",
                         "name": "Installing Docker Desktop",
