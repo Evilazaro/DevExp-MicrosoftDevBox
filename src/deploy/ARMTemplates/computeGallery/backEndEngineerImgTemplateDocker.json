@@ -105,7 +105,7 @@
                 ],
                 "buildTimeoutInMinutes": 0,
                 "vmProfile": {
-                    "vmSize": "Standard_E8pds_v5",
+                    "vmSize": "Standard_E4s_v5",
                     "osDiskSizeGB": 128,
                     "userAssignedIdentities": [
                         "[parameters('userAssignedId')]"
