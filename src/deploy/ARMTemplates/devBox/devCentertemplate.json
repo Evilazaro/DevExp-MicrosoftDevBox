@@ -57,7 +57,7 @@
                 "gitHub": {
                     "uri": "https://github.com/Evilazaro/MicrosoftDevBox.git",
                     "branch": "main",
-                    "path": "Tasks"
+                    "path": "/src/customizations/tasks"
                 }
             }
         },
