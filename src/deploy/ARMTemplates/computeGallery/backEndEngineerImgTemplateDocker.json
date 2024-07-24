@@ -51,19 +51,6 @@
                 },
                 "customize": [
                     {
-                        "type": "WindowsUpdate",
-                        "searchCriteria": "IsInstalled=0",
-                        "rebootAfterInstall": "true",
-                        "filters": [
-                            "exclude:$_.Title -like '*Preview*'"
-                        ]
-                    },
-                    {
-                        "type": "WindowsRestart",
-                        "restartCheckCommand": "powershell -command \"& {Get-Service -Name 'Wuauserv' | Select-Object -ExpandProperty Status}\"",
-                        "name": "Restart Computer to apply updates"
-                    },
-                    {
                         "type": "PowerShell",
                         "name": "Installing VS Code",
                         "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/powershell/installVSCode.ps1"
