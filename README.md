@@ -1,58 +1,57 @@
-# Microsoft DevBox Demo for Contoso
+# Microsoft DevBox Automation
 
-Welcome to the Microsoft DevBox demo repository! This project aims to simulate a company named "Contoso" that leverages Microsoft DevBox for provisioning workstations to its engineers.
+Welcome to the Microsoft DevBox demo repository! This repository contains a set of scripts designed to streamline the provisioning and deployment of Microsoft DevBox environments on Azure. The main orchestrator script is `deploy.sh`, which automates the setup of various Azure resources necessary for a fully functional DevBox environment.
 
 ## Table of Contents
 
-- [Description](#description)
-- [Pre-Requisites](#pre-requisites)
-- [Architecture](#architecture)
-- [Projects](#projects)
-- [How to Use the Scripts](#how-to-use-the-scripts)
-- [Contributing](#contributing)
-- [License](#license)
+1. [Introduction](#introduction)
+   - [Solution Architecture](#solution-architecture) 
+2. [Repository Structure](#repository-structure)
+3. [How to Use the Scripts](#how-to-use-the-scripts)
+   - [Prerequisites](#prerequisites)
+   - [Deployment Steps](#deployment-steps)
+   - [Script Overview](#script-overview)
+4. [Customization](#customization)
+5. [Error Handling](#error-handling)
+6. [Contributing](#contributing)
+7. [License](#license)
 
-## Description
+## Introduction
 
-Contoso is a fictitious company utilizing Microsoft's DevBox to streamline the deployment of development environments. This repository offers a real-world simulation to demonstrate the capabilities of DevBox in a practical setting.
+This epository provides a collection of scripts to automate the provisioning and deployment of Microsoft DevBox environments in Azure. The main script, `deploy.sh`, handles the orchestration of various Azure resources.
 
-## Pre-Requisites
+### Solution Architecture
 
-Before you delve into the project, ensure you have:
+![Solution Architecture](./images/ContosoDevBox.png)
 
-## 1. Environment
-- This script should be executed within a Bash shell environment.
+## Repository Structure
 
-### Required Software:
+- **src/deploy/**: This directory contains the following deployment scripts and templates, each serving a specific purpose in the DevBox setup process:
+  - **`identity_setup.sh`**: Configures the identities required for accessing and managing DevBox resources, including service principals and managed identities.
+  - **`network_setup.sh`**: Sets up the virtual network, subnets, and other networking components necessary for the DevBox environment.
+  - **`compute_gallery_setup.sh`**: Deploys the Azure Compute Gallery, where VM images are stored and managed.
+  - **`devcenter_setup.sh`**: Configures the Dev Center environment, including setting up necessary infrastructure and resources.
 
-#### All Environments:
-- **Azure CLI**: The script uses the Azure Command-Line Interface (`az`) for many of its operations. Ensure that you have the Azure CLI installed and updated to the latest version. You can check its installation with `az --version`.
-  - [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+The main orchestrator script, `deploy.sh`, sequentially calls these scripts to ensure a smooth and consistent deployment process. Each script is designed to handle specific aspects of the infrastructure setup, ensuring that all necessary components are correctly configured and deployed.
 
-#### For Windows:
-- **Windows Subsystem for Linux (WSL)**: To run Bash scripts on Windows, it's recommended to use WSL. This provides a Linux-compatible kernel interface on Windows.
-  - [Install WSL](https://docs.microsoft.com/en-us/windows/wsl/install)
-- **Git Bash**: Another option for running Bash scripts on Windows is Git Bash.
-  - [Download Git for Windows (includes Git Bash)](https://gitforwindows.org/)
+## How to Use the Scripts
 
-#### For MacOS:
-- **Terminal**: MacOS comes with a built-in terminal which supports Bash by default. No additional software is necessary to run Bash scripts. However, ensure that your MacOS version supports Bash. Starting from macOS Catalina, `zsh` is the default shell, but Bash can still be used.
-- **Homebrew**: This is a package manager for MacOS, which can be handy to install additional software.
-  - [Install Homebrew](https://brew.sh/)
+### Prerequisites
 
-### 2. Required Permissions:
-- **Azure Subscription Access**: The user executing this script must have sufficient permissions on the target Azure subscription. This includes permissions for creating resource groups, deploying resources, and managing Azure AD identities. Typically, this might require an Azure role like 'Contributor' or 'Owner'. 
-  - [Understand Azure RBAC roles](https://docs.microsoft.com/en-us/azure/role-based-access-control/overview)
+1. **Azure Subscription**: Ensure you have access to an Azure subscription.
+2. **Azure CLI**: Install the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) 
 
-### 3. Cloning the repo
+### Deployment Steps
 
+1. **Clone the Repository**: Clone this repository to your local machine.
+   ```bash
+   git clone https://github.com/Evilazaro/MicrosoftDevBox.git
+   
+   cd MicrosoftDevBox/src/deploy
 
-Bash
-```sh
+   ./deploy.sh <azureSubscriptionName> <buildImageParameter>
+  
 
-git clone https://github.com/Evilazaro/MicrosoftDevBox devBox
-
-```
 ### 3.1 Required Directory Structure:
 After cloning the repo, you will find the following Directory and Files structure. Ensure these scripts exist and are executable:
   
@@ -103,32 +102,7 @@ Finally, the script defines Network Variables:
 - `subNetName`: Name of the Subnet.
 - `networkConnectionName`: Name of the Network Connection.
 
-## Architecture
-
-![Solution Architecture](./images/ContosoDevBox.png)
-
-## Projects
-
-This repository is structured around multiple projects:
-
-1. **eShop**      - A reference .NET application implementing an eCommerce web site using a services-based architecture.
-
-## How to Use the Scripts
-
-To effectively utilize the scripts contained in this repository:
-
-```
-Bash
-
-# Access the deploy.sh cript folder
-cd Deploy/Bash
-
-# Run the script passing the Subscription Name as parameter
-./deploy.sh <SubscriptionName>
-
-```
-
-## Contributing
+### Contributing
 
 We welcome contributions! If you'd like to contribute, please follow these steps:
 
@@ -137,7 +111,7 @@ We welcome contributions! If you'd like to contribute, please follow these steps
 3. Make the desired changes or enhancements in your branch.
 4. Submit a pull request for review.
 
-## License
+### License
 
 This project is open-source, licensed under the [MIT License](LICENSE).
 
