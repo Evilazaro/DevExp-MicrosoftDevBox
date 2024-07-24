@@ -113,12 +113,6 @@ This repository is structured around multiple projects:
 
 1. **eShop**      - A reference .NET application implementing an eCommerce web site using a services-based architecture.
 
-2. **Contoso**    - Contoso is a fictional company often used in Microsoft's documentation, training materials, and demonstrations. It is not a real company but serves as an example organization in various Microsoft products and services to illustrate how their software and solutions can be used in a business context. Contoso is used to create sample scenarios and data for educational purposes in the Microsoft ecosystem.
-
-3. **Fabrikam**   - This reference implementation shows a set of best practices for building and running a microservices architecture on Microsoft Azure. This content is built on top of the AKS Secure Baseline, which is the recommended starting (baseline) infrastructure architecture for an AKS cluster.
-
-4. **TailWind**   - A fictitious retail company showcasing the future of intelligent application experiences. These reference apps are all powered by the Azure cloud, built with best-in-class tools, and made smarter through data and AI.
-
 ## How to Use the Scripts
 
 To effectively utilize the scripts contained in this repository:
