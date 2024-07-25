@@ -53,7 +53,7 @@
                     {
                         "type": "PowerShell",
                         "name": "Installing Winget and WSL",
-                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/powershell/installCustomizations.ps1 -step 1"
+                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/powershell/customizationsOrchestrator.ps1 -step 1"
                     },
                     {
                         "type": "WindowsRestart",
@@ -62,7 +62,7 @@
                     {
                         "type": "PowerShell",
                         "name": "Installing Ubuntu and Importing winget packages",
-                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/powershell/installCustomizations.ps1 -step 2"
+                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/powershell/customizationsOrchestrator.ps1 -step 2"
                     },
                     {
                         "type": "WindowsRestart",
@@ -71,7 +71,7 @@
                     {
                         "type": "PowerShell",
                         "name": "Installing VS Extensions and Updating dotne workloads",
-                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/powershell/installCustomizations.ps1 -step 3"
+                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/powershell/customizationsOrchestrator.ps1 -step 3"
                     }
                 ],
                 "distribute": [
