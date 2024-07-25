@@ -1,0 +1,10 @@
+$schema: "1.0"
+name: install-customizations
+parameters:
+  step:
+    default: 1
+    type: integer
+    required: true
+    description: |
+      Step of the installation process.
+command: ../powershell/customizationsOrchestrator.ps1 --step {{step}}
