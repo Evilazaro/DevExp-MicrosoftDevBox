@@ -67,10 +67,8 @@
                     },
                     {
                         "type": "PowerShell",
-                        "name": "Updating Winget Packages",
-                        "inline": [
-                            "winget upgrade --all"
-                        ]
+                        "name": "Updating Winget Packages Postman",
+                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/powershell/installWinget.ps1"
                     },
                     {
                         "type": "WindowsRestart",
