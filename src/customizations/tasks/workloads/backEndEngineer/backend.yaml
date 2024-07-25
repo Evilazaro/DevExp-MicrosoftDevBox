@@ -2,74 +2,26 @@ $schema: "1.0"
 name: "devbox-backend-customization"
 description: "Customize the backend workload for the devbox"
 tasks:
-  - name: winget
-    description: Installing Power Toys
+  - name: install-customizations
+    description: Install customizations
     parameters:
-      package: Microsoft.PowerToys
-  - name: winget
-    description: Installing Dotnet SDK 8
+      step: 1
+  - name: powershell
+    description: Reboot Computer
     parameters:
-      package: Microsoft.DotNet.SDK.8
-  - name: winget
-    description: Installing Dotnet Runtime 8
+      command: Restart-Computer -Force
+  - name: install-customizations
+    description: Install customizations
     parameters:
-      package: Microsoft.DotNet.Runtime.8
-  - name: winget
-    description: Installing Microsoft.WindowsTerminal
+      step: 2
+  - name: powershell
+    description: Reboot Computer
     parameters:
-      package: Microsoft.WindowsTerminal
-  - name: winget
-    description: Installing Microsoft.AzureCLI
+      command: Restart-Computer -Force
+  - name: install-customizations
+    description: Install customizations
     parameters:
-      package: Microsoft.AzureCLI
-  - name: winget
-    description: Installing Microsoft.Azd
-    parameters:
-      package: Microsoft.Azd
-  - name: winget
-    description: Installing OpenJS.NodeJS
-    parameters:
-      package: OpenJS.NodeJS
-  - name: winget
-    description: Installing Microsoft.Azure.FunctionsCoreTools
-    parameters:
-      package: Microsoft.Azure.FunctionsCoreTools
-  - name: winget
-    description: Installing Git.Git
-    parameters:
-      package: Git.Git
-  - name: winget
-    description: Installing GitHub.cli
-    parameters:
-      package: GitHub.cli
-  - name: winget
-    description: Installing GitHub.GitHubDesktop
-    parameters:
-      package: GitHub.GitHubDesktop
-  - name: winget
-    description: Installing Postman
-    parameters:
-      package: Postman.Postman
-  - name: winget
-    description: Installing Visual Studio Code
-    parameters:
-      package: Microsoft.VisualStudioCode
-  - name: winget
-    description: Installing Docker.DockerDesktop
-    parameters:
-      package: Docker.DockerDesktop
-  - name: winget
-    description: Installing ServiceBusExplorer
-    parameters:
-      package: paolosalvatori.ServiceBusExplorer
-  - name: winget
-    description: Installing StorageExplorer
-    parameters:
-      package: Microsoft.Azure.StorageExplorer
-  - name: winget
-    description: Installing RemoteDesktopClient
-    parameters:
-      package: Microsoft.RemoteDesktopClient
+      step: 3
   - name: git-clone
     description: Cloning the Microsoft DevBox repository
     parameters:
