@@ -1,5 +1,6 @@
-$schema: "1.0"
+$schema: 1.0
 name: install-customizations
+command: .\\customizationsOrchestrator.ps1 -step {{step}}
 parameters:
   step:
     default: 1
@@ -7,4 +8,3 @@ parameters:
     required: true
     description: |
       Step of the installation process.
-command: ./customizationsOrchestrator.ps1 -step {{step}}
