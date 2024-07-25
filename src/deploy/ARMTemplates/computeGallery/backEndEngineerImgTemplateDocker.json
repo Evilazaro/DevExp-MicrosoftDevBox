@@ -66,6 +66,13 @@
                         "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/powershell/installPostman.ps1"
                     },
                     {
+                        "type": "PowerShell",
+                        "name": "Updating Winget Packages",
+                        "inline": [
+                            "winget upgrade --all"
+                        ]
+                    },
+                    {
                         "type": "WindowsRestart",
                         "restartCheckCommand": "powershell -command \"& {Get-Service -Name 'Wuauserv' | Select-Object -ExpandProperty Status}\""
                     }
