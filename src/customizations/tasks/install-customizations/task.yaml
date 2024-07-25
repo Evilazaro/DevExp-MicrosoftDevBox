@@ -7,4 +7,4 @@ parameters:
     required: true
     description: |
       Step of the installation process.
-command: ./customizationsOrchestrator.ps1 --step {{step}}
+command: ./customizationsOrchestrator.ps1 -step {{step}}
