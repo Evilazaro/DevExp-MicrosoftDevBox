@@ -14,6 +14,10 @@ tasks:
     description: Install Ubuntu 20.04 LTS
   - name: install-winget-packages
     description: Install Windows Package Manager (winget) packages
+  - name: powershell
+    description: Rebooting the machine
+    parameters:
+      command: Restart-Computer -Force
   - name: install-vs-extensions
     description: Install Visual Studio Code extensions
   - name: update-dotnet-workloads
