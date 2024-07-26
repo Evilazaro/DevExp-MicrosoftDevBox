@@ -1,6 +1,7 @@
 $schema: 1.0
 name: install-customizations
 command: .\\customizationsOrchestrator.ps1 -step {{step}}
+author: Evilazaro Alves
 parameters:
   step:
     default: 1
