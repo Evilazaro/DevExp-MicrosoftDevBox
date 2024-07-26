@@ -2,4 +2,4 @@ $schema: 1.0
 name: install-vs-extensions
 description: Install Visual Studio Code extensions
 author: Evilazaro Alves
-command: .\\installVSCodeExntesions.ps1
+command: .\\installVSCodeExtensions.ps1

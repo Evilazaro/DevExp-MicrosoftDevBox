@@ -4,4 +4,4 @@ $schema: 1.0
 name: update-dotnet-workloads
 description: Update .NET workloads.
 author: Evilazaro Alves
-command: .\\updateDotnetWorkloads.ps1
+command: .\\updateDotNetWorkloads.ps1
