@@ -3,7 +3,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force;
 function installWingetPackages {
     try {
         Write-Host "Importing winget packages... Please have a sit and relax."
-        winget import -i .\devMachineConfig.json
+        winget import -i ..\install-winget-packages\devMachineConfig.json
         Write-Host "Packages have been imported successfully."
     }
     catch {
