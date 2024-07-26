@@ -3,7 +3,7 @@
 $schema: 1.0
 name: powershell
 description: Execute a powershell command.
-author: Microsoft Corporation
+author: Evilazaro Alves
 command: ".\\Run-Command.ps1 -Command {{command}} -WorkingDirectory {{workingDirectory}}"
 parameters:
   command:

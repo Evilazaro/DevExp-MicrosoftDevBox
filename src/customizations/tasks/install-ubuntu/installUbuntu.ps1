@@ -1,3 +1,5 @@
+Set-ExecutionPolicy Bypass -Scope Process -Force; 
+
 function installUbuntu{
     # Check if winget is installed
     if (Get-Command winget -ErrorAction SilentlyContinue) {
@@ -13,3 +15,5 @@ function installUbuntu{
     }
 
 }
+
+installUbuntu
