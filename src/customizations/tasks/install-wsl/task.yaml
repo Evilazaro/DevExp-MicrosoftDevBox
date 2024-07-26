@@ -1,5 +1,0 @@
-$schema: 1.0
-name: install-wsl
-description: Install Windows Subsystem for Linux (WSL)
-author: Evilazaro Alves
-command: .\\installWsl.ps1
