@@ -3,21 +3,42 @@ param(
     [int]$step = 1
 )
 
+function executePowerShellScript {
+    param(
+        [Parameter(Mandatory=$true, HelpMessage="Please provide the script content.")]
+        [string]$url
+    )
+    
+    $scriptContent = Invoke-WebRequest -Uri $url -UseBasicParsing
+    
+    # Execute the script
+    Invoke-Expression $scriptContent.Content
+}
+
 Set-ExecutionPolicy Bypass -Scope Process -Force; 
 
 switch ($step) {
     1 {
-        .\install-winget\installWinget.ps1
-        .\install-wsl\isntallWsl.ps1
+        # Install winget
+        executePowerShellScript -url "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/tasks/install-winget/installWinget.ps1"
+        # Install WSL
+        executePowerShellScript -url "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/tasks/install-wsl/installWsl.ps1"
+        
     }
     2 {
-        installUbuntu
-        importWingetPackages
+        # Install Ubuntu
+        executePowerShellScript -url "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/tasks/install-ubuntu/installUbuntu.ps1"
+        # Install winget packages
+        executePowerShellScript -url "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/tasks/install-winget-packages/installWingetPackages.ps1"
+        
     }
     3 {
-        InstallVSCodeExtensions
-        UpdateDotNetWorkloads   
-        updateWingetPackages 
+        # Install VS Code extensions
+        executePowerShellScript -url "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/tasks/install-vs-extensions/installVSCodeExtensions.ps1"
+        # Update .NET workloads
+        executePowerShellScript -url "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/tasks/update-dotnet-workloads/updateDotNetWorkloads.ps1"
+        # Update winget packages
+        executePowerShellScript -url "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/tasks/update-winget-packages/updateWingetPackages.ps1"
     }
     default {
         Write-Host "Invalid step number. Please provide a valid step number." -Level "ERROR"
