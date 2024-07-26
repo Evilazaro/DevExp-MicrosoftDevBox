@@ -5,4 +5,21 @@ param(
 
 Set-ExecutionPolicy Bypass -Scope Process -Force; 
 
-.\installCustomizations.ps1 -step $step
+switch ($step) {
+    1 {
+        .\install-winget\installWinget.ps1
+        .\install-wsl\isntallWsl.ps1
+    }
+    2 {
+        installUbuntu
+        importWingetPackages
+    }
+    3 {
+        InstallVSCodeExtensions
+        UpdateDotNetWorkloads   
+        updateWingetPackages 
+    }
+    default {
+        Write-Host "Invalid step number. Please provide a valid step number." -Level "ERROR"
+    }
+}

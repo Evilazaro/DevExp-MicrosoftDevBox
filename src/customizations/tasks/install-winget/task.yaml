@@ -1,0 +1,4 @@
+$schema: 1.0
+name: install-winget
+description: Install Windows Package Manager (winget)
+command: .\\instalWinget.ps1

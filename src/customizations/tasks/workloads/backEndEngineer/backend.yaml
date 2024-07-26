@@ -2,26 +2,29 @@ $schema: "1.0"
 name: "devbox-backend-customization"
 description: "Customize the backend workload for the devbox"
 tasks:
-  - name: install-customizations
-    description: Install customizations
-    parameters:
-      step: 1
+  - name: install-winget
+    description: Install Windows Package Manager (winget)
+  - name: install-wsl
+    description: Install Windows Subsystem for Linux (WSL)
   - name: powershell
-    description: Reboot Computer
-    parameters:
-      command: Restart-Computer -Force
-  - name: install-customizations
-    description: Install customizations
-    parameters:
-      step: 2
+    description: Install Windows Terminal
+    command: Restart-Computer -Force
+  - name: instal-ubuntu
+    description: Install Ubuntu 20.04 LTS
   - name: powershell
-    description: Reboot Computer
-    parameters:
-      command: Restart-Computer -Force
-  - name: install-customizations
-    description: Install customizations
-    parameters:
-      step: 3
+    description: Install Windows Terminal
+    command: Restart-Computer -Force
+  - name: install-winget-packages
+    description: Install Windows Package Manager (winget) packages
+  - name: powershell
+    description: Install Windows Terminal
+    command: Restart-Computer -Force
+  - name: install-vs-extensions
+    description: Install Visual Studio Code extensions
+  - name: update-dotnet-workloads
+    description: Update .NET workloads
+  - name: update-winget-packages
+    description: Update Windows Package Manager (winget) packages
   - name: git-clone
     description: Cloning the Microsoft DevBox repository
     parameters:

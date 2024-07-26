@@ -1,0 +1,4 @@
+$schema: 1.0
+name: update-winget-packages
+description: Update Windows Package Manager (winget) packages
+command: .\\updateWingetPackages.ps1

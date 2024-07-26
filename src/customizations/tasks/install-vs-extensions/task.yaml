@@ -1,0 +1,4 @@
+$schema: 1.0
+name: install-vs-extensions
+description: Install Visual Studio Code extensions
+command: .\\installVSCodeExntesions.ps1
