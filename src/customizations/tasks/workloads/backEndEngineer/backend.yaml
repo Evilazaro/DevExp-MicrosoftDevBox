@@ -6,22 +6,10 @@ tasks:
     description: Install Windows Package Manager (winget)
   - name: install-wsl
     description: Install Windows Subsystem for Linux (WSL)
-  - name: powershell
-    description: Install Windows Terminal
-    parameters:
-      command: Restart-Computer -Force
   - name: install-ubuntu
     description: Install Ubuntu 20.04 LTS
-  - name: powershell
-    description: Install Windows Terminal
-    parameters:
-      command: Restart-Computer -Force
   - name: install-winget-packages
     description: Install Windows Package Manager (winget) packages
-  - name: powershell
-    description: Install Windows Terminal
-    parameters:
-      command: Restart-Computer -Force
   - name: install-vs-extensions
     description: Install Visual Studio Code extensions
   - name: update-dotnet-workloads
