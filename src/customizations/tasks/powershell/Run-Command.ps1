@@ -5,6 +5,8 @@ param(
     [string]$WorkingDirectory
  )
 
+ Set-ExecutionPolicy Bypass -Scope Process -Force; 
+
 # Check if workingDirectory is set and not empty and if so, change to it.
 if ($WorkingDirectory -and $WorkingDirectory -ne "") {
     # Check if the working directory exists.

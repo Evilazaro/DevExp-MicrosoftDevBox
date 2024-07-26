@@ -1,3 +1,4 @@
+Set-ExecutionPolicy Bypass -Scope Process -Force; 
 function InstallVSCodeExtensions {
     try {
         Write-Host "Installing VSCode extensions..."
@@ -32,3 +33,5 @@ function InstallVSCodeExtensions {
         Write-Host "Failed to install VSCode extensions: $_" -Level "ERROR"
     }
 }
+
+InstallVSCodeExtensions

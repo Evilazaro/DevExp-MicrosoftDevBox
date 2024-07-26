@@ -1,3 +1,5 @@
+Set-ExecutionPolicy Bypass -Scope Process -Force; 
+
 function installWingetPackages {
     try {
         Write-Host "Importing winget packages... Please have a sit and relax."
@@ -8,3 +10,5 @@ function installWingetPackages {
         Write-Host "Failed to import winget packages: $_"  -Level "ERROR"
     }
 }
+
+installWingetPackages
