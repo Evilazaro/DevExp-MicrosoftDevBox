@@ -3,19 +3,17 @@ param(
     [int]$step = 1
 )
 
+Set-ExecutionPolicy Bypass -Scope Process -Force; 
+
 function executePowerShellScript {
     param(
         [Parameter(Mandatory=$true, HelpMessage="Please provide the script content.")]
         [string]$url
     )
     
-    $scriptContent = Invoke-WebRequest -Uri $url -UseBasicParsing
-    
-    # Execute the script
-    Invoke-Expression $scriptContent.Content
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; 
+    Invoke-Expression ((New-Object System.Net.WebClient).DownloadString($url))
 }
-
-Set-ExecutionPolicy Bypass -Scope Process -Force; 
 
 switch ($step) {
     1 {
