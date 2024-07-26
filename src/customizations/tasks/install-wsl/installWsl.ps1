@@ -6,7 +6,7 @@ function installWsl{
         Write-Host "winget is installed. Proceeding with WSL installation..."
 
         # Install Ubuntu
-        winget install -e --id Microsoft.WSL --source winget --accept-package-agreements --accept-source-agreements --silent
+        wsl install --force
 
         Write-Host "WSL installation initiated."
     }
