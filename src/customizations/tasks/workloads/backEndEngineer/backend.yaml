@@ -4,12 +4,12 @@ description: "Customize the backend workload for the devbox"
 tasks:
   - name: install-winget
     description: Install Windows Package Manager (winget)
+  - name: install-wsl
+    description: Install Windows Subsystem for Linux (WSL)
   - name: powershell
     description: Rebooting the machine
     parameters:
       command: Restart-Computer -Force
-  - name: install-wsl
-    description: Install Windows Subsystem for Linux (WSL)
   - name: install-ubuntu
     description: Install Ubuntu 20.04 LTS
   - name: install-winget-packages
