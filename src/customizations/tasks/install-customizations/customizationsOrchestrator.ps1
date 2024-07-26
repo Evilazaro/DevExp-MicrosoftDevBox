@@ -17,26 +17,17 @@ function executePowerShellScript {
 
 switch ($step) {
     1 {
-        # Install winget
-        executePowerShellScript -url "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/tasks/install-winget/installWinget.ps1"
-        # Install WSL
-        executePowerShellScript -url "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/tasks/install-wsl/installWsl.ps1"
-        
+        ..\install-winget\installWinget.ps1
+        ..\install-wsl\installWsl.ps1     
     }
     2 {
-        # Install Ubuntu
-        executePowerShellScript -url "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/tasks/install-ubuntu/installUbuntu.ps1"
-        # Install winget packages
-        executePowerShellScript -url "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/tasks/install-winget-packages/installWingetPackages.ps1"
-        
+        ..\install-ubuntu\installUbuntu.ps1
+        ..\install-winget-packages\installWingetPackages.ps1        
     }
     3 {
-        # Install VS Code extensions
-        executePowerShellScript -url "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/tasks/install-vs-extensions/installVSCodeExtensions.ps1"
-        # Update .NET workloads
-        executePowerShellScript -url "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/tasks/update-dotnet-workloads/updateDotNetWorkloads.ps1"
-        # Update winget packages
-        executePowerShellScript -url "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/tasks/update-winget-packages/updateWingetPackages.ps1"
+        ..\install-vs-extensions\installVSCodeExtensions.ps1
+        ..\update-dotnet-workloads\updateDotNetWorkloads.ps1
+        ..\update-winget-packages\updateWingetPackages.ps1
     }
     default {
         Write-Host "Invalid step number. Please provide a valid step number." -Level "ERROR"

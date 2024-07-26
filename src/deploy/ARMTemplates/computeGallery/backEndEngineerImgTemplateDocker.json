@@ -52,11 +52,19 @@
                 "customize": [
                     {
                         "type": "PowerShell",
-                        "name": "Installing Winget and WSL",
-                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/tasks/install-customizations/customizationsOrchestrator.ps1",
-                        "scriptParameters": {
-                            "step": "1"
+                        "name": "Cloning DevBox Repo",
+                        "inline": {
+                            "script": "git clone https://github.com/Evilazaro/MicrosoftDevBox.git c:\\workspaces\\MicrosoftDevBox"
                         }
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "Installing Winget and WSL",
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                            "cd c:\\workspaces\\MicrosoftDevBox\\src\\customizations\\tasks\\install-customizations",
+                            ".\\customizationsOrchestrator.ps1 -step 1"
+                        ]
                     },
                     {
                         "type": "WindowsRestart",
@@ -65,10 +73,11 @@
                     {
                         "type": "PowerShell",
                         "name": "Installing Ubuntu and Importing winget packages",
-                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/tasks/install-customizations/customizationsOrchestrator.ps1",
-                        "scriptParameters": {
-                            "step": "2"
-                        }
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                            "cd c:\\workspaces\\MicrosoftDevBox\\src\\customizations\\tasks\\install-customizations",
+                            ".\\customizationsOrchestrator.ps1 -step 2"
+                        ]
                     },
                     {
                         "type": "WindowsRestart",
@@ -77,10 +86,11 @@
                     {
                         "type": "PowerShell",
                         "name": "Installing VS Extensions and Updating dotne workloads",
-                        "scriptUri": "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/tasks/install-customizations/customizationsOrchestrator.ps1",
-                        "scriptParameters": {
-                            "step": "3"
-                        }
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                            "cd c:\\workspaces\\MicrosoftDevBox\\src\\customizations\\tasks\\install-customizations",
+                            ".\\customizationsOrchestrator.ps1 -step 3"
+                        ]
                     }
                 ],
                 "distribute": [
