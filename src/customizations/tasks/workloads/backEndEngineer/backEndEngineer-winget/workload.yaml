@@ -5,6 +5,6 @@ tasks:
   - name: winget
     description: "Install Winget Packages"
     parameters:
-        downloadUrl: 'https://raw.githubusercontent.com/microsoft/devhome/main/sampleConfigurations/microsoft/vscode/configuration.dsc.yaml'
+        downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/main/src/customizations/tasks/workloads/backEndEngineer/backEndEngineer-winget/dotnetDevMachineConfig.dsc.yaml'
         configurationFile: 'C:\WinGetConfig\dotnetDevMachineConfig.dsc.yaml'
         runAsUser: true
