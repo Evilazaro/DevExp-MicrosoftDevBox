@@ -1,7 +1,0 @@
-# This is a simple powershell command execution task for Dev Box.
-
-$schema: 1.0
-name: update-dotnet-workloads
-description: Update .NET workloads.
-author: Evilazaro Alves
-command: .\\updateDotNetWorkloads.ps1

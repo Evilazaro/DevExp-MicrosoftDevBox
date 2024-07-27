@@ -2,33 +2,11 @@ $schema: "1.0"
 name: "devbox-backend-customization"
 description: "Customize the backend workload for the devbox"
 tasks:
-  - name: install-winget
-    description: Install Windows Package Manager (winget)
-  - name: install-wsl
-    description: Install Windows Subsystem for Linux (WSL)
-  - name: powershell
-    description: Rebooting the machine
+  - name: winget
+    description: "Install Windows Subsystem for Linux"
     parameters:
-      command: Restart-Computer -Force
-  - name: install-ubuntu
-    description: Install Ubuntu 20.04 LTS
-  - name: install-winget-packages
-    description: Install Windows Package Manager (winget) packages
-  - name: powershell
-    description: Rebooting the machine
+        package: Microsoft.WSL
+  - name: winget
+    description: "Install Postman"
     parameters:
-      command: Restart-Computer -Force
-  - name: install-vs-extensions
-    description: Install Visual Studio Code extensions
-  - name: update-dotnet-workloads
-    description: Update .NET workloads
-  - name: update-winget-packages
-    description: Update Windows Package Manager (winget) packages
-  - name: git-clone
-    description: Cloning the Microsoft DevBox repository
-    parameters:
-      repositoryUrl: https://github.com/Evilazaro/MicrosoftDevBox
-  - name: git-clone
-    description: Cloning the eShop on Containers repository
-    parameters:
-      repositoryUrl: https://github.com/Evilazaro/eShopOnContainers
+        package: Postman.Postman

@@ -1,5 +1,0 @@
-$schema: 1.0
-name: install-winget-packages
-description: Install Windows Package Manager (winget) packages
-author: Evilazaro Alves
-command: .\\installWingetPackages.ps1

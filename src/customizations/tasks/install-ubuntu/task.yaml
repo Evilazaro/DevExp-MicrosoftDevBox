@@ -1,5 +1,0 @@
-$schema: 1.0
-name: install-ubuntu
-description: Install Ubuntu
-author: Evilazaro Alves
-command: .\\installUbuntu.ps1
