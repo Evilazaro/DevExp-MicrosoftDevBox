@@ -1,0 +1,9 @@
+$schema: "1.0"
+name: "devbox-backend-customization"
+description: "Customize the backend workload for the devbox"
+tasks:
+  - name: winget
+    description: "Install Windows Sub Packages"
+    parameters:
+        package: Postman.Postman
+        runAsUser: true
