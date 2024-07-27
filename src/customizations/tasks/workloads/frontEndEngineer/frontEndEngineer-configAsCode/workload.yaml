@@ -1,0 +1,4 @@
+$schema: "1.0"
+name: "devbox-backend-customization"
+description: "Customize the backend workload for the devbox"
+tasks:
