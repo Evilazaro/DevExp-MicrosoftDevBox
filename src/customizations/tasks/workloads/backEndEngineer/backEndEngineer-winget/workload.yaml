@@ -1,0 +1,10 @@
+$schema: "1.0"
+name: "devbox-backend-customization"
+description: "Customize the backend workload for the devbox"
+tasks:
+  - name: winget
+    description: "Install Winget Packages"
+    parameters:
+        downloadUrl: 'https://raw.githubusercontent.com/microsoft/devhome/main/sampleConfigurations/microsoft/vscode/configuration.dsc.yaml'
+        configurationFile: 'C:\WinGetConfig\dotnetDevMachineConfig.dsc.yaml'
+        runAsUser: true
