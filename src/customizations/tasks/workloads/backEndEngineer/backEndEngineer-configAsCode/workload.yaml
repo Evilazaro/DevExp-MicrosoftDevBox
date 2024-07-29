@@ -2,8 +2,17 @@ $schema: "1.0"
 name: "devbox-backend-customization"
 description: "Customize the backend workload for the devbox"
 tasks:
-  - name: winget
-    description: "Install Windows Sub Packages"
+  - name: powershell
     parameters:
-        package: Postman.Postman
-        runAsUser: true
+      command: |
+        # Install WSL2 distros
+        wsl --install --force
+        wsl --install -d Ubuntu
+        # Install VSCode extensions
+        code --install-extension ms-python.python;
+        code --install-extension ms-vscode-remote.remote-wsl;
+        code --install-extension d-biehl.robotcode
+  - name: install-docker
+    description: "Install Docker Desktop"
+  - name: install-postman
+    description: "Install Docker Desktop"
