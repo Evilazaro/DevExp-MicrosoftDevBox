@@ -22,12 +22,10 @@ tasks:
     description: "Install App Microsoft.DotNet.SDK.8"
     parameters:
       package: Microsoft.DotNet.SDK.8
-      runAsUser: true
   - name: winget
     description: "Install App Microsoft.DotNet.Runtime.8"
     parameters:
       package: Microsoft.DotNet.Runtime.8
-      runAsUser: true
   - name: winget
     description: "Install App Microsoft.WindowsTerminal"
     parameters:
@@ -37,32 +35,26 @@ tasks:
     description: "Install App Microsoft.AzureCLI"
     parameters:
       package: Microsoft.AzureCLI
-      runAsUser: true
   - name: winget
     description: "Install App Microsoft.Azd"
     parameters:
       package: Microsoft.Azd
-      runAsUser: true
   - name: winget
     description: "Install App OpenJS.NodeJS"
     parameters:
       package: OpenJS.NodeJS
-      runAsUser: true
   - name: winget
     description: "Install App Microsoft.Azure.FunctionsCoreTools"
     parameters:
       package: Microsoft.Azure.FunctionsCoreTools
-      runAsUser: true
   - name: winget
     description: "Install App Git.Git"
     parameters:
       package: Git.Git
-      runAsUser: true
   - name: winget
     description: "Install App GitHub.cli"
     parameters:
       package: GitHub.cli
-      runAsUser: true
   - name: winget
     description: "Install App GitHub.GitHubDesktop"
     parameters:
@@ -106,7 +98,6 @@ tasks:
   - name: powershell
     parameters:
       command: |
-        # Install WSL2 distros
         winget upgrade --all
       runAsUser: true
   
