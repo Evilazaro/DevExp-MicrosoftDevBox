@@ -1,18 +1,106 @@
 $schema: "1.0"
-name: "devbox-backend-customization"
+name: "devbox-backend-code"
 description: "Customize the backend workload for the devbox"
 tasks:
   - name: powershell
     parameters:
       command: |
         # Install WSL2 distros
-        wsl --install --force
         wsl --install -d Ubuntu
-        # Install VSCode extensions
-        code --install-extension ms-python.python;
-        code --install-extension ms-vscode-remote.remote-wsl;
-        code --install-extension d-biehl.robotcode
-  - name: install-docker
-    description: "Install Docker Desktop"
-  - name: install-postman
-    description: "Install Docker Desktop"
+
+  - name: winget
+    description: "Install App Microsoft.AppInstaller"
+    parameters:
+      package: "Microsoft.AppInstaller"
+
+  - name: winget
+    description: "Install App Microsoft.PowerToys"
+    parameters:
+      package: Microsoft.PowerToys
+
+  - name: winget
+    description: "Install App Microsoft.DotNet.SDK.8"
+    parameters:
+      package: Microsoft.DotNet.SDK.8
+
+  - name: winget
+    description: "Install App Microsoft.DotNet.Runtime.8"
+    parameters:
+      package: Microsoft.DotNet.Runtime.8
+
+  - name: winget
+    description: "Install App Microsoft.WindowsTerminal"
+    parameters:
+      package: Microsoft.WindowsTerminal
+
+  - name: winget
+    description: "Install App Microsoft.AzureCLI"
+    parameters:
+      package: Microsoft.AzureCLI
+
+  - name: winget
+    description: "Install App Microsoft.Azd"
+    parameters:
+      package: Microsoft.Azd
+
+  - name: winget
+    description: "Install App OpenJS.NodeJS"
+    parameters:
+      package: OpenJS.NodeJS
+
+  - name: winget
+    description: "Install App Microsoft.Azure.FunctionsCoreTools"
+    parameters:
+      package: Microsoft.Azure.FunctionsCoreTools
+
+  - name: winget
+    description: "Install App Git.Git"
+    parameters:
+      package: Git.Git
+
+  - name: winget
+    description: "Install App GitHub.cli"
+    parameters:
+      package: GitHub.cli
+
+  - name: winget
+    description: "Install App GitHub.GitHubDesktop"
+    parameters:
+      package: GitHub.GitHubDesktop
+
+  - name: winget
+    description: "Install App Microsoft.VisualStudioCode"
+    parameters:
+      package: Microsoft.VisualStudioCode
+
+  - name: winget
+    description: "Install App Microsoft.VisualStudio.2022.Enterprise"
+    parameters:
+      package: Microsoft.VisualStudio.2022.Enterprise
+
+  - name: winget
+    description: "Install App Postman.Postman"
+    parameters:
+      package: "Microsoft.AppInstaller"
+
+  - name: winget
+    description: "Install App Docker.DockerDesktop"
+    parameters:
+      package: Docker.DockerDesktop
+
+  - name: winget
+    description: "Install App paolosalvatori.ServiceBusExplorer"
+    parameters:
+      package: paolosalvatori.ServiceBusExplorer
+
+  - name: winget
+    description: "Install App Microsoft.Azure.StorageExplorer"
+    parameters:
+      package: Microsoft.Azure.StorageExplorer
+
+  - name: winget
+    description: "Install App Microsoft.RemoteDesktopClient"
+    parameters:
+      package: Microsoft.RemoteDesktopClient
+
+  

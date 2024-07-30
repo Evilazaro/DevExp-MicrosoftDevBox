@@ -1,17 +1,12 @@
 $schema: "1.0"
-name: "devbox-backend-customization"
+name: "devbox-backend-winget"
 description: "Customize the backend workload for the devbox"
 tasks:
   - name: powershell
     parameters:
       command: |
         # Install WSL2 distros
-        wsl --install --force
         wsl --install -d Ubuntu
-        # Install VSCode extensions
-        code --install-extension ms-python.python;
-        code --install-extension ms-vscode-remote.remote-wsl;
-        code --install-extension d-biehl.robotcode
       runAsUser: true
   - name: winget
     description: "Install App Microsoft.AppInstaller"
@@ -107,5 +102,11 @@ tasks:
     description: "Install App Microsoft.RemoteDesktopClient"
     parameters:
       package: Microsoft.RemoteDesktopClient
+      runAsUser: true
+  - name: powershell
+    parameters:
+      command: |
+        # Install WSL2 distros
+        winget upgrade --all
       runAsUser: true
   

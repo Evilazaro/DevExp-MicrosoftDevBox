@@ -77,7 +77,8 @@
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                             "cd c:\\workspaces\\MicrosoftDevBox\\src\\customizations\\tasks\\install-customizations",
                             ".\\customizationsOrchestrator.ps1 -step 2"
-                        ]
+                        ],
+                        "runAsUser": true
                     },
                     {
                         "type": "WindowsRestart",
@@ -90,7 +91,8 @@
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                             "cd c:\\workspaces\\MicrosoftDevBox\\src\\customizations\\tasks\\install-customizations",
                             ".\\customizationsOrchestrator.ps1 -step 3"
-                        ]
+                        ],
+                        "runAsUser": true
                     }
                 ],
                 "distribute": [
