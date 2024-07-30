@@ -53,46 +53,18 @@
                     {
                         "type": "PowerShell",
                         "name": "Cloning DevBox Repo",
-                        "inline": {
-                            "script": "git clone https://github.com/Evilazaro/MicrosoftDevBox.git c:\\workspaces\\MicrosoftDevBox"
-                        }
-                    },
-                    {
-                        "type": "PowerShell",
-                        "name": "Installing Winget and WSL",
                         "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "cd c:\\workspaces\\MicrosoftDevBox\\src\\customizations\\tasks\\install-customizations",
-                            ".\\customizationsOrchestrator.ps1 -step 1"
+                            "git clone https://github.com/Evilazaro/MicrosoftDevBox.git c:\\workspaces\\MicrosoftDevBox"
                         ]
                     },
                     {
-                        "type": "WindowsRestart",
-                        "restartCheckCommand": "powershell -command \"& {Get-Service -Name 'Wuauserv' | Select-Object -ExpandProperty Status}\""
-                    },             
-                    {
                         "type": "PowerShell",
-                        "name": "Installing Ubuntu and Importing winget packages",
+                        "name": "Installing Docker Desktop",
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "cd c:\\workspaces\\MicrosoftDevBox\\src\\customizations\\tasks\\install-customizations",
-                            ".\\customizationsOrchestrator.ps1 -step 2"
-                        ],
-                        "runAsUser": true
-                    },
-                    {
-                        "type": "WindowsRestart",
-                        "restartCheckCommand": "powershell -command \"& {Get-Service -Name 'Wuauserv' | Select-Object -ExpandProperty Status}\""
-                    },
-                    {
-                        "type": "PowerShell",
-                        "name": "Installing VS Extensions and Updating dotne workloads",
-                        "inline": [
-                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
-                            "cd c:\\workspaces\\MicrosoftDevBox\\src\\customizations\\tasks\\install-customizations",
-                            ".\\customizationsOrchestrator.ps1 -step 3"
-                        ],
-                        "runAsUser": true
+                            "cd c:\\workspaces\\MicrosoftDevBox\\src\\customizations\\tasks\\install-docker",
+                            ".\\main.ps1"
+                        ]
                     }
                 ],
                 "distribute": [
