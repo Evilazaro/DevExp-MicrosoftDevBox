@@ -2,6 +2,11 @@ $schema: "1.0"
 name: "devbox-backend-winget"
 description: "Customize the backend workload for the devbox"
 tasks:
+  - name: powershell
+    description: "Windows Subsystem for Linux"
+    parameters:
+      command: "wsl --install -d Ubuntu"
+      runAsUser: true
   - name: winget
     description: "Install App Microsoft.AppInstaller"
     parameters:
