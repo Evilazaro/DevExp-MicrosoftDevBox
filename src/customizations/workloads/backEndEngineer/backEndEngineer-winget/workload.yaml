@@ -72,7 +72,7 @@ tasks:
   - name: winget
     description: "Install App Postman.Postman"
     parameters:
-      package: "Microsoft.AppInstaller"
+      package: "Postman.Postman"
       runAsUser: true
   - name: winget
     description: "Install App Docker.DockerDesktop"
