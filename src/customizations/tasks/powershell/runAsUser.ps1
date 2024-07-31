@@ -1,5 +1,9 @@
-$CustomizationScriptsDir = "C:\DevBoxCustomizations"
+$CustomizationScriptsDir = "C:\DevBoxCustomizationsPwsh"
 $LockFile = "lockfile"
+$RunAsUserScript = "runAsUser.ps1"
+$CleanupScript = "cleanup.ps1"
+$RunAsUserTask = "DevBoxCustomizationsPwsh"
+$CleanupTask = "DevBoxCustomizationsPwshCleanup"
 
 # Set the progress preference to silently continue
 # in order to avoid progress bars in the output
