@@ -257,6 +257,13 @@ main() {
     imageName="microsoftvisualstudio_windowsplustools_base-win11-gen2"
     ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" false
     
+    if [[ $? -ne 0 ]]; then
+        echo "Error: Deployment failed. Error: $?"
+        exit 1
+    fi
+
+    clear
+    
     # Execute this function only if the buildImage parameter is true    
     if [[ "$buildImage" == "true" ]]; then
         echo "Deployment Completed Successfully! Building images..."
