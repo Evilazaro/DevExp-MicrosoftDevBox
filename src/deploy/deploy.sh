@@ -246,13 +246,6 @@ main() {
     # Creating Dev Center Project
     createDevCenterProject $locationDevCenter $subscriptionId $devBoxResourceGroupName $devCenterName
 
-    # Building Images
-    # Execute this function only if the buildImage parameter is true    
-    if [[ "$buildImage" == "true" ]]; then
-        # Build the image
-        buildImage $subscriptionId $imageGalleryResourceGroupName $locationComputeGallery $identityName $imageGalleryName $identityResourceGroupName $devBoxResourceGroupName $networkConnectionName
-    fi
-    
     # Skip image build
     echo "Skipping image build..."
     echo "Creating DevBox Definition for Back End Developers with Visual Studio 2022"
@@ -264,7 +257,15 @@ main() {
     imageName="microsoftvisualstudio_windowsplustools_base-win11-gen2"
     ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" false
     
-    echo "Deployment Completed Successfully!"
+    # Execute this function only if the buildImage parameter is true    
+    if [[ "$buildImage" == "true" ]]; then
+        echo "Deployment Completed Successfully! Building images..."
+        echo "You can start creating DevBoxes for your team."
+        buildImage $subscriptionId $imageGalleryResourceGroupName $locationComputeGallery $identityName $imageGalleryName $identityResourceGroupName $devBoxResourceGroupName $networkConnectionName
+    else
+        echo "Deployment Completed Successfully!"
+        echo "You can start creating DevBoxes for your team."
+    fi
 }
 
 main "$@"

@@ -15,5 +15,3 @@ Write-Host "Setting up scheduled tasks..."
 
 Remove-Item -Path "$($CustomizationScriptsDir)\$($LockFile)"
 
-
-

@@ -6,7 +6,7 @@ if(-not (Test-Path "$Choco")){
     Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 }
 Write-Host "Start to install docker desktop"
-choco install docker-desktop -y --no-progress
+choco install postman -y --no-progress
 Write-Host "End to install docker desktop"
 
 net localgroup docker-users "NT AUTHORITY\Authenticated Users" /ADD

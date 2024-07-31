@@ -65,6 +65,15 @@
                             "cd c:\\workspaces\\MicrosoftDevBox\\src\\customizations\\tasks\\install-docker",
                             ".\\main.ps1"
                         ]
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "Installing Docker Desktop",
+                        "inline": [
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force;",
+                            "cd c:\\workspaces\\MicrosoftDevBox\\src\\customizations\\tasks\\install-postman",
+                            ".\\main.ps1"
+                        ]
                     }
                 ],
                 "distribute": [
