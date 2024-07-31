@@ -7,12 +7,12 @@ param(
     [string]$RunAsUser
 )
 
-$CustomizationScriptsDir = "C:\DevBoxCustomizations"
+$CustomizationScriptsDir = "C:\DevBoxCustomizationsPwsh"
 $LockFile = "lockfile"
 $RunAsUserScript = "runAsUser.ps1"
 $CleanupScript = "cleanup.ps1"
-$RunAsUserTask = "DevBoxCustomizations"
-$CleanupTask = "DevBoxCustomizationsCleanup"
+$RunAsUserTask = "DevBoxCustomizationsPwsh"
+$CleanupTask = "DevBoxCustomizationsPwshCleanup"
 
 function SetupScheduledTasks {
     Write-Host "Setting up scheduled tasks"
