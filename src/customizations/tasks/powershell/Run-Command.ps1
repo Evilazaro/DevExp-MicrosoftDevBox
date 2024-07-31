@@ -103,7 +103,7 @@ if ($RunAsUser -eq "true") {
 
     Write-Host "Writing commands to user script"
 
-    Write-Host "Appending package install: $($Package)"
+    Write-Host "Appending script install: $($Command)"
     AppendToUserScript $Command
     AppendToUserScript "Write-Host 'powershell exit code: $LASTEXITCODE'"
 }
