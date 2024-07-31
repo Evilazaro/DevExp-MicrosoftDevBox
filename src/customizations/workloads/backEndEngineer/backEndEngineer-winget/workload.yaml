@@ -94,4 +94,9 @@ tasks:
     parameters:
       package: Microsoft.RemoteDesktopClient
       runAsUser: true
+  - name: powershell
+    description: "Update all winget packages"
+    parameters:
+      command: "winget upgrade --all"
+      runAsUser: true
   
