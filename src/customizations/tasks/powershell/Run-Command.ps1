@@ -4,7 +4,7 @@ param(
     [Parameter()]
     [string]$WorkingDirectory,
     [Parameter()]
-    [srtring]$RunAsUser
+    [string]$RunAsUser
 )
 
 $CustomizationScriptsDir = "C:\DevBoxCustomizations"
