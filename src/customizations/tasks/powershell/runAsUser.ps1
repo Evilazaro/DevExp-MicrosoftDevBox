@@ -20,3 +20,5 @@ Write-Host "Setting up scheduled tasks..."
 Remove-Item -Path "$($CustomizationScriptsDir)\$($LockFile)"
 
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+
+
