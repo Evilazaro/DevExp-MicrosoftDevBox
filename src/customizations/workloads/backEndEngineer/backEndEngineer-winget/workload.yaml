@@ -5,7 +5,7 @@ tasks:
   - name: powershell
     description: "Windows Subsystem for Linux"
     parameters:
-      command: "wsl --install -d Ubuntu"
+      command: "wsl --install -d Ubuntu --no-launch"
       runAsUser: true
   - name: winget
     description: "Install App Microsoft.AppInstaller"
