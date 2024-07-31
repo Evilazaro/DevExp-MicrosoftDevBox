@@ -68,7 +68,7 @@
                     },
                     {
                         "type": "PowerShell",
-                        "name": "Installing Docker Desktop",
+                        "name": "Installing Postman",
                         "inline": [
                             "Set-ExecutionPolicy Bypass -Scope Process -Force;",
                             "cd c:\\workspaces\\MicrosoftDevBox\\src\\customizations\\tasks\\install-postman",
