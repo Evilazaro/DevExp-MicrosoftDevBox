@@ -52,13 +52,6 @@ The main orchestrator script, `deploy.sh`, sequentially calls these scripts to e
 6. **VS Code for Windows**
 7. **Azure Subscription**: Ensure you have access to an Azure subscription. 
 
-You can install all the dependencies at once running the following PowerShell script:
-
-```powershell
-cd \src\deploy\dependencies
-
-.\installDependencies
-```
 ### Linux
 
 1. **PowerShell**:
@@ -69,10 +62,6 @@ cd \src\deploy\dependencies
 6. **VS Code for Windows**
 7. **Azure Subscription**: Ensure you have access to an Azure subscription. 
 
-```bash
-cd deploy
-```
-
 ### Microsoft DevBox Deploy
 
 1. **Clone the Repository**: Clone this repository to your local machine.
@@ -81,6 +70,9 @@ cd deploy
    
    cd MicrosoftDevBox/src/deploy
 
+   sudo apt-get update && \
+   sudo apt-get install -y dos2unix && \
+    find . -type f -print0 | xargs -P 4 -0 -n 1  dos2unix && \
    ./deploy.sh <azureSubscriptionName> <buildImageParameter>
   
 ### 5. Configuration:

@@ -5,8 +5,6 @@ if(-not (Test-Path "$Choco")){
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; 
     Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 }
-Write-Host "Start to install docker desktop"
+Write-Host "Start to install Postman"
 choco install postman -y --no-progress
-Write-Host "End to install docker desktop"
-
-net localgroup docker-users "NT AUTHORITY\Authenticated Users" /ADD
+Write-Host "End to install Postman"
