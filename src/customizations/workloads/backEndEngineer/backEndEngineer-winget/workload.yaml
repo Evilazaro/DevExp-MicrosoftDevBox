@@ -137,7 +137,7 @@ tasks:
         InstallVSCodeExtensions"
       runAsUser: true
   - name: powershell
-    description: "Update dotne workloads"
+    description: "Update dotnet workloads"
     parameters:
       command: "dotnet workload update"
       runAsUser: true
