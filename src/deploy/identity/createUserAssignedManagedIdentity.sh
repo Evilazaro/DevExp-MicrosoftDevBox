@@ -74,7 +74,7 @@ echo "Script started."
 createCustomRole "$subscriptionId" "$identityResourceGroupName" "$outputFilePath" "$customRoleName"
 
 # Assign roles
-assignRole "$identityId" "Intune Service Administrator" "$subscriptionId" ServicePrincipal
+
 assignRole "$identityId" "Virtual Machine Contributor" "$subscriptionId" ServicePrincipal
 assignRole "$identityId" "Desktop Virtualization Contributor" "$subscriptionId" ServicePrincipal
 assignRole "$identityId" "Desktop Virtualization Virtual Machine Contributor" "$subscriptionId" ServicePrincipal

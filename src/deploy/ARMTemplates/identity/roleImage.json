@@ -10,7 +10,6 @@
     "Microsoft.Compute/images/write",
     "Microsoft.Compute/images/read",
     "Microsoft.Compute/images/delete",
-    "microsoft.azure.supportTickets/allEntities/allTasks",
     "microsoft.cloudPC/allEntities/allProperties/allTasks",
     "microsoft.directory/bitlockerKeys/key/read",
     "microsoft.directory/contacts/basic/update",
