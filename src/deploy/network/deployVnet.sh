@@ -28,21 +28,36 @@ createVirtualNetworkAndSubnet() {
     local vnetAddressPrefix="10.0.0.0/16"
     local subnetAddressPrefix="10.0.0.0/24"
 
+    # Constants
+    branch="main"
+    templateFileUri="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy//ARMTemplates/network/vNet/vNetTemplate.json"
+
     echo "Starting the creation of Virtual Network and Subnet..."
     echo "Creating Virtual Network: $vnetName in Resource Group: $resourceGroupName with address prefix: $vnetAddressPrefix..."
-    
-    az network vnet create \
-        --resource-group "$resourceGroupName" \
-        --location "$location" \
+
+    az deployment group create \
         --name "$vnetName" \
-        --address-prefix "$vnetAddressPrefix" \
-        --subnet-name "$subnetName" \
-        --subnet-prefix "$subnetAddressPrefix" \
+        --resource-group "$resourceGroupName" \
+        --template-uri $templateFileUri \
+        --parameters vnetName="$vnetName" \
         --tags "division=petv2-Platform" \
                 "Environment=Prod" \
                 "offer=petv2-DevWorkstation-Service" \
                 "Team=Engineering" \
                 "solution=ContosoFabricDevWorkstation"
+    
+    # az network vnet create \
+    #     --resource-group "$resourceGroupName" \
+    #     --location "$location" \
+    #     --name "$vnetName" \
+    #     --address-prefix "$vnetAddressPrefix" \
+    #     --subnet-name "$subnetName" \
+    #     --subnet-prefix "$subnetAddressPrefix" \
+    #     --tags "division=petv2-Platform" \
+    #             "Environment=Prod" \
+    #             "offer=petv2-DevWorkstation-Service" \
+    #             "Team=Engineering" \
+    #             "solution=ContosoFabricDevWorkstation"
     
     echo "Virtual Network $vnetName and Subnet $subnetName have been created successfully in Resource Group $resourceGroupName."
 }
