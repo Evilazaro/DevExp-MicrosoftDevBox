@@ -3,11 +3,11 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vnetName": {
-            "defaultValue": "petVnet",
+            "defaultValue": "",
             "type": "String"
         },
-        "ddosProtectionPlans_petVnetDDoSPlan_externalid": {
-            "defaultValue": "[resourceId('Microsoft.Network/ddosProtectionPlans', parameters('vnetName'), 'petVnetDDoSPlan')]",
+        "ddosProtectionPlansExternalid": {
+            "defaultValue": "[resourceId('Microsoft.Network/ddosProtectionPlans','petVnetDDoSPlan')]",
             "type": "String"
         }
     },
@@ -59,7 +59,7 @@
                 "virtualNetworkPeerings": [],
                 "enableDdosProtection": true,
                 "ddosProtectionPlan": {
-                    "id": "[parameters('ddosProtectionPlans_petVnetDDoSPlan_externalid')]"
+                    "id": "[parameters('ddosProtectionPlansExternalid')]"
                 }
             }
         },

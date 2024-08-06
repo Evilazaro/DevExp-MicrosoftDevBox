@@ -39,12 +39,7 @@ createVirtualNetworkAndSubnet() {
         --name "$vnetName" \
         --resource-group "$resourceGroupName" \
         --template-uri $templateFileUri \
-        --parameters vnetName="$vnetName" \
-        --tags "division=petv2-Platform" \
-                "Environment=Prod" \
-                "offer=petv2-DevWorkstation-Service" \
-                "Team=Engineering" \
-                "solution=ContosoFabricDevWorkstation"
+        --parameters vnetName="$vnetName" 
     
     # az network vnet create \
     #     --resource-group "$resourceGroupName" \
