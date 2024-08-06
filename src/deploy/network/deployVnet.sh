@@ -39,8 +39,9 @@ createVirtualNetworkAndSubnet() {
         --name "$vnetName" \
         --resource-group "$resourceGroupName" \
         --template-uri $templateFileUri \
-        --parameters vnetName="$vnetName" 
-    
+        --parameters vNetName="$vnetName" \
+                     location="$location" 
+                     
     # az network vnet create \
     #     --resource-group "$resourceGroupName" \
     #     --location "$location" \
