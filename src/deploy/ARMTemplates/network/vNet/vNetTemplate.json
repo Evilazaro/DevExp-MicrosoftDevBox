@@ -60,7 +60,8 @@
                 "enableDdosProtection": true,
                 "ddosProtectionPlan": {
                     "id": "[parameters('ddosProtectionPlansExternalid')]"
-                }
+                },
+                "dependsOn": ["[resourceId('Microsoft.Network/ddosProtectionPlans', 'petVnetDDoSPlan')]"]
             }
         },
         {
@@ -93,6 +94,62 @@
                 "delegations": [],
                 "privateEndpointNetworkPolicies": "Disabled",
                 "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/ddosProtectionPlans",
+            "apiVersion": "2024-01-01",
+            "name": "petVnetDDoSPlan",
+            "location": "westus3",
+            "properties": {
+                "protectedResourceResourceId": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+            },
+            "sku": {
+                "tier": "Standard"
+            }
+        },
+        {
+            "type": "Microsoft.Network/azureFirewalls",
+            "apiVersion": "2024-01-01",
+            "name": "petVnetFirewall",
+            "location": "westus3",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "petVnetFirewallConfig",
+                        "properties": {
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), 'AzureFirewallSubnet')]"
+                            }
+                        }
+                    }
+                ]
+            },
+            "sku": {
+                "name": "AZFW_VNet",
+                "tier": "Standard"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2024-01-01",
+            "name": "petVnetFirewallPublicIP",
+            "location": "westus3",
+            "properties": {
+                "publicIPAllocationMethod": "Static",
+                "publicIPAddressVersion": "IPv4",
+                "dnsSettings": {
+                    "domainNameLabel": "petVnetFirewall"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/azureFirewalls', 'petVnetFirewall')]"
+            ],
+            "sku": {
+                "name": "Standard"
             }
         }
     ]
