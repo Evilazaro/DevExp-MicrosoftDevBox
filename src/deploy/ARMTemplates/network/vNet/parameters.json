@@ -5,7 +5,7 @@
         "vnetName": {
             "value": null
         },
-        "ddosProtectionPlans_petVnetDDoSPlan_externalid": {
+        "ddosProtectionPlansExternalid": {
             "value": null
         }
     }
