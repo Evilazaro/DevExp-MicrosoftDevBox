@@ -75,6 +75,7 @@ createCustomRole "$subscriptionId" "$identityResourceGroupName" "$outputFilePath
 
 # Assign roles
 
+assignRole "$identityId" "Intune Service Administrator" "$subscriptionId" ServicePrincipal
 assignRole "$identityId" "Virtual Machine Contributor" "$subscriptionId" ServicePrincipal
 assignRole "$identityId" "Desktop Virtualization Contributor" "$subscriptionId" ServicePrincipal
 assignRole "$identityId" "Desktop Virtualization Virtual Machine Contributor" "$subscriptionId" ServicePrincipal
