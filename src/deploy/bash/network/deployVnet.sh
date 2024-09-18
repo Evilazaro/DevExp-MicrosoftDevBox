@@ -47,7 +47,7 @@ createVirtualNetworkAndSubnet() {
 
     if ! az deployment group create \
         --name "$vnetName" \
-        --resource-group "$resourceGroupName" \
+        --resource-group "$networkResourceGroupName" \
         --template-uri $TEMPLATE_FILE_URI \
         --parameters vNetName="$vnetName" \
                      location="$location"; then

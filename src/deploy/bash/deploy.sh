@@ -137,13 +137,29 @@ function deployNetwork() {
     echo "Virtual network and network connection deployed successfully."
 }
 
-# Function to deploy a Compute Gallery
-function deployComputeGallery() {
+# Function to deploy a compute gallery
+deployComputeGallery() {
     local imageGalleryName="$1"
     local galleryResourceGroupName="$2"
 
-    echo "Deploying Compute Gallery: $imageGalleryName in $galleryResourceGroupName"
-    ./devBox/computeGallery/deployComputeGallery.sh "$imageGalleryName" "$location" "$galleryResourceGroupName"
+    # Check if the required arguments are provided
+    if [[ -z "$imageGalleryName" || -z "$galleryResourceGroupName" ]]; then
+        echo "Error: Missing required arguments."
+        echo "Usage: deployComputeGallery <imageGalleryName> <galleryResourceGroupName>"
+        exit 1
+    fi
+
+    # Check if the deployment script exists
+    local deployScript="./devBox/computeGallery/deployComputeGallery.sh"
+    if [[ ! -f "$deployScript" ]]; then
+        echo "Error: Deployment script not found at $deployScript"
+        exit 1
+    fi
+
+    echo "Deploying Compute Gallery: $imageGalleryName in Resource Group: $galleryResourceGroupName"
+    
+    # Execute the deployment script
+    "$deployScript" "$imageGalleryName" "$location" "$galleryResourceGroupName"
 }
 
 # Function to deploy a Dev Center
@@ -230,8 +246,7 @@ function deployMicrosoftDevBox() {
     createIdentity
     deployNetwork
 
-    # Uncomment the following lines to enable these steps
-    # deployComputeGallery "$imageGalleryName" "$imageGalleryResourceGroupName"
+    deployComputeGallery "$imageGalleryName" "$imageGalleryResourceGroupName"
     # deployDevCenter "$devCenterName" "$networkConnectionName" "$imageGalleryName" "$identityName" "$devBoxResourceGroupName" "$networkResourceGroupName" "$identityResourceGroupName" "$imageGalleryResourceGroupName"
     # createDevCenterProject "$subscriptionId" "$devBoxResourceGroupName" "$devCenterName"
 

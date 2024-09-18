@@ -1,130 +1,93 @@
 #!/bin/bash
 
-# Exit immediately if a command exits with a non-zero status
 set -e
-# Treat unset variables as an error
-set -o nounset
-# Prevent errors in a pipeline from being masked
-set -o pipefail
+set -u
 
 # Constants
-readonly BRANCH="main"
-readonly OUTPUT_FILE_PATH="../downloadedTempTemplates/identity/roleImage.json"
-readonly TEMPLATE_URL="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$BRANCH/src/deploy/ARMTemplates/identity/roleImage.json"
+readonly branch="main"
+readonly outputFilePath="../downloadedTempTemplates/identity/roleImage.json"
+readonly templateUrl="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy/ARMTemplates/identity/roleImage.json"
 
-# Function to display usage information
-usage() {
-    echo "Usage: $0 <identityResourceGroupName> <subscriptionId> <identityName> <customRoleName>"
-    exit 1
-}
+# Parameters
+identityResourceGroupName="$1"
+subscriptionId="$2"
+identityName="$3"
+customRoleName="$4"
 
-# Function to check if required arguments are provided
-checkArguments() {
-    if [ "$#" -ne 4 ]; then
-        echo "Error: Invalid number of arguments."
-        usage
-    fi
-}
+# Derive current user details
+currentUser=$(az account show --query user.name -o tsv)
+currentAzureUserId=$(az ad user show --id "$currentUser" --query id -o tsv)
+identityId=$(az identity show --name "$identityName" --resource-group "$identityResourceGroupName" --query principalId -o tsv)
 
-# Function to create a custom role
+# Function to create a custom role using a template
 createCustomRole() {
-    local subscriptionId="$1"
-    local resourceGroupName="$2"
-    local roleName="$3"
-
+    local subId="$1"
+    local resourceGroup="$2"
+    local outputFile="$3"
+    local roleName="$4"
+    
     echo "Starting custom role creation..."
     echo "Downloading image template..."
-
-    if ! wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" "$TEMPLATE_URL" -O "$OUTPUT_FILE_PATH"; then
+    
+    if ! wget --header="Cache-Control: no-cache" --header="Pragma: no-cache" "$templateUrl" -O "$outputFile"; then
         echo "Error: Failed to download the image template."
         exit 3
     fi
-
-    echo "Template downloaded to $OUTPUT_FILE_PATH."
+    
+    echo "Template downloaded to $outputFile."
     echo "Role Name: $roleName"
-
+    
     echo "Updating placeholders in the template..."
-    sed -i "s/<subscriptionId>/$subscriptionId/g" "$OUTPUT_FILE_PATH"
-    sed -i "s/<rgName>/$resourceGroupName/g" "$OUTPUT_FILE_PATH"
-    sed -i "s/<roleName>/$roleName/g" "$OUTPUT_FILE_PATH"
-
+    sed -i "s/<subscriptionId>/$subId/g" "$outputFile"
+    sed -i "s/<rgName>/$resourceGroup/g" "$outputFile"
+    sed -i "s/<roleName>/$roleName/g" "$outputFile"
+    
     if [ $? -ne 0 ]; then
-        echo "Error: Failed to update placeholders."
+        echo "Error updating placeholders."
         exit 4
     fi
+    
+    az role definition create --role-definition "$outputFile"
 
-    if az role definition create --role-definition "$OUTPUT_FILE_PATH"; then
-        while [ "$(az role definition list --name "$roleName" --query [].roleName -o tsv)" != "$roleName" ]; do
-            echo "Waiting for the role to be created..."
-            sleep 10
-        done
-        echo "Custom role creation completed."
-    else
-        echo "Error: Failed to create custom role."
-        exit 5
-    fi
-    echo "Waiting for the role to be created..."
-    sleep 10
+    while [ "$(az role definition list --name "$roleName" --query [].roleName -o tsv)" != "$roleName" ]; do
+        echo "Waiting for the role to be created..."
+        sleep 10
+    done 
+    
+    echo "Custom role creation completed."
 }
 
 # Function to assign a role to an identity
 assignRole() {
-    local roleName="$1"
-    local idType="$2"
-    local assigneeId="$3"
-    local subscriptionId="$4"
-    local customRole="$5"
+    local id="$1"
+    local roleName="$2"
+    local subId="$3"
+    local idType="$4"
 
-    echo "Assigning '$roleName' role to ID $assigneeId..."
-
-    if [ "$customRole" = true ]; then
-        while [ "$(az role definition list --name "$roleName" --query [].roleName -o tsv)" != "$roleName" ]; do
-            echo "Checking if the role is created..."
-            sleep 10
-        done
-    fi
-
-    if az role assignment create --assignee-object-id "$assigneeId" --assignee-principal-type "$idType" --role "$roleName" --scope /subscriptions/"$subscriptionId"; then
+    echo "Assigning '$roleName' role to ID $id..."
+    
+    if az role assignment create --assignee-object-id "$id" --assignee-principal-type "$idType" --role "$roleName" --scope /subscriptions/"$subId"; then
         echo "Role '$roleName' assigned."
     else
-        echo "Error: Failed to assign role '$roleName'."
+        echo "Error assigning '$roleName'."
         exit 2
     fi
 }
 
 # Main script execution
-createUserAssignedManagedIdentity() {
-    echo "Script started."
+echo "Script started."
 
-    checkArguments "$@"
+createCustomRole "$subscriptionId" "$identityResourceGroupName" "$outputFilePath" "$customRoleName"
 
-    local identityResourceGroupName="$1"
-    local subscriptionId="$2"
-    local identityName="$3"
-    local customRoleName="$4"
+# Assign roles
+assignRole "$identityId" "Virtual Machine Contributor" "$subscriptionId" "ServicePrincipal"
+assignRole "$identityId" "Desktop Virtualization Contributor" "$subscriptionId" "ServicePrincipal"
+assignRole "$identityId" "Desktop Virtualization Virtual Machine Contributor" "$subscriptionId" "ServicePrincipal"
+assignRole "$identityId" "Desktop Virtualization Workspace Contributor" "$subscriptionId" "ServicePrincipal"
+assignRole "$identityId" "Compute Gallery Sharing Admin" "$subscriptionId" "ServicePrincipal"
+assignRole "$identityId" "Virtual Machine Local User Login" "$subscriptionId" "ServicePrincipal"
+assignRole "$identityId" "Managed Identity Operator" "$subscriptionId" "ServicePrincipal"
+assignRole "$identityId" "$customRoleName" "$subscriptionId" "ServicePrincipal"
+assignRole "$currentAzureUserId" "DevCenter Dev Box User" "$subscriptionId" "User"
 
-    local currentUser
-    local currentAzureUserId
-    local identityId
-
-    currentUser=$(az account show --query user.name -o tsv)
-    currentAzureUserId=$(az ad user show --id "$currentUser" --query id -o tsv)
-    identityId=$(az identity show --name "$identityName" --resource-group "$identityResourceGroupName" --query principalId -o tsv)
-
-    createCustomRole "$subscriptionId" "$identityResourceGroupName" "$customRoleName"
-
-    assignRole "Virtual Machine Contributor" "ServicePrincipal" "$identityId" "$subscriptionId" false
-    assignRole "Desktop Virtualization Contributor" "ServicePrincipal" "$identityId" "$subscriptionId" false
-    assignRole "Desktop Virtualization Virtual Machine Contributor" "ServicePrincipal" "$identityId" "$subscriptionId" false
-    assignRole "Desktop Virtualization Workspace Contributor" "ServicePrincipal" "$identityId" "$subscriptionId" false
-    assignRole "Compute Gallery Sharing Admin" "ServicePrincipal" "$identityId" "$subscriptionId" false
-    assignRole "Virtual Machine Local User Login" "ServicePrincipal" "$identityId" "$subscriptionId" false
-    assignRole "Managed Identity Operator" "ServicePrincipal" "$identityId" "$subscriptionId" false
-    assignRole "$customRoleName" "ServicePrincipal" "$identityId" "$subscriptionId" true
-    assignRole "DevCenter Dev Box User" "User" "$currentAzureUserId" "$subscriptionId" false
-
-    echo "Script completed."
-}
-
-# Execute the main function with all script arguments
-createUserAssignedManagedIdentity "$@"
+echo "Script completed."
