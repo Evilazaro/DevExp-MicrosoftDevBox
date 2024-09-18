@@ -2,33 +2,35 @@
 
 echo "Deploying to Azure"
 
-# Variables
-branch="main"
-location="WestUS3"
-locationComputeGallery="WestUS3"
-locationDevCenter="WestUS3"
+# Contants Parameters
+readonly branch="main"
+readonly location="WestUS3"
+readonly locationComputeGallery=$location
+readonly locationDevCenter=$location
 
-# Azure Resource Group Names
-devBoxResourceGroupName="petv2DevBox-rg"
-imageGalleryResourceGroupName="petv2ImageGallery-rg"
-identityResourceGroupName="petv2IdentityDevBox-rg"
-networkResourceGroupName="petv2NetworkConnectivity-rg"
-managementResourceGroupName="petv2DevBoxManagement-rg"
+# Azure Resource Group Names Constants
+readonly devBoxResourceGroupName="petv2DevBox-rg"
+readonly imageGalleryResourceGroupName="petv2ImageGallery-rg"
+readonly identityResourceGroupName="petv2IdentityDevBox-rg"
+readonly networkResourceGroupName="petv2NetworkConnectivity-rg"
+readonly managementResourceGroupName="petv2DevBoxManagement-rg"
 
-# Identity Variables
-identityName="petv2DevBoxImgBldId"
-customRoleName="petv2BuilderRole"
+# Identity Parameters Contants
+readonly identityName="petv2DevBoxImgBldId"
+readonly customRoleName="petv2BuilderRole"
 
-# Image and DevCenter Names
-imageGalleryName="petv2ImageGallery"
-frontEndImageName="frontEndVm"
-backEndImageName="backEndVm"
-devCenterName="petv2DevCenter"
+# Image and DevCenter Parameters Constants
+readonly imageGalleryName="petv2ImageGallery"
+readonly frontEndImageName="frontEndVm"
+readonly backEndImageName="backEndVm"
+readonly devCenterName="petv2DevCenter"
 
-# Network Variables
-vnetName="petv2Vnet"
-subNetName="petv2SubNet"
-networkConnectionName="devBoxNetworkConnection"
+# Network Parameters Constants
+readonly vnetName="petv2Vnet"
+readonly subNetName="petv2SubNet"
+readonly networkConnectionName="devBoxNetworkConnection"
+
+# Build Image Parameter to inform if the image should be built
 buildImage=$2
 
 # Functions
