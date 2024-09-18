@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# This script creates an identity on Microsoft Azure.
-# It expects three parameters in the exact order:
-# 1. Resource Group Name
-# 2. Location
-# 3. Identity Name
-
 # Function to display usage information
 displayUsage() {
     echo "Usage: $0 <resourceGroupName> <location> <identityName>"
@@ -13,7 +7,7 @@ displayUsage() {
     exit 1
 }
 
-# Check for the correct number of arguments. If incorrect, display usage.
+# Function to check for the correct number of arguments
 checkArguments() {
     if [ "$#" -ne 3 ]; then
         echo "Error: Invalid number of arguments."
@@ -21,31 +15,23 @@ checkArguments() {
     fi
 }
 
-# Assign passed arguments to variables and display them.
+# Function to assign arguments to variables
 assignArguments() {
     resourceGroupName="$1"
-    echo "Resource Group Name: ${resourceGroupName}"
-
     location="$2"
-    echo "Location: ${location}"
-
     identityName="$3"
+
+    echo "Resource Group Name: ${resourceGroupName}"
+    echo "Location: ${location}"
     echo "Identity Name: ${identityName}"
 }
 
-# Create an identity on Azure.
+# Function to create an Azure identity
 createAzureIdentity() {
     echo "Creating identity '${identityName}' in resource group '${resourceGroupName}' located in '${location}'..."
 
-    output=$(az identity create \
-        --resource-group "${resourceGroupName}" \
-        --name "${identityName}" \
-        --location "${location}" 2>&1)
-}
-
-# Check the result of the identity creation and display appropriate messages.
-checkCreationResult() {
-    if [ "$?" -eq 0 ]; then
+    # Capture the output and error message
+    if output=$(az identity create --resource-group "${resourceGroupName}" --name "${identityName}" --location "${location}" 2>&1); then
         echo "Identity '${identityName}' successfully created."
     else
         echo "Error occurred while creating identity '${identityName}': ${output}"
@@ -53,8 +39,12 @@ checkCreationResult() {
     fi
 }
 
-# Main execution starts here
-checkArguments "$@"
-assignArguments "$@"
-createAzureIdentity
-checkCreationResult
+# Main script execution
+createIdentity() {
+    checkArguments "$@"
+    assignArguments "$@"
+    createAzureIdentity
+}
+
+# Execute the main function with all script arguments
+createIdentity "$@"

@@ -65,7 +65,6 @@ azureLogin() {
 }
 
 # Function to create an Azure resource group
-# Function to create an Azure resource group
 createResourceGroup() {
     local resourceGroupName="$1"
 
@@ -91,31 +90,39 @@ createResourceGroup() {
 
 # Function to create an identity
 function createIdentity {
-    local identityName=$1
-    local resourceGroupName=$2
-    local subscriptionId=$3
-    local customRoleName=$4
-
     # Check if all required parameters are provided
-    if [[ -z $identityName || -z $resourceGroupName || -z $subscriptionId || -z $customRoleName || -z $location ]]; then
+    if [[ -z "$identityName" || -z "$identityResourceGroupName" || -z "$subscriptionId" || -z "$customRoleName" || -z "$location" ]]; then
         echo "Error: Missing required parameters."
         echo "Usage: createIdentity <identityName> <resourceGroupName> <subscriptionId> <customRoleName> <location>"
         return 1
     fi
-    
-    # Execute scripts to create identity and register features
-    ./identity/createIdentity.sh "$resourceGroupName" "$location" "$identityName"
-    ./identity/registerFeatures.sh
-    ./identity/createUserAssignedManagedIdentity.sh "$resourceGroupName" "$subscriptionId" "$identityName" "$customRoleName"
+
+    # Execute the script to create the identity
+    echo "Creating identity..."
+    if ! ./identity/createIdentity.sh "$identityResourceGroupName" "$location" "$identityName"; then
+        echo "Error: Failed to create identity."
+        return 1
+    fi
+
+    # Execute the script to register features
+    echo "Registering features..."
+    if ! ./identity/registerFeatures.sh; then
+        echo "Error: Failed to register features."
+        return 1
+    fi
+
+    # Execute the script to create a user-assigned managed identity
+    echo "Creating user-assigned managed identity..."
+    if ! ./identity/createUserAssignedManagedIdentity.sh "$identityResourceGroupName" "$subscriptionId" "$identityName" "$customRoleName"; then
+        echo "Error: Failed to create user-assigned managed identity."
+        return 1
+    fi
+
+    echo "Identity and features successfully created and registered."
 }
 
 # Function to deploy a virtual network
 function deploynetwork() {
-    local vnetName="$1"
-    local subNetName="$2"
-    local networkConnectionName="$3"
-    local resourceGroupName="$4"
-    local subscriptionId="$5"
 
     # Check if the deployVnet.sh script exists
     if [ ! -f "./network/deployVnet.sh" ]; then
@@ -123,16 +130,27 @@ function deploynetwork() {
         return 1
     fi
 
-    # Execute scripts to deploy the virtual network and create network connection
-    ./network/deployVnet.sh "$resourceGroupName" "$location" "$vnetName" "$subNetName"
-    ./network/createNetWorkConnection.sh "$location" "$resourceGroupName" "$vnetName" "$subNetName" "$networkConnectionName"
-    local exitCode="$?"
-
-    # Check if the deployment was successful
-    if [ "$exitCode" -ne 0 ]; then
-        echo "Error: Deployment of Vnet failed with exit code $exitCode."
+    # Check if the createNetWorkConnection.sh script exists
+    if [ ! -f "./network/createNetWorkConnection.sh" ]; then
+        echo "Error: createNetWorkConnection.sh script not found."
         return 1
     fi
+
+    # Execute the script to deploy the virtual network
+    echo "Deploying virtual network..."
+    if ! ./network/deployVnet.sh "$networkResourceGroupName" "$location" "$vnetName" "$subNetName"; then
+        echo "Error: Failed to deploy virtual network."
+        return 1
+    fi
+
+    # Execute the script to create the network connection
+    echo "Creating network connection..."
+    if ! ./network/createNetWorkConnection.sh "$location" "$networkResourceGroupName" "$vnetName" "$subNetName" "$networkConnectionName"; then
+        echo "Error: Failed to create network connection."
+        return 1
+    fi
+
+    echo "Virtual network and network connection deployed successfully."
 }
 
 # Function to deploy a Compute Gallery
@@ -238,10 +256,10 @@ deployMicrosoftDevBox() {
     createResourceGroup "$managementResourceGroupName"
 
     # Create identity
-    createIdentity $identityName $identityResourceGroupName $subscriptionId $customRoleName
+    createIdentity
 
-    # # Deploy network
-    # deploynetwork $vnetName $subNetName $networkConnectionName $networkResourceGroupName $subscriptionId $location
+    # Deploy network
+    deploynetwork
 
     # # Deploy Compute Gallery
     # deployComputeGallery $imageGalleryName $location $imageGalleryResourceGroupName
