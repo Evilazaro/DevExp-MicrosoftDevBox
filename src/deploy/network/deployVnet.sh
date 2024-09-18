@@ -43,9 +43,9 @@ createVirtualNetworkAndSubnet() {
         --name "$vnetName" \
         --resource-group "$resourceGroupName" \
         --template-uri "$TEMPLATE_FILE_URI" \
-        --parameters vNetName="$vnetName" \
+        --parameters name="$vnetName" \
                      location="$location" \
-                     vNetAddressPrefix="$vnetAddressPrefix" \
+                     addressSpace="$vnetAddressPrefix" \
                      subnetName="$subnetName" \
                      subnetAddressPrefix="$subnetAddressPrefix"; then
         echo "Error: Failed to create Virtual Network and Subnet."
