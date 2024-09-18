@@ -33,21 +33,6 @@ deleteResourceGroup() {
         echo "Resource group $resourceGroupName does not exist. Skipping deletion."
     fi
 }
-
-# Remove Role
-removeRole() {
-    local roleName="$1"
-    local roleDefinition=$(az role definition list --name "$roleName")
-
-    if [[ -z "$roleDefinition" || "$roleDefinition" == "[]" ]]; then
-        echo "'$roleName' role does not exist. Skipping deletion."
-    else   
-        echo "Deleting the '$roleName' role..."
-        az role definition delete --name "$roleName"
-        echo "'$roleName' role successfully deleted." 
-    fi
-}
-
 # Remove Role Assignment
 removeRoleAssignment() {
     local roleId="$1"
@@ -71,16 +56,34 @@ removeRoleAssignment() {
     fi
 }
 
+deleteCustomRole() {
+    local roleName="$1"
+    echo "Deleting the '$roleName' role..."
+    roleExists=$(az role definition list --name "$roleName")
+
+    if [[ -z "$roleExists" || "$roleExists" == "[]" ]]; then
+        echo "'$roleName' role does not exist. Skipping deletion."
+        return
+    fi
+    az role definition delete --name "$roleName"
+
+    while [ "$(az role definition list --name "$roleName" --query [].roleName -o tsv)" = "$roleName" ]; do
+        echo "Waiting for the role to be deleted..."
+        sleep 10
+    done	
+    echo "'$roleName' role successfully deleted."
+}
+
 # Main Execution
 
 # Deleting role assignments and role definitions
 for roleName in 'Owner' 'Managed Identity Operator' 'DevCenter Dev Box User' "$customRoleName"; do
-    echo "Getting the role ID for '$roleName'..."
-    roleId=$(az role definition list --name "$roleName" --query [].name --output tsv)
+    echo "Getting the role ID for '$customRoleName'..."
+    roleId=$(az role definition list --name "$customRoleName" --query [].name --output tsv)
     removeRoleAssignment "$roleId" "$subscriptionId"
 done
 
-removeRole "$customRoleName"
+deleteCustomRole "$customRoleName" 
 
 # Deleting resource groups
 deleteResourceGroup "$devBoxResourceGroupName"

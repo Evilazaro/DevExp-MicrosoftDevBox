@@ -66,7 +66,6 @@ subnetId=""
 
 echo "Initiating the deployment in the resource group: $networkResourceGroupName, location: $location."
 
-
 getSubnetId "$networkResourceGroupName" "$vnetName" "$subNetName"
 deployNetworkConnection "$location" "$subnetId" "$networkConnectionName" "$networkResourceGroupName"
 
