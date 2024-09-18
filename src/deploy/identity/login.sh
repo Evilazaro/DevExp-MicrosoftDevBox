@@ -1,39 +1,45 @@
 #!/bin/bash
 
-# Ensure the script stops on the first error
+# Exit immediately if a command exits with a non-zero status
 set -e
 
-function usage() {
+# Set the subscription ID
+readonly subscriptionId="$1"
+
+# Function to display usage information
+usage() {
     echo "Usage: $0 <subscriptionId>"
     exit 1
 }
 
-function logIntoAzure() {
+# Function to log into Azure
+logIntoAzure() {
     echo "Attempting to log into Azure..."
-    az login --use-device-code
-    echo "Successfully logged into Azure."
+    if az login --use-device-code; then
+        echo "Successfully logged into Azure."
+        setAzureSubscription
+    else
+        echo "Error: Failed to log into Azure."
+        exit 1
+    fi
 }
 
-function setAzureSubscription() {
-    local subscriptionId="$1"
+# Function to set the Azure subscription
+setAzureSubscription() {
     echo "Attempting to set subscription to ${subscriptionId}..."
     
     if az account set --subscription "${subscriptionId}"; then
         echo "Successfully set Azure subscription to ${subscriptionId}."
     else
-        echo "Failed to set Azure subscription to ${subscriptionId}. Please check if the subscription ID is valid and you have access to it."
+        echo "Error: Failed to set Azure subscription to ${subscriptionId}. Please check if the subscription ID is valid and you have access to it."
         exit 1
     fi
 }
 
-# Ensure a command line argument is provided
+# Check if the correct number of arguments is provided
 if [ "$#" -ne 1 ]; then
     usage
 fi
 
-subscriptionId="$1"
-
+# Log into Azure and set the subscription
 logIntoAzure
-setAzureSubscription "${subscriptionId}"
-
-# Additional comments for future steps or improvements can be added below this line.

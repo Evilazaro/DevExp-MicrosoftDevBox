@@ -231,55 +231,55 @@ deployMicrosoftDevBox() {
     # Get the subscription ID
     subscriptionId=$(az account show --query id --output tsv)
     
-    # Create necessary resource groups
-    createResourceGroup "$devBoxResourceGroupName" "$location"
-    createResourceGroup "$imageGalleryResourceGroupName" "$location"
-    createResourceGroup "$identityResourceGroupName" "$location"
-    createResourceGroup "$networkResourceGroupName" "$location"
-    createResourceGroup "$managementResourceGroupName" "$location"
+    # # Create necessary resource groups
+    # createResourceGroup "$devBoxResourceGroupName" "$location"
+    # createResourceGroup "$imageGalleryResourceGroupName" "$location"
+    # createResourceGroup "$identityResourceGroupName" "$location"
+    # createResourceGroup "$networkResourceGroupName" "$location"
+    # createResourceGroup "$managementResourceGroupName" "$location"
 
-    # Create identity
-    createIdentity $identityName $identityResourceGroupName $subscriptionId $customRoleName $location
+    # # Create identity
+    # createIdentity $identityName $identityResourceGroupName $subscriptionId $customRoleName $location
 
-    # Deploy network
-    deploynetwork $vnetName $subNetName $networkConnectionName $networkResourceGroupName $subscriptionId $location
+    # # Deploy network
+    # deploynetwork $vnetName $subNetName $networkConnectionName $networkResourceGroupName $subscriptionId $location
 
-    # Deploy Compute Gallery
-    deployComputeGallery $imageGalleryName $locationComputeGallery $imageGalleryResourceGroupName
+    # # Deploy Compute Gallery
+    # deployComputeGallery $imageGalleryName $locationComputeGallery $imageGalleryResourceGroupName
 
-    # Deploy Dev Center
-    deployDevCenter $devCenterName $networkConnectionName $imageGalleryName $locationDevCenter $identityName $devBoxResourceGroupName $networkResourceGroupName $identityResourceGroupName $imageGalleryResourceGroupName
+    # # Deploy Dev Center
+    # deployDevCenter $devCenterName $networkConnectionName $imageGalleryName $locationDevCenter $identityName $devBoxResourceGroupName $networkResourceGroupName $identityResourceGroupName $imageGalleryResourceGroupName
 
-    # Create Dev Center project
-    createDevCenterProject $locationDevCenter $subscriptionId $devBoxResourceGroupName $devCenterName
+    # # Create Dev Center project
+    # createDevCenterProject $locationDevCenter $subscriptionId $devBoxResourceGroupName $devCenterName
 
-    echo "Skipping image build..."
-    echo "Creating DevBox Definition for Back End Developers with Visual Studio 2022"
-    imageName="microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2"
-    galleryName=$devCenterName
-    ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" false
+    # echo "Skipping image build..."
+    # echo "Creating DevBox Definition for Back End Developers with Visual Studio 2022"
+    # imageName="microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2"
+    # galleryName=$devCenterName
+    # ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" false
 
-    echo "Creating DevBox Definition for Front End Developers"
-    imageName="microsoftvisualstudio_windowsplustools_base-win11-gen2"
-    ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" false
+    # echo "Creating DevBox Definition for Front End Developers"
+    # imageName="microsoftvisualstudio_windowsplustools_base-win11-gen2"
+    # ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" false
     
-    # Check if the deployment was successful
-    if [[ $? -ne 0 ]]; then
-        echo "Error: Deployment failed. Error: $?"
-        exit 1
-    fi
+    # # Check if the deployment was successful
+    # if [[ $? -ne 0 ]]; then
+    #     echo "Error: Deployment failed. Error: $?"
+    #     exit 1
+    # fi
 
-    clear
+    # clear
       
-    # Check if images should be built
-    if [[ "$buildImage" == "true" ]]; then
-        echo "Deployment Completed Successfully! Building images..."
-        echo "You can start creating DevBoxes for your team."
-        buildImage $subscriptionId $imageGalleryResourceGroupName $locationComputeGallery $identityName $imageGalleryName $identityResourceGroupName $devBoxResourceGroupName $networkConnectionName
-    else
-        echo "Deployment Completed Successfully!"
-        echo "You can start creating DevBoxes for your team."
-    fi
+    # # Check if images should be built
+    # if [[ "$buildImage" == "true" ]]; then
+    #     echo "Deployment Completed Successfully! Building images..."
+    #     echo "You can start creating DevBoxes for your team."
+    #     buildImage $subscriptionId $imageGalleryResourceGroupName $locationComputeGallery $identityName $imageGalleryName $identityResourceGroupName $devBoxResourceGroupName $networkConnectionName
+    # else
+    #     echo "Deployment Completed Successfully!"
+    #     echo "You can start creating DevBoxes for your team."
+    # fi
 }
 
 # Start the deployment process
