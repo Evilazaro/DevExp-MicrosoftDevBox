@@ -42,12 +42,9 @@ createVirtualNetworkAndSubnet() {
     if ! az deployment group create \
         --name "$vnetName" \
         --resource-group "$resourceGroupName" \
-        --template-uri "$TEMPLATE_FILE_URI" \
-        --parameters name="$vnetName" \
-                     location="$location" \
-                     addressSpace="$vnetAddressPrefix" \
-                     subnetName="$subnetName" \
-                     subnetAddressPrefix="$subnetAddressPrefix"; then
+        --template-uri $templateFileUri \
+        --parameters vNetName="$vnetName" \
+                     location="$location" ; then
         echo "Error: Failed to create Virtual Network and Subnet."
         exit 1
     fi
