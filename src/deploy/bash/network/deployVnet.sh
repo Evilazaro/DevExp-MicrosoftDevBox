@@ -8,8 +8,8 @@ set -o nounset
 set -o pipefail
 
 # Constants
-readonly BRANCH="main"
-readonly TEMPLATE_FILE_URI="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$BRANCH/src/deploy/ARMTemplates/network/vNet/vNetTemplate.json"
+BRANCH="main"
+TEMPLATE_FILE_URI="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$BRANCH/src/deploy/ARMTemplates/network/vNet/vNetTemplate.json"
 
 # Function to display usage information
 usage() {

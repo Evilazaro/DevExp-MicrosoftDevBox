@@ -21,21 +21,12 @@ validateParameters() {
     fi
 }
 
-# Function to log into Azure
-logIntoAzure() {
-    echo "Attempting to log into Azure..."
-    if az login --use-device-code; then
-        echo "Successfully logged into Azure."
-    else
-        echo "Error: Failed to log into Azure."
-        exit 1
-    fi
-}
-
 # Function to set the Azure subscription
 setAzureSubscription() {
     local subscriptionId="$1"
     echo "Attempting to set subscription to ${subscriptionId}..."
+
+    az login --use-device-code
     
     if az account set --subscription "${subscriptionId}"; then
         echo "Successfully set Azure subscription to ${subscriptionId}."
@@ -48,9 +39,7 @@ setAzureSubscription() {
 # Main script execution
 main() {
     validateParameters "$@"
-    local subscriptionId="$1"
-    logIntoAzure
-    setAzureSubscription "$subscriptionId"
+    setAzureSubscription "$@"
 }
 
 # Execute the main function with all script arguments

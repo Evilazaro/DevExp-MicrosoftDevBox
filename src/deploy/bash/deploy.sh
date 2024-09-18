@@ -1,43 +1,43 @@
 #!/bin/bash
 
-set -e
-set -u
+# Exit immediately if a command exits with a non-zero status, treat unset variables as an error, and propagate errors in pipelines.
+set -euo pipefail
 
 echo "Deploying to Azure"
 
 # Constants Parameters
-readonly branch="main"
-readonly location="WestUS3"
+branch="main"
+location="WestUS3"
 
 # Azure Resource Group Names Constants
-readonly devBoxResourceGroupName="petv2DevBox-rg"
-readonly imageGalleryResourceGroupName="petv2ImageGallery-rg"
-readonly identityResourceGroupName="petv2IdentityDevBox-rg"
-readonly networkResourceGroupName="petv2NetworkConnectivity-rg"
-readonly managementResourceGroupName="petv2DevBoxManagement-rg"
+subscriptionName="$1"
+subscriptionId=""
+devBoxResourceGroupName="petv2DevBox-rg"
+imageGalleryResourceGroupName="petv2ImageGallery-rg"
+identityResourceGroupName="petv2IdentityDevBox-rg"
+networkResourceGroupName="petv2NetworkConnectivity-rg"
+managementResourceGroupName="petv2DevBoxManagement-rg"
 
 # Identity Parameters Constants
-readonly identityName="petv2DevBoxImgBldId"
-readonly customRoleName="petv2BuilderRole"
+identityName="petv2DevBoxImgBldId"
+customRoleName="petv2BuilderRole"
 
 # Image and DevCenter Parameters Constants
-readonly imageGalleryName="petv2ImageGallery"
-readonly frontEndImageName="frontEndVm"
-readonly backEndImageName="backEndVm"
-readonly devCenterName="petv2DevCenter"
+imageGalleryName="petv2ImageGallery"
+frontEndImageName="frontEndVm"
+backEndImageName="backEndVm"
+devCenterName="petv2DevCenter"
 
 # Network Parameters Constants
-readonly vnetName="petv2Vnet"
-readonly subNetName="petv2SubNet"
-readonly networkConnectionName="devBoxNetworkConnection"
+vnetName="petv2Vnet"
+subNetName="petv2SubNet"
+networkConnectionName="devBoxNetworkConnection"
 
-# Build Image Parameter to inform if the image should be built
-buildImage=$2
+# Build Image local to inform if the image should be built
+buildImage=${2:-false}
 
 # Function to log in to Azure
-function azureLogin() {
-    local subscriptionName="$1"
-
+azureLogin() {
     if [[ -z "$subscriptionName" ]]; then
         echo "Error: Subscription name is missing!"
         echo "Usage: azureLogin <subscriptionName>"
@@ -62,7 +62,7 @@ function azureLogin() {
 }
 
 # Function to create an Azure resource group
-function createResourceGroup() {
+createResourceGroup() {
     local resourceGroupName="$1"
 
     if [[ -z "$resourceGroupName" || -z "$location" ]]; then
@@ -82,7 +82,8 @@ function createResourceGroup() {
 }
 
 # Function to create an identity
-function createIdentity() {
+createIdentity() {
+
     if [[ -z "$identityName" || -z "$identityResourceGroupName" || -z "$subscriptionId" || -z "$customRoleName" || -z "$location" ]]; then
         echo "Error: Missing required parameters."
         echo "Usage: createIdentity <identityName> <resourceGroupName> <subscriptionId> <customRoleName> <location>"
@@ -102,6 +103,10 @@ function createIdentity() {
     fi
 
     echo "Creating user-assigned managed identity..."
+    subscriptionId=$(az account show --query id --output tsv)
+
+    echo "Subscription ID: $subscriptionId"
+    
     if ! ./identity/createUserAssignedManagedIdentity.sh "$identityResourceGroupName" "$subscriptionId" "$identityName" "$customRoleName"; then
         echo "Error: Failed to create user-assigned managed identity."
         return 1
@@ -111,7 +116,13 @@ function createIdentity() {
 }
 
 # Function to deploy a virtual network
-function deployNetwork() {
+deployNetwork() {
+    local networkResourceGroupName="$1"
+    local location="$2"
+    local vnetName="$3"
+    local subNetName="$4"
+    local networkConnectionName="$5"
+
     if [[ ! -f "./network/deployVnet.sh" ]]; then
         echo "Error: deployVnet.sh script not found."
         return 1
@@ -140,16 +151,15 @@ function deployNetwork() {
 # Function to deploy a compute gallery
 deployComputeGallery() {
     local imageGalleryName="$1"
-    local galleryResourceGroupName="$2"
+    local location="$2"
+    local galleryResourceGroupName="$3"
 
-    # Check if the required arguments are provided
     if [[ -z "$imageGalleryName" || -z "$galleryResourceGroupName" ]]; then
         echo "Error: Missing required arguments."
         echo "Usage: deployComputeGallery <imageGalleryName> <galleryResourceGroupName>"
         exit 1
     fi
 
-    # Check if the deployment script exists
     local deployScript="./devBox/computeGallery/deployComputeGallery.sh"
     if [[ ! -f "$deployScript" ]]; then
         echo "Error: Deployment script not found at $deployScript"
@@ -157,13 +167,11 @@ deployComputeGallery() {
     fi
 
     echo "Deploying Compute Gallery: $imageGalleryName in Resource Group: $galleryResourceGroupName"
-    
-    # Execute the deployment script
     "$deployScript" "$imageGalleryName" "$location" "$galleryResourceGroupName"
 }
 
 # Function to deploy a Dev Center
-function deployDevCenter() {
+deployDevCenter() {
     local devCenterName="$1"
     local networkConnectionName="$2"
     local imageGalleryName="$3"
@@ -183,7 +191,7 @@ function deployDevCenter() {
 }
 
 # Function to create a Dev Center project
-function createDevCenterProject() {
+createDevCenterProject() {
     local subscriptionId="$1"
     local resourceGroupName="$2"
     local devCenterName="$3"
@@ -204,7 +212,7 @@ function createDevCenterProject() {
 }
 
 # Function to build images
-function buildImage() {
+buildImages() {
     local subscriptionId="$1"
     local imageGalleryResourceGroupName="$2"
     local identityName="$3"
@@ -217,24 +225,24 @@ function buildImage() {
     imageParams["BackEnd-Docker-Img"]="VS22-BackEnd-Docker petv2-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy/ARMTemplates/computeGallery/backEndEngineerImgTemplateDocker.json Contoso"
 
     for imageName in "${!imageParams[@]}"; do
-        IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${imageParams[$imageName]}"
-        ./devBox/computeGallery/createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$imageGalleryResourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher" "$identityResourceGroupName"
+        IFS=' ' read -r imgSku offer outputFile imageTemplateFile publisher <<< "${imageParams[$imageName]}"
+        ./devBox/computeGallery/createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$imageGalleryResourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSku" "$publisher" "$identityResourceGroupName"
         ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$location" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" "$buildImage"
     done
 }
 
 # Main function to deploy Microsoft DevBox
-function deployMicrosoftDevBox() {
+deployMicrosoftDevBox() {
     clear
 
-    local subscriptionName="$1"
     local subscriptionId
 
     echo "Starting Deployment..."
 
-    azureLogin "$subscriptionName"
+    azureLogin
 
     subscriptionId=$(az account show --query id --output tsv)
+    
     echo "The Subscription ID is: $subscriptionId"
 
     createResourceGroup "$devBoxResourceGroupName"
@@ -244,16 +252,14 @@ function deployMicrosoftDevBox() {
     createResourceGroup "$managementResourceGroupName"
 
     createIdentity
-    deployNetwork
-
-    deployComputeGallery "$imageGalleryName" "$imageGalleryResourceGroupName"
+    # deployNetwork "$networkResourceGroupName" "$location" "$vnetName" "$subNetName" "$networkConnectionName"
+    # deployComputeGallery "$imageGalleryName" "$location" "$imageGalleryResourceGroupName"
     # deployDevCenter "$devCenterName" "$networkConnectionName" "$imageGalleryName" "$identityName" "$devBoxResourceGroupName" "$networkResourceGroupName" "$identityResourceGroupName" "$imageGalleryResourceGroupName"
     # createDevCenterProject "$subscriptionId" "$devBoxResourceGroupName" "$devCenterName"
 
-    # Uncomment the following lines to enable image building
     # if [[ "$buildImage" == "true" ]]; then
     #     echo "Building images..."
-    #     buildImage "$subscriptionId" "$imageGalleryResourceGroupName" "$identityName" "$imageGalleryName" "$identityResourceGroupName" "$devBoxResourceGroupName" "$networkConnectionName"
+    #     buildImages "$subscriptionId" "$imageGalleryResourceGroupName" "$identityName" "$imageGalleryName" "$identityResourceGroupName" "$devBoxResourceGroupName" "$networkConnectionName"
     # fi
 
     echo "Deployment Completed Successfully!"
