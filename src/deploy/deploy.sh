@@ -5,8 +5,6 @@ echo "Deploying to Azure"
 # Constants Parameters
 readonly branch="main"
 readonly location="WestUS3"
-readonly locationComputeGallery=$location
-readonly locationDevCenter=$location
 
 # Azure Resource Group Names Constants
 readonly devBoxResourceGroupName="petv2DevBox-rg"
@@ -67,14 +65,15 @@ azureLogin() {
 }
 
 # Function to create an Azure resource group
+# Function to create an Azure resource group
 createResourceGroup() {
     local resourceGroupName="$1"
-    local location="$2"
 
     # Check if resource group name and location are provided
     if [[ -z "$resourceGroupName" || -z "$location" ]]; then
+        echo "Error: Missing required parameters."
         echo "Usage: createResourceGroup <resourceGroupName> <location>"
-        exit 1
+        return 1
     fi
 
     echo "Creating Azure Resource Group..."
@@ -82,8 +81,12 @@ createResourceGroup() {
     echo "Location: $location"
 
     # Create the resource group with specified tags
-    az group create --name "$resourceGroupName" --location "$location" --tags "division=petv2-Platform" "Environment=Prod" "offer=petv2-DevWorkstation-Service" "Team=Engineering" "division=petv2-Platform" "solution=ContosoFabricDevWorkstation"
-    echo "Resource group '$resourceGroupName' created successfully."
+    if az group create --name "$resourceGroupName" --location "$location" --tags "division=petv2-Platform" "Environment=Prod" "offer=petv2-DevWorkstation-Service" "Team=Engineering" "division=petv2-Platform" "solution=ContosoFabricDevWorkstation"; then
+        echo "Resource group '$resourceGroupName' created successfully."
+    else
+        echo "Error: Failed to create resource group '$resourceGroupName'."
+        return 1
+    fi
 }
 
 # Function to create an identity
@@ -92,7 +95,6 @@ function createIdentity {
     local resourceGroupName=$2
     local subscriptionId=$3
     local customRoleName=$4
-    local location=$5
 
     # Check if all required parameters are provided
     if [[ -z $identityName || -z $resourceGroupName || -z $subscriptionId || -z $customRoleName || -z $location ]]; then
@@ -114,7 +116,6 @@ function deploynetwork() {
     local networkConnectionName="$3"
     local resourceGroupName="$4"
     local subscriptionId="$5"
-    local location="$6"
 
     # Check if the deployVnet.sh script exists
     if [ ! -f "./network/deployVnet.sh" ]; then
@@ -136,9 +137,8 @@ function deploynetwork() {
 
 # Function to deploy a Compute Gallery
 function deployComputeGallery {
-    local imageGalleryName="$1"  
-    local location="$2"           
-    local galleryResourceGroupName="$3"  
+    local imageGalleryName="$1"            
+    local galleryResourceGroupName="$2"  
 
     # Execute the script to deploy the Compute Gallery
     ./devBox/computeGallery/deployComputeGallery.sh "$imageGalleryName" "$location" "$galleryResourceGroupName"
@@ -149,12 +149,11 @@ function deployDevCenter() {
     local devCenterName="$1"
     local networkConnectionName="$2"
     local imageGalleryName="$3"
-    local location="$4"
-    local identityName="$5"
-    local devBoxResourceGroupName="$6"
-    local networkResourceGroupName="$7"
-    local identityResourceGroupName="$8"
-    local imageGalleryResourceGroupName="$9"
+    local identityName="$4"
+    local devBoxResourceGroupName="$5"
+    local networkResourceGroupName="$6"
+    local identityResourceGroupName="$7"
+    local imageGalleryResourceGroupName="$8"
 
     # Check if all required parameters are provided
     if [ -z "$devCenterName" ] || [ -z "$networkConnectionName" ] || [ -z "$imageGalleryName" ] || [ -z "$location" ] || [ -z "$identityName" ] || [ -z "$devBoxResourceGroupName" ] || [ -z "$networkResourceGroupName" ] || [ -z "$identityResourceGroupName" ] || [ -z "$imageGalleryResourceGroupName" ]; then
@@ -168,10 +167,9 @@ function deployDevCenter() {
 
 # Function to create a Dev Center project
 function createDevCenterProject() {
-    local location="$1"
-    local subscriptionId="$2"
-    local resourceGroupName="$3"
-    local devCenterName="$4"
+    local subscriptionId="$1"
+    local resourceGroupName="$2"
+    local devCenterName="$3"
     
     # Check if all required parameters are provided
     if [[ -z "$location" || -z "$subscriptionId" || -z "$resourceGroupName" || -z "$devCenterName" ]]; then
@@ -194,12 +192,11 @@ function createDevCenterProject() {
 function buildImage {
     local subscriptionId="$1"
     local imageGalleryResourceGroupName="$2"
-    local location="$3"
-    local identityName="$4"
-    local galleryName="$5"
-    local identityResourceGroupName="$6"
-    local devBoxResourceGroupName="$7"
-    local networkConnectionName="$8"
+    local identityName="$3"
+    local galleryName="$4"
+    local identityResourceGroupName="$5"
+    local devBoxResourceGroupName="$6"
+    local networkConnectionName="$7"
 
     # Declare an associative array to store image parameters
     declare -A image_params
@@ -210,8 +207,8 @@ function buildImage {
     # Loop through the image parameters and execute scripts to create VM image templates and DevBox definitions
     for imageName in "${!image_params[@]}"; do
         IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${image_params[$imageName]}"
-        ./devBox/computeGallery/createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$imageGalleryResourceGroupName" "$locationComputeGallery" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher" "$identityResourceGroupName"
-        ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" "$buildImage"
+        ./devBox/computeGallery/createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$imageGalleryResourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher" "$identityResourceGroupName"
+        ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$location" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" "$buildImage"
     done
 }
 
@@ -230,38 +227,40 @@ deployMicrosoftDevBox() {
 
     # Get the subscription ID
     subscriptionId=$(az account show --query id --output tsv)
-    
-    # # Create necessary resource groups
-    # createResourceGroup "$devBoxResourceGroupName" "$location"
-    # createResourceGroup "$imageGalleryResourceGroupName" "$location"
-    # createResourceGroup "$identityResourceGroupName" "$location"
-    # createResourceGroup "$networkResourceGroupName" "$location"
-    # createResourceGroup "$managementResourceGroupName" "$location"
 
-    # # Create identity
-    # createIdentity $identityName $identityResourceGroupName $subscriptionId $customRoleName $location
+    echo "The Subscription ID is: " $subscriptionId
+    
+    # Create necessary resource groups
+    createResourceGroup "$devBoxResourceGroupName"
+    createResourceGroup "$imageGalleryResourceGroupName"
+    createResourceGroup "$identityResourceGroupName"
+    createResourceGroup "$networkResourceGroupName"
+    createResourceGroup "$managementResourceGroupName"
+
+    # Create identity
+    createIdentity $identityName $identityResourceGroupName $subscriptionId $customRoleName
 
     # # Deploy network
     # deploynetwork $vnetName $subNetName $networkConnectionName $networkResourceGroupName $subscriptionId $location
 
     # # Deploy Compute Gallery
-    # deployComputeGallery $imageGalleryName $locationComputeGallery $imageGalleryResourceGroupName
+    # deployComputeGallery $imageGalleryName $location $imageGalleryResourceGroupName
 
     # # Deploy Dev Center
-    # deployDevCenter $devCenterName $networkConnectionName $imageGalleryName $locationDevCenter $identityName $devBoxResourceGroupName $networkResourceGroupName $identityResourceGroupName $imageGalleryResourceGroupName
+    # deployDevCenter $devCenterName $networkConnectionName $imageGalleryName $location $identityName $devBoxResourceGroupName $networkResourceGroupName $identityResourceGroupName $imageGalleryResourceGroupName
 
     # # Create Dev Center project
-    # createDevCenterProject $locationDevCenter $subscriptionId $devBoxResourceGroupName $devCenterName
+    # createDevCenterProject $location $subscriptionId $devBoxResourceGroupName $devCenterName
 
     # echo "Skipping image build..."
     # echo "Creating DevBox Definition for Back End Developers with Visual Studio 2022"
     # imageName="microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2"
     # galleryName=$devCenterName
-    # ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" false
+    # ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$location" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" false
 
     # echo "Creating DevBox Definition for Front End Developers"
     # imageName="microsoftvisualstudio_windowsplustools_base-win11-gen2"
-    # ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" false
+    # ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$location" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" false
     
     # # Check if the deployment was successful
     # if [[ $? -ne 0 ]]; then
@@ -275,7 +274,7 @@ deployMicrosoftDevBox() {
     # if [[ "$buildImage" == "true" ]]; then
     #     echo "Deployment Completed Successfully! Building images..."
     #     echo "You can start creating DevBoxes for your team."
-    #     buildImage $subscriptionId $imageGalleryResourceGroupName $locationComputeGallery $identityName $imageGalleryName $identityResourceGroupName $devBoxResourceGroupName $networkConnectionName
+    #     buildImage $subscriptionId $imageGalleryResourceGroupName $location $identityName $imageGalleryName $identityResourceGroupName $devBoxResourceGroupName $networkConnectionName
     # else
     #     echo "Deployment Completed Successfully!"
     #     echo "You can start creating DevBoxes for your team."
