@@ -2,7 +2,7 @@
 
 echo "Deploying to Azure"
 
-# Contants Parameters
+# Constants Parameters
 readonly branch="main"
 readonly location="WestUS3"
 readonly locationComputeGallery=$location
@@ -15,7 +15,7 @@ readonly identityResourceGroupName="petv2IdentityDevBox-rg"
 readonly networkResourceGroupName="petv2NetworkConnectivity-rg"
 readonly managementResourceGroupName="petv2DevBoxManagement-rg"
 
-# Identity Parameters Contants
+# Identity Parameters Constants
 readonly identityName="petv2DevBoxImgBldId"
 readonly customRoleName="petv2BuilderRole"
 
@@ -33,11 +33,11 @@ readonly networkConnectionName="devBoxNetworkConnection"
 # Build Image Parameter to inform if the image should be built
 buildImage=$2
 
-# Functions
+# Function to log in to Azure
 azureLogin() {
     local subscriptionName="$1"
 
-    # Check if the subscriptionName is empty
+    # Check if subscription name is provided
     if [[ -z "$subscriptionName" ]]; then
         echo "Error: Subscription name is missing!"
         echo "Usage: azureLogin <subscriptionName>"
@@ -48,13 +48,16 @@ azureLogin() {
 
     local scriptPath="./identity/login.sh"
     
+    # Check if the login script exists and is executable
     if [[ ! -x "$scriptPath" ]]; then
         echo "Error: The login script $scriptPath does not exist or is not executable."
         return 1
     fi
     
+    # Execute the login script
     "$scriptPath" "$subscriptionName"
     
+    # Check if login was successful
     if [[ $? -eq 0 ]]; then
         echo "Successfully logged in to $subscriptionName."
     else
@@ -63,10 +66,12 @@ azureLogin() {
     fi
 }
 
+# Function to create an Azure resource group
 createResourceGroup() {
     local resourceGroupName="$1"
     local location="$2"
 
+    # Check if resource group name and location are provided
     if [[ -z "$resourceGroupName" || -z "$location" ]]; then
         echo "Usage: createResourceGroup <resourceGroupName> <location>"
         exit 1
@@ -76,10 +81,12 @@ createResourceGroup() {
     echo "Resource Group Name: $resourceGroupName"
     echo "Location: $location"
 
+    # Create the resource group with specified tags
     az group create --name "$resourceGroupName" --location "$location" --tags "division=petv2-Platform" "Environment=Prod" "offer=petv2-DevWorkstation-Service" "Team=Engineering" "division=petv2-Platform" "solution=ContosoFabricDevWorkstation"
     echo "Resource group '$resourceGroupName' created successfully."
 }
 
+# Function to create an identity
 function createIdentity {
     local identityName=$1
     local resourceGroupName=$2
@@ -87,21 +94,21 @@ function createIdentity {
     local customRoleName=$4
     local location=$5
 
-    # Validate the presence of all parameters
+    # Check if all required parameters are provided
     if [[ -z $identityName || -z $resourceGroupName || -z $subscriptionId || -z $customRoleName || -z $location ]]; then
         echo "Error: Missing required parameters."
         echo "Usage: createIdentity <identityName> <resourceGroupName> <subscriptionId> <customRoleName> <location>"
         return 1
     fi
     
+    # Execute scripts to create identity and register features
     ./identity/createIdentity.sh "$resourceGroupName" "$location" "$identityName"
     ./identity/registerFeatures.sh
     ./identity/createUserAssignedManagedIdentity.sh "$resourceGroupName" "$subscriptionId" "$identityName" "$customRoleName"
-    
-} 
+}
 
+# Function to deploy a virtual network
 function deploynetwork() {
-    # Local variables to store function arguments
     local vnetName="$1"
     local subNetName="$2"
     local networkConnectionName="$3"
@@ -109,40 +116,35 @@ function deploynetwork() {
     local subscriptionId="$5"
     local location="$6"
 
-    # Check if the deployVnet.sh script exists before attempting to execute it
+    # Check if the deployVnet.sh script exists
     if [ ! -f "./network/deployVnet.sh" ]; then
         echo "Error: deployVnet.sh script not found."
         return 1
     fi
 
-    # Execute the deployVnet.sh script with the passed parameters and capture its exit code
+    # Execute scripts to deploy the virtual network and create network connection
     ./network/deployVnet.sh "$resourceGroupName" "$location" "$vnetName" "$subNetName"
     ./network/createNetWorkConnection.sh "$location" "$resourceGroupName" "$vnetName" "$subNetName" "$networkConnectionName"
     local exitCode="$?"
 
-    # Check the exit code of the deployVnet.sh script and echo appropriate message
+    # Check if the deployment was successful
     if [ "$exitCode" -ne 0 ]; then
         echo "Error: Deployment of Vnet failed with exit code $exitCode."
         return 1
     fi
 }
 
-# This function deploys a Compute Gallery to a specified location and resource group.
-# It receives three parameters: 
-# 1. imageGalleryName: The name of the Compute Gallery
-# 2. location: The Azure region where the Compute Gallery will be deployed
-# 3. galleryResourceGroupName: The name of the resource group where the Compute Gallery will be placed
-
+# Function to deploy a Compute Gallery
 function deployComputeGallery {
-    local imageGalleryName="$1"  # The name of the Compute Gallery to deploy
-    local location="$2"            # The Azure location (region) where the Compute Gallery will be deployed
-    local galleryResourceGroupName="$3"  # The resource group where the Compute Gallery will reside
+    local imageGalleryName="$1"  
+    local location="$2"           
+    local galleryResourceGroupName="$3"  
 
-    # The actual deployment command. Using a relative path to the deployment script
+    # Execute the script to deploy the Compute Gallery
     ./devBox/computeGallery/deployComputeGallery.sh "$imageGalleryName" "$location" "$galleryResourceGroupName"
 }
 
-# Function to deploy Dev Center
+# Function to deploy a Dev Center
 function deployDevCenter() {
     local devCenterName="$1"
     local networkConnectionName="$2"
@@ -154,41 +156,42 @@ function deployDevCenter() {
     local identityResourceGroupName="$8"
     local imageGalleryResourceGroupName="$9"
 
-    # Validate that all required parameters are provided
+    # Check if all required parameters are provided
     if [ -z "$devCenterName" ] || [ -z "$networkConnectionName" ] || [ -z "$imageGalleryName" ] || [ -z "$location" ] || [ -z "$identityName" ] || [ -z "$devBoxResourceGroupName" ] || [ -z "$networkResourceGroupName" ] || [ -z "$identityResourceGroupName" ] || [ -z "$imageGalleryResourceGroupName" ]; then
         echo "Error: Missing required parameters."
-        return 1 # Return with error code
+        return 1 
     fi
     
-    # Execute the deployDevCenter.sh script with the provided parameters and capture its exit code
+    # Execute the script to deploy the Dev Center
     ./devBox/devCenter/deployDevCenter.sh "$devCenterName" "$networkConnectionName" "$imageGalleryName" "$location" "$identityName" "$devBoxResourceGroupName" "$networkResourceGroupName" "$identityResourceGroupName" "$imageGalleryResourceGroupName"
-
 }
 
+# Function to create a Dev Center project
 function createDevCenterProject() {
     local location="$1"
     local subscriptionId="$2"
     local resourceGroupName="$3"
     local devCenterName="$4"
     
-    # Check if the necessary parameters are provided
+    # Check if all required parameters are provided
     if [[ -z "$location" || -z "$subscriptionId" || -z "$resourceGroupName" || -z "$devCenterName" ]]; then
         echo "Error: Missing required parameters."
         echo "Usage: createDevCenterProject <location> <subscriptionId> <resourceGroupName> <devCenterName>"
         return 1
     fi
     
-    # Validate if the createDevCenterProject.sh script exists before executing
+    # Check if the createDevCenterProject.sh script exists
     if [[ ! -f "./devBox/devCenter/createDevCenterProject.sh" ]]; then
         echo "Error: createDevCenterProject.sh script not found!"
         return 1
     fi
     
+    # Execute the script to create the Dev Center project
     ./devBox/devCenter/createDevCenterProject.sh "$location" "$subscriptionId" "$resourceGroupName" "$devCenterName"
 }
 
-function buildImage
-{
+# Function to build images
+function buildImage {
     local subscriptionId="$1"
     local imageGalleryResourceGroupName="$2"
     local location="$3"
@@ -198,10 +201,13 @@ function buildImage
     local devBoxResourceGroupName="$7"
     local networkConnectionName="$8"
 
+    # Declare an associative array to store image parameters
     declare -A image_params
 
+    # Define image parameters
     image_params["BackEnd-Docker-Img"]="VS22-BackEnd-Docker petv2-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy/ARMTemplates/computeGallery/backEndEngineerImgTemplateDocker.json Contoso"
 
+    # Loop through the image parameters and execute scripts to create VM image templates and DevBox definitions
     for imageName in "${!image_params[@]}"; do
         IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${image_params[$imageName]}"
         ./devBox/computeGallery/createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$imageGalleryResourceGroupName" "$locationComputeGallery" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher" "$identityResourceGroupName"
@@ -209,31 +215,30 @@ function buildImage
     done
 }
 
-main() {
+# Main function to deploy Microsoft DevBox
+deployMicrosoftDevBox() {
     clear
     set -e
-
-    if [[ -z "$1" ]]; then
-        echo "Usage: $0 <subscriptionName>"
-        exit 1
-    fi
 
     local subscriptionName="$1"
     local subscriptionId
 
     echo "Starting Deployment..."
 
+    # Log in to Azure
     azureLogin "$subscriptionName"
 
+    # Get the subscription ID
     subscriptionId=$(az account show --query id --output tsv)
     
+    # Create necessary resource groups
     createResourceGroup "$devBoxResourceGroupName" "$location"
     createResourceGroup "$imageGalleryResourceGroupName" "$location"
     createResourceGroup "$identityResourceGroupName" "$location"
     createResourceGroup "$networkResourceGroupName" "$location"
     createResourceGroup "$managementResourceGroupName" "$location"
 
-    # Deploy Identity
+    # Create identity
     createIdentity $identityName $identityResourceGroupName $subscriptionId $customRoleName $location
 
     # Deploy network
@@ -245,10 +250,9 @@ main() {
     # Deploy Dev Center
     deployDevCenter $devCenterName $networkConnectionName $imageGalleryName $locationDevCenter $identityName $devBoxResourceGroupName $networkResourceGroupName $identityResourceGroupName $imageGalleryResourceGroupName
 
-    # Creating Dev Center Project
+    # Create Dev Center project
     createDevCenterProject $locationDevCenter $subscriptionId $devBoxResourceGroupName $devCenterName
 
-    # Skip image build
     echo "Skipping image build..."
     echo "Creating DevBox Definition for Back End Developers with Visual Studio 2022"
     imageName="microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2"
@@ -259,14 +263,15 @@ main() {
     imageName="microsoftvisualstudio_windowsplustools_base-win11-gen2"
     ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" false
     
+    # Check if the deployment was successful
     if [[ $? -ne 0 ]]; then
         echo "Error: Deployment failed. Error: $?"
         exit 1
     fi
 
     clear
-    
-    # Execute this function only if the buildImage parameter is true    
+      
+    # Check if images should be built
     if [[ "$buildImage" == "true" ]]; then
         echo "Deployment Completed Successfully! Building images..."
         echo "You can start creating DevBoxes for your team."
@@ -277,4 +282,5 @@ main() {
     fi
 }
 
-main "$@"
+# Start the deployment process
+deployMicrosoftDevBox "$@"
