@@ -1,35 +1,20 @@
 #!/bin/bash
 
-# Exit immediately if a command exits with a non-zero status
-set -e
-# Treat unset variables as an error
-set -o nounset
-# Prevent errors in a pipeline from being masked
-set -o pipefail
-
-# Function to display usage information
-usage() {
-    echo "Usage: $0 <location> <networkResourceGroupName> <vnetName> <subNetName> <networkConnectionName>"
-    exit 1
-}
-
-# Function to validate input parameters
+# Ensure all required parameters are provided
 validateInput() {
     if [ "$#" -ne 5 ]; then
-        echo "Error: Invalid number of arguments."
-        usage
+        echo "Usage: $0 <location> <networkResourceGroupName> <vnetName> <subNetName> <networkConnectionName>"
+        exit 1
     fi
 }
 
-# Function to retrieve the Subnet ID
+# Retrieve the subnet ID
 getSubnetId() {
     local networkResourceGroupName="$1"
     local vnetName="$2"
     local subNetName="$3"
 
-    echo "Retrieving Subnet ID for $subNetName in VNet $vnetName..."
-
-    local subnetId
+    echo "Retrieving Subnet ID for $subNetName..."
     subnetId=$(az network vnet subnet show \
         --resource-group "$networkResourceGroupName" \
         --vnet-name "$vnetName" \
@@ -38,53 +23,51 @@ getSubnetId() {
         --output tsv)
 
     if [ -z "$subnetId" ]; then
-        echo "Error: Unable to retrieve the Subnet ID for $subNetName in VNet $vnetName."
+        echo "Error: Unable to retrieve the Subnet ID for $subNetName in $vnetName."
         exit 1
     fi
 
-    echo "Subnet ID for $subNetName retrieved successfully: $subnetId"
+    echo "Subnet ID for $subNetName retrieved successfully."
     echo "$subnetId"
 }
 
-# Function to deploy the network connection
 deployNetworkConnection() {
     local location="$1"
-    local networkResourceGroupName="$2"
+    local subnetId="$2"
     local networkConnectionName="$3"
-    local subnetId="$4"
+    local networkResourceGroupName="$4"
 
-    echo "Deploying Network Connection $networkConnectionName in Resource Group $networkResourceGroupName..."
-
-    if az devcenter admin network-connection create \
+    echo "Deploying Network Connection"
+    az devcenter admin network-connection create \
         --location "$location" \
         --domain-join-type "AzureADJoin" \
         --subnet-id "$subnetId" \
         --name "$networkConnectionName" \
-        --resource-group "$networkResourceGroupName"; then
-        echo "Network Connection $networkConnectionName deployed successfully."
+        --resource-group "$networkResourceGroupName"
+
+    # Check the status of the last command
+    if [ $? -eq 0 ]; then
+        echo "Deployment initiated successfully."
     else
-        echo "Error: Failed to deploy Network Connection $networkConnectionName."
+        echo "Error: Deployment failed."
         exit 1
     fi
 }
 
-# Main script execution
-main() {
-    validateInput "$@"
+# Main Execution
+validateInput "$@"
 
-    local location="$1"
-    local networkResourceGroupName="$2"
-    local vnetName="$3"
-    local subNetName="$4"
-    local networkConnectionName="$5"
+location="$1"
+networkResourceGroupName="$2"
+vnetName="$3"
+subNetName="$4"
+networkConnectionName="$5"
+subnetId=""
 
-    echo "Initiating the deployment in Resource Group: $networkResourceGroupName, Location: $location."
+echo "Initiating the deployment in the resource group: $networkResourceGroupName, location: $location."
 
-    local subnetId
-    subnetId=$(getSubnetId "$networkResourceGroupName" "$vnetName" "$subNetName")
+getSubnetId "$networkResourceGroupName" "$vnetName" "$subNetName"
+deployNetworkConnection "$location" "$subnetId" "$networkConnectionName" "$networkResourceGroupName"
 
-    deployNetworkConnection "$location" "$networkResourceGroupName" "$networkConnectionName" "$subnetId"
-}
-
-# Execute the main function with all script arguments
-main "$@"
+# Exit normally
+exit 0
