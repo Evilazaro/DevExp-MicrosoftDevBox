@@ -34,9 +34,9 @@ createCustomRole() {
     echo "Role Name: $customRoleName"
     
     echo "Updating placeholders in the template..."
-    sed -i "<subscriptionId>/$subscriptionId/g" "$outputFilePath"
-    sed -i "<rgName>/$identityResourceGroupName/g" "$outputFilePath"
-    sed -i "<customRoleName>/$customRoleName/g" "$outputFilePath"
+    sed -i "s/<subscriptionId>/$subscriptionId/g" "$outputFilePath"
+    sed -i "s/<rgName>/$identityResourceGroupName/g" "$outputFilePath"
+    sed -i "s/<roleName>/$customRoleName/g" "$outputFilePath"
     
     if [ $? -ne 0 ]; then
         echo "Error updating placeholders."
@@ -45,7 +45,7 @@ createCustomRole() {
     
     az role definition create --role-definition "$outputFilePath"
 
-    while [ "$(az role definition list --name "$customRoleName" --query [].customRoleName -o tsv)" != "$customRoleName" ]; do
+    while [ "$(az role definition list --name "$customRoleName" --query [].roleName -o tsv)" != "$customRoleName" ]; do
         echo "Waiting for the role to be created..."
         sleep 10
     done 
@@ -61,7 +61,7 @@ assignRole() {
 
     echo "Assigning '$roleName' role to identityId $identityId..."
     
-    if az role assignment create --assignee-object-identityId "$identityId" --assignee-principal-type "$idType" --role "$roleName" --scope /subscriptions/"$subscriptionId"; then
+    if az role assignment create --assignee-object-id "$identityId" --assignee-principal-type "$idType" --role "$roleName" --scope /subscriptions/"$subscriptionId"; then
         echo "Role '$roleName' assigned."
     else
         echo "Error assigning '$roleName'."

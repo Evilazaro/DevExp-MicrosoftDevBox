@@ -67,7 +67,7 @@ deleteCustomRole() {
     fi
     az role definition delete --name "$roleName"
 
-    while [ "$(az role definition list --name "$roleName" --query [].roleName -o tsv)" = "$roleName" ]; do
+    while [ "$(az role definition list --name "$roleName" --query [].roleName -o tsv)" == "$roleName" ]; do
         echo "Waiting for the role to be deleted..."
         sleep 10
     done	
