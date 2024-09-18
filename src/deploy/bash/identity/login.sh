@@ -2,9 +2,10 @@
 
 # Exit immediately if a command exits with a non-zero status
 set -e
-
-# Set the subscription ID
-readonly subscriptionId="$1"
+# Treat unset variables as an error
+set -o nounset
+# Prevent errors in a pipeline from being masked
+set -o pipefail
 
 # Function to display usage information
 usage() {
@@ -12,12 +13,19 @@ usage() {
     exit 1
 }
 
+# Function to validate input parameters
+validateParameters() {
+    if [ "$#" -ne 1 ]; then
+        echo "Error: Invalid number of arguments."
+        usage
+    fi
+}
+
 # Function to log into Azure
 logIntoAzure() {
     echo "Attempting to log into Azure..."
     if az login --use-device-code; then
         echo "Successfully logged into Azure."
-        setAzureSubscription
     else
         echo "Error: Failed to log into Azure."
         exit 1
@@ -26,6 +34,7 @@ logIntoAzure() {
 
 # Function to set the Azure subscription
 setAzureSubscription() {
+    local subscriptionId="$1"
     echo "Attempting to set subscription to ${subscriptionId}..."
     
     if az account set --subscription "${subscriptionId}"; then
@@ -36,10 +45,13 @@ setAzureSubscription() {
     fi
 }
 
-# Check if the correct number of arguments is provided
-if [ "$#" -ne 1 ]; then
-    usage
-fi
+# Main script execution
+main() {
+    validateParameters "$@"
+    local subscriptionId="$1"
+    logIntoAzure
+    setAzureSubscription "$subscriptionId"
+}
 
-# Log into Azure and set the subscription
-logIntoAzure
+# Execute the main function with all script arguments
+main "$@"

@@ -7,6 +7,12 @@ set -o nounset
 # Prevent errors in a pipeline from being masked
 set -o pipefail
 
+# Function to display usage information
+usage() {
+    echo "Usage: $0"
+    exit 1
+}
+
 # Function to check if Azure CLI is installed
 checkAzureCli() {
     if ! command -v az &> /dev/null; then
@@ -77,6 +83,7 @@ registerFeatures() {
     done
 
     # Add the DevCenter extension
+    echo "Adding the 'devcenter' extension..."
     if az extension add --name devcenter; then
         echo "Successfully added the 'devcenter' extension."
     else
@@ -87,5 +94,10 @@ registerFeatures() {
     echo "Azure Resource Providers registration process completed."
 }
 
+# Main script execution
+main() {
+    registerFeatures
+}
+
 # Execute the main function
-registerFeatures
+main "$@"

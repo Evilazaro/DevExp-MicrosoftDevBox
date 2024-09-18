@@ -26,7 +26,7 @@
 
 # Constants
 $Branch = "main"
-$OutputFilePath = "./downloadedTempTemplates/identity/roleImage.json"
+$OutputFilePath = "../downloadedTempTemplates/identity/roleImage.json"
 $TemplateUrl = "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$Branch/src/deploy/ARMTemplates/identity/roleImage.json"
 
 # Function to display usage information
@@ -70,7 +70,7 @@ function Create-CustomRole {
         Write-Host "Updating placeholders in the template..."
         (Get-Content $OutputFilePath) -replace '<subscriptionId>', $SubscriptionId -replace '<rgName>', $ResourceGroupName -replace '<roleName>', $RoleName | Set-Content $OutputFilePath
 
-        az role definition create --role-definition $OutputFilePath
+        az role definition create --role-definition $OutputFilePath | Out-Null
         Write-Host "Custom role creation completed."
     }
     catch {
@@ -91,7 +91,7 @@ function Assign-Role {
     Write-Host "Assigning '$RoleName' role to ID $Id..."
 
     try {
-        az role assignment create --assignee-object-id $Id --assignee-principal-type $IdType --role $RoleName --scope /subscriptions/$SubscriptionId
+        az role assignment create --assignee-object-id $Id --assignee-principal-type $IdType --role $RoleName --scope /subscriptions/$SubscriptionId | Out-Null
         Write-Host "Role '$RoleName' assigned."
     }
     catch {

@@ -7,11 +7,17 @@ set -o nounset
 # Prevent errors in a pipeline from being masked
 set -o pipefail
 
+# Function to display usage information
+usage() {
+    echo "Usage: $0 <location> <networkResourceGroupName> <vnetName> <subNetName> <networkConnectionName>"
+    exit 1
+}
+
 # Function to validate input parameters
 validateInput() {
     if [ "$#" -ne 5 ]; then
-        echo "Usage: $0 <location> <networkResourceGroupName> <vnetName> <subNetName> <networkConnectionName>"
-        exit 1
+        echo "Error: Invalid number of arguments."
+        usage
     fi
 }
 
@@ -43,9 +49,9 @@ getSubnetId() {
 # Function to deploy the network connection
 deployNetworkConnection() {
     local location="$1"
-    local subnetId="$2"
+    local networkResourceGroupName="$2"
     local networkConnectionName="$3"
-    local networkResourceGroupName="$4"
+    local subnetId="$4"
 
     echo "Deploying Network Connection $networkConnectionName in Resource Group $networkResourceGroupName..."
 
@@ -63,7 +69,7 @@ deployNetworkConnection() {
 }
 
 # Main script execution
-createNetWorkConnection() {
+main() {
     validateInput "$@"
 
     local location="$1"
@@ -77,8 +83,8 @@ createNetWorkConnection() {
     local subnetId
     subnetId=$(getSubnetId "$networkResourceGroupName" "$vnetName" "$subNetName")
 
-    deployNetworkConnection "$location" "$subnetId" "$networkConnectionName" "$networkResourceGroupName"
+    deployNetworkConnection "$location" "$networkResourceGroupName" "$networkConnectionName" "$subnetId"
 }
 
 # Execute the main function with all script arguments
-createNetWorkConnection "$@"
+main "$@"

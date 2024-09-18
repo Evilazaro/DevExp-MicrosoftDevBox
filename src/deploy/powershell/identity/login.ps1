@@ -39,7 +39,6 @@ function Log-IntoAzure {
     try {
         az login --use-device-code | Out-Null
         Write-Host "Successfully logged into Azure."
-        Set-AzureSubscription -SubscriptionId $SubscriptionId
     }
     catch {
         Write-Host "Error: Failed to log into Azure. $_"
@@ -72,4 +71,5 @@ param (
 )
 
 Validate-Parameters -SubscriptionId $SubscriptionId
-Log-IntoAzure -SubscriptionId $SubscriptionId
+Log-IntoAzure
+Set-AzureSubscription -SubscriptionId $SubscriptionId

@@ -1,8 +1,15 @@
 #!/bin/bash
 
+# Exit immediately if a command exits with a non-zero status
+set -e
+# Treat unset variables as an error
+set -o nounset
+# Prevent errors in a pipeline from being masked
+set -o pipefail
+
 # Function to display usage information
 displayUsage() {
-    echo "Usage: $0 <resourceGroupName> <location> <identityName>"
+    echo "Usage: $0 <identityResourceGroupName> <location> <identityName>"
     echo "Example: $0 myResourceGroup EastUS myIdentity"
     exit 1
 }
@@ -15,23 +22,16 @@ checkArguments() {
     fi
 }
 
-# Function to assign arguments to variables
-assignArguments() {
-    resourceGroupName="$1"
-    location="$2"
-    identityName="$3"
-
-    echo "Resource Group Name: ${resourceGroupName}"
-    echo "Location: ${location}"
-    echo "Identity Name: ${identityName}"
-}
-
 # Function to create an Azure identity
 createAzureIdentity() {
-    echo "Creating identity '${identityName}' in resource group '${resourceGroupName}' located in '${location}'..."
+    local identityResourceGroupName="$1"
+    local location="$2"
+    local identityName="$3"
+
+    echo "Creating identity '${identityName}' in resource group '${identityResourceGroupName}' located in '${location}'..."
 
     # Capture the output and error message
-    if output=$(az identity create --resource-group "${resourceGroupName}" --name "${identityName}" --location "${location}" 2>&1); then
+    if output=$(az identity create --resource-group "${identityResourceGroupName}" --name "${identityName}" --location "${location}" 2>&1); then
         echo "Identity '${identityName}' successfully created."
     else
         echo "Error occurred while creating identity '${identityName}': ${output}"
@@ -40,11 +40,10 @@ createAzureIdentity() {
 }
 
 # Main script execution
-createIdentity() {
+main() {
     checkArguments "$@"
-    assignArguments "$@"
-    createAzureIdentity
+    createAzureIdentity "$@"
 }
 
 # Execute the main function with all script arguments
-createIdentity "$@"
+main "$@"
