@@ -162,14 +162,6 @@ deployComputeGallery() {
 
 # Function to deploy a Dev Center
 deployDevCenter() {
-    local devCenterName="$1"
-    local networkConnectionName="$2"
-    local imageGalleryName="$3"
-    local identityName="$4"
-    local devBoxResourceGroupName="$5"
-    local networkResourceGroupName="$6"
-    local identityResourceGroupName="$7"
-    local imageGalleryResourceGroupName="$8"
 
     if [[ -z "$devCenterName" || -z "$networkConnectionName" || -z "$imageGalleryName" || -z "$location" || -z "$identityName" || -z "$devBoxResourceGroupName" || -z "$networkResourceGroupName" || -z "$identityResourceGroupName" || -z "$imageGalleryResourceGroupName" ]]; then
         echo "Error: Missing required parameters."
@@ -245,7 +237,7 @@ deployMicrosoftDevBox() {
     
     deployComputeGallery
 
-    # deployDevCenter "$devCenterName" "$networkConnectionName" "$imageGalleryName" "$identityName" "$devBoxResourceGroupName" "$networkResourceGroupName" "$identityResourceGroupName" "$imageGalleryResourceGroupName"
+    deployDevCenter
     # createDevCenterProject "$subscriptionId" "$devBoxResourceGroupName" "$devCenterName"
 
     # if [[ "$buildImage" == "true" ]]; then
