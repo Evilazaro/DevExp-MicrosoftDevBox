@@ -144,13 +144,9 @@ deployNetwork() {
 
 # Function to deploy a compute gallery
 deployComputeGallery() {
-    local imageGalleryName="$1"
-    local location="$2"
-    local galleryResourceGroupName="$3"
-
-    if [[ -z "$imageGalleryName" || -z "$galleryResourceGroupName" ]]; then
+    if [[ -z "$imageGalleryName" || -z "$imageGalleryResourceGroupName" ]]; then
         echo "Error: Missing required arguments."
-        echo "Usage: deployComputeGallery <imageGalleryName> <galleryResourceGroupName>"
+        echo "Usage: deployComputeGallery <imageGalleryName> <imageGalleryResourceGroupName>"
         exit 1
     fi
 
@@ -160,8 +156,8 @@ deployComputeGallery() {
         exit 1
     fi
 
-    echo "Deploying Compute Gallery: $imageGalleryName in Resource Group: $galleryResourceGroupName"
-    "$deployScript" "$imageGalleryName" "$location" "$galleryResourceGroupName"
+    echo "Deploying Compute Gallery: $imageGalleryName in Resource Group: $imageGalleryResourceGroupName"
+    "$deployScript" "$imageGalleryName" "$location" "$imageGalleryResourceGroupName"
 }
 
 # Function to deploy a Dev Center
@@ -246,7 +242,9 @@ deployMicrosoftDevBox() {
     createIdentity "$subscriptionId"
     
     deployNetwork
-    # deployComputeGallery "$imageGalleryName" "$location" "$imageGalleryResourceGroupName"
+    
+    deployComputeGallery
+
     # deployDevCenter "$devCenterName" "$networkConnectionName" "$imageGalleryName" "$identityName" "$devBoxResourceGroupName" "$networkResourceGroupName" "$identityResourceGroupName" "$imageGalleryResourceGroupName"
     # createDevCenterProject "$subscriptionId" "$devBoxResourceGroupName" "$devCenterName"
 

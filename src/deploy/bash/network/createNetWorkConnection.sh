@@ -69,7 +69,7 @@ createNetworkConnection() {
 
     # Retrieve the subnet ID
     local subnetId
-    subnetId=getSubnetId "$networkResourceGroupName" "$vnetName" "$subNetName"
+    getSubnetId "$networkResourceGroupName" "$vnetName" "$subNetName"
 
     # Deploy the network connection
     deployNetworkConnection "$location" "$subnetId" "$networkConnectionName" "$networkResourceGroupName"
