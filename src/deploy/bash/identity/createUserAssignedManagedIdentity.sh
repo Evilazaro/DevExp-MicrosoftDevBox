@@ -7,17 +7,15 @@ set -u
 readonly branch="main"
 readonly outputFilePath="../downloadedTempTemplates/identity/roleImage.json"
 readonly templateUrl="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy/ARMTemplates/identity/roleImage.json"
-
-# Parameters
 readonly identityResourceGroupName="$1"
 readonly subscriptionId="$2"
 readonly identityName="$3"
 readonly customRoleName="$4"
+readonly location="$5"
 
 # Derive current user details
-currentUser=$(az account show --query user.name -o tsv)
-currentAzureUserId=$(az ad user show --id "$currentUser" --query objectId -o tsv)
-identityId=$(az identity show --name "$identityName" --resource-group "$identityResourceGroupName" --query principalId -o tsv)
+currentUser=$(az ad signed-in-user show --query id -o tsv)
+identityId=$(az identity show --name "$identityName" --resource-group "$identityResourceGroupName" --query clientId -o tsv)
 
 # Function to create a custom role using a template
 createCustomRole() {
@@ -59,9 +57,9 @@ assignRole() {
     local roleName="$2"
     local idType="$3"
 
-    echo "Assigning '$roleName' role to identityId $identityId..."
+    echo "Assigning '$roleName' role to identityId $userIdentityId..."
     
-    if az role assignment create --assignee-object-id "$identityId" --assignee-principal-type "$idType" --role "$roleName" --scope /subscriptions/"$subscriptionId"; then
+    if az role assignment create --assignee-object-id "$userIdentityId" --assignee-principal-type "$idType" --role "$roleName" --scope /subscriptions/"$subscriptionId"; then
         echo "Role '$roleName' assigned."
     else
         echo "Error assigning '$roleName'."
@@ -69,20 +67,23 @@ assignRole() {
     fi
 }
 
-# Main script execution
-echo "Script started."
+createUserAssignedManagedIdentity()
+{
+    echo "Creating identity '$identityName' in resource group '$identityResourceGroupName' located in '$location'..."
 
-createCustomRole
+    createCustomRole 
 
-# Assign roles
-assignRole "$identityId" "Virtual Machine Contributor" "ServicePrincipal"
-assignRole "$identityId" "Desktop Virtualization Contributor" "ServicePrincipal"
-assignRole "$identityId" "Desktop Virtualization Virtual Machine Contributor" "ServicePrincipal"
-assignRole "$identityId" "Desktop Virtualization Workspace Contributor" "ServicePrincipal"
-assignRole "$identityId" "Compute Gallery Sharing Admin" "ServicePrincipal"
-assignRole "$identityId" "Virtual Machine Local User Login" "ServicePrincipal"
-assignRole "$identityId" "Managed Identity Operator" "ServicePrincipal"
-assignRole "$identityId" "$customRoleName" "ServicePrincipal"
-assignRole "$currentAzureUserId" "DevCenter Dev Box User" "User"
+    # Assign roles
+    assignRole "$identityId" "Virtual Machine Contributor" "ServicePrincipal"
+    assignRole "$identityId" "Desktop Virtualization Contributor" "ServicePrincipal"
+    assignRole "$identityId" "Desktop Virtualization Virtual Machine Contributor" "ServicePrincipal"
+    assignRole "$identityId" "Desktop Virtualization Workspace Contributor" "ServicePrincipal"
+    assignRole "$identityId" "Compute Gallery Sharing Admin" "ServicePrincipal"
+    assignRole "$identityId" "Virtual Machine Local User Login" "ServicePrincipal"
+    assignRole "$identityId" "Managed Identity Operator" "ServicePrincipal"
+    assignRole "$identityId" "$customRoleName" "ServicePrincipal"
+    assignRole "$currentUser" "DevCenter Dev Box User" "User"
 
-echo "Script completed."
+}
+
+createUserAssignedManagedIdentity "$@"

@@ -30,14 +30,14 @@ getSubnetId() {
     echo "Subnet ID for $subNetName retrieved successfully."
     echo "$subnetId"
 }
-
+# Deploy the network connection
 deployNetworkConnection() {
     local location="$1"
     local subnetId="$2"
     local networkConnectionName="$3"
     local networkResourceGroupName="$4"
 
-    echo "Deploying Network Connection"
+    echo "Deploying Network Connection..."
     az devcenter admin network-connection create \
         --location "$location" \
         --domain-join-type "AzureADJoin" \
@@ -54,20 +54,28 @@ deployNetworkConnection() {
     fi
 }
 
-# Main Execution
-validateInput "$@"
+# Main function to create network connection
+createNetworkConnection() {
+    # Validate input parameters
+    validateInput "$@"
 
-location="$1"
-networkResourceGroupName="$2"
-vnetName="$3"
-subNetName="$4"
-networkConnectionName="$5"
-subnetId=""
+    local location="$1"
+    local networkResourceGroupName="$2"
+    local vnetName="$3"
+    local subNetName="$4"
+    local networkConnectionName="$5"
 
-echo "Initiating the deployment in the resource group: $networkResourceGroupName, location: $location."
+    echo "Initiating the deployment in the resource group: $networkResourceGroupName, location: $location."
 
-getSubnetId "$networkResourceGroupName" "$vnetName" "$subNetName"
-deployNetworkConnection "$location" "$subnetId" "$networkConnectionName" "$networkResourceGroupName"
+    # Retrieve the subnet ID
+    local subnetId
+    subnetId=getSubnetId "$networkResourceGroupName" "$vnetName" "$subNetName"
 
-# Exit normally
-exit 0
+    # Deploy the network connection
+    deployNetworkConnection "$location" "$subnetId" "$networkConnectionName" "$networkResourceGroupName"
+
+    echo "Deployment completed successfully."
+}
+
+# Execute the main function with all script arguments
+createNetworkConnection "$@"

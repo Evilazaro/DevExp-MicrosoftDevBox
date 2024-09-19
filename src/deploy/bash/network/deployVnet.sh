@@ -17,14 +17,6 @@ usage() {
     exit 1
 }
 
-# Function to check if Azure CLI is installed
-checkAzCliInstalled() {
-    if ! command -v az &> /dev/null; then
-        echo "Error: az CLI could not be found. Please install it before running this script."
-        exit 1
-    fi
-}
-
 # Function to ensure the correct number of arguments are passed
 ensureArgumentsPassed() {
     if [ "$#" -ne 4 ]; then
@@ -59,11 +51,10 @@ createVirtualNetworkAndSubnet() {
 }
 
 # Main script execution
-main() {
+deployVnet() {
     ensureArgumentsPassed "$@"
-    checkAzCliInstalled
     createVirtualNetworkAndSubnet "$@"
 }
 
 # Execute the main function with all script arguments
-main "$@"
+deployVnet "$@"
