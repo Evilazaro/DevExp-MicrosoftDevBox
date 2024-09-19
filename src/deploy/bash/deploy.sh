@@ -170,17 +170,16 @@ deployDevCenter() {
 
     echo "Deploying Dev Center: $devCenterName"
     ./devBox/devCenter/deployDevCenter.sh "$devCenterName" "$networkConnectionName" "$imageGalleryName" "$location" "$identityName" "$devBoxResourceGroupName" "$networkResourceGroupName" "$identityResourceGroupName" "$imageGalleryResourceGroupName"
+
+    createDevCenterProject
 }
 
 # Function to create a Dev Center project
 createDevCenterProject() {
-    local subscriptionId="$1"
-    local resourceGroupName="$2"
-    local devCenterName="$3"
 
-    if [[ -z "$location" || -z "$subscriptionId" || -z "$resourceGroupName" || -z "$devCenterName" ]]; then
+    if [[ -z "$location" || -z "$subscriptionId" || -z "$devBoxResourceGroupName" || -z "$devCenterName" ]]; then
         echo "Error: Missing required parameters."
-        echo "Usage: createDevCenterProject <location> <subscriptionId> <resourceGroupName> <devCenterName>"
+        echo "Usage: createDevCenterProject <location> <subscriptionId> <devBoxResourceGroupName> <devCenterName>"
         return 1
     fi
 
@@ -190,7 +189,7 @@ createDevCenterProject() {
     fi
 
     echo "Creating Dev Center project: $devCenterName"
-    ./devBox/devCenter/createDevCenterProject.sh "$location" "$subscriptionId" "$resourceGroupName" "$devCenterName"
+    ./devBox/devCenter/createDevCenterProject.sh "$location" "$subscriptionId" "$devBoxResourceGroupName" "$devCenterName"
 }
 
 # Function to build images
@@ -238,7 +237,6 @@ deployMicrosoftDevBox() {
     deployComputeGallery
 
     deployDevCenter
-    # createDevCenterProject "$subscriptionId" "$devBoxResourceGroupName" "$devCenterName"
 
     # if [[ "$buildImage" == "true" ]]; then
     #     echo "Building images..."

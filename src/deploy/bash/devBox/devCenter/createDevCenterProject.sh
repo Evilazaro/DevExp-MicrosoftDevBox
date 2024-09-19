@@ -1,14 +1,23 @@
 #!/bin/bash
 
-# This script creates a devCenter admin project in Azure, applying several tags.
+# Exit immediately if a command exits with a non-zero status, treat unset variables as an error, and propagate errors in pipelines.
+set -euo pipefail
 
-# Print usage if not enough arguments are provided
-function printUsage() {
+# Print usage information
+printUsage() {
     echo "Usage: $0 <location> <subscriptionId> <devBoxResourceGroupName> <devCenterName>"
 }
 
+# Validate the number of arguments
+validateArguments() {
+    if [ "$#" -ne 4 ]; then
+        printUsage
+        exit 1
+    fi
+}
+
 # Create devCenter projects in Azure
-function createDevCenterProjects() {
+createDevCenterProjects() {
     local location="$1"
     local description="$2"
     local devCenterId="$3"
@@ -22,9 +31,8 @@ function createDevCenterProjects() {
     for projectName in "${!projects[@]}"; do
         echo "Creating a new devCenter admin project in Azure..."
         echo "Location: $location"
-        echo "Subscription ID: $subscriptionId"
+        echo "Dev Center ID: $devCenterId"
         echo "Resource Group Name: $devBoxResourceGroupName"
-        echo "Dev Center Name: $devCenterName"
         echo "Description: $description"
         echo "Project Name: ${projects[$projectName]}"
         echo "Max Dev Boxes Per User: $maxDevBoxesPerUser"
@@ -44,26 +52,27 @@ function createDevCenterProjects() {
                     "businessUnit=e-Commerce"
 
         if [ $? -eq 0 ]; then
-            echo "DevCenter admin project '$projectName' has been created successfully!"
+            echo "DevCenter admin project '${projects[$projectName]}' has been created successfully!"
         else
-            echo "Failed to create devCenter admin project '$projectName'." >&2
+            echo "Error: Failed to create devCenter admin project '${projects[$projectName]}'." >&2
             exit 2
         fi
     done
 }
 
 # Main script execution starts here
-if [ "$#" -ne 4 ]; then
-    printUsage
-    exit 1
-fi
+deployDevCenterProject() {
+    validateArguments "$@"
 
-location="$1"
-subscriptionId="$2"
-devBoxResourceGroupName="$3"
-devCenterName="$4"
-description="Sample .NET Core reference application, powered by Microsoft"
-maxDevBoxesPerUser="10"
-devCenterId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devCenters/$devCenterName"
+    local location="$1"
+    local subscriptionId="$2"
+    local devBoxResourceGroupName="$3"
+    local devCenterName="$4"
+    local description="Sample .NET Core reference application, powered by Microsoft"
+    local maxDevBoxesPerUser="10"
+    local devCenterId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devCenters/$devCenterName"
 
-createDevCenterProjects "$location" "$description" "$devCenterId" "$devBoxResourceGroupName" "$maxDevBoxesPerUser"
+    createDevCenterProjects "$location" "$description" "$devCenterId" "$devBoxResourceGroupName" "$maxDevBoxesPerUser"
+}
+
+deployDevCenterProject "$@"
