@@ -65,6 +65,7 @@ deleteCustomRole() {
         echo "'$roleName' role does not exist. Skipping deletion."
         return
     fi
+    
     az role definition delete --name "$roleName"
 
     while [ "$(az role definition list --name "$roleName" --query [].roleName -o tsv)" == "$roleName" ]; do

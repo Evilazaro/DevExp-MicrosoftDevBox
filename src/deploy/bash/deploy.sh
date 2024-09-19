@@ -6,32 +6,31 @@ set -euo pipefail
 echo "Deploying to Azure"
 
 # Constants Parameters
-branch="main"
-location="WestUS3"
+readonly branch="main"
+readonly location="WestUS3"
 
 # Azure Resource Group Names Constants
-subscriptionName="$1"
-subscriptionId=""
-devBoxResourceGroupName="petv2DevBox-rg"
-imageGalleryResourceGroupName="petv2ImageGallery-rg"
-identityResourceGroupName="petv2IdentityDevBox-rg"
-networkResourceGroupName="petv2NetworkConnectivity-rg"
-managementResourceGroupName="petv2DevBoxManagement-rg"
+readonly subscriptionName="$1"
+readonly devBoxResourceGroupName="petv2DevBox-rg"
+readonly imageGalleryResourceGroupName="petv2ImageGallery-rg"
+readonly identityResourceGroupName="petv2IdentityDevBox-rg"
+readonly networkResourceGroupName="petv2NetworkConnectivity-rg"
+readonly managementResourceGroupName="petv2DevBoxManagement-rg"
 
 # Identity Parameters Constants
-identityName="petv2DevBoxImgBldId"
-customRoleName="petv2BuilderRole"
+readonly identityName="petv2DevBoxImgBldId"
+readonly customRoleName="petv2BuilderRole"
 
 # Image and DevCenter Parameters Constants
-imageGalleryName="petv2ImageGallery"
-frontEndImageName="frontEndVm"
-backEndImageName="backEndVm"
-devCenterName="petv2DevCenter"
+readonly imageGalleryName="petv2ImageGallery"
+readonly frontEndImageName="frontEndVm"
+readonly backEndImageName="backEndVm"
+readonly devCenterName="petv2DevCenter"
 
 # Network Parameters Constants
-vnetName="petv2Vnet"
-subNetName="petv2SubNet"
-networkConnectionName="devBoxNetworkConnection"
+readonly vnetName="petv2Vnet"
+readonly subNetName="petv2SubNet"
+readonly networkConnectionName="devBoxNetworkConnection"
 
 # Build Image local to inform if the image should be built
 buildImage=${2:-false}
@@ -83,6 +82,7 @@ createResourceGroup() {
 
 # Function to create an identity
 createIdentity() {
+    local subscriptionId="$1"
 
     if [[ -z "$identityName" || -z "$identityResourceGroupName" || -z "$subscriptionId" || -z "$customRoleName" || -z "$location" ]]; then
         echo "Error: Missing required parameters."
@@ -107,7 +107,7 @@ createIdentity() {
 
     echo "Subscription ID: $subscriptionId"
     
-    if ! ./identity/createUserAssignedManagedIdentity.sh "$identityResourceGroupName" "$subscriptionId" "$identityName" "$customRoleName"; then
+    if ! ./identity/createUserAssignedManagedIdentity.sh "$identityResourceGroupName" "$subscriptionId" "$identityName" "$customRoleName" "$location"; then
         echo "Error: Failed to create user-assigned managed identity."
         return 1
     fi
@@ -117,12 +117,6 @@ createIdentity() {
 
 # Function to deploy a virtual network
 deployNetwork() {
-    local networkResourceGroupName="$1"
-    local location="$2"
-    local vnetName="$3"
-    local subNetName="$4"
-    local networkConnectionName="$5"
-
     if [[ ! -f "./network/deployVnet.sh" ]]; then
         echo "Error: deployVnet.sh script not found."
         return 1
@@ -150,13 +144,9 @@ deployNetwork() {
 
 # Function to deploy a compute gallery
 deployComputeGallery() {
-    local imageGalleryName="$1"
-    local location="$2"
-    local galleryResourceGroupName="$3"
-
-    if [[ -z "$imageGalleryName" || -z "$galleryResourceGroupName" ]]; then
+    if [[ -z "$imageGalleryName" || -z "$imageGalleryResourceGroupName" ]]; then
         echo "Error: Missing required arguments."
-        echo "Usage: deployComputeGallery <imageGalleryName> <galleryResourceGroupName>"
+        echo "Usage: deployComputeGallery <imageGalleryName> <imageGalleryResourceGroupName>"
         exit 1
     fi
 
@@ -166,8 +156,8 @@ deployComputeGallery() {
         exit 1
     fi
 
-    echo "Deploying Compute Gallery: $imageGalleryName in Resource Group: $galleryResourceGroupName"
-    "$deployScript" "$imageGalleryName" "$location" "$galleryResourceGroupName"
+    echo "Deploying Compute Gallery: $imageGalleryName in Resource Group: $imageGalleryResourceGroupName"
+    "$deployScript" "$imageGalleryName" "$location" "$imageGalleryResourceGroupName"
 }
 
 # Function to deploy a Dev Center
@@ -234,13 +224,11 @@ buildImages() {
 # Main function to deploy Microsoft DevBox
 deployMicrosoftDevBox() {
     clear
-
-    local subscriptionId
-
+    
     echo "Starting Deployment..."
-
     azureLogin
 
+    local subscriptionId
     subscriptionId=$(az account show --query id --output tsv)
     
     echo "The Subscription ID is: $subscriptionId"
@@ -251,9 +239,12 @@ deployMicrosoftDevBox() {
     createResourceGroup "$networkResourceGroupName"
     createResourceGroup "$managementResourceGroupName"
 
-    createIdentity
-    # deployNetwork "$networkResourceGroupName" "$location" "$vnetName" "$subNetName" "$networkConnectionName"
-    # deployComputeGallery "$imageGalleryName" "$location" "$imageGalleryResourceGroupName"
+    createIdentity "$subscriptionId"
+    
+    deployNetwork
+    
+    deployComputeGallery
+
     # deployDevCenter "$devCenterName" "$networkConnectionName" "$imageGalleryName" "$identityName" "$devBoxResourceGroupName" "$networkResourceGroupName" "$identityResourceGroupName" "$imageGalleryResourceGroupName"
     # createDevCenterProject "$subscriptionId" "$devBoxResourceGroupName" "$devCenterName"
 

@@ -37,10 +37,10 @@ setAzureSubscription() {
 }
 
 # Main script execution
-main() {
+loginToAzure() {
     validateParameters "$@"
     setAzureSubscription "$@"
 }
 
 # Execute the main function with all script arguments
-main "$@"
+loginToAzure "$@"
