@@ -74,6 +74,7 @@ createUserAssignedManagedIdentity()
     createCustomRole 
 
     # Assign roles
+    assignRole "$identityId" "Windows 365 Administrator" "ServicePrincipal"
     assignRole "$identityId" "Virtual Machine Contributor" "ServicePrincipal"
     assignRole "$identityId" "Desktop Virtualization Contributor" "ServicePrincipal"
     assignRole "$identityId" "Desktop Virtualization Virtual Machine Contributor" "ServicePrincipal"
