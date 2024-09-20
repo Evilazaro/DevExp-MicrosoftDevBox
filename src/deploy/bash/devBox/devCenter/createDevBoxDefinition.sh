@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# Exit immediately if a command exits with a non-zero status, treat unset variables as an error, and propagate errors in pipelines.
+set -euo pipefail
+
 # Check if all required arguments are provided
-if [[ $# -lt 7 ]]; then
-    echo "Usage: $0 <subscriptionId> <location> <devBoxResourceGroupName> <devCenterName> <galleryName> <imageName> <networkConnectionName>"
+if [[ $# -lt 8 ]]; then
+    echo "Usage: $0 <subscriptionId> <location> <devBoxResourceGroupName> <devCenterName> <galleryName> <imageName> <networkConnectionName> <buildImage>"
     exit 1
 fi
 
@@ -16,9 +19,14 @@ imageName="$6"
 networkConnectionName="$7"
 buildImage="$8"
 
-echo "Updating DevCEnter..."
-
-#!/bin/bash
+# Inform the user about the initialization step
+echo "Initializing script with:
+subscriptionId: $subscriptionId
+location: $location
+devBoxResourceGroupName: $devBoxResourceGroupName
+devCenterName: $devCenterName
+galleryName: $galleryName
+imageName: $imageName."
 
 # List of DevOps best practices adjectives
 adjectives=("Automated" "Continuous" "Integrated" "Scalable" "Efficient" "Resilient" "Reliable" "Secure" "Optimized" "Collaborative"
@@ -37,19 +45,18 @@ terms=("Developer" "Architect" "Engineer" "Coder" "Programmer" "Hacker" "Debugge
        "DevSecOps")
 
 # Function to generate a random name
-generate_random_name() {
-  local random_adjective=${adjectives[$RANDOM % ${#adjectives[@]}]}
-  local random_term=${terms[$RANDOM % ${#terms[@]}]}
-  local random_number=$((RANDOM % 1000))
-  echo "${random_adjective}${random_term}${random_number}"
+generateRandomName() {
+    local randomAdjective=${adjectives[$RANDOM % ${#adjectives[@]}]}
+    local randomTerm=${terms[$RANDOM % ${#terms[@]}]}
+    local randomNumber=$((RANDOM % 1000))
+    echo "${randomAdjective}${randomTerm}${randomNumber}"
 }
 
-# Function to get the content before the underscore
-get_before_hyphen() {
-  local input_string="$1"
-  # Use parameter expansion to extract the content before the underscore
-  local result="${input_string%%-*}"
-  echo "$result"
+# Function to get the content before the hyphen
+getBeforeHyphen() {
+    local inputString="$1"
+    local result="${inputString%%-*}"
+    echo "$result"
 }
 
 # Function to create development pools and boxes
@@ -74,46 +81,43 @@ createDevPoolsAndDevBoxes() {
     done
 }
 
-# Inform the user about the initialization step
-echo "Initializing script with:
-subscriptionId: $subscriptionId
-location: $location
-devBoxResourceGroupName: $devBoxResourceGroupName
-devCenterName: $devCenterName
-galleryName: $galleryName
-imageName: $imageName."
+createDevBoxDefinition()
+{
+    # Construct necessary variables
+    if [ "$buildImage" == "true" ]; then
+        imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/${galleryName}/images/${imageName}/versions/1.0.0"   
+    else
+        imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/Default/images/${imageName}"
+    fi
 
-# Construct necessary variables
-if ("$buildImage" == "true"); then
-    imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/${galleryName}/images/${imageName}/versions/1.0.0"   
-else
-    imageReferenceId="/subscriptions/$subscriptionId/resourceGroups/$devBoxResourceGroupName/providers/Microsoft.DevCenter/devcenters/$devCenterName/galleries/Default/images/${imageName}"
-fi
+    devBoxDefinitionName="$(generateRandomName)-def"
+    poolName="$(getBeforeHyphen $devBoxDefinitionName)-pool"
+    devBoxName="$(getBeforeHyphen $devBoxDefinitionName)-devbox"
 
-devBoxDefinitionName="$(generate_random_name)-def"
-poolName="$(get_before_hyphen $devBoxDefinitionName)-pool"
-devBoxName="$(get_before_hyphen $devBoxDefinitionName)-devbox"
+    # Display constructed variables
+    echo "Constructed variables:
+    imageReferenceId: $imageReferenceId
+    devBoxDefinitionName: $devBoxDefinitionName
+    networkConnectionName: $networkConnectionName
+    poolName: $poolName
+    devBoxName: $devBoxName
+    imageName: $imageName"
 
-# Display constructed variables
-echo "Constructed variables:
-imageReferenceId: $imageReferenceId
-devBoxDefinitionName: $devBoxDefinitionName
-networkConnectionName: $networkConnectionName
-poolName: $poolName
-devBoxName: $devBoxName
-imageName: $imageName"
+    # Create a DevBox definition
+    echo "Creating DevBox definition..."
+    az devcenter admin devbox-definition create --location "$location" \
+        --image-reference id="$imageReferenceId" \
+        --os-storage-type "ssd_512gb" \
+        --sku name="general_i_32c128gb512ssd_v2" \
+        --name "$devBoxDefinitionName" \
+        --dev-center-name "$devCenterName" \
+        --resource-group "$devBoxResourceGroupName"
 
-# Create a DevBox definition
-echo "Creating DevBox definition..."
-az devcenter admin devbox-definition create --location "$location" \
-    --image-reference id="$imageReferenceId" \
-    --os-storage-type "ssd_512gb" \
-    --sku name="general_i_32c128gb512ssd_v2" \
-    --name "$devBoxDefinitionName" \
-    --dev-center-name "$devCenterName" \
-    --resource-group "$devBoxResourceGroupName"
+    echo "DevBox definition created successfully."
 
-echo "DevBox definition created successfully."
+    # Invoke the function to create development pools and boxes
+    createDevPoolsAndDevBoxes "$location" "$devBoxDefinitionName" "$networkConnectionName" "$poolName" "$devBoxResourceGroupName" "$devBoxName" "$devCenterName"
+}
 
-# Invoke the function to create development pools and boxes
-createDevPoolsAndDevBoxes "$location" "$devBoxDefinitionName" "$networkConnectionName" "$poolName" "$devBoxResourceGroupName" "$devBoxName" "$devCenterName"
+createDevBoxDefinition  # Invoke the function to create a DevBox definition
+

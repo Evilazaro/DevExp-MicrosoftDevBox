@@ -192,24 +192,66 @@ createDevCenterProject() {
     ./devBox/devCenter/createDevCenterProject.sh "$location" "$subscriptionId" "$devBoxResourceGroupName" "$devCenterName"
 }
 
+# Function to set up the Dev Center
+setUpDevBoxDefinition() {
+    # Create Dev Box Definition
+    echo "Creating Dev Box Definition..."
+    ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$location" "$devBoxResourceGroupName" "$devCenterName" "$imageGalleryName" "$imageName" "$networkConnectionName" "$buildImage"
+    if [ $? -eq 0 ]; then
+        echo "Dev Box Definition created successfully."
+    else
+        echo "Error: Failed to create Dev Box Definition." >&2
+        exit 1
+    fi
+}
+
+setupImageTemplate(){
+    local outputFilePath="$1"
+    local subscriptionId="$2"
+    local imageGalleryResourceGroupName="$3"
+    local location="$4"
+    local imageName="$5"
+    local identityName="$6"
+    local imageTemplateFile="$7"
+    local imageGalleryName="$8"
+    local offer="$9"
+    local imgSku="${10}"
+    local publisher="${11}"
+    local identityResourceGroupName="${12}"
+
+    if [[ -z "$outputFilePath" || -z "$subscriptionId" || -z "$imageGalleryResourceGroupName" || -z "$location" || -z "$imageName" || -z "$identityName" || -z "$imageTemplateFile" || -z "$imageGalleryName" || -z "$offer" || -z "$imgSku" || -z "$publisher" || -z "$identityResourceGroupName" ]]; then
+        echo "Error: Missing required parameters."
+        echo "Usage: setupImageTemplate <outputFilePath> <subscriptionId> <imageGalleryResourceGroupName> <location> <imageName> <identityName> <imageTemplateFile> <imageGalleryName> <offer> <imgSku> <publisher> <identityResourceGroupName>"
+        return 1
+    fi
+
+    echo "Setting up image template..."
+    if ! ./devBox/computeGallery/createVMImageTemplate.sh "$outputFilePath" "$subscriptionId" "$imageGalleryResourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$imageGalleryName" "$offer" "$imgSku" "$publisher" "$identityResourceGroupName"; then
+        echo "Error: Failed to set up image template."
+        return 1
+    fi
+}
+
 # Function to build images
 buildImages() {
-    local subscriptionId="$1"
-    local imageGalleryResourceGroupName="$2"
-    local identityName="$3"
-    local galleryName="$4"
-    local identityResourceGroupName="$5"
-    local devBoxResourceGroupName="$6"
-    local networkConnectionName="$7"
-
     declare -A imageParams
     imageParams["BackEnd-Docker-Img"]="VS22-BackEnd-Docker petv2-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy/ARMTemplates/computeGallery/backEndEngineerImgTemplateDocker.json Contoso"
 
     for imageName in "${!imageParams[@]}"; do
         IFS=' ' read -r imgSku offer outputFile imageTemplateFile publisher <<< "${imageParams[$imageName]}"
-        ./devBox/computeGallery/createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$imageGalleryResourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSku" "$publisher" "$identityResourceGroupName"
-        ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$location" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" "$buildImage"
+        setupImageTemplate "$outputFile" "$subscriptionId" "$imageGalleryResourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$imageGalleryName" "$offer" "$imgSku" "$publisher" "$identityResourceGroupName"
+        setUpDevBoxDefinition
     done
+}
+
+demoScript() {
+    read -p "Do you want to continue? (y/n) " answer
+    if [[ "$answer" == "y" ]]; then
+        echo "Continuing..."
+    else
+        echo "Stopping the script."
+        exit 1
+    fi
 }
 
 # Main function to deploy Microsoft DevBox
@@ -230,18 +272,31 @@ deployMicrosoftDevBox() {
     createResourceGroup "$networkResourceGroupName"
     createResourceGroup "$managementResourceGroupName"
 
+    demoScript
+
     createIdentity "$subscriptionId"
+
+    demoScript
     
     deployNetwork
+
+    demoScript
     
     deployComputeGallery
 
+    demoScript
+
     deployDevCenter
 
-    # if [[ "$buildImage" == "true" ]]; then
-    #     echo "Building images..."
-    #     buildImages "$subscriptionId" "$imageGalleryResourceGroupName" "$identityName" "$imageGalleryName" "$identityResourceGroupName" "$devBoxResourceGroupName" "$networkConnectionName"
-    # fi
+    demoScript
+
+    if [[ "$buildImage" == "true" ]]; then
+        echo "Building images..."
+        buildImages
+    else
+        echo "Skipping image build..."
+        setUpDevBoxDefinition
+    fi
 
     echo "Deployment Completed Successfully!"
 }

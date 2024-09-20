@@ -15,7 +15,7 @@ readonly location="$5"
 
 # Derive current user details
 currentUser=$(az ad signed-in-user show --query id -o tsv)
-identityId=$(az identity show --name "$identityName" --resource-group "$identityResourceGroupName" --query clientId -o tsv)
+identityId=$(az identity show --name "$identityName" --resource-group "$identityResourceGroupName" --query principalId -o tsv)
 
 # Function to create a custom role using a template
 createCustomRole() {
@@ -43,7 +43,7 @@ createCustomRole() {
     
     az role definition create --role-definition "$outputFilePath"
 
-    while [ "$(az role definition list --name "$customRoleName" --query [].roleName -o tsv)" != "$customRoleName" ]; do
+    while [ "$(az role definition list --name "$customRoleName")" != "[]" ]; do
         echo "Waiting for the role to be created..."
         sleep 10
     done 
@@ -74,14 +74,6 @@ createUserAssignedManagedIdentity()
     createCustomRole 
 
     # Assign roles
-    assignRole "$identityId" "Windows 365 Administrator" "ServicePrincipal"
-    assignRole "$identityId" "Virtual Machine Contributor" "ServicePrincipal"
-    assignRole "$identityId" "Desktop Virtualization Contributor" "ServicePrincipal"
-    assignRole "$identityId" "Desktop Virtualization Virtual Machine Contributor" "ServicePrincipal"
-    assignRole "$identityId" "Desktop Virtualization Workspace Contributor" "ServicePrincipal"
-    assignRole "$identityId" "Compute Gallery Sharing Admin" "ServicePrincipal"
-    assignRole "$identityId" "Virtual Machine Local User Login" "ServicePrincipal"
-    assignRole "$identityId" "Managed Identity Operator" "ServicePrincipal"
     assignRole "$identityId" "$customRoleName" "ServicePrincipal"
     assignRole "$currentUser" "DevCenter Dev Box User" "User"
 

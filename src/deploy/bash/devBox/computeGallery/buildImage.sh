@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Exit immediately if a command exits with a non-zero status, treat unset variables as an error, and propagate errors in pipelines.
+set -euo pipefail
+
 # Variables
 branch="main"
 location="WestUS3"
@@ -28,8 +31,8 @@ vnetName="petv2Vnet"
 subNetName="petv2SubNet"
 networkConnectionName="devBoxNetworkConnection"
 
-function buildImage
-{
+# Function to build images and create DevCenter definitions
+buildImage() {
     local subscriptionId="$1"
     local imageGalleryResourceGroupName="$2"
     local location="$3"
@@ -40,15 +43,28 @@ function buildImage
     local networkConnectionName="$8"
     local buildImage=true
 
-    declare -A image_params
+    declare -A imageParams
+    imageParams["BackEnd-Docker-Img"]="VS22-BackEnd-Docker petv2-Fabric ../downloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy/ARMTemplates/computeGallery/backEndEngineerImgTemplateDocker.json Contoso"
 
-    image_params["BackEnd-Docker-Img"]="VS22-BackEnd-Docker petv2-Fabric ../downloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy/ARMTemplates/computeGallery/backEndEngineerImgTemplateDocker.json Contoso"
-
-    for imageName in "${!image_params[@]}"; do
-        IFS=' ' read -r imgSKU offer outputFile imageTemplateFile publisher <<< "${image_params[$imageName]}"
-        ./createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$imageGalleryResourceGroupName" "$locationComputeGallery" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSKU" "$publisher" "$identityResourceGroupName"
+    for imageName in "${!imageParams[@]}"; do
+        IFS=' ' read -r imgSku offer outputFile imageTemplateFile publisher <<< "${imageParams[$imageName]}"
+        
+        echo "Creating VM Image Template for $imageName..."
+        ./createVMImageTemplate.sh "$outputFile" "$subscriptionId" "$imageGalleryResourceGroupName" "$locationComputeGallery" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSku" "$publisher" "$identityResourceGroupName"
+        
+        echo "Creating DevCenter Definition for $imageName..."
         ./devCenter/createDevCenterDefinition.sh "$subscriptionId" "$locationDevCenter" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" "$buildImage"
     done
 }
 
-buildImage "$subscriptionId" "$imageGalleryResourceGroupName" "$location" "$identityName" "$imageGalleryName" "$identityResourceGroupName" "$devBoxResourceGroupName" "$networkConnectionName"
+# Main script execution
+main() {
+    if [[ $# -ne 8 ]]; then
+        echo "Usage: $0 <subscriptionId> <imageGalleryResourceGroupName> <location> <identityName> <galleryName> <identityResourceGroupName> <devBoxResourceGroupName> <networkConnectionName>"
+        exit 1
+    fi
+
+    buildImage "$@"
+}
+
+main "$@"
