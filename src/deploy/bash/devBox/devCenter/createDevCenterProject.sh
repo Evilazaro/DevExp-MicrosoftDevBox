@@ -16,7 +16,7 @@ validateArguments() {
     fi
 }
 
-# Create devCenter projects in Azure
+# Create DevCenter projects in Azure
 createDevCenterProjects() {
     local location="$1"
     local description="$2"
@@ -29,7 +29,7 @@ createDevCenterProjects() {
     )
 
     for projectName in "${!projects[@]}"; do
-        echo "Creating a new devCenter admin project in Azure..."
+        echo "Creating a new DevCenter admin project in Azure..."
         echo "Location: $location"
         echo "Dev Center ID: $devCenterId"
         echo "Resource Group Name: $devBoxResourceGroupName"
@@ -54,7 +54,7 @@ createDevCenterProjects() {
         if [ $? -eq 0 ]; then
             echo "DevCenter admin project '${projects[$projectName]}' has been created successfully!"
         else
-            echo "Error: Failed to create devCenter admin project '${projects[$projectName]}'." >&2
+            echo "Error: Failed to create DevCenter admin project '${projects[$projectName]}'." >&2
             exit 2
         fi
     done

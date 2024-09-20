@@ -1,10 +1,11 @@
 #!/bin/bash
 
-set -e
+# Exit immediately if a command exits with a non-zero status, treat unset variables as an error, and propagate errors in pipelines.
+set -euo pipefail
 
 # Function to display usage instructions
 displayUsage() {
-    echo "Usage: $0 <outputFile> <subscriptionID> <resourceGroupName> <location> <imageName> <identityName> <imageFileUri> <galleryName> <offer> <imgSKU> <publisher> <identityResourceGroupName>"
+    echo "Usage: $0 <outputFile> <subscriptionId> <resourceGroupName> <location> <imageName> <identityName> <imageFileUri> <galleryName> <offer> <imgSku> <publisher> <identityResourceGroupName>"
     exit 1
 }
 
@@ -15,7 +16,7 @@ parseArguments() {
     fi
 
     outputFile="$1"
-    subscriptionID="$2"
+    subscriptionId="$2"
     resourceGroupName="$3"
     location="$4"
     imageName="$5"
@@ -23,11 +24,12 @@ parseArguments() {
     imageFileUri="$7"
     galleryName="$8"
     offer="$9"
-    imgSKU="${10}"
+    imgSku="${10}"
     publisher="${11}"
     identityResourceGroupName="${12}"
 }
 
+# Create an image definition in the Shared Image Gallery
 createImageDefinition() {
     local imageDefName="${imageName}"
     local features="SecurityType=TrustedLaunch IsHibernateSupported=true"
@@ -41,7 +43,7 @@ createImageDefinition() {
         --os-type Windows \
         --publisher "${publisher}" \
         --offer "${offer}" \
-        --sku "${imgSKU}" \
+        --sku "${imgSku}" \
         --os-state generalized \
         --hyper-v-generation V2 \
         --features "${features}" \
@@ -54,20 +56,31 @@ createImageDefinition() {
                 "businessUnit=e-Commerce"
 }
 
-retrieveImageGalleryID() {
+# Retrieve the ID of the image gallery
+retrieveImageGalleryId() {
     echo "Retrieving the ID of the image gallery..."
 
     imageGalleryId=$(az sig show --resource-group "${resourceGroupName}" \
                     --gallery-name "${galleryName}" --query id --output tsv)
+    if [[ -z "$imageGalleryId" ]]; then
+        echo "Error: Failed to retrieve the image gallery ID." >&2
+        exit 1
+    fi
 }
 
-retrieveUserAssignedID() {
+# Retrieve the ID of the user-assigned identity
+retrieveUserAssignedId() {
     echo "Retrieving the ID of the user-assigned identity..."
 
     userAssignedId=$(az identity show --resource-group "${identityResourceGroupName}" \
                     --name "${identityName}" --query id --output tsv)
+    if [[ -z "$userAssignedId" ]]; then
+        echo "Error: Failed to retrieve the user-assigned identity ID." >&2
+        exit 1
+    fi
 }
 
+# Create a deployment group
 createDeploymentGroup() {
     echo "Creating a deployment group..."
 
@@ -80,6 +93,7 @@ createDeploymentGroup() {
                      location="${location}"
 }
 
+# Invoke an action on the resource
 invokeActionOnResource() {
     echo "Invoking an action on the resource..."
 
@@ -88,14 +102,15 @@ invokeActionOnResource() {
         --action "Run"
 }
 
-main() {
+# Main script execution starts here
+createVMImageTemplate() {
     parseArguments "$@"
     createImageDefinition
-    retrieveImageGalleryID
-    retrieveUserAssignedID
+    retrieveImageGalleryId
+    retrieveUserAssignedId
     createDeploymentGroup
     invokeActionOnResource
     echo "Script executed successfully."
 }
 
-main "$@"
+createVMImageTemplate "$@"

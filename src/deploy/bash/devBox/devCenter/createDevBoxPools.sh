@@ -1,24 +1,31 @@
 #!/bin/bash
 
-# Define the usage of the script to inform users about expected parameters
+# Exit immediately if a command exits with a non-zero status, treat unset variables as an error, and propagate errors in pipelines.
+set -euo pipefail
+
+# Function to display usage instructions
 showUsage() {
     echo "Usage: $0 <location> <devBoxDefinitionName> <networkConnectionName> <poolName> <projectName> <devBoxResourceGroupName>"
 }
 
 # Validate the number of arguments passed to the script
-if [ "$#" -ne 6 ]; then
-    echo "Error: Incorrect number of arguments"
-    showUsage
-    exit 1
-fi
+validateArguments() {
+    if [ "$#" -ne 6 ]; then
+        echo "Error: Incorrect number of arguments"
+        showUsage
+        exit 1
+    fi
+}
 
 # Assign arguments to camelCase variables with meaningful names
-location="$1"
-devBoxDefinitionName="$2"
-networkConnectionName="$3"
-poolName="$4"
-projectName="$5"
-devBoxResourceGroupName="$6"
+assignArguments() {
+    location="$1"
+    devBoxDefinitionName="$2"
+    networkConnectionName="$3"
+    poolName="$4"
+    projectName="$5"
+    devBoxResourceGroupName="$6"
+}
 
 # Function to create a DevCenter admin pool
 createDevCenterAdminPool() {
@@ -49,10 +56,16 @@ createDevCenterAdminPool() {
     if [ "$?" -eq 0 ]; then
         echo "DevCenter admin pool created successfully."
     else
-        echo "Failed to create DevCenter admin pool. Please check the parameters and try again."
+        echo "Error: Failed to create DevCenter admin pool. Please check the parameters and try again." >&2
         exit 1
     fi
 }
 
-# Call the function to create a DevCenter admin pool
-createDevCenterAdminPool
+# Main script execution
+createDevBoxPools() {
+    validateArguments "$@"
+    assignArguments "$@"
+    createDevCenterAdminPool
+}
+
+createDevBoxPools "$@"

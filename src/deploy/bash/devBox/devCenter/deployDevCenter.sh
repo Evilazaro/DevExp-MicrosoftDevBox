@@ -3,6 +3,10 @@
 # Exit immediately if a command exits with a non-zero status, treat unset variables as an error, and propagate errors in pipelines.
 set -euo pipefail
 
+# Constants
+readonly branch="main"
+readonly templateFileUri="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy//ARMTemplates/devBox/devCentertemplate.json"
+
 # Display usage information
 displayUsage() {
     echo "Usage: $0 <devCenterName> <networkConnectionName> <imageGalleryName> <location> <identityName> <devBoxResourceGroupName> <networkResourceGroupName> <identityResourceGroupName> <imageGalleryResourceGroupName>"
@@ -97,11 +101,6 @@ deployDevCenter() {
     validateNumberOfArguments "$@"
     assignArgumentsToVariables "$@"
     displayDeploymentParameters
-
-    # Constants
-    branch="main"
-    templateFileUri="https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy//ARMTemplates/devBox/devCentertemplate.json"
-
     fetchNetworkConnectionId
     fetchComputeGalleryId
     fetchUserIdentityId
