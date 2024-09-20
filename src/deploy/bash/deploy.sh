@@ -196,7 +196,7 @@ createDevCenterProject() {
 setUpDevBoxDefinition() {
     # Create Dev Box Definition
     echo "Creating Dev Box Definition..."
-    ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$location" "$devBoxResourceGroupName" "$devCenterName" "$galleryName" "$imageName" "$networkConnectionName" "$buildImage"
+    ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$location" "$devBoxResourceGroupName" "$devCenterName" "$imageGalleryName" "$imageName" "$networkConnectionName" "$buildImage"
     if [ $? -eq 0 ]; then
         echo "Dev Box Definition created successfully."
     else
@@ -213,20 +213,20 @@ setupImageTemplate(){
     local imageName="$5"
     local identityName="$6"
     local imageTemplateFile="$7"
-    local galleryName="$8"
+    local imageGalleryName="$8"
     local offer="$9"
     local imgSku="${10}"
     local publisher="${11}"
     local identityResourceGroupName="${12}"
 
-    if [[ -z "$outputFilePath" || -z "$subscriptionId" || -z "$imageGalleryResourceGroupName" || -z "$location" || -z "$imageName" || -z "$identityName" || -z "$imageTemplateFile" || -z "$galleryName" || -z "$offer" || -z "$imgSku" || -z "$publisher" || -z "$identityResourceGroupName" ]]; then
+    if [[ -z "$outputFilePath" || -z "$subscriptionId" || -z "$imageGalleryResourceGroupName" || -z "$location" || -z "$imageName" || -z "$identityName" || -z "$imageTemplateFile" || -z "$imageGalleryName" || -z "$offer" || -z "$imgSku" || -z "$publisher" || -z "$identityResourceGroupName" ]]; then
         echo "Error: Missing required parameters."
-        echo "Usage: setupImageTemplate <outputFilePath> <subscriptionId> <imageGalleryResourceGroupName> <location> <imageName> <identityName> <imageTemplateFile> <galleryName> <offer> <imgSku> <publisher> <identityResourceGroupName>"
+        echo "Usage: setupImageTemplate <outputFilePath> <subscriptionId> <imageGalleryResourceGroupName> <location> <imageName> <identityName> <imageTemplateFile> <imageGalleryName> <offer> <imgSku> <publisher> <identityResourceGroupName>"
         return 1
     fi
 
     echo "Setting up image template..."
-    if ! ./devBox/computeGallery/createVMImageTemplate.sh "$outputFilePath" "$subscriptionId" "$imageGalleryResourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSku" "$publisher" "$identityResourceGroupName"; then
+    if ! ./devBox/computeGallery/createVMImageTemplate.sh "$outputFilePath" "$subscriptionId" "$imageGalleryResourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$imageGalleryName" "$offer" "$imgSku" "$publisher" "$identityResourceGroupName"; then
         echo "Error: Failed to set up image template."
         return 1
     fi
@@ -239,9 +239,19 @@ buildImages() {
 
     for imageName in "${!imageParams[@]}"; do
         IFS=' ' read -r imgSku offer outputFile imageTemplateFile publisher <<< "${imageParams[$imageName]}"
-        setupImageTemplate "$outputFile" "$subscriptionId" "$imageGalleryResourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$galleryName" "$offer" "$imgSku" "$publisher" "$identityResourceGroupName"
+        setupImageTemplate "$outputFile" "$subscriptionId" "$imageGalleryResourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$imageGalleryName" "$offer" "$imgSku" "$publisher" "$identityResourceGroupName"
         setUpDevBoxDefinition
     done
+}
+
+demoScript() {
+    read -p "Do you want to continue? (y/n) " answer
+    if [[ "$answer" == "y" ]]; then
+        echo "Continuing..."
+    else
+        echo "Stopping the script."
+        exit 1
+    fi
 }
 
 # Main function to deploy Microsoft DevBox
@@ -262,23 +272,23 @@ deployMicrosoftDevBox() {
     createResourceGroup "$networkResourceGroupName"
     createResourceGroup "$managementResourceGroupName"
 
-    break;
+    demoScript
 
     createIdentity "$subscriptionId"
 
-    break;
+    demoScript
     
     deployNetwork
 
-    break;
+    demoScript
     
     deployComputeGallery
 
-    break;
+    demoScript
 
     deployDevCenter
 
-    break;
+    demoScript
 
     if [[ "$buildImage" == "true" ]]; then
         echo "Building images..."

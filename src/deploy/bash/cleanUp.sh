@@ -1,26 +1,41 @@
 #!/bin/bash
 
+# Exit immediately if a command exits with a non-zero status, treat unset variables as an error, and propagate errors in pipelines.
+set -euo pipefail
+
+# Clear the terminal screen
 clear
 
 echo "Cleaning up the deployment environment..."
 
-# Declaring Variables
+# Constants Parameters
+readonly branch="main"
+readonly location="WestUS3"
 
-# Resources Organization
+# Azure Resource Group Names Constants
+readonly devBoxResourceGroupName="petv2DevBox-rg"
+readonly imageGalleryResourceGroupName="petv2ImageGallery-rg"
+readonly identityResourceGroupName="petv2IdentityDevBox-rg"
+readonly networkResourceGroupName="petv2NetworkConnectivity-rg"
+readonly managementResourceGroupName="petv2DevBoxManagement-rg"
 subscriptionId=$(az account show --query id --output tsv)
-# Azure Resource Group Names
-devBoxResourceGroupName="petv2DevBox-rg"
-imageGalleryResourceGroupName="petv2ImageGallery-rg"
-identityResourceGroupName="petv2IdentityDevBox-rg"
-networkResourceGroupName="petv2NetworkConnectivity-rg"
-managementResourceGroupName="petv2DevBoxManagement-rg"
-location='WestUS3'
 
-# Identity Variables
-identityName="petv2DevBoxImgBldId"
-customRoleName="petv2BuilderRole"
+# Identity Parameters Constants
+readonly identityName="petv2DevBoxImgBldId"
+readonly customRoleName="petv2BuilderRole"
 
-# Delete Resource Group
+# Image and DevCenter Parameters Constants
+readonly imageGalleryName="petv2ImageGallery"
+readonly frontEndImageName="frontEndVm"
+readonly backEndImageName="backEndVm"
+readonly devCenterName="petv2DevCenter"
+
+# Network Parameters Constants
+readonly vnetName="petv2Vnet"
+readonly subNetName="petv2SubNet"
+readonly networkConnectionName="devBoxNetworkConnection"
+
+# Function to delete a resource group
 deleteResourceGroup() {
     local resourceGroupName="$1"
     local groupExists=$(az group exists --name "$resourceGroupName")
@@ -33,7 +48,8 @@ deleteResourceGroup() {
         echo "Resource group $resourceGroupName does not exist. Skipping deletion."
     fi
 }
-# Remove Role Assignment
+
+# Function to remove a role assignment
 removeRoleAssignment() {
     local roleId="$1"
     local subscription="$2"
@@ -56,10 +72,11 @@ removeRoleAssignment() {
     fi
 }
 
+# Function to delete a custom role
 deleteCustomRole() {
     local roleName="$1"
     echo "Deleting the '$roleName' role..."
-    roleExists=$(az role definition list --name "$roleName")
+    local roleExists=$(az role definition list --name "$roleName")
 
     if [[ -z "$roleExists" || "$roleExists" == "[]" ]]; then
         echo "'$roleName' role does not exist. Skipping deletion."
@@ -75,23 +92,33 @@ deleteCustomRole() {
     echo "'$roleName' role successfully deleted."
 }
 
-# Main Execution
+# Function to delete role assignments
+deleteRoleAssignments() {
+    # Deleting role assignments and role definitions
+    for roleName in 'Owner' 'Managed Identity Operator' 'DevCenter Dev Box User' "$customRoleName"; do
+        echo "Getting the role ID for '$roleName'..."
+        local roleId=$(az role definition list --name "$roleName" --query [].name --output tsv)
+        if [[ -z "$roleId" ]]; then
+            echo "Role ID for '$roleName' not found. Skipping role assignment deletion."
+            continue
+        fi
+        removeRoleAssignment "$roleId" "$subscriptionId"
+    done
+}
 
-# Deleting role assignments and role definitions
-for roleName in 'Owner' 'Managed Identity Operator' 'DevCenter Dev Box User' "$customRoleName"; do
-    echo "Getting the role ID for '$customRoleName'..."
-    roleId=$(az role definition list --name "$customRoleName" --query [].name --output tsv)
-    removeRoleAssignment "$roleId" "$subscriptionId"
-done
+# Function to clean up resources
+cleanUpResources() {
+    deleteRoleAssignments
+    deleteCustomRole "$customRoleName" 
+    deleteResourceGroup "$devBoxResourceGroupName"
+    deleteResourceGroup "$imageGalleryResourceGroupName"
+    deleteResourceGroup "$identityResourceGroupName"
+    deleteResourceGroup "$networkResourceGroupName"
+    deleteResourceGroup "$managementResourceGroupName"
+    deleteResourceGroup "NetworkWatcherRG"
+    deleteResourceGroup "Default-ActivityLogAlerts"
+    deleteResourceGroup "DefaultResourceGroup-WUS2"
+}
 
-deleteCustomRole "$customRoleName" 
-
-# Deleting resource groups
-deleteResourceGroup "$devBoxResourceGroupName"
-deleteResourceGroup "$imageGalleryResourceGroupName"
-deleteResourceGroup "$identityResourceGroupName"
-deleteResourceGroup "$networkResourceGroupName"
-deleteResourceGroup "$managementResourceGroupName"
-deleteResourceGroup "NetworkWatcherRG"
-deleteResourceGroup "Default-ActivityLogAlerts"
-deleteResourceGroup "DefaultResourceGroup-WUS2"
+# Main script execution
+cleanUpResources

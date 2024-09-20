@@ -74,10 +74,6 @@ createUserAssignedManagedIdentity()
     createCustomRole 
 
     # Assign roles
-    assignRole "$identityId" "Contributor" "ServicePrincipal"
-    assignRole "$identityId" "Compute Gallery Artifacts Publisher" "ServicePrincipal"
-    assignRole "$identityId" "Compute Gallery Image Reader" "ServicePrincipal"
-    assignRole "$identityId" "Compute Gallery Sharing Admin" "ServicePrincipal"
     assignRole "$identityId" "$customRoleName" "ServicePrincipal"
     assignRole "$currentUser" "DevCenter Dev Box User" "User"
 
