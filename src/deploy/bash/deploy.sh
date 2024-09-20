@@ -34,6 +34,7 @@ readonly networkConnectionName="devBoxNetworkConnection"
 
 # Build Image local to inform if the image should be built
 buildImage=${2:-false}
+scriptDemo=${3:-false}
 
 # Function to log in to Azure
 azureLogin() {
@@ -58,6 +59,7 @@ azureLogin() {
         echo "Failed to log in to $subscriptionName."
         return 1
     fi
+    demoScript
 }
 
 # Function to create an Azure resource group
@@ -78,6 +80,18 @@ createResourceGroup() {
         echo "Error: Failed to create resource group '$resourceGroupName'."
         return 1
     fi
+}
+
+# Function to deploy resources for the organization
+deployResourcesOrganization() {
+
+    createResourceGroup "$devBoxResourceGroupName"
+    createResourceGroup "$imageGalleryResourceGroupName"
+    createResourceGroup "$identityResourceGroupName"
+    createResourceGroup "$networkResourceGroupName"
+    createResourceGroup "$managementResourceGroupName"
+
+    demoScript
 }
 
 # Function to create an identity
@@ -106,13 +120,15 @@ createIdentity() {
     subscriptionId=$(az account show --query id --output tsv)
 
     echo "Subscription ID: $subscriptionId"
-    
+
     if ! ./identity/createUserAssignedManagedIdentity.sh "$identityResourceGroupName" "$subscriptionId" "$identityName" "$customRoleName" "$location"; then
         echo "Error: Failed to create user-assigned managed identity."
         return 1
     fi
 
     echo "Identity and features successfully created and registered."
+
+    demoScript
 }
 
 # Function to deploy a virtual network
@@ -140,6 +156,8 @@ deployNetwork() {
     fi
 
     echo "Virtual network and network connection deployed successfully."
+
+    demoScript
 }
 
 # Function to deploy a compute gallery
@@ -158,6 +176,8 @@ deployComputeGallery() {
 
     echo "Deploying Compute Gallery: $imageGalleryName in Resource Group: $imageGalleryResourceGroupName"
     "$deployScript" "$imageGalleryName" "$location" "$imageGalleryResourceGroupName"
+
+    demoScript
 }
 
 # Function to deploy a Dev Center
@@ -190,14 +210,19 @@ createDevCenterProject() {
 
     echo "Creating Dev Center project: $devCenterName"
     ./devBox/devCenter/createDevCenterProject.sh "$location" "$subscriptionId" "$devBoxResourceGroupName" "$devCenterName"
+
+    demoScript
 }
 
 # Function to set up the Dev Center
+# Function to set up a Dev Box Definition
 setUpDevBoxDefinition() {
-    # Create Dev Box Definition
-    echo "Creating Dev Box Definition..."
-    ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$location" "$devBoxResourceGroupName" "$devCenterName" "$imageGalleryName" "$imageName" "$networkConnectionName" "$buildImage"
-    if [ $? -eq 0 ]; then
+    local imageNameDevBox="$1"
+
+    echo "Creating Dev Box Definition with image: $imageNameDevBox..."
+
+    # Execute the script to create the Dev Box Definition
+    if ./devBox/devCenter/createDevBoxDefinition.sh "$subscriptionId" "$location" "$devBoxResourceGroupName" "$devCenterName" "$imageGalleryName" "$imageNameDevBox" "$networkConnectionName" "$buildImage"; then
         echo "Dev Box Definition created successfully."
     else
         echo "Error: Failed to create Dev Box Definition." >&2
@@ -205,7 +230,7 @@ setUpDevBoxDefinition() {
     fi
 }
 
-setupImageTemplate(){
+setupImageTemplate() {
     local outputFilePath="$1"
     local subscriptionId="$2"
     local imageGalleryResourceGroupName="$3"
@@ -235,68 +260,64 @@ setupImageTemplate(){
 # Function to build images
 buildImages() {
     declare -A imageParams
-    imageParams["BackEnd-Docker-Img"]="VS22-BackEnd-Docker petv2-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy/ARMTemplates/computeGallery/backEndEngineerImgTemplateDocker.json Contoso"
-
-    for imageName in "${!imageParams[@]}"; do
-        IFS=' ' read -r imgSku offer outputFile imageTemplateFile publisher <<< "${imageParams[$imageName]}"
-        setupImageTemplate "$outputFile" "$subscriptionId" "$imageGalleryResourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$imageGalleryName" "$offer" "$imgSku" "$publisher" "$identityResourceGroupName"
-        setUpDevBoxDefinition
-    done
+    if [[ "$buildImage" == "true" ]]; then
+        echo "Building images..."  
+        imageParams["BackEnd-Docker-Img"]="VS22-BackEnd-Docker petv2-Fabric ./DownloadedTempTemplates/BackEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy/ARMTemplates/computeGallery/backEndEngineerImgTemplateDocker.json Contoso"
+        imageParams["FrontEnd-Docker-Img"]="VS22-FrontEnd-Docker petv2-Fabric ./DownloadedTempTemplates/FrontEnd-Docker-Output.json https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy/ARMTemplates/computeGallery/frontEndEngineerImgTemplateDocker.json Contoso"
+        for imageName in "${!imageParams[@]}"; do
+            IFS=' ' read -r imgSku offer outputFile imageTemplateFile publisher <<<"${imageParams[$imageName]}"
+            setupImageTemplate "$outputFile" "$subscriptionId" "$imageGalleryResourceGroupName" "$location" "$imageName" "$identityName" "$imageTemplateFile" "$imageGalleryName" "$offer" "$imgSku" "$publisher" "$identityResourceGroupName"
+            setUpDevBoxDefinition "$imageName"
+        done
+    else
+        echo "Skipping image build..."
+        imageParams["BackEndEngineer-vm"]="microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2"
+        imageParams["FrontEndEngineer-vm"]="microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365"
+        for imageName in "${!imageParams[@]}"; do
+            IFS=' ' read -r imageNameDevBox <<<"${imageParams[$imageName]}"
+            # Create Dev Box Definition
+            echo "Creating Dev Box Definition..."
+            setUpDevBoxDefinition "$imageNameDevBox"
+        done
+    fi
 }
 
 demoScript() {
-    read -p "Do you want to continue? (y/n) " answer
-    if [[ "$answer" == "y" ]]; then
-        echo "Continuing..."
-    else
-        echo "Stopping the script."
-        exit 1
+    if [[ "$scriptDemo" == "true" ]]; then
+        read -p "Do you want to continue? (y/n) " answer
+        if [[ "$answer" == "y" ]]; then
+            clear
+            echo "Continuing..."            
+        else
+            echo "Stopping the script."
+            exit 1
+        fi
     fi
 }
 
 # Main function to deploy Microsoft DevBox
 deployMicrosoftDevBox() {
     clear
-    
+
     echo "Starting Deployment..."
     azureLogin
 
     local subscriptionId
     subscriptionId=$(az account show --query id --output tsv)
-    
+
     echo "The Subscription ID is: $subscriptionId"
 
-    createResourceGroup "$devBoxResourceGroupName"
-    createResourceGroup "$imageGalleryResourceGroupName"
-    createResourceGroup "$identityResourceGroupName"
-    createResourceGroup "$networkResourceGroupName"
-    createResourceGroup "$managementResourceGroupName"
-
-    demoScript
+    deployResourcesOrganization
 
     createIdentity "$subscriptionId"
 
-    demoScript
-    
     deployNetwork
 
-    demoScript
-    
     deployComputeGallery
-
-    demoScript
 
     deployDevCenter
 
-    demoScript
-
-    if [[ "$buildImage" == "true" ]]; then
-        echo "Building images..."
-        buildImages
-    else
-        echo "Skipping image build..."
-        setUpDevBoxDefinition
-    fi
+    buildImages
 
     echo "Deployment Completed Successfully!"
 }

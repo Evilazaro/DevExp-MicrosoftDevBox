@@ -91,8 +91,8 @@ createDevBoxDefinition()
     fi
 
     devBoxDefinitionName="$(generateRandomName)-def"
-    poolName="$(getBeforeHyphen $devBoxDefinitionName)-pool"
-    devBoxName="$(getBeforeHyphen $devBoxDefinitionName)-devbox"
+    poolName="$(getBeforeHyphen "$devBoxDefinitionName")-pool"
+    devBoxName="$(getBeforeHyphen "$devBoxDefinitionName")-devbox"
 
     # Display constructed variables
     echo "Constructed variables:
