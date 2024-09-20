@@ -59,7 +59,6 @@ azureLogin() {
         echo "Failed to log in to $subscriptionName."
         return 1
     fi
-    demoScript
 }
 
 # Function to create an Azure resource group

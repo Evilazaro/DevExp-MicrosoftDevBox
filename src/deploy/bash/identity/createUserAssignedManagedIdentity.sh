@@ -45,7 +45,7 @@ createCustomRole() {
 
     while [ "$(az role definition list --name "$customRoleName")" != "[]" ]; do
         echo "Waiting for the role to be created..."
-        sleep 10
+        sleep 20
     done 
     
     echo "Custom role creation completed."
