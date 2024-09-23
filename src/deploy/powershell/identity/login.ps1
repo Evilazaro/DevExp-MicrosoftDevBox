@@ -1,75 +1,75 @@
-#!/usr/bin/env pwsh
-
 <#
 .SYNOPSIS
-    Script to log into Azure and set the subscription.
+    This script logs into Azure and sets the specified subscription.
 
 .DESCRIPTION
-    This script logs into Azure using device code authentication and sets the specified subscription.
+    This script takes one parameter: the subscription ID.
+    It logs into Azure using device code authentication and sets the specified subscription.
 
-.PARAMETER SubscriptionId
+.PARAMETER subscriptionId
     The Azure subscription ID to set.
 
 .EXAMPLE
-    .\login.ps1 -SubscriptionId "your-subscription-id"
+    .\LoginToAzure.ps1 -subscriptionId "12345678-1234-1234-1234-123456789012"
 #>
 
+param (
+    [Parameter(Mandatory = $true)]
+    [string]$subscriptionId
+)
+
 # Function to display usage information
-function Display-Usage {
-    Write-Host "Usage: .\login.ps1 -SubscriptionId <subscriptionId>"
+function Show-Usage {
+    Write-Host "Usage: .\LoginToAzure.ps1 -subscriptionId <subscriptionId>"
+    Write-Host "Example: .\LoginToAzure.ps1 -subscriptionId '12345678-1234-1234-1234-123456789012'"
     exit 1
 }
 
 # Function to validate input parameters
 function Validate-Parameters {
     param (
-        [string]$SubscriptionId
+        [string]$subscriptionId
     )
 
-    if (-not $SubscriptionId) {
-        Write-Host "Error: Missing required parameter."
-        Display-Usage
-    }
-}
-
-# Function to log into Azure
-function Log-IntoAzure {
-    Write-Host "Attempting to log into Azure..."
-
-    try {
-        az login --use-device-code | Out-Null
-        Write-Host "Successfully logged into Azure."
-    }
-    catch {
-        Write-Host "Error: Failed to log into Azure. $_"
-        exit 1
+    if (-not $subscriptionId) {
+        Write-Error "Error: Invalid number of arguments."
+        Show-Usage
     }
 }
 
 # Function to set the Azure subscription
 function Set-AzureSubscription {
     param (
-        [string]$SubscriptionId
+        [string]$subscriptionId
     )
 
-    Write-Host "Attempting to set subscription to $SubscriptionId..."
+    Write-Host "Attempting to set subscription to $subscriptionId..."
 
     try {
-        az account set --subscription $SubscriptionId | Out-Null
-        Write-Host "Successfully set Azure subscription to $SubscriptionId."
+        az login --use-device-code
+    } catch {
+        Write-Error "Error: Failed to log in to Azure."
+        exit 1
     }
-    catch {
-        Write-Host "Error: Failed to set Azure subscription to $SubscriptionId. Please check if the subscription ID is valid and you have access to it. $_"
+
+    try {
+        az account set --subscription $subscriptionId
+        Write-Host "Successfully set Azure subscription to $subscriptionId."
+    } catch {
+        Write-Error "Error: Failed to set Azure subscription to $subscriptionId. Please check if the subscription ID is valid and you have access to it."
         exit 1
     }
 }
 
 # Main script execution
-param (
-    [Parameter(Mandatory=$true)]
-    [string]$SubscriptionId
-)
+function Login-ToAzure {
+    param (
+        [string]$subscriptionId
+    )
 
-Validate-Parameters -SubscriptionId $SubscriptionId
-Log-IntoAzure
-Set-AzureSubscription -SubscriptionId $SubscriptionId
+    Validate-Parameters -subscriptionId $subscriptionId
+    Set-AzureSubscription -subscriptionId $subscriptionId
+}
+
+# Execute the main function with the script argument
+Login-ToAzure -subscriptionId $subscriptionId

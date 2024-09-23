@@ -1,145 +1,135 @@
-#!/usr/bin/env pwsh
-
 <#
 .SYNOPSIS
-    Script to create a user-assigned managed identity and assign roles.
+    This script creates a user-assigned managed identity and assigns a custom role in Azure.
 
 .DESCRIPTION
-    This script creates a user-assigned managed identity in a specified resource group and location,
-    creates a custom role, and assigns various roles to the identity.
+    This script takes five parameters: the resource group name, the subscription ID, the identity name, the custom role name, and the location.
+    It creates a user-assigned managed identity, downloads a role definition template, updates the template with the provided parameters, creates the custom role, and assigns the role to the identity.
 
-.PARAMETER IdentityResourceGroupName
+.PARAMETER identityResourceGroupName
     The name of the resource group where the identity will be created.
 
-.PARAMETER SubscriptionId
+.PARAMETER subscriptionId
     The Azure subscription ID.
 
-.PARAMETER IdentityName
+.PARAMETER identityName
     The name of the identity to be created.
 
-.PARAMETER CustomRoleName
-    The name of the custom role to be created and assigned.
+.PARAMETER customRoleName
+    The name of the custom role to be created.
+
+.PARAMETER location
+    The Azure location where the identity will be created.
 
 .EXAMPLE
-    .\createUserAssignedManagedIdentity.ps1 -IdentityResourceGroupName "myResourceGroup" -SubscriptionId "mySubscriptionId" -IdentityName "myIdentity" -CustomRoleName "myCustomRole"
+    .\CreateUserAssignedManagedIdentity.ps1 -identityResourceGroupName "myResourceGroup" -subscriptionId "12345678-1234-1234-1234-123456789012" -identityName "myIdentity" -customRoleName "myCustomRole" -location "EastUS"
 #>
 
+param (
+    [Parameter(Mandatory = $true)]
+    [string]$identityResourceGroupName,
+
+    [Parameter(Mandatory = $true)]
+    [string]$subscriptionId,
+
+    [Parameter(Mandatory = $true)]
+    [string]$identityName,
+
+    [Parameter(Mandatory = $true)]
+    [string]$customRoleName,
+
+    [Parameter(Mandatory = $true)]
+    [string]$location
+)
+
 # Constants
-$Branch = "main"
-$OutputFilePath = "../downloadedTempTemplates/identity/roleImage.json"
-$TemplateUrl = "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$Branch/src/deploy/ARMTemplates/identity/roleImage.json"
+$branch = "main"
+$outputFilePath = "../downloadedTempTemplates/identity/roleImage.json"
+$templateUrl = "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy/ARMTemplates/identity/roleImage.json"
 
 # Function to display usage information
-function Display-Usage {
-    Write-Host "Usage: .\createUserAssignedManagedIdentity.ps1 -IdentityResourceGroupName <resourceGroupName> -SubscriptionId <subscriptionId> -IdentityName <identityName> -CustomRoleName <customRoleName>"
+function Show-Usage {
+    Write-Host "Usage: .\CreateUserAssignedManagedIdentity.ps1 -identityResourceGroupName <identityResourceGroupName> -subscriptionId <subscriptionId> -identityName <identityName> -customRoleName <customRoleName> -location <location>"
+    Write-Host "Example: .\CreateUserAssignedManagedIdentity.ps1 -identityResourceGroupName 'myResourceGroup' -subscriptionId '12345678-1234-1234-1234-123456789012' -identityName 'myIdentity' -customRoleName 'myCustomRole' -location 'EastUS'"
     exit 1
 }
 
-# Function to validate input parameters
-function Validate-Parameters {
-    param (
-        [string]$IdentityResourceGroupName,
-        [string]$SubscriptionId,
-        [string]$IdentityName,
-        [string]$CustomRoleName
-    )
-
-    if (-not $IdentityResourceGroupName -or -not $SubscriptionId -or -not $IdentityName -or -not $CustomRoleName) {
-        Write-Host "Error: Missing required parameters."
-        Display-Usage
-    }
-}
-
-# Function to create a custom role
+# Function to create a custom role using a template
 function Create-CustomRole {
-    param (
-        [string]$SubscriptionId,
-        [string]$ResourceGroupName,
-        [string]$OutputFilePath,
-        [string]$RoleName
-    )
-
     Write-Host "Starting custom role creation..."
     Write-Host "Downloading image template..."
 
     try {
-        Invoke-WebRequest -Uri $TemplateUrl -OutFile $OutputFilePath -Headers @{"Cache-Control"="no-cache"; "Pragma"="no-cache"}
-        Write-Host "Template downloaded to $OutputFilePath."
-        Write-Host "Role Name: $RoleName"
-
-        Write-Host "Updating placeholders in the template..."
-        (Get-Content $OutputFilePath) -replace '<subscriptionId>', $SubscriptionId -replace '<rgName>', $ResourceGroupName -replace '<roleName>', $RoleName | Set-Content $OutputFilePath
-
-        az role definition create --role-definition $OutputFilePath | Out-Null
-        Write-Host "Custom role creation completed."
+        Invoke-WebRequest -Uri $templateUrl -OutFile $outputFilePath -Headers @{ "Cache-Control" = "no-cache"; "Pragma" = "no-cache" }
+        Write-Host "Template downloaded to $outputFilePath."
+    } catch {
+        Write-Error "Error: Failed to download the image template."
+        exit 3
     }
-    catch {
-        Write-Host "Error: Failed to create custom role. $_"
-        exit 1
+
+    Write-Host "Role Name: $customRoleName"
+    Write-Host "Updating placeholders in the template..."
+
+    try {
+        (Get-Content $outputFilePath) -replace '<subscriptionId>', $subscriptionId -replace '<rgName>', $identityResourceGroupName -replace '<roleName>', $customRoleName | Set-Content $outputFilePath
+        Write-Host "Placeholders updated successfully."
+    } catch {
+        Write-Error "Error updating placeholders."
+        exit 4
     }
+
+    try {
+        az role definition create --role-definition $outputFilePath
+        Write-Host "Custom role created successfully."
+    } catch {
+        Write-Error "Error creating custom role."
+        exit 5
+    }
+
+    while ((az role definition list --name $customRoleName) -eq "[]") {
+        Write-Host "Waiting for the role to be created..."
+        Start-Sleep -Seconds 20
+    }
+
+    Write-Host "Custom role creation completed."
 }
 
 # Function to assign a role to an identity
 function Assign-Role {
     param (
-        [string]$Id,
-        [string]$RoleName,
-        [string]$SubscriptionId,
-        [string]$IdType
+        [string]$userIdentityId,
+        [string]$roleName,
+        [string]$idType
     )
 
-    Write-Host "Assigning '$RoleName' role to ID $Id..."
+    Write-Host "Assigning '$roleName' role to identityId $userIdentityId..."
 
     try {
-        az role assignment create --assignee-object-id $Id --assignee-principal-type $IdType --role $RoleName --scope /subscriptions/$SubscriptionId | Out-Null
-        Write-Host "Role '$RoleName' assigned."
-    }
-    catch {
-        Write-Host "Error: Failed to assign role '$RoleName'. $_"
-        exit 1
+        az role assignment create --assignee-object-id $userIdentityId --assignee-principal-type $idType --role $roleName --scope /subscriptions/$subscriptionId
+        Write-Host "Role '$roleName' assigned."
+    } catch {
+        Write-Error "Error assigning '$roleName'."
+        exit 2
     }
 }
 
 # Main script execution
-param (
-    [Parameter(Mandatory=$true)]
-    [string]$IdentityResourceGroupName,
+function Create-UserAssignedManagedIdentity {
+    Write-Host "Creating identity '$identityName' in resource group '$identityResourceGroupName' located in '$location'..."
 
-    [Parameter(Mandatory=$true)]
-    [string]$SubscriptionId,
+    $currentUser = az ad signed-in-user show --query id -o tsv
+    $identityId = az identity show --name $identityName --resource-group $identityResourceGroupName --query principalId -o tsv
 
-    [Parameter(Mandatory=$true)]
-    [string]$IdentityName,
+    Create-CustomRole
 
-    [Parameter(Mandatory=$true)]
-    [string]$CustomRoleName
-)
-
-Write-Host "Script started."
-
-Validate-Parameters -IdentityResourceGroupName $IdentityResourceGroupName -SubscriptionId $SubscriptionId -IdentityName $IdentityName -CustomRoleName $CustomRoleName
-
-$currentUser = az account show --query user.name -o tsv
-$currentAzureUserId = az ad user show --id $currentUser --query id -o tsv
-$identityId = az identity show --name $IdentityName --resource-group $IdentityResourceGroupName --query principalId -o tsv
-
-Create-CustomRole -SubscriptionId $SubscriptionId -ResourceGroupName $IdentityResourceGroupName -OutputFilePath $OutputFilePath -RoleName $CustomRoleName
-
-$roles = @(
-    "Virtual Machine Contributor",
-    "Desktop Virtualization Contributor",
-    "Desktop Virtualization Virtual Machine Contributor",
-    "Desktop Virtualization Workspace Contributor",
-    "Compute Gallery Sharing Admin",
-    "Virtual Machine Local User Login",
-    "Managed Identity Operator",
-    $CustomRoleName
-)
-
-foreach ($role in $roles) {
-    Assign-Role -Id $identityId -RoleName $role -SubscriptionId $SubscriptionId -IdType "ServicePrincipal"
+    # Assign roles
+    Assign-Role -userIdentityId $identityId -roleName $customRoleName -idType "ServicePrincipal"
+    Assign-Role -userIdentityId $currentUser -roleName "DevCenter Dev Box User" -idType "User"
 }
 
-Assign-Role -Id $currentAzureUserId -RoleName "DevCenter Dev Box User" -SubscriptionId $SubscriptionId -IdType "User"
+if ($PSCmdlet.MyInvocation.BoundParameters.Count -ne 5) {
+    Write-Error "Error: Invalid number of arguments."
+    Show-Usage
+}
 
-Write-Host "Script completed."
+Create-UserAssignedManagedIdentity
