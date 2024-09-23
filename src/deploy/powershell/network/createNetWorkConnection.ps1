@@ -1,81 +1,96 @@
-#!/usr/bin/env pwsh
-
 <#
 .SYNOPSIS
-    Script to deploy a network connection in Azure.
+    This script creates a network connection in Azure DevCenter.
 
 .DESCRIPTION
-    This script retrieves the Subnet ID and deploys a network connection in a specified resource group and location.
+    This script takes five parameters: the location, the network resource group name, the virtual network name, the subnet name, and the network connection name.
+    It validates the input parameters, retrieves the subnet ID, and deploys the network connection.
 
-.PARAMETER Location
-    The Azure region where the network connection will be deployed.
+.PARAMETER location
+    The Azure location where the network connection will be created.
 
-.PARAMETER NetworkResourceGroupName
-    The name of the resource group containing the virtual network.
+.PARAMETER networkResourceGroupName
+    The name of the resource group where the virtual network is located.
 
-.PARAMETER VnetName
+.PARAMETER vnetName
     The name of the virtual network.
 
-.PARAMETER SubNetName
-    The name of the subnet within the virtual network.
+.PARAMETER subnetName
+    The name of the subnet.
 
-.PARAMETER NetworkConnectionName
+.PARAMETER networkConnectionName
     The name of the network connection to be created.
 
 .EXAMPLE
-    .\createNetworkConnection.ps1 -Location "EastUS" -NetworkResourceGroupName "myResourceGroup" -VnetName "myVnet" -SubNetName "mySubnet" -NetworkConnectionName "myNetworkConnection"
+    .\CreateNetworkConnection.ps1 -location "EastUS" -networkResourceGroupName "myResourceGroup" -vnetName "myVnet" -subnetName "mySubnet" -networkConnectionName "myNetworkConnection"
 #>
 
+param (
+    [Parameter(Mandatory = $true)]
+    [string]$location,
+
+    [Parameter(Mandatory = $true)]
+    [string]$networkResourceGroupName,
+
+    [Parameter(Mandatory = $true)]
+    [string]$vnetName,
+
+    [Parameter(Mandatory = $true)]
+    [string]$subnetName,
+
+    [Parameter(Mandatory = $true)]
+    [string]$networkConnectionName
+)
+
 # Function to display usage information
-function Display-Usage {
-    Write-Host "Usage: .\createNetworkConnection.ps1 -Location <location> -NetworkResourceGroupName <networkResourceGroupName> -VnetName <vnetName> -SubNetName <subNetName> -NetworkConnectionName <networkConnectionName>"
+function Show-Usage {
+    Write-Host "Usage: .\CreateNetworkConnection.ps1 -location <location> -networkResourceGroupName <networkResourceGroupName> -vnetName <vnetName> -subnetName <subnetName> -networkConnectionName <networkConnectionName>"
     exit 1
 }
 
 # Function to validate input parameters
-function Validate-Parameters {
+function Validate-Input {
     param (
-        [string]$Location,
-        [string]$NetworkResourceGroupName,
-        [string]$VnetName,
-        [string]$SubNetName,
-        [string]$NetworkConnectionName
+        [string]$location,
+        [string]$networkResourceGroupName,
+        [string]$vnetName,
+        [string]$subnetName,
+        [string]$networkConnectionName
     )
 
-    if (-not $Location -or -not $NetworkResourceGroupName -or -not $VnetName -or -not $SubNetName -or -not $NetworkConnectionName) {
-        Write-Host "Error: Missing required parameters."
-        Display-Usage
+    if (-not $location -or -not $networkResourceGroupName -or -not $vnetName -or -not $subnetName -or -not $networkConnectionName) {
+        Write-Error "Error: All parameters are required."
+        Show-Usage
     }
 }
 
-# Function to retrieve the Subnet ID
+# Function to retrieve the subnet ID
 function Get-SubnetId {
     param (
-        [string]$NetworkResourceGroupName,
-        [string]$VnetName,
-        [string]$SubNetName
+        [string]$networkResourceGroupName,
+        [string]$vnetName,
+        [string]$subnetName
     )
 
-    Write-Host "Retrieving Subnet ID for $SubNetName in VNet $VnetName..."
+    Write-Host "Retrieving Subnet ID for $subnetName..."
 
     try {
         $subnetId = az network vnet subnet show `
-            --resource-group $NetworkResourceGroupName `
-            --vnet-name $VnetName `
-            --name $SubNetName `
+            --resource-group $networkResourceGroupName `
+            --vnet-name $vnetName `
+            --name $subnetName `
             --query id `
             --output tsv
 
         if (-not $subnetId) {
-            Write-Host "Error: Unable to retrieve the Subnet ID for $SubNetName in VNet $VnetName."
+            Write-Error "Error: Unable to retrieve the Subnet ID for $subnetName in $vnetName."
             exit 1
         }
 
-        Write-Host "Subnet ID for $SubNetName retrieved successfully: $subnetId"
+        Write-Host "Subnet ID for $subnetName retrieved successfully."
         return $subnetId
-    }
-    catch {
-        Write-Host "Error: Failed to retrieve Subnet ID. $_"
+    } catch {
+        Write-Error "Error: Failed to retrieve Subnet ID."
         exit 1
     }
 }
@@ -83,52 +98,52 @@ function Get-SubnetId {
 # Function to deploy the network connection
 function Deploy-NetworkConnection {
     param (
-        [string]$Location,
-        [string]$NetworkResourceGroupName,
-        [string]$NetworkConnectionName,
-        [string]$SubnetId
+        [string]$location,
+        [string]$subnetId,
+        [string]$networkConnectionName,
+        [string]$networkResourceGroupName
     )
 
-    Write-Host "Deploying Network Connection $NetworkConnectionName in Resource Group $NetworkResourceGroupName..."
+    Write-Host "Deploying Network Connection..."
 
     try {
         az devcenter admin network-connection create `
-            --location $Location `
+            --location $location `
             --domain-join-type "AzureADJoin" `
-            --subnet-id $SubnetId `
-            --name $NetworkConnectionName `
-            --resource-group $NetworkResourceGroupName | Out-Null
+            --subnet-id $subnetId `
+            --name $networkConnectionName `
+            --resource-group $networkResourceGroupName
 
-        Write-Host "Network Connection $NetworkConnectionName deployed successfully."
-    }
-    catch {
-        Write-Host "Error: Failed to deploy Network Connection $NetworkConnectionName. $_"
+        Write-Host "Deployment initiated successfully."
+    } catch {
+        Write-Error "Error: Deployment failed."
         exit 1
     }
 }
 
-# Main script execution
-param (
-    [Parameter(Mandatory=$true)]
-    [string]$Location,
+# Main function to create network connection
+function Create-NetworkConnection {
+    param (
+        [string]$location,
+        [string]$networkResourceGroupName,
+        [string]$vnetName,
+        [string]$subnetName,
+        [string]$networkConnectionName
+    )
 
-    [Parameter(Mandatory=$true)]
-    [string]$NetworkResourceGroupName,
+    # Validate input parameters
+    Validate-Input -location $location -networkResourceGroupName $networkResourceGroupName -vnetName $vnetName -subnetName $subnetName -networkConnectionName $networkConnectionName
 
-    [Parameter(Mandatory=$true)]
-    [string]$VnetName,
+    Write-Host "Initiating the deployment in the resource group: $networkResourceGroupName, location: $location."
 
-    [Parameter(Mandatory=$true)]
-    [string]$SubNetName,
+    # Retrieve the subnet ID
+    $subnetId = Get-SubnetId -networkResourceGroupName $networkResourceGroupName -vnetName $vnetName -subnetName $subnetName
 
-    [Parameter(Mandatory=$true)]
-    [string]$NetworkConnectionName
-)
+    # Deploy the network connection
+    Deploy-NetworkConnection -location $location -subnetId $subnetId -networkConnectionName $networkConnectionName -networkResourceGroupName $networkResourceGroupName
 
-Validate-Parameters -Location $Location -NetworkResourceGroupName $NetworkResourceGroupName -VnetName $VnetName -SubNetName $SubNetName -NetworkConnectionName $NetworkConnectionName
+    Write-Host "Deployment completed successfully."
+}
 
-Write-Host "Initiating the deployment in Resource Group: $NetworkResourceGroupName, Location: $Location."
-
-$subnetId = Get-SubnetId -NetworkResourceGroupName $NetworkResourceGroupName -VnetName $VnetName -SubNetName $SubNetName
-
-Deploy-NetworkConnection -Location $Location -NetworkResourceGroupName $NetworkResourceGroupName -NetworkConnectionName $NetworkConnectionName -SubnetId $subnetId
+# Execute the main function with all script arguments
+Create-NetworkConnection -location $location -networkResourceGroupName $networkResourceGroupName -vnetName $vnetName -subnetName $subnetName -networkConnectionName $networkConnectionName

@@ -98,7 +98,7 @@ invokeActionOnResource() {
     echo "Invoking an action on the resource..."
 
     az resource invoke-action \
-        --ids $(az resource show --name "${imageName}" --resource-group "${resourceGroupName}" --resource-type "Microsoft.VirtualMachineImages/imageTemplates" --query id --output tsv) \
+        --ids "$(az resource show --name "${imageName}" --resource-group "${resourceGroupName}" --resource-type "Microsoft.VirtualMachineImages/imageTemplates" --query id --output tsv)" \
         --action "Run"
 }
 

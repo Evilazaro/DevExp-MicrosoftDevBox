@@ -32,7 +32,6 @@ createVirtualNetworkAndSubnet() {
     local vnetName="$3"
     local subnetName="$4"
     local vnetAddressPrefix="10.0.0.0/16"
-    local subnetAddressPrefix="10.0.0.0/24"
 
     echo "Starting the creation of Virtual Network and Subnet..."
     echo "Creating Virtual Network: $vnetName in Resource Group: $networkResourceGroupName with address prefix: $vnetAddressPrefix..."
@@ -42,7 +41,8 @@ createVirtualNetworkAndSubnet() {
         --resource-group "$networkResourceGroupName" \
         --template-uri $TEMPLATE_FILE_URI \
         --parameters vNetName="$vnetName" \
-                     location="$location"; then
+                     location="$location" \
+                     ; then
         echo "Error: Failed to create Virtual Network and Subnet."
         exit 1
     fi
