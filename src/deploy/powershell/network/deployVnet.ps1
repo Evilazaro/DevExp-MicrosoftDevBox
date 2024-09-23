@@ -79,6 +79,11 @@ function Create-VirtualNetworkAndSubnet {
             --template-uri $templateFileUri `
             --parameters vNetName=$vnetName location=$location | Out-Null
 
+            while ((az network vnet show --resource-group $networkResourceGroupName --name $vnetName --query provisioningState -o tsv) -ne "Succeeded") {
+                Write-Host "Waiting for the vnet to be created..."
+                Start-Sleep -Seconds 20
+            }
+
         Write-Host "Virtual Network $vnetName and Subnet $subnetName have been created successfully in Resource Group $networkResourceGroupName."
     } catch {
         Write-Error "Error: Failed to create Virtual Network and Subnet."
