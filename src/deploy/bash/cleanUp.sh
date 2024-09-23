@@ -8,10 +8,6 @@ clear
 
 echo "Cleaning up the deployment environment..."
 
-# Constants Parameters
-readonly branch="main"
-readonly location="WestUS3"
-
 # Azure Resource Group Names Constants
 readonly devBoxResourceGroupName="petv2DevBox-rg"
 readonly imageGalleryResourceGroupName="petv2ImageGallery-rg"
@@ -21,19 +17,7 @@ readonly managementResourceGroupName="petv2DevBoxManagement-rg"
 subscriptionId=$(az account show --query id --output tsv)
 
 # Identity Parameters Constants
-readonly identityName="petv2DevBoxImgBldId"
 readonly customRoleName="petv2BuilderRole"
-
-# Image and DevCenter Parameters Constants
-readonly imageGalleryName="petv2ImageGallery"
-readonly frontEndImageName="frontEndVm"
-readonly backEndImageName="backEndVm"
-readonly devCenterName="petv2DevCenter"
-
-# Network Parameters Constants
-readonly vnetName="petv2Vnet"
-readonly subNetName="petv2SubNet"
-readonly networkConnectionName="devBoxNetworkConnection"
 
 # Function to delete a resource group
 deleteResourceGroup() {
