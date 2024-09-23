@@ -1,112 +1,103 @@
-#!/usr/bin/env pwsh
-
 <#
 .SYNOPSIS
-    Script to create a virtual network and subnet in Azure.
+    This script creates a virtual network and subnet in Azure.
 
 .DESCRIPTION
-    This script checks if the Azure CLI is installed, validates input parameters, and creates a virtual network and subnet in a specified resource group and location.
+    This script takes four parameters: the network resource group name, the location, the virtual network name, and the subnet name.
+    It creates a virtual network and subnet using an ARM template.
 
-.PARAMETER NetworkResourceGroupName
-    The name of the resource group containing the virtual network.
+.PARAMETER networkResourceGroupName
+    The name of the resource group where the virtual network will be created.
 
-.PARAMETER Location
-    The Azure region where the virtual network will be created.
+.PARAMETER location
+    The Azure location where the virtual network will be created.
 
-.PARAMETER VnetName
-    The name of the virtual network.
+.PARAMETER vnetName
+    The name of the virtual network to be created.
 
-.PARAMETER SubnetName
-    The name of the subnet within the virtual network.
+.PARAMETER subnetName
+    The name of the subnet to be created.
 
 .EXAMPLE
-    .\deployVnet.ps1 -NetworkResourceGroupName "myResourceGroup" -Location "EastUS" -VnetName "myVnet" -SubnetName "mySubnet"
+    .\DeployVnet.ps1 -networkResourceGroupName "myResourceGroup" -location "EastUS" -vnetName "myVnet" -subnetName "mySubnet"
 #>
 
+param (
+    [Parameter(Mandatory = $true)]
+    [string]$networkResourceGroupName,
+
+    [Parameter(Mandatory = $true)]
+    [string]$location,
+
+    [Parameter(Mandatory = $true)]
+    [string]$vnetName,
+
+    [Parameter(Mandatory = $true)]
+    [string]$subnetName
+)
+
 # Constants
-$Branch = "main"
-$TemplateFileUri = "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$Branch/src/deploy/ARMTemplates/network/vNet/vNetTemplate.json"
+$branch = "main"
+$templateFileUri = "https://raw.githubusercontent.com/Evilazaro/MicrosoftDevBox/$branch/src/deploy/ARMTemplates/network/vNet/vNetTemplate.json"
 
 # Function to display usage information
-function Display-Usage {
-    Write-Host "Usage: .\deployVnet.ps1 -NetworkResourceGroupName <networkResourceGroupName> -Location <location> -VnetName <vnetName> -SubnetName <subnetName>"
+function Show-Usage {
+    Write-Host "Usage: .\DeployVnet.ps1 -networkResourceGroupName <networkResourceGroupName> -location <location> -vnetName <vnetName> -subnetName <subnetName>"
     exit 1
 }
 
-# Function to validate input parameters
-function Validate-Parameters {
+# Function to ensure the correct number of arguments are passed
+function Ensure-ArgumentsPassed {
     param (
-        [string]$NetworkResourceGroupName,
-        [string]$Location,
-        [string]$VnetName,
-        [string]$SubnetName
+        [int]$argumentCount
     )
 
-    if (-not $NetworkResourceGroupName -or -not $Location -or -not $VnetName -or -not $SubnetName) {
-        Write-Host "Error: Missing required parameters."
-        Display-Usage
-    }
-}
-
-# Function to check if Azure CLI is installed
-function Check-AzureCliInstalled {
-    if (-not (Get-Command az -ErrorAction SilentlyContinue)) {
-        Write-Host "Error: 'az' command is not found. Please ensure Azure CLI is installed."
-        exit 1
-    } else {
-        Write-Host "'az' command is available. Continuing with the script..."
+    if ($argumentCount -ne 4) {
+        Write-Error "Error: Invalid number of arguments."
+        Show-Usage
     }
 }
 
 # Function to create a virtual network and subnet
 function Create-VirtualNetworkAndSubnet {
     param (
-        [string]$NetworkResourceGroupName,
-        [string]$Location,
-        [string]$VnetName,
-        [string]$SubnetName
+        [string]$networkResourceGroupName,
+        [string]$location,
+        [string]$vnetName,
+        [string]$subnetName
     )
 
     $vnetAddressPrefix = "10.0.0.0/16"
-    $subnetAddressPrefix = "10.0.0.0/24"
 
     Write-Host "Starting the creation of Virtual Network and Subnet..."
-    Write-Host "Creating Virtual Network: $VnetName in Resource Group: $NetworkResourceGroupName with address prefix: $vnetAddressPrefix..."
+    Write-Host "Creating Virtual Network: $vnetName in Resource Group: $networkResourceGroupName with address prefix: $vnetAddressPrefix..."
 
     try {
         az deployment group create `
-            --name $VnetName `
-            --resource-group $NetworkResourceGroupName `
-            --template-uri $TemplateFileUri `
-            --parameters vNetName=$VnetName `
-                         location=$Location `
-                         vNetAddressPrefix=$vnetAddressPrefix `
-                         subnetName=$SubnetName `
-                         subnetAddressPrefix=$subnetAddressPrefix | Out-Null
+            --name $vnetName `
+            --resource-group $networkResourceGroupName `
+            --template-uri $templateFileUri `
+            --parameters vNetName=$vnetName location=$location | Out-Null
 
-        Write-Host "Virtual Network $VnetName and Subnet $SubnetName have been created successfully in Resource Group $NetworkResourceGroupName."
-    }
-    catch {
-        Write-Host "Error: Failed to create Virtual Network and Subnet. $_"
+        Write-Host "Virtual Network $vnetName and Subnet $subnetName have been created successfully in Resource Group $networkResourceGroupName."
+    } catch {
+        Write-Error "Error: Failed to create Virtual Network and Subnet."
         exit 1
     }
 }
 
 # Main script execution
-param (
-    [Parameter(Mandatory=$true)]
-    [string]$NetworkResourceGroupName,
+function Deploy-Vnet {
+    param (
+        [string]$networkResourceGroupName,
+        [string]$location,
+        [string]$vnetName,
+        [string]$subnetName
+    )
 
-    [Parameter(Mandatory=$true)]
-    [string]$Location,
+    Ensure-ArgumentsPassed -argumentCount $PSCmdlet.MyInvocation.BoundParameters.Count
+    Create-VirtualNetworkAndSubnet -networkResourceGroupName $networkResourceGroupName -location $location -vnetName $vnetName -subnetName $subnetName
+}
 
-    [Parameter(Mandatory=$true)]
-    [string]$VnetName,
-
-    [Parameter(Mandatory=$true)]
-    [string]$SubnetName
-)
-
-Check-AzureCliInstalled
-Validate-Parameters -NetworkResourceGroupName $NetworkResourceGroupName -Location $Location -VnetName $VnetName -SubnetName $SubnetName
-Create-VirtualNetworkAndSubnet -NetworkResourceGroupName $NetworkResourceGroupName -Location $Location -VnetName $VnetName -SubnetName $SubnetName
+# Execute the main function with all script arguments
+Deploy-Vnet -networkResourceGroupName $networkResourceGroupName -location $location -vnetName $vnetName -subnetName $subnetName
