@@ -23,8 +23,6 @@ readonly customRoleName="petv2BuilderRole"
 
 # Image and DevCenter Parameters Constants
 readonly imageGalleryName="petv2ImageGallery"
-readonly frontEndImageName="frontEndVm"
-readonly backEndImageName="backEndVm"
 readonly devCenterName="petv2DevCenter"
 
 # Network Parameters Constants
