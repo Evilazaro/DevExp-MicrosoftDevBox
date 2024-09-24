@@ -24,9 +24,6 @@ vnetName="eShopPetVnet"
 subNetName="eShopPetSubNet"
 networkConnectionName="eShopPetNetworkConnection"
 
-# Build Image local to inform if the image should be built
-buildImage=${1:-false}
-scriptDemo=${2:-false}
 subscriptionId=$(az account show --query id --output tsv)
 
 # Function to delete a resource group
