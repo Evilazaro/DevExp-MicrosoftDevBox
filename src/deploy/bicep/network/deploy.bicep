@@ -2,30 +2,30 @@ param vnetName string
 param subnetName string
 param networkConnectionName string
 
-module deployVnet 'deployVnet.bicep' = {
-  name: 'deployVnet'
+module virtualNetwork 'deployVnet.bicep' = {
+  name: 'virtualNetwork'
   params: {
     vnetName: vnetName
     subnetName: subnetName
   }
 }
 
-output vnetId string = deployVnet.outputs.vnetId
-output subnetId string = deployVnet.outputs.subnetId
-output subnetName string = deployVnet.outputs.subnetName
-output addressPrefix string = deployVnet.outputs.addressPrefix
-output vnetName string = deployVnet.name
+output vnetId string = virtualNetwork.outputs.vnetId
+output subnetId string = virtualNetwork.outputs.subnetId
+output subnetName string = virtualNetwork.outputs.subnetName
+output addressPrefix string = virtualNetwork.outputs.addressPrefix
+output vnetName string = virtualNetwork.name
 
-module deployNetworkConnection 'createNetWorkConnection.bicep' = {
-  name: 'deployNetworkConnection'
+module networkConnection 'createNetWorkConnection.bicep' = {
+  name: 'networkConnection'
   params: {
     name: networkConnectionName
-    subnetId: deployVnet.outputs.subnetId
+    subnetId: virtualNetwork.outputs.subnetId
     location: resourceGroup().location
   }
   dependsOn: [
-    deployVnet
+    virtualNetwork
   ]
 }
 
-output networkConnectionName string = deployNetworkConnection.name
+output networkConnectionName string = networkConnection.name

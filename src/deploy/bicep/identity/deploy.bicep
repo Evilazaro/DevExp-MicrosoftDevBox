@@ -1,7 +1,7 @@
 param identityName string
 param customRoleName string
 
-module createIdentity 'deployIdentity.bicep' = {
+module identity 'deployIdentity.bicep' = {
   name: 'deployIdentity'
   params: {
     location: resourceGroup().location
@@ -9,10 +9,10 @@ module createIdentity 'deployIdentity.bicep' = {
   }
 }
 
-output identityName string = createIdentity.outputs.identityName
-output ideidentityClientIdntityId string = createIdentity.outputs.identityClientId
-output identityPrincipalId string = createIdentity.outputs.identityPrincipalId
-output identityResourceId string = createIdentity.outputs.identityResourceId
+output identityName string = identity.outputs.identityName
+output ideidentityClientIdntityId string = identity.outputs.identityClientId
+output identityPrincipalId string = identity.outputs.identityPrincipalId
+output identityResourceId string = identity.outputs.identityResourceId
 
 module deployCustomRole 'deployCustomRole.bicep' = {
   name: 'deployCustomRole'
@@ -20,7 +20,7 @@ module deployCustomRole 'deployCustomRole.bicep' = {
     customRoleName: customRoleName
   }
   dependsOn: [
-    createIdentity
+    identity
   ]
 }
 
@@ -31,7 +31,7 @@ module identityCustomRoleAssignment 'customRoleAssignment.bicep' = {
   name: 'identityCustomRoleAssignment'
   params: {
     customRoleName: deployCustomRole.outputs.customRoleName
-    identityId: createIdentity.outputs.identityPrincipalId
+    identityId: identity.outputs.identityPrincipalId
     customRoleId: deployCustomRole.outputs.customRoleId
   }
   dependsOn: [

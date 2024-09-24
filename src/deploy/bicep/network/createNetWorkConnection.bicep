@@ -2,7 +2,7 @@ param name string
 param subnetId string
 param location string
 
-resource networkConnection 'Microsoft.DevCenter/networkconnections@2023-04-01' = {
+resource DeployNetworkConnection 'Microsoft.DevCenter/networkconnections@2023-04-01' = {
   name: name
   location: location
   properties: {
@@ -12,5 +12,5 @@ resource networkConnection 'Microsoft.DevCenter/networkconnections@2023-04-01' =
   }
 }
 
-output networkConnectionName string = networkConnection.name
-output networkConnectionId string = networkConnection.id
+output networkConnectionName string = DeployNetworkConnection.name
+output networkConnectionId string = DeployNetworkConnection.id

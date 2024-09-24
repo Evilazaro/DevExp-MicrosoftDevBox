@@ -2,7 +2,7 @@ param customRoleName string
 param identityId string
 param customRoleId string
 
-resource customRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+resource deployCustomRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(subscription().subscriptionId, customRoleName)
   scope: resourceGroup()
   properties: {
@@ -12,8 +12,8 @@ resource customRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-0
   } 
 }
 
-output customRoleAssignmentName string = customRoleAssignment.name
-output customRoleAssignmentId string = customRoleAssignment.id
-output customRoleAssignmentScope string = customRoleAssignment.properties.scope
-output customRoleAssignmentPrincipalId string = customRoleAssignment.properties.principalId
-output customRoleAssignmentRoleDefinitionId string = customRoleAssignment.properties.roleDefinitionId
+output customRoleAssignmentName string = deployCustomRoleAssignment.name
+output customRoleAssignmentId string = deployCustomRoleAssignment.id
+output customRoleAssignmentScope string = deployCustomRoleAssignment.properties.scope
+output customRoleAssignmentPrincipalId string = deployCustomRoleAssignment.properties.principalId
+output customRoleAssignmentRoleDefinitionId string = deployCustomRoleAssignment.properties.roleDefinitionId

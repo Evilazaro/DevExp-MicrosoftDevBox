@@ -29,18 +29,18 @@ module computeGallery './computeGallery/deployComputeGallery.bicep' = {
 output computeGalleryId string = computeGallery.outputs.computeGalleryId
 output computeGalleryName string = computeGallery.outputs.computeGalleryName
 
-// module devCenter './devCenter/deployDevCenter.bicep' = {
-//   name: 'devCenter'
-//   params: {
-//     devCenterName: devCenterName
-//     devBoxDefinitionName: resourceId('Microsoft.Network/networkConnections', networkConnectionName)
-//     computeGalleryId: computeGallery.outputs.computeGalleryId
-//     location: resourceGroup().location
-//     networkConnectionName: networkConnectionName
-//     userIdentityId: identity.outputs.identityPrincipalId
-//     computeGalleryImageName: computeGalleryImageName
-//   }
-//   dependsOn: [
-//     computeGallery
-//   ]
-// }
+module devCenter './devCenter/deployDevCenter.bicep' = {
+  name: 'devCenter'
+  params: {
+    devCenterName: devCenterName
+    devBoxDefinitionName: resourceId('Microsoft.Network/networkConnections', networkConnectionName)
+    location: resourceGroup().location
+    networkConnectionName: networkConnectionName
+    identityName: identity.name
+    computeGalleryName: computeGalleryName
+    computeGalleryImageName: computeGalleryImageName
+  }
+  dependsOn: [
+    computeGallery
+  ]
+}

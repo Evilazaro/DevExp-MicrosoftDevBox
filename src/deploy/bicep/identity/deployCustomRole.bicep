@@ -1,6 +1,6 @@
 param customRoleName string
 
-resource customRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
+resource deployCustomRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
   name: guid(subscription().subscriptionId, customRoleName)
   properties: {
     roleName: customRoleName
@@ -27,5 +27,5 @@ resource customRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
   }
 }
 
-output customRoleName string = customRole.name
-output customRoleId string = customRole.id
+output customRoleName string = deployCustomRole.name
+output customRoleId string = deployCustomRole.id

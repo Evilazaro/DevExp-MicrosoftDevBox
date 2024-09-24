@@ -10,22 +10,22 @@ branch="main"
 location="WestUS3"
 
 # Azure Resource Group Names Constants
-devBoxResourceGroupName="petv2DevBox-rg"
-networkResourceGroupName="petv2NetworkConnectivity-rg"
-managementResourceGroupName="petv2DevBoxManagement-rg"
+devBoxResourceGroupName="eShopPetDevBox-rg"
+networkResourceGroupName="eShopPetNetworkConnectivity-rg"
+managementResourceGroupName="eShopPetDevBoxManagement-rg"
 
 # Identity Parameters Constants
-identityName="petv2DevBoxImgBldId"
-customRoleName="petv2BuilderRole"
+identityName="eShopPetDevBoxImgBldId"
+customRoleName="eShopPetBuilderRole"
 
 # Image and DevCenter Parameters Constants
-computeGalleryName="petv2ImageGallery"
-devCenterName="petv2DevCenter"
+computeGalleryName="eShopPetImageGallery"
+devCenterName="eShopPetDevCenter"
 
 # Network Parameters Constants
-vnetName="petv2Vnet"
-subNetName="petv2SubNet"
-networkConnectionName="devBoxNetworkConnection"
+vnetName="eShopPetVnet"
+subNetName="eShopPetSubNet"
+networkConnectionName="eShopPetNetworkConnection"
 
 # Build Image local to inform if the image should be built
 buildImage=${1:-false}
@@ -51,7 +51,7 @@ createResourceGroup() {
 
     echo "Creating Azure Resource Group: $resourceGroupName in $location"
 
-    if az group create --name "$resourceGroupName" --location "$location" --tags "division=petv2-Platform" "Environment=Prod" "offer=petv2-DevWorkstation-Service" "Team=Engineering" "solution=ContosoFabricDevWorkstation"; then
+    if az group create --name "$resourceGroupName" --location "$location" --tags "division=eShopPet-Platform" "Environment=Prod" "offer=eShopPet-DevWorkstation-Service" "Team=Engineering" "solution=ContosoFabricDevWorkstation"; then
         echo "Resource group '$resourceGroupName' created successfully."
     else
         echo "Error: Failed to create resource group '$resourceGroupName'."
@@ -156,7 +156,7 @@ deploy(){
     azureLogin
     deployResourcesOrganization
     deployNetworkResources "$networkResourceGroupName" "$vnetName" "$subNetName" "$networkConnectionName"
-    deployDevCenter "$devBoxResourceGroupName" "$devCenterName" "$networkConnectionName" "$identityName" "$customRoleName"
+    deployDevCenter "$devBoxResourceGroupName" "$devCenterName" "$networkConnectionName" "$identityName" "$customRoleName" "$computeGalleryName"
 }
 
 demoScript() {

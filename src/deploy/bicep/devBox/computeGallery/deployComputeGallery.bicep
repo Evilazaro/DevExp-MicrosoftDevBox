@@ -1,6 +1,6 @@
 param computeGalleryName string
 
-resource computeGallery 'Microsoft.Compute/galleries@2023-07-03' = {
+resource deployComputeGallery 'Microsoft.Compute/galleries@2023-07-03' = {
   name: computeGalleryName
   location: resourceGroup().location
   properties: {
@@ -8,5 +8,5 @@ resource computeGallery 'Microsoft.Compute/galleries@2023-07-03' = {
   }
 }
 
-output computeGalleryId string = computeGallery.id
-output computeGalleryName string = computeGallery.name
+output computeGalleryId string = deployComputeGallery.id
+output computeGalleryName string = deployComputeGallery.name
