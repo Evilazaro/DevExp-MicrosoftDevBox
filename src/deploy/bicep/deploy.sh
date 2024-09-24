@@ -134,7 +134,8 @@ deployNetwork() {
         --parameters \
             vnetName="$vnetName" \
             subnetName="$subNetName" \
-            networkConnectionName="$networkConnectionName"
+            networkConnectionName="$networkConnectionName" \
+            identityId="$identityId"
 
     if [[ $? -ne 0 ]]; then
         echo "Error: Failed to deploy network resources."
