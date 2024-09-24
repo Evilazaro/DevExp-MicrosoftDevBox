@@ -2,6 +2,7 @@ param devCenterName string
 param networkConnectionName string 
 param identityName string 
 param customRoleName string 
+param computeGalleryName string
 param computeGalleryImageName string
 
 module identity '../identity/deploy.bicep' = {
@@ -18,7 +19,7 @@ output userIdentityName string = identity.outputs.identityName
 module computeGallery './computeGallery/deployComputeGallery.bicep' = {
   name: 'computeGallery'
   params: {
-    computeGalleryName: computeGalleryImageName
+    computeGalleryName: computeGalleryName
   }
   dependsOn: [
     identity

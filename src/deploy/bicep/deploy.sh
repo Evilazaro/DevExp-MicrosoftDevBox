@@ -11,18 +11,15 @@ location="WestUS3"
 
 # Azure Resource Group Names Constants
 devBoxResourceGroupName="petv2DevBox-rg"
-imageGalleryResourceGroupName="petv2ImageGallery-rg"
-identityResourceGroupName="petv2IdentityDevBox-rg"
 networkResourceGroupName="petv2NetworkConnectivity-rg"
 managementResourceGroupName="petv2DevBoxManagement-rg"
 
 # Identity Parameters Constants
 identityName="petv2DevBoxImgBldId"
 customRoleName="petv2BuilderRole"
-identityId=''
 
 # Image and DevCenter Parameters Constants
-imageGalleryName="petv2ImageGallery"
+computeGalleryName="petv2ImageGallery"
 devCenterName="petv2DevCenter"
 
 # Network Parameters Constants
@@ -119,6 +116,7 @@ deployDevCenter() {
     local networkConnectionName="$3"
     local identityName="$4"
     local customRoleName="$5"
+    local computeGalleryName="$6"
 
     # Check if required parameters are provided
     if [[ -z "$devBoxResourceGroupName" || -z "$devCenterName" || -z "$networkConnectionName" || -z "$identityName" || -z "$customRoleName" ]]; then
@@ -140,6 +138,7 @@ deployDevCenter() {
             identityName="$identityName" \
             customRoleName="$customRoleName" \
             computeGalleryImageName="microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2" \
+            computeGalleryName="$computeGalleryName" \
         --verbose
 
     # Check if the deployment was successful
