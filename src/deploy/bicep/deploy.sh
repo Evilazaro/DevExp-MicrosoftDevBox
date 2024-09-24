@@ -10,7 +10,6 @@ branch="main"
 location="WestUS3"
 
 # Azure Resource Group Names Constants
-subscriptionName="$1"
 devBoxResourceGroupName="petv2DevBox-rg"
 imageGalleryResourceGroupName="petv2ImageGallery-rg"
 identityResourceGroupName="petv2IdentityDevBox-rg"
@@ -20,6 +19,7 @@ managementResourceGroupName="petv2DevBoxManagement-rg"
 # Identity Parameters Constants
 identityName="petv2DevBoxImgBldId"
 customRoleName="petv2BuilderRole"
+identityId=''
 
 # Image and DevCenter Parameters Constants
 imageGalleryName="petv2ImageGallery"
@@ -96,12 +96,15 @@ deployIdentity() {
         --template-file ./identity/deploy.bicep \
         --parameters \
             identityName="$identityName" \
-            customRoleName="$customRoleName"
+            customRoleName="$customRoleName" \
+            networkResourceGroupName="$networkResourceGroupName"
 
     if [[ $? -ne 0 ]]; then
         echo "Error: Failed to deploy identity resources."
         return 1
     fi
+
+    identityId=$(az identity show --name "$identityName" --resource-group "$identityResourceGroupName" --query principalId --output tsv)
 
     echo "Identity resources deployed successfully."
 }
@@ -114,6 +117,7 @@ deployNetwork() {
     local vnetName="$2"
     local subNetName="$3"
     local networkConnectionName="$4"
+    local identityId="$5"
 
     if [[ -z "$identityResourceGroupName" || -z "$vnetName" || -z "$subNetName" || -z "$networkConnectionName" ]]; then
         echo "Error: Missing required parameters."
@@ -174,7 +178,7 @@ deployMicrosoftDevBox() {
 
     deployIdentity "$identityResourceGroupName" "$identityName" "$customRoleName"
 
-    deployNetwork "$networkResourceGroupName" "$vnetName" "$subNetName" "$networkConnectionName"
+    deployNetwork "$networkResourceGroupName" "$vnetName" "$subNetName" "$networkConnectionName" "$identityId"
 }
 
 deployMicrosoftDevBox

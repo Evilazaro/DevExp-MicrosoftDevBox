@@ -92,8 +92,8 @@ deleteRoleAssignments() {
 
 # Function to clean up resources
 cleanUpResources() {
-    #deleteRoleAssignments
-    #deleteCustomRole "$customRoleName" 
+    deleteRoleAssignments
+    deleteCustomRole "$customRoleName" 
     deleteResourceGroup "$devBoxResourceGroupName"
     deleteResourceGroup "$imageGalleryResourceGroupName"
     deleteResourceGroup "$identityResourceGroupName"

@@ -31,10 +31,8 @@ output userAssignedIdentityName string = deployCustomRole.outputs.customRoleName
 module identityCustomRoleAssignment 'customRoleAssignment.bicep' = {
   name: 'identityCustomRoleAssignment'
   params: {
-    resourceGroupName: resourceGroup().name
-    customRoleId: deployCustomRole.outputs.customRoleId
     customRoleName: deployCustomRole.outputs.customRoleName
-    identityId: createIdentity.outputs.identityResourceId
+    identityId: createIdentity.outputs.identityPrincipalId
   }
 }
 
@@ -43,15 +41,3 @@ output customRoleAssignmentId string = identityCustomRoleAssignment.outputs.cust
 output customRoleAssignmentScope string = identityCustomRoleAssignment.outputs.customRoleAssignmentScope
 output customRoleAssignmentPrincipalId string = identityCustomRoleAssignment.outputs.customRoleAssignmentPrincipalId
 output customRoleAssignmentRoleDefinitionId string = identityCustomRoleAssignment.outputs.customRoleAssignmentRoleDefinitionId
-
-module networkCustomRoleAssignment 'customRoleAssignment.bicep' = {
-  name: 'networkCustomRoleAssignment'
-  params: {
-    resourceGroupName: networkResourceGroupName
-    customRoleId: deployCustomRole.outputs.customRoleId
-    customRoleName: deployCustomRole.outputs.customRoleName
-    identityId: createIdentity.outputs.identityResourceId
-  }
-}
-
-
