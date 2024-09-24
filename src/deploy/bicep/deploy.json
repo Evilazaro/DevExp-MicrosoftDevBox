@@ -1,0 +1,172 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.30.3.12046",
+      "templateHash": "4136955873558527041"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "createIdentity",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "identityName": {
+            "value": "myIdentity"
+          },
+          "location": {
+            "value": "eastus"
+          },
+          "customRoleName": {
+            "value": "myCustomRole"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.30.3.12046",
+              "templateHash": "555727136537850472"
+            }
+          },
+          "parameters": {
+            "identityName": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            },
+            "customRoleName": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/roleDefinitions",
+              "apiVersion": "2022-04-01",
+              "name": "[parameters('customRoleName')]",
+              "properties": {
+                "roleName": "[parameters('customRoleName')]",
+                "description": "Custom role for managing custom images",
+                "assignableScopes": [
+                  "[format('/subscriptions/{0}', subscription().subscriptionId)]"
+                ],
+                "permissions": [
+                  {
+                    "actions": [
+                      "Microsoft.Compute/galleries/images/write",
+                      "Microsoft.Compute/galleries/images/read",
+                      "Microsoft.Compute/galleries/images/delete",
+                      "Microsoft.Compute/galleries/images/versions/write",
+                      "Microsoft.Compute/galleries/images/versions/read",
+                      "Microsoft.Compute/galleries/images/versions/delete"
+                    ],
+                    "notActions": [],
+                    "dataActions": [],
+                    "notDataActions": []
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'createIdentity')]"
+              ]
+            },
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2022-04-01",
+              "name": "[guid(parameters('customRoleName'))]",
+              "properties": {
+                "principalId": "[reference(resourceId('Microsoft.Resources/deployments', 'createIdentity'), '2022-09-01').outputs.identityResourceId.value]",
+                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', parameters('customRoleName'))]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Authorization/roleDefinitions', parameters('customRoleName'))]",
+                "[resourceId('Microsoft.Resources/deployments', 'createIdentity')]"
+              ]
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2022-09-01",
+              "name": "createIdentity",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "identityName": {
+                    "value": "[parameters('identityName')]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.30.3.12046",
+                      "templateHash": "9593189490181953382"
+                    }
+                  },
+                  "parameters": {
+                    "identityName": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+                      "apiVersion": "2023-01-31",
+                      "name": "[parameters('identityName')]",
+                      "location": "[parameters('location')]"
+                    }
+                  ],
+                  "outputs": {
+                    "identityName": {
+                      "type": "string",
+                      "value": "[parameters('identityName')]"
+                    },
+                    "identityResourceId": {
+                      "type": "string",
+                      "value": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName'))]"
+                    },
+                    "identityPrincipalId": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName')), '2023-01-31').principalId]"
+                    },
+                    "identityClientId": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName')), '2023-01-31').clientId]"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": {
+            "customRoleId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Authorization/roleDefinitions', parameters('customRoleName'))]"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
