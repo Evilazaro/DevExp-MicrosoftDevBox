@@ -152,8 +152,11 @@ deployDevCenter() {
 
 
 deploy(){
+    
     clear
+    
     azureLogin
+    
     deployResourcesOrganization
     
     deployNetworkResources \
