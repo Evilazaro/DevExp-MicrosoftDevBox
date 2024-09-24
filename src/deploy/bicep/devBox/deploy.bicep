@@ -1,4 +1,5 @@
 param devCenterName string
+param devboxDefinitionName string
 param networkConnectionName string 
 param identityName string 
 param customRoleName string 
@@ -33,10 +34,10 @@ module devCenter './devCenter/deployDevCenter.bicep' = {
   name: 'devCenter'
   params: {
     devCenterName: devCenterName
-    devBoxDefinitionName: resourceId('Microsoft.Network/networkConnections', networkConnectionName)
+    devBoxDefinitionName: devboxDefinitionName
     location: resourceGroup().location
     networkConnectionName: networkConnectionName
-    identityName: identity.name
+    identityName: identity.outputs.identityName
     computeGalleryName: computeGalleryName
     computeGalleryImageName: computeGalleryImageName
   }

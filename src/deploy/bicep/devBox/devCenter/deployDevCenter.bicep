@@ -7,7 +7,7 @@ param computeGalleryName string
 param computeGalleryImageName string
 
 
-var identityId = format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{2}', subscription().subscriptionId, resourceGroup().name, identityName)
+var identityId = format('/subscriptions/{0}/resourcegroups/{1}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{2}', subscription().subscriptionId, resourceGroup().name, identityName)
 
 @description('Deploying DevCenter')
 resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' = {

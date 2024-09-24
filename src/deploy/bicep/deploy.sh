@@ -3,10 +3,7 @@
 # Exit immediately if a command exits with a non-zero status, treat unset variables as an error, and propagate errors in pipelines.
 set -euo pipefail
 
-echo "Deploying to Azure"
 
-# Constants Parameters
-branch="main"
 location="WestUS3"
 
 # Azure Resource Group Names Constants
@@ -33,10 +30,16 @@ scriptDemo=${2:-false}
 
 # Function to log in to Azure
 azureLogin() {
+    echo "Logging in to Azure using device code..."
 
-
+    # Attempt to log in to Azure
     az login --use-device-code
-    
+    if [[ $? -ne 0 ]]; then
+        echo "Error: Failed to log in to Azure."
+        return 1
+    fi
+
+    echo "Successfully logged in to Azure."
 }
 
 # Function to create an Azure resource group
@@ -68,8 +71,6 @@ deployResourcesOrganization() {
 
     demoScript
 }
-
-#!/bin/bash
 
 # Function to deploy network resources
 deployNetworkResources() {
@@ -107,21 +108,20 @@ deployNetworkResources() {
     echo "Network resources deployed successfully."
 }
 
-#!/bin/bash
-
 # Function to deploy Dev Center resources
 deployDevCenter() {
-    local devBoxResourceGroupName="$1"
-    local devCenterName="$2"
-    local networkConnectionName="$3"
-    local identityName="$4"
-    local customRoleName="$5"
+    local devCenterName="$1"
+    local devboxDefinitionName="$2"
+    local networkConnectionName="$3" 
+    local identityName="$4" 
+    local customRoleName="$5" 
     local computeGalleryName="$6"
+    local computeGalleryImageName="$7"
 
     # Check if required parameters are provided
-    if [[ -z "$devBoxResourceGroupName" || -z "$devCenterName" || -z "$networkConnectionName" || -z "$identityName" || -z "$customRoleName" ]]; then
+    if [[ -z "$devCenterName" || -z "$devboxDefinitionName" || -z "$networkConnectionName" || -z "$identityName" || -z "$customRoleName" || -z "$computeGalleryName" || -z "$computeGalleryImageName" ]]; then
         echo "Error: Missing required parameters."
-        echo "Usage: deployDevCenter <devBoxResourceGroupName> <devCenterName> <networkConnectionName> <identityName> <customRoleName>"
+        echo "Usage: deployDevCenter <devCenterName> <devboxDefinitionName> <networkConnectionName> <identityName> <customRoleName> <computeGalleryName> <computeGalleryImageName>"
         return 1
     fi
 
@@ -134,12 +134,12 @@ deployDevCenter() {
         --template-file ./devBox/deploy.bicep \
         --parameters \
             devCenterName="$devCenterName" \
+            devboxDefinitionName="$devboxDefinitionName" \
             networkConnectionName="$networkConnectionName" \
             identityName="$identityName" \
             customRoleName="$customRoleName" \
-            computeGalleryImageName="microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2" \
             computeGalleryName="$computeGalleryName" \
-        --verbose
+            computeGalleryImageName="$computeGalleryImageName" \
 
     # Check if the deployment was successful
     if [[ $? -ne 0 ]]; then
@@ -155,8 +155,20 @@ deploy(){
     clear
     azureLogin
     deployResourcesOrganization
-    deployNetworkResources "$networkResourceGroupName" "$vnetName" "$subNetName" "$networkConnectionName"
-    deployDevCenter "$devBoxResourceGroupName" "$devCenterName" "$networkConnectionName" "$identityName" "$customRoleName" "$computeGalleryName"
+    
+    deployNetworkResources \
+        "$networkResourceGroupName" \
+        "$vnetName" \
+        "$subNetName" \
+        "$networkConnectionName"
+    
+    deployDevCenter "$devCenterName" \
+        "eShopPetDevBox" \
+        "$networkConnectionName" \
+        "$identityName" \
+        "$customRoleName" \
+        "$computeGalleryName" \
+        "eShopPetDevBoxImage"
 }
 
 demoScript() {
