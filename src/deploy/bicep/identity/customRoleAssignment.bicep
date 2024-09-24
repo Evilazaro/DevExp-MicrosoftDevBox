@@ -1,12 +1,14 @@
 param customRoleName string
 param identityId string
+param customRoleId string
 
 resource customRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(subscription().subscriptionId, customRoleName)
+  scope: resourceGroup()
   properties: {
-    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', customRoleName)
+    roleDefinitionId: customRoleId
     principalId: identityId
-    scope: format('/subscriptions/{0}/resourcegroups/{1}', subscription().subscriptionId, resourceGroup().name)
+    principalType: 'ServicePrincipal'
   } 
 }
 

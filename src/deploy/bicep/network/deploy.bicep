@@ -1,17 +1,6 @@
 param vnetName string
 param subnetName string
 param networkConnectionName string
-param customRoleName string
-param identityId string
-
-module networkCustomRoleAssignment '../identity/customRoleAssignment.bicep' = {
-  name: 'networkCustomRoleAssignment'
-  params: {
-    customRoleName: customRoleName
-    identityId: identityId
-  }
-}
-
 
 module deployVnet 'deployVnet.bicep' = {
   name: 'deployVnet'
@@ -21,5 +10,22 @@ module deployVnet 'deployVnet.bicep' = {
   }
 }
 
-output vnetName string = deployVnet.outputs.subnetId
-output subnetId string = deployVnet.outputs.vnetId
+output vnetId string = deployVnet.outputs.vnetId
+output subnetId string = deployVnet.outputs.subnetId
+output subnetName string = deployVnet.outputs.subnetName
+output addressPrefix string = deployVnet.outputs.addressPrefix
+output vnetName string = deployVnet.name
+
+module deployNetworkConnection 'createNetWorkConnection.bicep' = {
+  name: 'deployNetworkConnection'
+  params: {
+    name: networkConnectionName
+    subnetId: deployVnet.outputs.subnetId
+    location: resourceGroup().location
+  }
+  dependsOn: [
+    deployVnet
+  ]
+}
+
+output networkConnectionName string = deployNetworkConnection.name

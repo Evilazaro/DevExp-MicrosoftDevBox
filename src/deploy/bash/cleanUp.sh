@@ -92,8 +92,6 @@ deleteRoleAssignments() {
 
 # Function to clean up resources
 cleanUpResources() {
-    deleteRoleAssignments
-    deleteCustomRole "$customRoleName" 
     deleteResourceGroup "$devBoxResourceGroupName"
     deleteResourceGroup "$imageGalleryResourceGroupName"
     deleteResourceGroup "$identityResourceGroupName"
@@ -102,6 +100,8 @@ cleanUpResources() {
     deleteResourceGroup "NetworkWatcherRG"
     deleteResourceGroup "Default-ActivityLogAlerts"
     deleteResourceGroup "DefaultResourceGroup-WUS2"
+    deleteRoleAssignments
+    deleteCustomRole "$customRoleName" 
 }
 
 # Main script execution

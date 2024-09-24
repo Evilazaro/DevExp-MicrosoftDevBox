@@ -1,6 +1,5 @@
 param identityName string
 param customRoleName string
-param networkResourceGroupName string
 
 module createIdentity 'deployIdentity.bicep' = {
   name: 'deployIdentity'
@@ -33,7 +32,11 @@ module identityCustomRoleAssignment 'customRoleAssignment.bicep' = {
   params: {
     customRoleName: deployCustomRole.outputs.customRoleName
     identityId: createIdentity.outputs.identityPrincipalId
+    customRoleId: deployCustomRole.outputs.customRoleId
   }
+  dependsOn: [
+    deployCustomRole
+  ]
 }
 
 output customRoleAssignmentName string = identityCustomRoleAssignment.outputs.customRoleAssignmentName

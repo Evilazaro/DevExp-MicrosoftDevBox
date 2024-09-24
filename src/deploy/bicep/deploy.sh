@@ -31,8 +31,8 @@ subNetName="petv2SubNet"
 networkConnectionName="devBoxNetworkConnection"
 
 # Build Image local to inform if the image should be built
-buildImage=${2:-false}
-scriptDemo=${3:-false}
+buildImage=${1:-false}
+scriptDemo=${2:-false}
 
 # Function to log in to Azure
 azureLogin() {
@@ -66,8 +66,6 @@ createResourceGroup() {
 deployResourcesOrganization() {
 
     createResourceGroup "$devBoxResourceGroupName"
-    createResourceGroup "$imageGalleryResourceGroupName"
-    createResourceGroup "$identityResourceGroupName"
     createResourceGroup "$networkResourceGroupName"
     createResourceGroup "$managementResourceGroupName"
 
@@ -76,73 +74,90 @@ deployResourcesOrganization() {
 
 #!/bin/bash
 
-# Function to deploy identity resources
-deployIdentity() {
-    local identityResourceGroupName="$1"
-    local identityName="$2"
-    local customRoleName="$3"
-
-    if [[ -z "$identityResourceGroupName" || -z "$identityName" || -z "$customRoleName" ]]; then
-        echo "Error: Missing required parameters."
-        echo "Usage: deployIdentity <identityResourceGroupName> <identityName> <customRoleName>"
-        return 1
-    fi
-
-    echo "Deploying identity resources to resource group: $identityResourceGroupName"
-
-    az deployment group create \
-        --name "DeployDevBox-Identity" \
-        --resource-group "$identityResourceGroupName" \
-        --template-file ./identity/deploy.bicep \
-        --parameters \
-            identityName="$identityName" \
-            customRoleName="$customRoleName" \
-            networkResourceGroupName="$networkResourceGroupName"
-
-    if [[ $? -ne 0 ]]; then
-        echo "Error: Failed to deploy identity resources."
-        return 1
-    fi
-
-    identityId=$(az identity show --name "$identityName" --resource-group "$identityResourceGroupName" --query principalId --output tsv)
-
-    echo "Identity resources deployed successfully."
-}
-
-#!/bin/bash
-
 # Function to deploy network resources
-deployNetwork() {
-    local identityResourceGroupName="$1"
+deployNetworkResources() {
+    local networkResourceGroupName="$1"
     local vnetName="$2"
     local subNetName="$3"
     local networkConnectionName="$4"
-    local identityId="$5"
 
-    if [[ -z "$identityResourceGroupName" || -z "$vnetName" || -z "$subNetName" || -z "$networkConnectionName" ]]; then
+    # Check if required parameters are provided
+    if [[ -z "$networkResourceGroupName" || -z "$vnetName" || -z "$subNetName" || -z "$networkConnectionName" ]]; then
         echo "Error: Missing required parameters."
-        echo "Usage: deployNetwork <identityResourceGroupName> <vnetName> <subNetName> <networkConnectionName>"
+        echo "Usage: deployNetworkResources <networkResourceGroupName> <vnetName> <subNetName> <networkConnectionName>"
         return 1
     fi
 
-    echo "Deploying network resources to resource group: $identityResourceGroupName"
+    echo "Deploying network resources to resource group: $networkResourceGroupName"
 
+    # Execute the Azure deployment command
     az deployment group create \
-        --name "DeployDevBox-Network" \
-        --resource-group "$identityResourceGroupName" \
+        --name "MicrosoftDevBox-NetworkDeployment" \
+        --resource-group "$networkResourceGroupName" \
         --template-file ./network/deploy.bicep \
         --parameters \
             vnetName="$vnetName" \
             subnetName="$subNetName" \
             networkConnectionName="$networkConnectionName" \
-            identityId="$identityId"
+        --verbose
 
+    # Check if the deployment was successful
     if [[ $? -ne 0 ]]; then
         echo "Error: Failed to deploy network resources."
         return 1
     fi
 
     echo "Network resources deployed successfully."
+}
+
+#!/bin/bash
+
+# Function to deploy Dev Center resources
+deployDevCenter() {
+    local devBoxResourceGroupName="$1"
+    local devCenterName="$2"
+    local networkConnectionName="$3"
+    local identityName="$4"
+    local customRoleName="$5"
+
+    # Check if required parameters are provided
+    if [[ -z "$devBoxResourceGroupName" || -z "$devCenterName" || -z "$networkConnectionName" || -z "$identityName" || -z "$customRoleName" ]]; then
+        echo "Error: Missing required parameters."
+        echo "Usage: deployDevCenter <devBoxResourceGroupName> <devCenterName> <networkConnectionName> <identityName> <customRoleName>"
+        return 1
+    fi
+
+    echo "Deploying Dev Center resources to resource group: $devBoxResourceGroupName"
+
+    # Execute the Azure deployment command
+    az deployment group create \
+        --name "MicrosoftDevBox-DevCenterDeployment" \
+        --resource-group "$devBoxResourceGroupName" \
+        --template-file ./devBox/deploy.bicep \
+        --parameters \
+            devCenterName="$devCenterName" \
+            networkConnectionName="$networkConnectionName" \
+            identityName="$identityName" \
+            customRoleName="$customRoleName" \
+            computeGalleryImageName="microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2" \
+        --verbose
+
+    # Check if the deployment was successful
+    if [[ $? -ne 0 ]]; then
+        echo "Error: Failed to deploy Dev Center resources."
+        return 1
+    fi
+
+    echo "Dev Center resources deployed successfully."
+}
+
+
+deploy(){
+    clear
+    azureLogin
+    deployResourcesOrganization
+    deployNetworkResources "$networkResourceGroupName" "$vnetName" "$subNetName" "$networkConnectionName"
+    deployDevCenter "$devBoxResourceGroupName" "$devCenterName" "$networkConnectionName" "$identityName" "$customRoleName"
 }
 
 demoScript() {
@@ -158,30 +173,4 @@ demoScript() {
     fi
 }
 
-
-# Main function to deploy Microsoft DevBox
-deployMicrosoftDevBox() {
-    clear
-
-    echo "Starting Deployment..."
-    azureLogin
-
-    local subscriptionId
-    subscriptionId=$(az account show --query id --output tsv)
-    if [[ $? -ne 0 ]]; then
-        echo "Error: Failed to retrieve subscription ID."
-        exit 1
-    fi
-
-    echo "The Subscription ID is: $subscriptionId"
-
-    deployResourcesOrganization
-
-    deployIdentity "$identityResourceGroupName" "$identityName" "$customRoleName"
-
-    deployNetwork "$networkResourceGroupName" "$vnetName" "$subNetName" "$networkConnectionName" "$identityId"
-}
-
-deployMicrosoftDevBox
-
-clear
+deploy
