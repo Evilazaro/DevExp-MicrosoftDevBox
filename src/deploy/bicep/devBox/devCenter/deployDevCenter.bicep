@@ -5,10 +5,12 @@ param identityName string
 param computeGalleryName string
 param networkResourceGroupName string
 
-// var identityId = format('/subscriptions/{0}/resourcegroups/{1}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{2}', subscription().subscriptionId, resourceGroup().name, identityName)
-
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
   name: identityName
+}
+
+resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
+  name: 'logAnalyticsWorkspaceName'
 }
 
 @description('Deploying DevCenter')
@@ -31,6 +33,23 @@ output devCenterId string = deployDevCenter.id
 output devCenterName string = deployDevCenter.name
 output devCenterIdentityId string = managedIdentity.id
 
+resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'eShopDiagnosticSettings'
+  scope: deployDevCenter
+  properties: {
+    logs: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+        retentionPolicy: {
+          enabled: true
+          days: 30
+        }
+      }
+    ]
+  }
+}
+
 resource devCenterCatalogs 'Microsoft.DevCenter/devcenters/catalogs@2024-02-01' = {
   parent: deployDevCenter
   name: 'eShopDevCenterCatalog'
@@ -50,7 +69,12 @@ resource devCenterNetworkConnection 'Microsoft.DevCenter/devcenters/attachednetw
   parent: deployDevCenter
   name: networkConnectionName
   properties: {
-    networkConnectionId: format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/networkConnections/{2}', subscription().subscriptionId, networkResourceGroupName, networkConnectionName)
+    networkConnectionId: format(
+      '/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/networkConnections/{2}',
+      subscription().subscriptionId,
+      networkResourceGroupName,
+      networkConnectionName
+    )
   }
 }
 
@@ -68,7 +92,6 @@ resource devCenterComputeGallery 'Microsoft.DevCenter/devcenters/galleries@2024-
 output devCenterName_computeGalleryImage_id string = devCenterComputeGallery.id
 output devCenterName_computeGalleryImage_name string = devCenterComputeGallery.name
 
-
 resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
   name: 'eShopPet-BackEndEngineer'
   location: resourceGroup().location
@@ -76,7 +99,13 @@ resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitio
   properties: {
     hibernateSupport: 'true'
     imageReference: {
-      id: format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/devcenters/{2}/galleries/Default/images/{3}', subscription().subscriptionId, resourceGroup().name, devCenterName, 'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2')
+      id: format(
+        '/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/devcenters/{2}/galleries/Default/images/{3}',
+        subscription().subscriptionId,
+        resourceGroup().name,
+        devCenterName,
+        'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2'
+      )
     }
     osStorageType: 'ssd_512gb'
     sku: {
@@ -97,7 +126,13 @@ resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefiniti
   properties: {
     hibernateSupport: 'true'
     imageReference: {
-      id: format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/devcenters/{2}/galleries/Default/images/{3}', subscription().subscriptionId, resourceGroup().name, devCenterName, 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365')
+      id: format(
+        '/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/devcenters/{2}/galleries/Default/images/{3}',
+        subscription().subscriptionId,
+        resourceGroup().name,
+        devCenterName,
+        'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
+      )
     }
     osStorageType: 'ssd_512gb'
     sku: {
@@ -143,7 +178,6 @@ resource backEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
 output backEndPoolId string = backEndPool.id
 output backEndPoolName string = backEndPool.name
 
-
 resource frontEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
   name: 'frontEndPool'
   location: resourceGroup().location
@@ -162,4 +196,3 @@ resource frontEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
 
 output frontEndPoolId string = backEndPool.id
 output frontEndPoolName string = backEndPool.name
-

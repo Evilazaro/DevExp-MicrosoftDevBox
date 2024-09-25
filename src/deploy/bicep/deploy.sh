@@ -28,6 +28,9 @@ networkConnectionName="eShopPetNetworkConnection"
 buildImage=${1:-false}
 scriptDemo=${2:-false}
 
+# Management Parameters constants
+logAnalyticsWorkspaceName="eShopPetDevBoxLogAnalytics"
+
 # Function to log in to Azure
 azureLogin() {
     echo "Logging in to Azure using device code..."
@@ -69,6 +72,39 @@ deployResourcesOrganization() {
     createResourceGroup "$networkResourceGroupName"
     createResourceGroup "$managementResourceGroupName"
 
+    demoScript
+}
+
+# Function to deploy Log Analytics Workspace
+deployLogAnalytics() {
+    local managementResourceGroupName="$1"
+    local logAnalyticsWorkspaceName="$2"
+
+    # Check if required parameters are provided
+    if [[ -z "$managementResourceGroupName" || -z "$logAnalyticsWorkspaceName" ]]; then
+        echo "Error: Missing required parameters."
+        echo "Usage: deployLogAnalytics <managementResourceGroupName> <logAnalyticsWorkspaceName>"
+        return 1
+    fi
+
+    echo "Deploying Log Analytics Workspace to resource group: $managementResourceGroupName"
+
+    # Execute the Azure deployment command
+    az deployment group create \
+        --name "MicrosoftDevBox-LogAnalytics-Deployment" \
+        --resource-group "$managementResourceGroupName" \
+        --template-file ./management/deploy.bicep \
+        --parameters \
+            logAnalyticsWorkspaceName="$logAnalyticsWorkspaceName" \
+        --verbose
+
+    # Check if the deployment was successful
+    if [[ $? -ne 0 ]]; then
+        echo "Error: Failed to deploy Log Analytics Workspace."
+        return 1
+    fi
+
+    echo "Log Analytics Workspace deployed successfully."
     demoScript
 }
 
@@ -166,6 +202,10 @@ deploy(){
     azureLogin
     
     deployResourcesOrganization
+
+    deployLogAnalytics \
+        "$managementResourceGroupName" \
+        "$logAnalyticsWorkspaceName"
     
     deployNetworkResources \
         "$networkResourceGroupName" \
