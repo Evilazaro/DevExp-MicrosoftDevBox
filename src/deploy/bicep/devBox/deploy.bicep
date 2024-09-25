@@ -5,6 +5,7 @@ param identityName string
 param customRoleName string 
 param computeGalleryName string
 param computeGalleryImageName string
+param networkResourceGroupName string
 
 module identity '../identity/deploy.bicep' = {
   name: 'identity'
@@ -40,6 +41,7 @@ module devCenter './devCenter/deployDevCenter.bicep' = {
     identityName: identity.outputs.identityName
     computeGalleryName: computeGalleryName
     computeGalleryImageName: computeGalleryImageName
+    networkResourceGroupName: networkResourceGroupName
   }
   dependsOn: [
     computeGallery

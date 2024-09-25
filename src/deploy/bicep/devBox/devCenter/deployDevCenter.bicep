@@ -5,9 +5,13 @@ param networkConnectionName string
 param identityName string
 param computeGalleryName string
 param computeGalleryImageName string
+param networkResourceGroupName string
 
+// var identityId = format('/subscriptions/{0}/resourcegroups/{1}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{2}', subscription().subscriptionId, resourceGroup().name, identityName)
 
-var identityId = format('/subscriptions/{0}/resourcegroups/{1}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{2}', subscription().subscriptionId, resourceGroup().name, identityName)
+resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
+  name: identityName
+}
 
 @description('Deploying DevCenter')
 resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' = {
@@ -16,7 +20,7 @@ resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' = {
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: {
-      '${identityId}': {}
+      '${managedIdentity.id}': {}
     }
   }
   properties: {}
@@ -24,65 +28,65 @@ resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' = {
 
 output devCenterId string = deployDevCenter.id
 output devCenterName string = deployDevCenter.name
-output devCenterIdentityId string = identityId
+output devCenterIdentityId string = managedIdentity.id
 
-// resource devCenterName_quickstart_devbox_tasks 'Microsoft.DevCenter/devcenters/catalogs@2024-02-01' = {
-//   parent: deployDevCenter
-//   name: 'quickstart-devbox-tasks'
-//   properties: {
-//     gitHub: {
-//       uri: 'https://github.com/Evilazaro/MicrosoftDevBox.git'
-//       branch: 'main'
-//       path: 'src/customizations/tasks'
-//     }
-//   }
-// }
+resource devCenterCatalogs 'Microsoft.DevCenter/devcenters/catalogs@2024-02-01' = {
+  parent: deployDevCenter
+  name: 'eShopDevCenterCatalog'
+  properties: {
+    gitHub: {
+      uri: 'https://github.com/Evilazaro/MicrosoftDevBox.git'
+      branch: 'main'
+      path: 'src/customizations/tasks'
+    }
+  }
+}
 
-// output devCenterName_quickstart_devbox_tasks_id string = devCenterName_quickstart_devbox_tasks.id
-// output devCenterName_quickstart_devbox_tasks_name string = devCenterName_quickstart_devbox_tasks.name
+output devCenterName_quickstart_devbox_tasks_id string = devCenterCatalogs.id
+output devCenterName_quickstart_devbox_tasks_name string = devCenterCatalogs.name
 
-// resource devCenterName_networkConnection 'Microsoft.DevCenter/devcenters/attachednetworks@2024-02-01' = {
-//   parent: deployDevCenter
-//   name: networkConnectionName
-//   properties: {
-//     networkConnectionId: resourceId('Microsoft.Network/connections', networkConnectionName)
-//   }
-// }
+resource devCenterNetworkConnection 'Microsoft.DevCenter/devcenters/attachednetworks@2024-02-01' = {
+  parent: deployDevCenter
+  name: networkConnectionName
+  properties: {
+    networkConnectionId: format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/networkConnections/{2}', subscription().subscriptionId, networkResourceGroupName, networkConnectionName)
+  }
+}
 
-// output devCenterName_networkConnection_id string = devCenterName_networkConnection.id
-// output devCenterName_networkConnection_name string = devCenterName_networkConnection.name
+output devCenterName_networkConnection_id string = devCenterNetworkConnection.id
+output devCenterName_networkConnection_name string = devCenterNetworkConnection.name
 
-// resource devCenterName_computeGalleryImage 'Microsoft.DevCenter/devcenters/galleries@2024-02-01' = {
-//   parent: deployDevCenter
-//   name: computeGalleryName
-//   properties: {
-//     galleryResourceId: format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/devcenters/{2}/galleries/{3}', subscription().subscriptionId, resourceGroup().name, devCenterName, computeGalleryName)
-//   }
-// }
+resource devCenterNameComputeGalleryImage 'Microsoft.DevCenter/devcenters/galleries@2024-02-01' = {
+  parent: deployDevCenter
+  name: computeGalleryName
+  properties: {
+    galleryResourceId: format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/devcenters/galleries/{2}', subscription().subscriptionId, resourceGroup().name, computeGalleryName)
+  }
+}
 
-// output devCenterName_computeGalleryImage_id string = devCenterName_computeGalleryImage.id
-// output devCenterName_computeGalleryImage_name string = devCenterName_computeGalleryImage.name
+output devCenterName_computeGalleryImage_id string = devCenterNameComputeGalleryImage.id
+output devCenterName_computeGalleryImage_name string = devCenterNameComputeGalleryImage.name
 
-// resource devBoxDefinition 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
-//   name: devBoxDefinitionName
-//   location: resourceGroup().location
-//   parent: deployDevCenter
-//   properties: {
-//     hibernateSupport: 'true'
-//     imageReference: {
-//       id: format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/devcenters/{2}/galleries/Default/images/{3}', subscription().subscriptionId, resourceGroup().name, devCenterName, computeGalleryImageName)
-//     }
-//     osStorageType: 'ssd_512gb'
-//     sku: {
-//       capacity: 10
-//       family: 'string'
-//       name: 'general_i_32c128gb512ssd_v2'
-//     }
-//   }
-// }
+resource devBoxDefinition 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
+  name: devBoxDefinitionName
+  location: resourceGroup().location
+  parent: deployDevCenter
+  properties: {
+    hibernateSupport: 'true'
+    imageReference: {
+      id: format('/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/devcenters/{2}/galleries/Default/images/{3}', subscription().subscriptionId, resourceGroup().name, devCenterName, computeGalleryImageName)
+    }
+    osStorageType: 'ssd_512gb'
+    sku: {
+      capacity: 10
+      family: 'string'
+      name: 'general_i_32c128gb512ssd_v2'
+    }
+  }
+}
 
-// output devBoxDefinitionId string = devBoxDefinition.id
-// output devBoxDefinitionName string = devBoxDefinition.name
+output devBoxDefinitionId string = devBoxDefinition.id
+output devBoxDefinitionName string = devBoxDefinition.name
 
 // resource project 'Microsoft.DevCenter/projects@2024-02-01' = {
 //   name: 'eShop'

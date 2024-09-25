@@ -90,7 +90,7 @@ deployNetworkResources() {
 
     # Execute the Azure deployment command
     az deployment group create \
-        --name "MicrosoftDevBox-NetworkDeployment" \
+        --name "MicrosoftDevBox-Networ-kDeployment" \
         --resource-group "$networkResourceGroupName" \
         --template-file ./network/deploy.bicep \
         --parameters \
@@ -117,11 +117,12 @@ deployDevCenter() {
     local customRoleName="$5" 
     local computeGalleryName="$6"
     local computeGalleryImageName="$7"
+    local networkResourceGroupName="$8"
 
     # Check if required parameters are provided
-    if [[ -z "$devCenterName" || -z "$devboxDefinitionName" || -z "$networkConnectionName" || -z "$identityName" || -z "$customRoleName" || -z "$computeGalleryName" || -z "$computeGalleryImageName" ]]; then
+    if [[ -z "$devCenterName" || -z "$devboxDefinitionName" || -z "$networkConnectionName" || -z "$identityName" || -z "$customRoleName" || -z "$computeGalleryName" || -z "$computeGalleryImageName" || -z "$networkResourceGroupName" ]]; then
         echo "Error: Missing required parameters."
-        echo "Usage: deployDevCenter <devCenterName> <devboxDefinitionName> <networkConnectionName> <identityName> <customRoleName> <computeGalleryName> <computeGalleryImageName>"
+        echo "Usage: deployDevCenter <devCenterName> <devboxDefinitionName> <networkConnectionName> <identityName> <customRoleName> <computeGalleryName> <computeGalleryImageName> <networkResourceGroupName>"
         return 1
     fi
 
@@ -129,7 +130,7 @@ deployDevCenter() {
 
     # Execute the Azure deployment command
     az deployment group create \
-        --name "MicrosoftDevBox-DevCenterDeployment" \
+        --name "MicrosoftDevBox-DevCenter-Deployment" \
         --resource-group "$devBoxResourceGroupName" \
         --template-file ./devBox/deploy.bicep \
         --parameters \
@@ -140,6 +141,7 @@ deployDevCenter() {
             customRoleName="$customRoleName" \
             computeGalleryName="$computeGalleryName" \
             computeGalleryImageName="$computeGalleryImageName" \
+            networkResourceGroupName="$networkResourceGroupName" 
 
     # Check if the deployment was successful
     if [[ $? -ne 0 ]]; then
@@ -148,6 +150,11 @@ deployDevCenter() {
     fi
 
     echo "Dev Center resources deployed successfully."
+}
+
+buildImages()
+{
+    echo "Building the image..."
 }
 
 
@@ -171,7 +178,8 @@ deploy(){
         "$identityName" \
         "$customRoleName" \
         "$computeGalleryName" \
-        "eShopPetDevBoxImage"
+        "microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2" \
+        "$networkResourceGroupName"
 }
 
 demoScript() {

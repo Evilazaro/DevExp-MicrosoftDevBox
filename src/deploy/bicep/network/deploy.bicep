@@ -2,7 +2,7 @@ param vnetName string
 param subnetName string
 param networkConnectionName string
 
-module virtualNetwork 'deployVnet.bicep' = {
+module virtualNetwork './virtualNetwork/deployVnet.bicep' = {
   name: 'virtualNetwork'
   params: {
     vnetName: vnetName
@@ -16,7 +16,7 @@ output subnetName string = virtualNetwork.outputs.subnetName
 output addressPrefix string = virtualNetwork.outputs.addressPrefix
 output vnetName string = virtualNetwork.name
 
-module networkConnection 'createNetWorkConnection.bicep' = {
+module networkConnection './networkConnection/createNetWorkConnection.bicep' = {
   name: 'networkConnection'
   params: {
     name: networkConnectionName
