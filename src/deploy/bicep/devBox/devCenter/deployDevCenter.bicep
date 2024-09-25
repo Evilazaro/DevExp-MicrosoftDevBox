@@ -34,7 +34,7 @@ output devCenterName string = deployDevCenter.name
 output devCenterIdentityId string = managedIdentity.id
 
 resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'diagnosticSettings'
+  name: 'eShopDiagnosticSettings'
   scope: deployDevCenter
   properties: {
     logs: [

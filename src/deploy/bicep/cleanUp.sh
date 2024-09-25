@@ -4,25 +4,13 @@
 set -euo pipefail
 
 
-location="WestUS3"
-
 # Azure Resource Group Names Constants
 devBoxResourceGroupName="eShopPetDevBox-rg"
 networkResourceGroupName="eShopPetNetworkConnectivity-rg"
 managementResourceGroupName="eShopPetDevBoxManagement-rg"
 
 # Identity Parameters Constants
-identityName="eShopPetDevBoxImgBldId"
 customRoleName="eShopPetBuilderRole"
-
-# Image and DevCenter Parameters Constants
-computeGalleryName="eShopPetImageGallery"
-devCenterName="eShopPetDevCenter"
-
-# Network Parameters Constants
-vnetName="eShopPetVnet"
-subNetName="eShopPetSubNet"
-networkConnectionName="eShopPetNetworkConnection"
 
 subscriptionId=$(az account show --query id --output tsv)
 
