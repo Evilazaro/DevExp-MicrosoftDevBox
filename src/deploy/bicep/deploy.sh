@@ -128,6 +128,8 @@ deployDevCenter() {
 
     echo "Deploying Dev Center resources to resource group: $devBoxResourceGroupName"
 
+    currentUser=$(az ad signed-in-user show --query id -o tsv)
+
     # Execute the Azure deployment command
     az deployment group create \
         --name "MicrosoftDevBox-DevCenter-Deployment" \
@@ -139,7 +141,8 @@ deployDevCenter() {
             identityName="$identityName" \
             customRoleName="$customRoleName" \
             computeGalleryName="$computeGalleryName" \
-            networkResourceGroupName="$networkResourceGroupName" 
+            networkResourceGroupName="$networkResourceGroupName" \
+            currentUser="$currentUser" 
 
     # Check if the deployment was successful
     if [[ $? -ne 0 ]]; then

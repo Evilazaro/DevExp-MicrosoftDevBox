@@ -21,6 +21,9 @@ resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' = {
       '${managedIdentity.id}': {}
     }
   }
+  dependsOn: [
+    managedIdentity
+  ]
   properties: {}
 }
 

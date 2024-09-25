@@ -1,5 +1,6 @@
 param identityName string
 param customRoleName string
+param currentUser string
 
 module identity 'deployIdentity.bicep' = {
   name: 'deployIdentity'
@@ -32,6 +33,7 @@ module identityCustomRoleAssignment 'customRoleAssignment.bicep' = {
   params: {
     customRoleName: customRole.outputs.customRoleName
     identityId: identity.outputs.identityPrincipalId
+    currentUser: currentUser
     customRoleId: customRole.outputs.customRoleId
   }
   dependsOn: [
