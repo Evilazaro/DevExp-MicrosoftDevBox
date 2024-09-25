@@ -3,21 +3,28 @@
 # Exit immediately if a command exits with a non-zero status, treat unset variables as an error, and propagate errors in pipelines.
 set -euo pipefail
 
-# Clear the terminal screen
-clear
 
-echo "Cleaning up the deployment environment..."
+location="WestUS3"
 
 # Azure Resource Group Names Constants
-readonly devBoxResourceGroupName="petv2DevBox-rg"
-readonly imageGalleryResourceGroupName="petv2ImageGallery-rg"
-readonly identityResourceGroupName="petv2IdentityDevBox-rg"
-readonly networkResourceGroupName="petv2NetworkConnectivity-rg"
-readonly managementResourceGroupName="petv2DevBoxManagement-rg"
-subscriptionId=$(az account show --query id --output tsv)
+devBoxResourceGroupName="eShopPetDevBox-rg"
+networkResourceGroupName="eShopPetNetworkConnectivity-rg"
+managementResourceGroupName="eShopPetDevBoxManagement-rg"
 
 # Identity Parameters Constants
-readonly customRoleName="petv2BuilderRole"
+identityName="eShopPetDevBoxImgBldId"
+customRoleName="eShopPetBuilderRole"
+
+# Image and DevCenter Parameters Constants
+computeGalleryName="eShopPetImageGallery"
+devCenterName="eShopPetDevCenter"
+
+# Network Parameters Constants
+vnetName="eShopPetVnet"
+subNetName="eShopPetSubNet"
+networkConnectionName="eShopPetNetworkConnection"
+
+subscriptionId=$(az account show --query id --output tsv)
 
 # Function to delete a resource group
 deleteResourceGroup() {
@@ -92,16 +99,14 @@ deleteRoleAssignments() {
 
 # Function to clean up resources
 cleanUpResources() {
-    deleteRoleAssignments
-    deleteCustomRole "$customRoleName" 
     deleteResourceGroup "$devBoxResourceGroupName"
-    deleteResourceGroup "$imageGalleryResourceGroupName"
-    deleteResourceGroup "$identityResourceGroupName"
     deleteResourceGroup "$networkResourceGroupName"
     deleteResourceGroup "$managementResourceGroupName"
     deleteResourceGroup "NetworkWatcherRG"
     deleteResourceGroup "Default-ActivityLogAlerts"
     deleteResourceGroup "DefaultResourceGroup-WUS2"
+    deleteRoleAssignments
+    deleteCustomRole "$customRoleName" 
 }
 
 # Main script execution
