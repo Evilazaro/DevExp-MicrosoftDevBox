@@ -106,6 +106,8 @@ deployNetworkResources() {
     fi
 
     echo "Network resources deployed successfully."
+
+    demoScript
 }
 
 # Function to deploy Dev Center resources
