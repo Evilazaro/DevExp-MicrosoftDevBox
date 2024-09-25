@@ -111,18 +111,16 @@ deployNetworkResources() {
 # Function to deploy Dev Center resources
 deployDevCenter() {
     local devCenterName="$1"
-    local devboxDefinitionName="$2"
-    local networkConnectionName="$3" 
-    local identityName="$4" 
-    local customRoleName="$5" 
-    local computeGalleryName="$6"
-    local computeGalleryImageName="$7"
-    local networkResourceGroupName="$8"
+    local networkConnectionName="$2" 
+    local identityName="$3" 
+    local customRoleName="$4" 
+    local computeGalleryName="$5"
+    local networkResourceGroupName="$6"
 
     # Check if required parameters are provided
-    if [[ -z "$devCenterName" || -z "$devboxDefinitionName" || -z "$networkConnectionName" || -z "$identityName" || -z "$customRoleName" || -z "$computeGalleryName" || -z "$computeGalleryImageName" || -z "$networkResourceGroupName" ]]; then
+    if [[ -z "$devCenterName" || -z "$networkConnectionName" || -z "$identityName" || -z "$customRoleName" || -z "$computeGalleryName" || -z "$networkResourceGroupName" ]]; then
         echo "Error: Missing required parameters."
-        echo "Usage: deployDevCenter <devCenterName> <devboxDefinitionName> <networkConnectionName> <identityName> <customRoleName> <computeGalleryName> <computeGalleryImageName> <networkResourceGroupName>"
+        echo "Usage: deployDevCenter <devCenterName> <networkConnectionName> <identityName> <customRoleName> <computeGalleryName> <networkResourceGroupName>"
         return 1
     fi
 
@@ -135,12 +133,10 @@ deployDevCenter() {
         --template-file ./devBox/deploy.bicep \
         --parameters \
             devCenterName="$devCenterName" \
-            devboxDefinitionName="$devboxDefinitionName" \
             networkConnectionName="$networkConnectionName" \
             identityName="$identityName" \
             customRoleName="$customRoleName" \
             computeGalleryName="$computeGalleryName" \
-            computeGalleryImageName="$computeGalleryImageName" \
             networkResourceGroupName="$networkResourceGroupName" 
 
     # Check if the deployment was successful
@@ -172,13 +168,11 @@ deploy(){
         "$subNetName" \
         "$networkConnectionName"
     
-    deployDevCenter "$devCenterName" \
-        "eShopPetDevBox" \
+    deployDevCenter "$devCenterName"  \
         "$networkConnectionName" \
         "$identityName" \
         "$customRoleName" \
         "$computeGalleryName" \
-        "microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2" \
         "$networkResourceGroupName"
 }
 

@@ -14,7 +14,7 @@ output ideidentityClientIdntityId string = identity.outputs.identityClientId
 output identityPrincipalId string = identity.outputs.identityPrincipalId
 output identityResourceId string = identity.outputs.identityResourceId
 
-module deployCustomRole 'deployCustomRole.bicep' = {
+module customRole 'deployCustomRole.bicep' = {
   name: 'deployCustomRole'
   params: {
     customRoleName: customRoleName
@@ -24,18 +24,18 @@ module deployCustomRole 'deployCustomRole.bicep' = {
   ]
 }
 
-output userAssignedIdentityId string = deployCustomRole.outputs.customRoleId
-output userAssignedIdentityName string = deployCustomRole.outputs.customRoleName
+output userAssignedIdentityId string = customRole.outputs.customRoleId
+output userAssignedIdentityName string = customRole.outputs.customRoleName
 
 module identityCustomRoleAssignment 'customRoleAssignment.bicep' = {
   name: 'identityCustomRoleAssignment'
   params: {
-    customRoleName: deployCustomRole.outputs.customRoleName
+    customRoleName: customRole.outputs.customRoleName
     identityId: identity.outputs.identityPrincipalId
-    customRoleId: deployCustomRole.outputs.customRoleId
+    customRoleId: customRole.outputs.customRoleId
   }
   dependsOn: [
-    deployCustomRole
+    customRole
   ]
 }
 

@@ -12,12 +12,9 @@ resource deployCustomRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' =
     permissions: [
       {
         actions: [
-          'Microsoft.Compute/galleries/images/write'
-          'Microsoft.Compute/galleries/images/read'
-          'Microsoft.Compute/galleries/images/delete'
-          'Microsoft.Compute/galleries/images/versions/write'
-          'Microsoft.Compute/galleries/images/versions/read'
-          'Microsoft.Compute/galleries/images/versions/delete'
+          'Microsoft.DevCenter/*'
+          'Microsoft.Compute/galleries/*'
+          'Microsoft.Compute/galleries/images/*'
         ]
         notActions: []
         dataActions: []
