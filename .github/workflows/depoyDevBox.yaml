@@ -20,4 +20,4 @@ jobs:
               creds: ${{ secrets.AZURE_CREDENTIALS }}
 
           - name: Create Resources Organization
-            run: az group create --name DevBoxResourceGroup --location eastus
+            run: ../src/deploy/bicep/bash/deployResourcesOrganization.sh
