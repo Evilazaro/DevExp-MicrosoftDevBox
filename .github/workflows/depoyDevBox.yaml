@@ -4,28 +4,28 @@ on:
   workflow_dispatch: # Manually trigger the workflow
 
 env:
-location: "WestUS3"
+  location: "WestUS3"
 
-# Azure Resource Group Names Constants
-devBoxResourceGroupName: "eShopPetDevBox-rg"
-networkResourceGroupName: "eShopPetNetworkConnectivity-rg"
-managementResourceGroupName: "eShopPetDevBoxManagement-rg"
+  # Azure Resource Group Names Constants
+  devBoxResourceGroupName: "eShopPetDevBox-rg"
+  networkResourceGroupName: "eShopPetNetworkConnectivity-rg"
+  managementResourceGroupName: "eShopPetDevBoxManagement-rg"
 
-# Identity Parameters Constants
-identityName: "eShopPetDevBoxImgBldId"
-customRoleName: "eShopPetBuilderRole"
+  # Identity Parameters Constants
+  identityName: "eShopPetDevBoxImgBldId"
+  customRoleName: "eShopPetBuilderRole"
 
-# Image and DevCenter Parameters Constants
-computeGalleryName: "eShopPetImageGallery"
-devCenterName: "eShopPetDevCenter"
+  # Image and DevCenter Parameters Constants
+  computeGalleryName: "eShopPetImageGallery"
+  devCenterName: "eShopPetDevCenter"
 
-# Network Parameters Constants
-vnetName: "eShopPetVnet"
-subNetName: "eShopPetSubNet"
-networkConnectionName: "eShopPetNetworkConnection"
+  # Network Parameters Constants
+  vnetName: "eShopPetVnet"
+  subNetName: "eShopPetSubNet"
+  networkConnectionName: "eShopPetNetworkConnection"
 
-# Management Parameters constants
-logAnalyticsWorkspaceName: "eShopPetDevBoxLogAnalytics"
+  # Management Parameters constants
+  logAnalyticsWorkspaceName: "eShopPetDevBoxLogAnalytics"
 
 jobs:
   Build-And-Deploy-DevBox-As-A-Service-For-eShop:
