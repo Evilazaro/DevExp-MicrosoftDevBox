@@ -5,6 +5,8 @@ param customRoleName string
 param computeGalleryName string
 param networkResourceGroupName string
 param currentUser string
+param logAnalyticsWorkspaceName string
+param managementResourceGroupName string
 
 module identity '../identity/deploy.bicep' = {
   name: 'identity'
@@ -40,6 +42,8 @@ module devCenter './devCenter/deployDevCenter.bicep' = {
     identityName: identity.outputs.identityName
     computeGalleryName: computeGalleryName
     networkResourceGroupName: networkResourceGroupName
+    logAnalyticsWorkspaceName:logAnalyticsWorkspaceName
+    managementResourceGroupName: managementResourceGroupName
   }
   dependsOn: [
     computeGallery

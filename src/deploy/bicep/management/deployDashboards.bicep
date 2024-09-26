@@ -1,3 +1,4 @@
+@description('Deploy Azure Inventory Dashboard')
 resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
   name: 'AzureInventory'
   location: resourceGroup().location
@@ -690,3 +691,8 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
     metadata: {}
   }
 }
+
+output AzureInventoryId string = AzureInventory.id
+output AzureInventoryName string = AzureInventory.name
+output AzureInventoryType string = AzureInventory.type
+

@@ -1,12 +1,16 @@
 param vnetName string
 param subnetName string
 param networkConnectionName string
+param logAnalyticsWorkspaceName string
+param managementResourceGroupName string
 
 module virtualNetwork './virtualNetwork/deployVnet.bicep' = {
   name: 'virtualNetwork'
   params: {
     vnetName: vnetName
     subnetName: subnetName
+    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
+    managementResourceGroupName: managementResourceGroupName
   }
 }
 
@@ -21,7 +25,6 @@ module networkConnection './networkConnection/createNetWorkConnection.bicep' = {
   params: {
     name: networkConnectionName
     subnetId: virtualNetwork.outputs.subnetId
-    location: resourceGroup().location
   }
   dependsOn: [
     virtualNetwork

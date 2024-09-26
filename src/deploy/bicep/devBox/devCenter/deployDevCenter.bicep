@@ -4,13 +4,25 @@ param networkConnectionName string
 param identityName string
 param computeGalleryName string
 param networkResourceGroupName string
+param logAnalyticsWorkspaceName string
+param managementResourceGroupName string
+
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
+  name: logAnalyticsWorkspaceName
+  scope: resourceGroup(managementResourceGroupName)
+}
+
 
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
   name: identityName
 }
 
-resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
-  name: 'logAnalyticsWorkspaceName'
+resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-02-01' existing = {
+  name: networkConnectionName
+}
+
+resource computeGallery 'Microsoft.Compute/galleries@2021-10-01' existing = {
+  name: computeGalleryName
 }
 
 @description('Deploying DevCenter')
@@ -24,6 +36,8 @@ resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' = {
     }
   }
   dependsOn: [
+    networkConnection
+    logAnalyticsWorkspace
     managedIdentity
   ]
   properties: {}
@@ -33,23 +47,31 @@ output devCenterId string = deployDevCenter.id
 output devCenterName string = deployDevCenter.name
 output devCenterIdentityId string = managedIdentity.id
 
-resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'eShopDiagnosticSettings'
+@description('Create DevCenter Diagnostic Settings')
+resource devCenterDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'devCenterDiagnosticSettings'
   scope: deployDevCenter
   properties: {
+    workspaceId: logAnalyticsWorkspace.id
     logs: [
+      {
+        categoryGroup: 'allLogs'
+        enabled: true
+      }
+    ]
+    metrics: [
       {
         category: 'AllMetrics'
         enabled: true
-        retentionPolicy: {
-          enabled: true
-          days: 30
-        }
       }
     ]
   }
 }
 
+output devCenterDiagnosticSettingsId string = devCenterDiagnosticSettings.id
+output devCenterDiagnosticSettingsName string = devCenterDiagnosticSettings.name
+
+@description('Create DevCenter Catalogs with DevBox Tasks')
 resource devCenterCatalogs 'Microsoft.DevCenter/devcenters/catalogs@2024-02-01' = {
   parent: deployDevCenter
   name: 'eShopDevCenterCatalog'
@@ -65,15 +87,34 @@ resource devCenterCatalogs 'Microsoft.DevCenter/devcenters/catalogs@2024-02-01' 
 output devCenterName_quickstart_devbox_tasks_id string = devCenterCatalogs.id
 output devCenterName_quickstart_devbox_tasks_name string = devCenterCatalogs.name
 
+@description('Create DevCenter Development Environment for the eShop Project')
+resource devCenterDevEnvironment 'Microsoft.DevCenter/devcenters/environmenttypes@2024-02-01' = {
+  parent: deployDevCenter
+  name: 'Development'
+}
+
+output devCenterDevEnvironmentId string = devCenterDevEnvironment.id
+output devCenterDevEnvironmentName string = devCenterDevEnvironment.name
+
+@description('Create DevCenter Staging Environment for the eShop Project')
+resource devCenterStagingEnvironment 'Microsoft.DevCenter/devcenters/environmenttypes@2024-02-01' = {
+  parent: deployDevCenter
+  name: 'Staging'
+}
+
+output devCenterStagingEnvironmentId string = devCenterStagingEnvironment.id
+output devCenterStagingEnvironmentName string = devCenterStagingEnvironment.name
+
+@description('Create DevCenter Network Connection')
 resource devCenterNetworkConnection 'Microsoft.DevCenter/devcenters/attachednetworks@2024-02-01' = {
   parent: deployDevCenter
-  name: networkConnectionName
+  name: networkConnection.name
   properties: {
     networkConnectionId: format(
       '/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/networkConnections/{2}',
       subscription().subscriptionId,
       networkResourceGroupName,
-      networkConnectionName
+      networkConnection.name
     )
   }
 }
@@ -81,17 +122,19 @@ resource devCenterNetworkConnection 'Microsoft.DevCenter/devcenters/attachednetw
 output devCenterName_networkConnection_id string = devCenterNetworkConnection.id
 output devCenterName_networkConnection_name string = devCenterNetworkConnection.name
 
+@description('Create DevCenter Compute Gallery')
 resource devCenterComputeGallery 'Microsoft.DevCenter/devcenters/galleries@2024-02-01' = {
   parent: deployDevCenter
-  name: computeGalleryName
+  name: computeGallery.name
   properties: {
-    galleryResourceId: resourceId('Microsoft.Compute/galleries', computeGalleryName)
+    galleryResourceId: resourceId('Microsoft.Compute/galleries', computeGallery.name)
   }
 }
 
 output devCenterName_computeGalleryImage_id string = devCenterComputeGallery.id
 output devCenterName_computeGalleryImage_name string = devCenterComputeGallery.name
 
+@description('Create DevCenter DevBox Definition for BackEnd Engineer')
 resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
   name: 'eShopPet-BackEndEngineer'
   location: resourceGroup().location
@@ -119,6 +162,7 @@ resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitio
 output devBoxDefinitionBackEndId string = devBoxDefinitionBackEnd.id
 output devBoxDefinitionBackEndName string = devBoxDefinitionBackEnd.name
 
+@description('Create DevCenter DevBox Definition for FrontEnd Engineer')
 resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
   name: 'eShopPet-FrontEndEngineer'
   location: resourceGroup().location
@@ -146,7 +190,8 @@ resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefiniti
 output devBoxDefinitionFrontEndId string = devBoxDefinitionFrontEnd.id
 output devBoxDefinitionFrontEndName string = devBoxDefinitionFrontEnd.name
 
-resource project 'Microsoft.DevCenter/projects@2024-02-01' = {
+@description('Create DevCenter eShop Project')
+resource eShopProject 'Microsoft.DevCenter/projects@2024-02-01' = {
   name: 'eShop'
   location: resourceGroup().location
   properties: {
@@ -156,13 +201,14 @@ resource project 'Microsoft.DevCenter/projects@2024-02-01' = {
   }
 }
 
-output projectId string = project.id
-output projectName string = project.name
+output eShopProjectId string = eShopProject.id
+output eShopProjectName string = eShopProject.name
 
+@description('Create DevCenter DevBox Pools for BackEnd Engineers of eShop Project')
 resource backEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
   name: 'backEndPool'
   location: resourceGroup().location
-  parent: project
+  parent: eShopProject
   properties: {
     devBoxDefinitionName: devBoxDefinitionBackEnd.name
     licenseType: 'Windows_Client'
@@ -178,10 +224,11 @@ resource backEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
 output backEndPoolId string = backEndPool.id
 output backEndPoolName string = backEndPool.name
 
+@description('Create DevCenter DevBox Pools for FrontEnd Engineers of eShop Project')
 resource frontEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
   name: 'frontEndPool'
   location: resourceGroup().location
-  parent: project
+  parent: eShopProject
   properties: {
     devBoxDefinitionName: devBoxDefinitionFrontEnd.name
     licenseType: 'Windows_Client'
@@ -196,3 +243,59 @@ resource frontEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
 
 output frontEndPoolId string = backEndPool.id
 output frontEndPoolName string = backEndPool.name
+
+resource eShopDevEnvironment 'Microsoft.DevCenter/projects/environmentTypes@2023-04-01' = {
+  name: 'eShopDevEnvironment'
+  location: resourceGroup().location
+  type: devCenterDevEnvironment
+  tags: {
+    tagName1: 'Development'
+    tagName2: 'eShop'
+  }
+  parent: eShopProject
+  identity: {
+    type: 'SystemAssigned'
+    userAssignedIdentities: {
+      '${managedIdentity.id}': {}
+    }
+  }
+  properties: {
+    creatorRoleAssignment: {
+      roles: {
+        '8e3af657-a8ff-443c-a75c-2fe8c4bcb635':{}
+    }
+    deploymentTargetId: subscription().subscriptionId
+    status: 'Enabled'
+    userRoleAssignments: {}
+  }
+}
+
+output eShopDevEnvironmentId string = eShopDevEnvironment.id
+output eShopDevEnvironmentName string = eShopDevEnvironment.name
+
+// resource eShopStagingEnvironment 'Microsoft.DevCenter/projects/environmentTypes@2023-04-01' = {
+//   name: 'eShopStagingEnvironment'
+//   location: resourceGroup().location
+//   tags: {
+//     tagName1: 'Staging'
+//     tagName2: 'eShop'
+//   }
+//   parent: eShopProject
+//   identity: {
+//     type: 'UserAssigned'
+//     userAssignedIdentities: {
+//       '${managedIdentity.id}': {}
+//     }
+//   }
+//   properties: {
+//     creatorRoleAssignment: {
+//       roles: {}
+//     }
+//     deploymentTargetId: subscription().subscriptionId
+//     status: 'Enabled'
+//     userRoleAssignments: {}
+//   }
+// }
+
+// output eShopStagingEnvironmentId string = eShopStagingEnvironment.id
+// output eShopStagingEnvironmentName string = eShopStagingEnvironment.name
