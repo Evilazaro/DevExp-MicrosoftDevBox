@@ -1,6 +1,7 @@
 name: Deploy DevBox as a Service to Azure
 
 on:
+    workflow_dispatch: # Manually trigger the workflow
     push:
         branches:
             - main
@@ -17,18 +18,14 @@ jobs:
           uses: azure/login@v1
           with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
-        
-        - name: Set up Azure CLI
-          uses: azure/setup-cli@v1
-          with:
-            version: 2.0.72
 
-        - name: Deploy Bicep script
-          uses: azure/arm-deploy@v1
-          with:
-            subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-            resourceGroupName: myResourceGroup
-            template: ./path/to/your/template.bicep
-            parameters: |
-                parameter1=${{ secrets.PARAMETER1 }}
-                parameter2=${{ secrets.PARAMETER2 }}
+        # - name: Deploy Bicep script
+        #   uses: azure/arm-deploy@v1
+        #   with:
+        #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        #     resourceGroupName: myResourceGroup
+        #     template: ./path/to/your/template.bicep
+        #     parameters: |
+        #         parameter1=${{ secrets.PARAMETER1 }}
+        #         parameter2=${{ secrets.PARAMETER2 }}
+
