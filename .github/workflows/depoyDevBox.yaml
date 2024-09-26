@@ -32,6 +32,21 @@ env:
   logAnalyticsWorkspaceName: "eShopPetDevBoxLogAnalytics"
 
 jobs:
+    Validate-and-Build-Bicep-Templates:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v3
+        - name: Bicep Upgrade
+          run: az bicep upgrade
+        - name: Validate Management Bicep Templates
+          run: az bicep build ./src/deploy/bicep/management/deploy.bicep
+        - name: Validate Network Bicep Templates
+          run: az bicep build ./src/deploy/bicep/network/deploy.bicep
+        - name: Validate DevCenter Bicep Templates
+          run: az bicep build ./src/deploy/bicep/devBox/deploy.bicep
+      needs: [Deploy-DevBox-As-A-Service-For-eShop]
+
     Deploy-DevBox-As-A-Service-For-eShop:
         runs-on: ubuntu-latest
 
@@ -62,9 +77,4 @@ jobs:
               subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
               resourceGroupName: ${{ env.networkResourceGroupName }}
               template: ./src/deploy/bicep/network/deploy.bicep
-              parameters: |
-                vnetName=${{ env.vnetName }}
-                subnetName=${{ env.subNetName }}
-                networkConnectionName=${{ env.networkConnectionName }}
-                logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }}
-                managementResourceGroupName=${{ env.managementResourceGroupName }}
+              parameters: 'vnetName=${{ env.vnetName }} subnetName=${{ env.subNetName }} networkConnectionName=${{ env.networkConnectionName }} logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }} managementResourceGroupName=${{ env.managementResourceGroupName }}'
