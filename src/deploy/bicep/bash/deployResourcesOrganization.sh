@@ -1,5 +1,7 @@
 #!/bin/bash
 
+location="WestUS3"
+
 # Azure Resource Group Names Constants
 devBoxResourceGroupName="eShopPetDevBox-rg"
 networkResourceGroupName="eShopPetNetworkConnectivity-rg"
