@@ -22,7 +22,7 @@ jobs:
               # tenant-id: ${{ secrets.AZURE_TENANT_ID }}
               # client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
               # subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-              # auth-method: service-principal
+               auth-method: service-principal
 
           # Verify Azure CLI login by listing subscriptions (optional step)
           - name: Verify login by listing subscriptions
