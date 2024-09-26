@@ -18,24 +18,3 @@ jobs:
             uses: azure/login@v2
             with:
               creds: ${{ secrets.AZURE_CREDENTIALS }}
-              managedIdentity: 'true'
-
-          # Verify Azure CLI login by listing subscriptions (optional step)
-          - name: Verify login by listing subscriptions
-            uses: azure/CLI@v2
-            with:
-              azcli-version: latest
-              inlineScript: |
-                az account show
-          # Add more Azure CLI or deployment commands here
-
-          # - name: Deploy Bicep script
-          #   uses: azure/arm-deploy@v1
-          #   with:
-          #     subscriptionId: ${{ secrets.subscriptionId }}
-          #     resourceGroupName: myResourceGroup
-          #     template: ./path/to/your/template.bicep
-          #     parameters: |
-          #         parameter1=${{ secrets.PARAMETER1 }}
-          #         parameter2=${{ secrets.PARAMETER2 }}
-
