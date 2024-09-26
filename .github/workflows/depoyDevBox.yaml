@@ -40,11 +40,11 @@ jobs:
         - name: Bicep Upgrade
           run: az bicep upgrade
         - name: Validate Management Bicep Templates
-          run: az bicep build ./src/deploy/bicep/management/deploy.bicep
+          run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep
         - name: Validate Network Bicep Templates
-          run: az bicep build ./src/deploy/bicep/network/deploy.bicep
+          run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep
         - name: Validate DevCenter Bicep Templates
-          run: az bicep build ./src/deploy/bicep/devBox/deploy.bicep
+          run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep
 
     Deploy-DevBox-As-A-Service-For-eShop:
         runs-on: ubuntu-latest
