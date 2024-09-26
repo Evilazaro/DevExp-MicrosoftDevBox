@@ -1,6 +1,7 @@
 name: Deploy DevBox as a Service to Azure
 
 on:
+    workflow_dispatch: # Manually trigger the workflow
     push:
         branches:
             - main
