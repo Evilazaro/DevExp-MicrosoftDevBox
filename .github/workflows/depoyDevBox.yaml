@@ -19,5 +19,8 @@ jobs:
             with:
               creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+          - name: Give execute permissions to the script
+            run: chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh
+
           - name: Create Resources Organization
             run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh
