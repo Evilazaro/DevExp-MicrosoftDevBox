@@ -44,13 +44,13 @@ jobs:
         run: az bicep upgrade
 
       - name: Validate Management Bicep Templates
-        run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep --out-file ./artifactsBicep/management.json
+        run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep --outfile ./artifactsBicep/management.json
 
       - name: Validate Network Bicep Templates
-        run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep --out-file ./artifactsBicep/network.json
+        run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outfile ./artifactsBicep/network.json
 
       - name: Validate DevCenter Bicep Templates
-        run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --out-file ./artifactsBicep/devBox.json
+        run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./artifactsBicep/devBox.json
 
       - name: Upload Bicep Artifacts
         uses: actions/upload-artifact@v3
