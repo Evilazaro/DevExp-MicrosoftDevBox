@@ -17,7 +17,19 @@ jobs:
         - name: Log in to Azure
           uses: azure/login@v1
           with:
-            creds: ${{ secrets.AZURE_CREDENTIALS }}
+            client-id: ${{ secrets.AZURE_CLIENT_ID }}
+            tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+            client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+        # Verify Azure CLI login by listing subscriptions (optional step)
+        - name: Verify login by listing subscriptions
+          run: az account show
+
+        # Perform other tasks, e.g., deploying to Azure or running scripts
+        - name: Deploy resources
+          run: |
+            az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        # Add more Azure CLI or deployment commands here
 
         # - name: Deploy Bicep script
         #   uses: azure/arm-deploy@v1
