@@ -31,8 +31,6 @@ deployResourcesOrganization() {
     createResourceGroup "$devBoxResourceGroupName"
     createResourceGroup "$networkResourceGroupName"
     createResourceGroup "$managementResourceGroupName"
-
-    demoScript
 }
 
 deployResourcesOrganization
