@@ -49,7 +49,16 @@ jobs:
           run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep
         - name: Validate DevCenter Bicep Templates
           run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep
-
+        - name: Validate Identity Bicep Templates
+          uses: actions/download-artifact@v2
+          with:
+            name: artifactsBicep
+            path: ./artifactsBicep
+        - name: artifacts
+          uses: actions/upload-artifact@v2
+          with:
+            name: artifactsBicep
+            path: ./artifactsBicep
     Deploy-DevBox-As-A-Service-For-eShop:
         runs-on: ubuntu-latest
 
