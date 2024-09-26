@@ -20,4 +20,4 @@ jobs:
               creds: ${{ secrets.AZURE_CREDENTIALS }}
 
           - name: Create Resources Organization
-            run: ../src/deploy/bicep/bash/deployResourcesOrganization.sh
+            run: ls
