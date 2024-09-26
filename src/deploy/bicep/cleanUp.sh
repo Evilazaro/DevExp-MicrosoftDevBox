@@ -26,6 +26,7 @@ deleteResourceGroup() {
             az deployment group delete --resource-group "$resourceGroupName" --name "$deployment"
             echo "Deployment $deployment deleted."
         done
+        sleep 10
         echo "Deleting resource group: $resourceGroupName..."
         az group delete --name "$resourceGroupName" --yes --no-wait
         echo "Resource group $resourceGroupName deletion initiated."
@@ -46,13 +47,14 @@ removeRoleAssignment() {
         return
     fi
 
-    local assignmentExists=$(az role assignment list --role "$roleId" --scope /subscriptions/"$subscription")
-
+    local assignmentExists
+    assignmentExists=$(az role assignment list --role "$roleId" )
+#--scope /subscriptions/"$subscription"
     if [[ -z "$assignmentExists" || "$assignmentExists" == "[]" ]]; then
         echo "'$roleId' role assignment does not exist. Skipping deletion."
     else
         echo "Removing '$roleId' role assignment from the identity..."   
-        az role assignment delete --role "$roleId" --scope /subscriptions/"$subscription"
+        az role assignment delete --role "$roleId"
         echo "'$roleId' role assignment successfully removed."
     fi
 }
@@ -86,6 +88,9 @@ deleteRoleAssignments() {
         if [[ -z "$roleId" ]]; then
             echo "Role ID for '$roleName' not found. Skipping role assignment deletion."
             continue
+        else
+            echo "Role ID for '$roleName' is '$roleId'."
+            echo "Removing '$roleName' role assignment..."
         fi
         removeRoleAssignment "$roleId" "$subscriptionId"
     done
@@ -94,14 +99,14 @@ deleteRoleAssignments() {
 # Function to clean up resources
 cleanUpResources() {
     clear
+    deleteRoleAssignments
+    deleteCustomRole "$customRoleName" 
     deleteResourceGroup "$devBoxResourceGroupName"
     deleteResourceGroup "$networkResourceGroupName"
     deleteResourceGroup "$managementResourceGroupName"
     deleteResourceGroup "NetworkWatcherRG"
     deleteResourceGroup "Default-ActivityLogAlerts"
     deleteResourceGroup "DefaultResourceGroup-WUS2"
-    deleteRoleAssignments
-    deleteCustomRole "$customRoleName" 
 }
 
 # Main script execution

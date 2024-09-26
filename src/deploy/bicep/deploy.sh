@@ -83,7 +83,7 @@ deployLogAnalytics() {
     # Check if required parameters are provided
     if [[ -z "$managementResourceGroupName" || -z "$logAnalyticsWorkspaceName" ]]; then
         echo "Error: Missing required parameters."
-        echo "Usage: deployLogAnalytics <managementResourceGroupName> <logAnalyticsWorkspaceName>"
+        echo "Usage: deployLogAnalytics <managementResourceGroupName> <logAnalyticsWorkspaceName> "
         return 1
     fi
 
@@ -105,6 +105,7 @@ deployLogAnalytics() {
     fi
 
     echo "Log Analytics Workspace deployed successfully."
+
     demoScript
 }
 
@@ -114,11 +115,13 @@ deployNetworkResources() {
     local vnetName="$2"
     local subNetName="$3"
     local networkConnectionName="$4"
+    local logAnalyticsWorkspaceName="$5"
+    local managementResourceGroupName="$6"
 
     # Check if required parameters are provided
-    if [[ -z "$networkResourceGroupName" || -z "$vnetName" || -z "$subNetName" || -z "$networkConnectionName" ]]; then
+    if [[ -z "$networkResourceGroupName" || -z "$vnetName" || -z "$subNetName" || -z "$networkConnectionName"|| -z "$logAnalyticsWorkspaceName"  ]]; then
         echo "Error: Missing required parameters."
-        echo "Usage: deployNetworkResources <networkResourceGroupName> <vnetName> <subNetName> <networkConnectionName>"
+        echo "Usage: deployNetworkResources <networkResourceGroupName> <vnetName> <subNetName> <networkConnectionName> <logAnalyticsWorkspaceName>"
         return 1
     fi
 
@@ -133,6 +136,8 @@ deployNetworkResources() {
             vnetName="$vnetName" \
             subnetName="$subNetName" \
             networkConnectionName="$networkConnectionName" \
+            logAnalyticsWorkspaceName="$logAnalyticsWorkspaceName" \
+            managementResourceGroupName="$managementResourceGroupName" \
         --verbose
 
     # Check if the deployment was successful
@@ -203,22 +208,24 @@ deploy(){
     
     deployResourcesOrganization
 
-    deployLogAnalytics \
-        "$managementResourceGroupName" \
-        "$logAnalyticsWorkspaceName"
+    # deployLogAnalytics \
+    #     "$managementResourceGroupName" \
+    #     "$logAnalyticsWorkspaceName" 
     
     deployNetworkResources \
         "$networkResourceGroupName" \
         "$vnetName" \
         "$subNetName" \
-        "$networkConnectionName"
-    
-    deployDevCenter "$devCenterName"  \
         "$networkConnectionName" \
-        "$identityName" \
-        "$customRoleName" \
-        "$computeGalleryName" \
-        "$networkResourceGroupName"
+        "$logAnalyticsWorkspaceName" \
+        "$managementResourceGroupName"
+    
+    # deployDevCenter "$devCenterName"  \
+    #     "$networkConnectionName" \
+    #     "$identityName" \
+    #     "$customRoleName" \
+    #     "$computeGalleryName" \
+    #     "$networkResourceGroupName"    
 }
 
 demoScript() {

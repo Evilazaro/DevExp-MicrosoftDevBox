@@ -4,13 +4,23 @@ param networkConnectionName string
 param identityName string
 param computeGalleryName string
 param networkResourceGroupName string
+param logAnalyticsWorkspaceName string
+
 
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
   name: identityName
 }
 
-resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
-  name: 'logAnalyticsWorkspaceName'
+resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-02-01' existing = {
+  name: networkConnectionName
+}
+
+resource computeGallery 'Microsoft.Compute/galleries@2021-10-01' existing = {
+  name: computeGalleryName
+}
+
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
+  name: logAnalyticsWorkspaceName
 }
 
 @description('Deploying DevCenter')
@@ -24,6 +34,8 @@ resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' = {
     }
   }
   dependsOn: [
+    networkConnection
+    logAnalyticsWorkspace
     managedIdentity
   ]
   properties: {}
@@ -33,10 +45,12 @@ output devCenterId string = deployDevCenter.id
 output devCenterName string = deployDevCenter.name
 output devCenterIdentityId string = managedIdentity.id
 
-resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'eShopDiagnosticSettings'
+@description('Create DevCenter Diagnostic Settings')
+resource devCenterDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'devCenterDiagnosticSettings'
   scope: deployDevCenter
   properties: {
+    workspaceId: logAnalyticsWorkspace.id
     logs: [
       {
         category: 'AllMetrics'
@@ -50,6 +64,10 @@ resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-pr
   }
 }
 
+output devCenterDiagnosticSettingsId string = devCenterDiagnosticSettings.id
+output devCenterDiagnosticSettingsName string = devCenterDiagnosticSettings.name
+
+@description('Create DevCenter Catalogs with DevBox Tasks')
 resource devCenterCatalogs 'Microsoft.DevCenter/devcenters/catalogs@2024-02-01' = {
   parent: deployDevCenter
   name: 'eShopDevCenterCatalog'
@@ -65,15 +83,16 @@ resource devCenterCatalogs 'Microsoft.DevCenter/devcenters/catalogs@2024-02-01' 
 output devCenterName_quickstart_devbox_tasks_id string = devCenterCatalogs.id
 output devCenterName_quickstart_devbox_tasks_name string = devCenterCatalogs.name
 
+@description('Create DevCenter Network Connection')
 resource devCenterNetworkConnection 'Microsoft.DevCenter/devcenters/attachednetworks@2024-02-01' = {
   parent: deployDevCenter
-  name: networkConnectionName
+  name: networkConnection.name
   properties: {
     networkConnectionId: format(
       '/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/networkConnections/{2}',
       subscription().subscriptionId,
       networkResourceGroupName,
-      networkConnectionName
+      networkConnection.name
     )
   }
 }
@@ -81,17 +100,19 @@ resource devCenterNetworkConnection 'Microsoft.DevCenter/devcenters/attachednetw
 output devCenterName_networkConnection_id string = devCenterNetworkConnection.id
 output devCenterName_networkConnection_name string = devCenterNetworkConnection.name
 
+@description('Create DevCenter Compute Gallery')
 resource devCenterComputeGallery 'Microsoft.DevCenter/devcenters/galleries@2024-02-01' = {
   parent: deployDevCenter
-  name: computeGalleryName
+  name: computeGallery.name
   properties: {
-    galleryResourceId: resourceId('Microsoft.Compute/galleries', computeGalleryName)
+    galleryResourceId: resourceId('Microsoft.Compute/galleries', computeGallery.name)
   }
 }
 
 output devCenterName_computeGalleryImage_id string = devCenterComputeGallery.id
 output devCenterName_computeGalleryImage_name string = devCenterComputeGallery.name
 
+@description('Create DevCenter DevBox Definition for BackEnd Engineer')
 resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
   name: 'eShopPet-BackEndEngineer'
   location: resourceGroup().location
@@ -119,6 +140,7 @@ resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitio
 output devBoxDefinitionBackEndId string = devBoxDefinitionBackEnd.id
 output devBoxDefinitionBackEndName string = devBoxDefinitionBackEnd.name
 
+@description('Create DevCenter DevBox Definition for FrontEnd Engineer')
 resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
   name: 'eShopPet-FrontEndEngineer'
   location: resourceGroup().location
@@ -146,6 +168,7 @@ resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefiniti
 output devBoxDefinitionFrontEndId string = devBoxDefinitionFrontEnd.id
 output devBoxDefinitionFrontEndName string = devBoxDefinitionFrontEnd.name
 
+@description('Create DevCenter eShop Project')
 resource project 'Microsoft.DevCenter/projects@2024-02-01' = {
   name: 'eShop'
   location: resourceGroup().location
@@ -159,6 +182,7 @@ resource project 'Microsoft.DevCenter/projects@2024-02-01' = {
 output projectId string = project.id
 output projectName string = project.name
 
+@description('Create DevCenter DevBox Pools for BackEnd Engineers of eShop Project')
 resource backEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
   name: 'backEndPool'
   location: resourceGroup().location
@@ -178,6 +202,7 @@ resource backEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
 output backEndPoolId string = backEndPool.id
 output backEndPoolName string = backEndPool.name
 
+@description('Create DevCenter DevBox Pools for FrontEnd Engineers of eShop Project')
 resource frontEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
   name: 'frontEndPool'
   location: resourceGroup().location
