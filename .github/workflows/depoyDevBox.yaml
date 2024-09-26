@@ -47,25 +47,19 @@ jobs:
           run: az bicep upgrade
 
         - name: Validate Management Bicep Templates
-          run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep
+          run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep --out-file ./artifactsBicep/management.json
 
         - name: Validate Network Bicep Templates
-          run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep
+          run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep --out-file ./artifactsBicep/network.json
 
         - name: Validate DevCenter Bicep Templates
-          run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep
-
-        - name: Validate Identity Bicep Templates
-          uses: actions/download-artifact@v2
-          with:
-            name: artifactsBicep
-            path: ./artifactsBicep
+          run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --out-file ./artifactsBicep/devBox.json
 
         - name: artifacts
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
-            name: artifactsBicep
-            path: ./artifactsBicep
+            name: artifactsBicep-ARM-Templates
+            path: ./artifactsBicep/*.json
 
     Deploy-DevBox-As-A-Service-For-eShop:
         runs-on: ubuntu-latest
