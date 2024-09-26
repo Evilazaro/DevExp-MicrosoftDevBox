@@ -27,13 +27,13 @@ jobs:
           # Perform other tasks, e.g., deploying to Azure or running scripts
           - name: Deploy resources
             run: |
-              az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+              az account set --subscription ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
           # Add more Azure CLI or deployment commands here
 
           # - name: Deploy Bicep script
           #   uses: azure/arm-deploy@v1
           #   with:
-          #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          #     subscriptionId: ${{ secrets.subscriptionId }}
           #     resourceGroupName: myResourceGroup
           #     template: ./path/to/your/template.bicep
           #     parameters: |
