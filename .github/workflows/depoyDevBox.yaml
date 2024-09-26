@@ -1,103 +1,96 @@
 name: Build and Deploy DevBox as a Service for eShop
 # note
 on:
-    workflow_dispatch: # Manually trigger the workflow
+  workflow_dispatch: # Manually trigger the workflow
 
 env:
-  location: "WestUS3"
+location: "WestUS3"
 
-  # Azure Resource Group Names Constants
-  devBoxResourceGroupName: "eShopPetDevBox-rg"
-  networkResourceGroupName: "eShopPetNetworkConnectivity-rg"
-  managementResourceGroupName: "eShopPetDevBoxManagement-rg"
+# Azure Resource Group Names Constants
+devBoxResourceGroupName: "eShopPetDevBox-rg"
+networkResourceGroupName: "eShopPetNetworkConnectivity-rg"
+managementResourceGroupName: "eShopPetDevBoxManagement-rg"
 
-  # Identity Parameters Constants
-  identityName: "eShopPetDevBoxImgBldId"
-  customRoleName: "eShopPetBuilderRole"
+# Identity Parameters Constants
+identityName: "eShopPetDevBoxImgBldId"
+customRoleName: "eShopPetBuilderRole"
 
-  # Image and DevCenter Parameters Constants
-  computeGalleryName: "eShopPetImageGallery"
-  devCenterName: "eShopPetDevCenter"
+# Image and DevCenter Parameters Constants
+computeGalleryName: "eShopPetImageGallery"
+devCenterName: "eShopPetDevCenter"
 
-  # Network Parameters Constants
-  vnetName: "eShopPetVnet"
-  subNetName: "eShopPetSubNet"
-  networkConnectionName: "eShopPetNetworkConnection"
-  
-  # Management Parameters constants
-  logAnalyticsWorkspaceName: "eShopPetDevBoxLogAnalytics"
+# Network Parameters Constants
+vnetName: "eShopPetVnet"
+subNetName: "eShopPetSubNet"
+networkConnectionName: "eShopPetNetworkConnection"
+
+# Management Parameters constants
+logAnalyticsWorkspaceName: "eShopPetDevBoxLogAnalytics"
 
 jobs:
-    Validate-and-Build-Bicep-Templates:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Update Packages
-          run: |
-            sudo apt-get update && \
-            sudo apt-get upgrade -y
+  Build-And-Deploy-DevBox-As-A-Service-For-eShop:
+    runs-on: ubuntu-latest
 
-        - name: Checkout repository
-          uses: actions/checkout@v3
+    steps:
+      - name: Update Packages
+        run: |
+          sudo apt-get update && \
+          sudo apt-get upgrade -y
 
-        - name: Bicep Upgrade
-          run: az bicep upgrade
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-        - name: Validate Management Bicep Templates
-          run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep --out-file ./artifactsBicep/management.json
+      - name: Bicep Upgrade
+        run: az bicep upgrade
 
-        - name: Validate Network Bicep Templates
-          run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep --out-file ./artifactsBicep/network.json
+      - name: Validate Management Bicep Templates
+        run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep --out-file ./artifactsBicep/management.json
 
-        - name: Validate DevCenter Bicep Templates
-          run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --out-file ./artifactsBicep/devBox.json
+      - name: Validate Network Bicep Templates
+        run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep --out-file ./artifactsBicep/network.json
 
-        - name: artifacts
-          uses: actions/upload-artifact@v3
-          with:
-            name: artifactsBicep-ARM-Templates
-            path: ./artifactsBicep/*.json
+      - name: Validate DevCenter Bicep Templates
+        run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --out-file ./artifactsBicep/devBox.json
 
-    Deploy-DevBox-As-A-Service-For-eShop:
-        runs-on: ubuntu-latest
+      - name: Upload Bicep Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifactsBicep-ARM-Templates
+          path: ./artifactsBicep/*.json
 
-        steps:
-          - name: Update Packages
-            run: |
-              sudo apt-get update && \
-              sudo apt-get upgrade -y 
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-          - name: Checkout repository
-            uses: actions/checkout@v3
+      - name: Bicep Upgrade
+        run: az bicep upgrade
 
-          - name: Log in to Azure
-            uses: azure/login@v2
-            with:
-              creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Give execute permissions to the script
+        run: chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh
 
-          - name: Bicep Upgrade
-            run: az bicep upgrade
+      - name: Create Resources Organization
+        run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh
 
-          - name: Give execute permissions to the script
-            run: chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh
-
-          - name: Create Resources Organization
-            run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh
-
-          - name: Deploy Log Analytics
-            uses: azure/arm-deploy@v1
-            with:
-              subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
-              resourceGroupName: ${{ env.managementResourceGroupName }}
-              template: ./src/deploy/bicep/management/deploy.bicep
-              parameters: |
-                logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }}
-                
-          - name: Deploy Network Connectivity Resources
-            uses: azure/arm-deploy@v1
-            with:
-              subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
-              resourceGroupName: ${{ env.networkResourceGroupName }}
-              template: ./src/deploy/bicep/network/deploy.bicep
-              parameters: 'vnetName=${{ env.vnetName }} subnetName=${{ env.subNetName }} networkConnectionName=${{ env.networkConnectionName }} logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }} managementResourceGroupName=${{ env.managementResourceGroupName }}'
-        needs: 
-          - Validate-and-Build-Bicep-Templates
+      - name: Deploy Log Analytics
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
+          resourceGroupName: ${{ env.managementResourceGroupName }}
+          template: ./src/deploy/bicep/management/deploy.bicep
+          parameters: |
+            logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }}
+            
+      - name: Deploy Network Connectivity Resources
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
+          resourceGroupName: ${{ env.networkResourceGroupName }}
+          template: ./src/deploy/bicep/network/deploy.bicep
+          parameters: |
+            vnetName=${{ env.vnetName }} 
+            subnetName=${{ env.subNetName }} 
+            networkConnectionName=${{ env.networkConnectionName }} 
+            logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }}
+            managementResourceGroupName=${{ env.managementResourceGroupName }}
+            
