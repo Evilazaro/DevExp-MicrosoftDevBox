@@ -58,4 +58,5 @@ jobs:
               template: ./src/deploy/bicep/management/deploy.bicep
               parameters: |
                 logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }}
+                failOnStdErr: false
 
