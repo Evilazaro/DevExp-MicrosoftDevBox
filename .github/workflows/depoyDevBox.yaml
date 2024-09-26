@@ -32,7 +32,7 @@ env:
   logAnalyticsWorkspaceName: "eShopPetDevBoxLogAnalytics"
 
 jobs:
-    DeployDevBoxAsAService:
+    Deploy-DevBox-As-A-Service-For-eShop:
         runs-on: ubuntu-latest
 
         steps:
@@ -69,7 +69,6 @@ jobs:
               resourceGroupName: ${{ env.networkResourceGroupName }}
               template: ./src/deploy/bicep/network/deploy.bicep
               parameters: |
-                networkResourceGroupName=${{ env.networkResourceGroupName }}
                 vnetName=${{ env.vnetName }}
                 subNetName=${{ env.subNetName }}
                 networkConnectionName=${{ env.networkConnectionName }}
