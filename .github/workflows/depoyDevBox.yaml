@@ -27,6 +27,7 @@ env:
   vnetName: "eShopPetVnet"
   subNetName: "eShopPetSubNet"
   networkConnectionName: "eShopPetNetworkConnection"
+  
   # Management Parameters constants
   logAnalyticsWorkspaceName: "eShopPetDevBoxLogAnalytics"
 
