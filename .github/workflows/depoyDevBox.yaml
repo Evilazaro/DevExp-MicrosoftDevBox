@@ -15,10 +15,9 @@ jobs:
             uses: actions/checkout@v2
 
           - name: Log in to Azure
-            uses: azure/login@v1
+            uses: azure/login@v2
             with:
               creds: ${{ secrets.AZURE_CREDENTIALS }}
-              auth-method: service-principal
 
           # Verify Azure CLI login by listing subscriptions (optional step)
           - name: Verify login by listing subscriptions
