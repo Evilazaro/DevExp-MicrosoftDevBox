@@ -18,6 +18,7 @@ jobs:
             uses: azure/login@v2
             with:
               creds: ${{ secrets.AZURE_CREDENTIALS }}
+              managedIdentity: 'true'
 
           # Verify Azure CLI login by listing subscriptions (optional step)
           - name: Verify login by listing subscriptions
@@ -26,8 +27,6 @@ jobs:
               azcli-version: latest
               inlineScript: |
                 az account show
-                az account set --subscription ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
-                az account list --output table
           # Add more Azure CLI or deployment commands here
 
           # - name: Deploy Bicep script
