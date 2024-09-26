@@ -247,20 +247,22 @@ output frontEndPoolName string = backEndPool.name
 resource eShopDevEnvironment 'Microsoft.DevCenter/projects/environmentTypes@2023-04-01' = {
   name: 'eShopDevEnvironment'
   location: resourceGroup().location
+  type: devCenterDevEnvironment
   tags: {
     tagName1: 'Development'
     tagName2: 'eShop'
   }
   parent: eShopProject
   identity: {
-    type: 'UserAssigned'
+    type: 'SystemAssigned'
     userAssignedIdentities: {
       '${managedIdentity.id}': {}
     }
   }
   properties: {
     creatorRoleAssignment: {
-      roles: {}
+      roles: {
+        '8e3af657-a8ff-443c-a75c-2fe8c4bcb635':{}
     }
     deploymentTargetId: subscription().subscriptionId
     status: 'Enabled'
@@ -271,29 +273,29 @@ resource eShopDevEnvironment 'Microsoft.DevCenter/projects/environmentTypes@2023
 output eShopDevEnvironmentId string = eShopDevEnvironment.id
 output eShopDevEnvironmentName string = eShopDevEnvironment.name
 
-resource eShopStagingEnvironment 'Microsoft.DevCenter/projects/environmentTypes@2023-04-01' = {
-  name: 'eShopStagingEnvironment'
-  location: resourceGroup().location
-  tags: {
-    tagName1: 'Staging'
-    tagName2: 'eShop'
-  }
-  parent: eShopProject
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${managedIdentity.id}': {}
-    }
-  }
-  properties: {
-    creatorRoleAssignment: {
-      roles: {}
-    }
-    deploymentTargetId: subscription().subscriptionId
-    status: 'Enabled'
-    userRoleAssignments: {}
-  }
-}
+// resource eShopStagingEnvironment 'Microsoft.DevCenter/projects/environmentTypes@2023-04-01' = {
+//   name: 'eShopStagingEnvironment'
+//   location: resourceGroup().location
+//   tags: {
+//     tagName1: 'Staging'
+//     tagName2: 'eShop'
+//   }
+//   parent: eShopProject
+//   identity: {
+//     type: 'UserAssigned'
+//     userAssignedIdentities: {
+//       '${managedIdentity.id}': {}
+//     }
+//   }
+//   properties: {
+//     creatorRoleAssignment: {
+//       roles: {}
+//     }
+//     deploymentTargetId: subscription().subscriptionId
+//     status: 'Enabled'
+//     userRoleAssignments: {}
+//   }
+// }
 
-output eShopStagingEnvironmentId string = eShopStagingEnvironment.id
-output eShopStagingEnvironmentName string = eShopStagingEnvironment.name
+// output eShopStagingEnvironmentId string = eShopStagingEnvironment.id
+// output eShopStagingEnvironmentName string = eShopStagingEnvironment.name

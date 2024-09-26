@@ -100,13 +100,13 @@ deleteRoleAssignments() {
 cleanUpResources() {
     clear
     deleteRoleAssignments
-    deleteCustomRole "$customRoleName" 
     deleteResourceGroup "$devBoxResourceGroupName"
     deleteResourceGroup "$networkResourceGroupName"
     deleteResourceGroup "$managementResourceGroupName"
     deleteResourceGroup "NetworkWatcherRG"
     deleteResourceGroup "Default-ActivityLogAlerts"
     deleteResourceGroup "DefaultResourceGroup-WUS2"
+    deleteCustomRole "$customRoleName" 
 }
 
 # Main script execution
