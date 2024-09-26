@@ -93,4 +93,20 @@ jobs:
             networkConnectionName=${{ env.networkConnectionName }} 
             logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }}
             managementResourceGroupName=${{ env.managementResourceGroupName }}
-            
+
+      - name: Deploy DevCenter Resources
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
+          resourceGroupName: ${{ env.devBoxResourceGroupName }}
+          template: ./src/deploy/bicep/devBox/deploy.bicep
+          parameters: |
+            devCenterName=${{ env.devCenterName }}
+            networkConnectionName=${{ env.networkConnectionName }}
+            identityName=${{ env.identityName }}
+            customRoleName=${{ env.customRoleName }}
+            computeGalleryName=${{ env.computeGalleryName }}
+            networkResourceGroupName=${{ env.networkResourceGroupName }}
+            currentUser=${{ secre.AZURE_CREDENTIALS.clientId }}
+            logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }}
+            managementResourceGroupName=${{ env.managementResourceGroupName }}

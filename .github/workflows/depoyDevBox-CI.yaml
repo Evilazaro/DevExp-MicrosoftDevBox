@@ -55,7 +55,7 @@ jobs:
         - name: Validate DevCenter Bicep Templates
           run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./artifactsBicep/deployDevBox.json
 
-        - name: artifacts
+        - name: Upload Bicep Artifacts
           uses: actions/upload-artifact@v3
           with:
             name: artifactsBicep-ARM-Templates
