@@ -107,6 +107,6 @@ jobs:
             customRoleName=${{ env.customRoleName }}
             computeGalleryName=${{ env.computeGalleryName }}
             networkResourceGroupName=${{ env.networkResourceGroupName }}
-            currentUser=${{ secre.AZURE_CREDENTIALS.clientId }}
+            currentUser=${{ secrets.AZURE_CREDENTIALS.clientId }}
             logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }}
             managementResourceGroupName=${{ env.managementResourceGroupName }}
