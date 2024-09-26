@@ -5,6 +5,12 @@ param identityName string
 param computeGalleryName string
 param networkResourceGroupName string
 param logAnalyticsWorkspaceName string
+param managementResourceGroupName string
+
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
+  name: logAnalyticsWorkspaceName
+  scope: resourceGroup(managementResourceGroupName)
+}
 
 
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
@@ -17,10 +23,6 @@ resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-02-01' e
 
 resource computeGallery 'Microsoft.Compute/galleries@2021-10-01' existing = {
   name: computeGalleryName
-}
-
-resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
-  name: logAnalyticsWorkspaceName
 }
 
 @description('Deploying DevCenter')
@@ -53,12 +55,14 @@ resource devCenterDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021
     workspaceId: logAnalyticsWorkspace.id
     logs: [
       {
+        categoryGroup: 'allLogs'
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
         category: 'AllMetrics'
         enabled: true
-        retentionPolicy: {
-          enabled: true
-          days: 30
-        }
       }
     ]
   }

@@ -158,7 +158,9 @@ deployDevCenter() {
     local identityName="$3" 
     local customRoleName="$4" 
     local computeGalleryName="$5"
-    local networkResourceGroupName="$6"
+    local networkResourceGroupName="$6" 
+    local logAnalyticsWorkspaceName="$7"
+    local managementResourceGroupName="$8"
 
     # Check if required parameters are provided
     if [[ -z "$devCenterName" || -z "$networkConnectionName" || -z "$identityName" || -z "$customRoleName" || -z "$computeGalleryName" || -z "$networkResourceGroupName" ]]; then
@@ -183,7 +185,10 @@ deployDevCenter() {
             customRoleName="$customRoleName" \
             computeGalleryName="$computeGalleryName" \
             networkResourceGroupName="$networkResourceGroupName" \
-            currentUser="$currentUser" 
+            currentUser="$currentUser" \
+            logAnalyticsWorkspaceName="$logAnalyticsWorkspaceName" \
+            managementResourceGroupName="$managementResourceGroupName" \
+        --verbose
 
     # Check if the deployment was successful
     if [[ $? -ne 0 ]]; then
@@ -208,9 +213,9 @@ deploy(){
     
     deployResourcesOrganization
 
-    # deployLogAnalytics \
-    #     "$managementResourceGroupName" \
-    #     "$logAnalyticsWorkspaceName" 
+    deployLogAnalytics \
+        "$managementResourceGroupName" \
+        "$logAnalyticsWorkspaceName" 
     
     deployNetworkResources \
         "$networkResourceGroupName" \
@@ -220,12 +225,14 @@ deploy(){
         "$logAnalyticsWorkspaceName" \
         "$managementResourceGroupName"
     
-    # deployDevCenter "$devCenterName"  \
-    #     "$networkConnectionName" \
-    #     "$identityName" \
-    #     "$customRoleName" \
-    #     "$computeGalleryName" \
-    #     "$networkResourceGroupName"    
+    deployDevCenter "$devCenterName"  \
+        "$networkConnectionName" \
+        "$identityName" \
+        "$customRoleName" \
+        "$computeGalleryName" \
+        "$networkResourceGroupName"  \
+        "$logAnalyticsWorkspaceName" \
+        "$managementResourceGroupName"
 }
 
 demoScript() {

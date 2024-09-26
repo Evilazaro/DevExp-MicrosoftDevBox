@@ -30,6 +30,9 @@ resource deployVirtualNetwork 'Microsoft.Network/virtualNetworks@2024-01-01' = {
       }
     ]
   }
+  dependsOn: [
+    logAnalyticsWorkspace
+  ]
 }
 
 output vnetId string = deployVirtualNetwork.id
