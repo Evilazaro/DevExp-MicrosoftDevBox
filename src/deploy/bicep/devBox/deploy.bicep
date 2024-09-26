@@ -6,6 +6,7 @@ param computeGalleryName string
 param networkResourceGroupName string
 param currentUser string
 param logAnalyticsWorkspaceName string
+param managementResourceGroupName string
 
 module identity '../identity/deploy.bicep' = {
   name: 'identity'
@@ -23,8 +24,6 @@ module computeGallery './computeGallery/deployComputeGallery.bicep' = {
   name: 'computeGallery'
   params: {
     computeGalleryName: computeGalleryName
-    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
-    managementResourceGroupName: networkResourceGroupName
   }
   dependsOn: [
     identity
@@ -44,7 +43,7 @@ module devCenter './devCenter/deployDevCenter.bicep' = {
     computeGalleryName: computeGalleryName
     networkResourceGroupName: networkResourceGroupName
     logAnalyticsWorkspaceName:logAnalyticsWorkspaceName
-    managementResourceGroupName: networkResourceGroupName
+    managementResourceGroupName: managementResourceGroupName
   }
   dependsOn: [
     computeGallery

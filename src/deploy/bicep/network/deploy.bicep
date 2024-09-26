@@ -25,7 +25,6 @@ module networkConnection './networkConnection/createNetWorkConnection.bicep' = {
   params: {
     name: networkConnectionName
     subnetId: virtualNetwork.outputs.subnetId
-    location: resourceGroup().location
   }
   dependsOn: [
     virtualNetwork

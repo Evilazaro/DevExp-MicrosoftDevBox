@@ -87,6 +87,24 @@ resource devCenterCatalogs 'Microsoft.DevCenter/devcenters/catalogs@2024-02-01' 
 output devCenterName_quickstart_devbox_tasks_id string = devCenterCatalogs.id
 output devCenterName_quickstart_devbox_tasks_name string = devCenterCatalogs.name
 
+@description('Create DevCenter Development Environment for the eShop Project')
+resource devCenterDevEnvironment 'Microsoft.DevCenter/devcenters/environmenttypes@2024-02-01' = {
+  parent: deployDevCenter
+  name: 'Development'
+}
+
+output devCenterDevEnvironmentId string = devCenterDevEnvironment.id
+output devCenterDevEnvironmentName string = devCenterDevEnvironment.name
+
+@description('Create DevCenter Staging Environment for the eShop Project')
+resource devCenterStagingEnvironment 'Microsoft.DevCenter/devcenters/environmenttypes@2024-02-01' = {
+  parent: deployDevCenter
+  name: 'Staging'
+}
+
+output devCenterStagingEnvironmentId string = devCenterStagingEnvironment.id
+output devCenterStagingEnvironmentName string = devCenterStagingEnvironment.name
+
 @description('Create DevCenter Network Connection')
 resource devCenterNetworkConnection 'Microsoft.DevCenter/devcenters/attachednetworks@2024-02-01' = {
   parent: deployDevCenter
@@ -173,7 +191,7 @@ output devBoxDefinitionFrontEndId string = devBoxDefinitionFrontEnd.id
 output devBoxDefinitionFrontEndName string = devBoxDefinitionFrontEnd.name
 
 @description('Create DevCenter eShop Project')
-resource project 'Microsoft.DevCenter/projects@2024-02-01' = {
+resource eShopProject 'Microsoft.DevCenter/projects@2024-02-01' = {
   name: 'eShop'
   location: resourceGroup().location
   properties: {
@@ -183,14 +201,14 @@ resource project 'Microsoft.DevCenter/projects@2024-02-01' = {
   }
 }
 
-output projectId string = project.id
-output projectName string = project.name
+output eShopProjectId string = eShopProject.id
+output eShopProjectName string = eShopProject.name
 
 @description('Create DevCenter DevBox Pools for BackEnd Engineers of eShop Project')
 resource backEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
   name: 'backEndPool'
   location: resourceGroup().location
-  parent: project
+  parent: eShopProject
   properties: {
     devBoxDefinitionName: devBoxDefinitionBackEnd.name
     licenseType: 'Windows_Client'
@@ -210,7 +228,7 @@ output backEndPoolName string = backEndPool.name
 resource frontEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
   name: 'frontEndPool'
   location: resourceGroup().location
-  parent: project
+  parent: eShopProject
   properties: {
     devBoxDefinitionName: devBoxDefinitionFrontEnd.name
     licenseType: 'Windows_Client'
@@ -225,3 +243,58 @@ resource frontEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
 
 output frontEndPoolId string = backEndPool.id
 output frontEndPoolName string = backEndPool.name
+
+resource eShopDevEnvironment 'Microsoft.DevCenter/projects/environmentTypes@2023-04-01' = {
+  name: 'eShopDevEnvironment'
+  location: resourceGroup().location
+  tags: {
+    tagName1: 'Development'
+    tagName2: 'eShop'
+  }
+  parent: eShopProject
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${managedIdentity.id}': {}
+    }
+  }
+  properties: {
+    creatorRoleAssignment: {
+      roles: {}
+    }
+    deploymentTargetId: subscriptionResourceId(subscription().subscriptionId,'Microsoft.Subscription')
+    status: 'Enabled'
+    userRoleAssignments: {}
+  }
+}
+
+output eShopDevEnvironmentId string = eShopDevEnvironment.id
+output eShopDevEnvironmentName string = eShopDevEnvironment.name
+
+resource eShopStagingEnvironment 'Microsoft.DevCenter/projects/environmentTypes@2023-04-01' = {
+  name: 'eShopStagingEnvironment'
+  location: resourceGroup().location
+  tags: {
+    tagName1: 'Staging'
+    tagName2: 'eShop'
+  }
+  parent: eShopProject
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${managedIdentity.id}': {}
+    }
+  }
+  properties: {
+    creatorRoleAssignment: {
+      roles: {}
+    }
+    deploymentTargetId: subscriptionResourceId(subscription().subscriptionId,'Microsoft.Subscription')
+    
+    status: 'Enabled'
+    userRoleAssignments: {}
+  }
+}
+
+output eShopStagingEnvironmentId string = eShopStagingEnvironment.id
+output eShopStagingEnvironmentName string = eShopStagingEnvironment.name

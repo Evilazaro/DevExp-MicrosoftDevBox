@@ -213,17 +213,17 @@ deploy(){
     
     deployResourcesOrganization
 
-    deployLogAnalytics \
-        "$managementResourceGroupName" \
-        "$logAnalyticsWorkspaceName" 
+    # deployLogAnalytics \
+    #     "$managementResourceGroupName" \
+    #     "$logAnalyticsWorkspaceName" 
     
-    deployNetworkResources \
-        "$networkResourceGroupName" \
-        "$vnetName" \
-        "$subNetName" \
-        "$networkConnectionName" \
-        "$logAnalyticsWorkspaceName" \
-        "$managementResourceGroupName"
+    # deployNetworkResources \
+    #     "$networkResourceGroupName" \
+    #     "$vnetName" \
+    #     "$subNetName" \
+    #     "$networkConnectionName" \
+    #     "$logAnalyticsWorkspaceName" \
+    #     "$managementResourceGroupName"
     
     deployDevCenter "$devCenterName"  \
         "$networkConnectionName" \
