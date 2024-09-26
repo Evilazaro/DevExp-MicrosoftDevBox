@@ -33,7 +33,7 @@ module computeGallery './computeGallery/deployComputeGallery.bicep' = {
 output computeGalleryId string = computeGallery.outputs.computeGalleryId
 output computeGalleryName string = computeGallery.outputs.computeGalleryName
 
-module devCenter './devCenter/deployDevCenter.bicep' = {
+module devCenter 'devCenter/deployDevCenter.bicep' = {
   name: 'devCenter'
   params: {
     devCenterName: devCenterName
@@ -49,6 +49,7 @@ module devCenter './devCenter/deployDevCenter.bicep' = {
     computeGallery
   ]
 }
+
 
 output devCenterId string = devCenter.outputs.devCenterId
 output devCenterName string = devCenter.outputs.devCenterName

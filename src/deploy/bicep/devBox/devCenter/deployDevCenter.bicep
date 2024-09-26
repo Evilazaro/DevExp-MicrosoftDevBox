@@ -12,7 +12,6 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09
   scope: resourceGroup(managementResourceGroupName)
 }
 
-
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
   name: identityName
 }
@@ -247,22 +246,18 @@ output frontEndPoolName string = backEndPool.name
 resource eShopDevEnvironment 'Microsoft.DevCenter/projects/environmentTypes@2023-04-01' = {
   name: 'eShopDevEnvironment'
   location: resourceGroup().location
-  type: devCenterDevEnvironment
   tags: {
     tagName1: 'Development'
     tagName2: 'eShop'
   }
   parent: eShopProject
   identity: {
-    type: 'SystemAssigned'
-    userAssignedIdentities: {
-      '${managedIdentity.id}': {}
-    }
+    type: 'string'
+    userAssignedIdentities: {}
   }
   properties: {
     creatorRoleAssignment: {
-      roles: {
-        '8e3af657-a8ff-443c-a75c-2fe8c4bcb635':{}
+      roles: {}
     }
     deploymentTargetId: subscription().subscriptionId
     status: 'Enabled'
