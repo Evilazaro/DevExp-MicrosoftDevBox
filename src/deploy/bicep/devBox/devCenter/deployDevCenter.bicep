@@ -262,7 +262,7 @@ resource eShopDevEnvironment 'Microsoft.DevCenter/projects/environmentTypes@2023
     creatorRoleAssignment: {
       roles: {}
     }
-    deploymentTargetId: subscriptionResourceId(subscription().subscriptionId,'Microsoft.Subscription')
+    deploymentTargetId: subscription().subscriptionId
     status: 'Enabled'
     userRoleAssignments: {}
   }
@@ -289,8 +289,7 @@ resource eShopStagingEnvironment 'Microsoft.DevCenter/projects/environmentTypes@
     creatorRoleAssignment: {
       roles: {}
     }
-    deploymentTargetId: subscriptionResourceId(subscription().subscriptionId,'Microsoft.Subscription')
-    
+    deploymentTargetId: subscription().subscriptionId
     status: 'Enabled'
     userRoleAssignments: {}
   }
