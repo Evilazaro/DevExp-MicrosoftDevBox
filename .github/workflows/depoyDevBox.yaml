@@ -95,4 +95,4 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
           resourceGroupName: ${{ env.devBoxResourceGroupName }}
           template: ./src/deploy/bicep/devBox/deploy.bicep
-          parameters: 'devCenterName=${{ env.devCenterName }} networkConnectionName=${{ env.networkConnectionName }} identityName=${{ env.identityName }} customRoleName=${{ env.customRoleName }} computeGalleryName=${{ env.computeGalleryName }} networkResourceGroupName=${{ env.networkResourceGroupName }} currentUser=${{ secrets.AZURE_CREDENTIALS.clientId }} logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }} managementResourceGroupName=${{ env.managementResourceGroupName }}'
+          parameters: 'devCenterName=${{ env.devCenterName }} networkConnectionName=${{ env.networkConnectionName }} identityName=${{ env.identityName }} customRoleName=${{ env.customRoleName }} computeGalleryName=${{ env.computeGalleryName }} networkResourceGroupName=${{ env.networkResourceGroupName }} currentUser=f7d97159-e451-49e7-8b8c-83e0dc73597e logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }} managementResourceGroupName=${{ env.managementResourceGroupName }}'
