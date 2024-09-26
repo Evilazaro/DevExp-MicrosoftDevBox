@@ -51,7 +51,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   isOptional: true
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQuerySingleValueTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -77,7 +77,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   value: 1
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQueryChartTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -125,7 +125,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   isOptional: true
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQuerySingleValueTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -151,7 +151,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   value: 1
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQueryChartTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -177,7 +177,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   value: 1
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQueryChartTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -203,7 +203,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   value: 1
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQueryChartTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -251,7 +251,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   isOptional: true
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQueryGridTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -277,7 +277,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   isOptional: true
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQuerySingleValueTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -303,7 +303,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   value: 1
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQueryChartTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -329,7 +329,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   value: 1
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQueryChartTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -377,7 +377,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   isOptional: true
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQuerySingleValueTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -403,7 +403,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   isOptional: true
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQuerySingleValueTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -429,7 +429,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   isOptional: true
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQuerySingleValueTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -455,7 +455,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   value: 1
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQueryChartTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -503,7 +503,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   isOptional: true
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQuerySingleValueTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -529,7 +529,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   value: 1
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQueryChartTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -555,7 +555,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   value: 1
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQueryChartTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -603,7 +603,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   isOptional: true
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQuerySingleValueTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -629,7 +629,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   isOptional: true
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQuerySingleValueTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -655,7 +655,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   value: 1
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQueryChartTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
@@ -681,7 +681,7 @@ resource AzureInventory 'Microsoft.Portal/dashboards@2020-09-01-preview' = {
                   value: 1
                 }
               ]
-              type: 'Extension/HubsExtension/PartType/ArgQueryChartTile'
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
               settings: {}
             }
           }
