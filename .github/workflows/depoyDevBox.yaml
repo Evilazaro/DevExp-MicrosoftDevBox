@@ -21,12 +21,12 @@ jobs:
 
           # Verify Azure CLI login by listing subscriptions (optional step)
           - name: Verify login by listing subscriptions
-            run: az account show
+            run: echo ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
 
-          # Perform other tasks, e.g., deploying to Azure or running scripts
-          - name: Deploy resources
-            run: |
-              az account set --subscription ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
+          # # Perform other tasks, e.g., deploying to Azure or running scripts
+          # - name: Deploy resources
+          #   run: |
+          #     az account set --subscription ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
           # Add more Azure CLI or deployment commands here
 
           # - name: Deploy Bicep script
