@@ -50,10 +50,6 @@ jobs:
           - name: Give execute permissions to the script
             run: chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh
 
-    ProvisionAzureResources:
-        runs-on: ubuntu-latest
-        needs: SetupEnvironment
-        steps:
           - name: Create Resources Organization
             run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh
 
