@@ -70,7 +70,7 @@ jobs:
               template: ./src/deploy/bicep/network/deploy.bicep
               parameters: |
                 vnetName=${{ env.vnetName }}
-                subNetName=${{ env.subNetName }}
+                subnetName=${{ env.subNetName }}
                 networkConnectionName=${{ env.networkConnectionName }}
                 logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }}
                 managementResourceGroupName=${{ env.managementResourceGroupName }}
