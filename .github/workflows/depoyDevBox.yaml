@@ -88,11 +88,11 @@ jobs:
           resourceGroupName: ${{ env.networkResourceGroupName }}
           template: ./src/deploy/bicep/network/deploy.bicep
           parameters: |
-            'vnetName=${{ env.vnetName }} ' 
-            'subnetName=${{ env.subNetName }} ' 
-            'networkConnectionName=${{ env.networkConnectionName }} ' 
-            'logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }} ' 
-            'managementResourceGroupName=${{ env.managementResourceGroupName }} ' 
+            'vnetName=${{ env.vnetName }}  
+             subnetName=${{ env.subNetName }}  
+             networkConnectionName=${{ env.networkConnectionName }}  
+             logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }}  
+             managementResourceGroupName=${{ env.managementResourceGroupName }} ' 
 
       - name: Deploy DevCenter Resources
         uses: azure/arm-deploy@v1
