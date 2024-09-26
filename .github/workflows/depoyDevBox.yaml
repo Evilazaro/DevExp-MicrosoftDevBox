@@ -1,11 +1,7 @@
-name: Deploy DevBox as a Service to Azure
+name: Build and Deploy DevBox as a Service for eShop
 # note
 on:
     workflow_dispatch: # Manually trigger the workflow
-    push:
-        branches:
-            - main
-
 
 env:
   location: "WestUS3"
