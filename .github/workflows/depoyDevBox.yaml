@@ -6,6 +6,30 @@ on:
         branches:
             - main
 
+
+env:
+  location: "WestUS3"
+
+  # Azure Resource Group Names Constants
+  devBoxResourceGroupName: "eShopPetDevBox-rg"
+  networkResourceGroupName: "eShopPetNetworkConnectivity-rg"
+  managementResourceGroupName: "eShopPetDevBoxManagement-rg"
+
+  # Identity Parameters Constants
+  identityName: "eShopPetDevBoxImgBldId"
+  customRoleName: "eShopPetBuilderRole"
+
+  # Image and DevCenter Parameters Constants
+  computeGalleryName: "eShopPetImageGallery"
+  devCenterName: "eShopPetDevCenter"
+
+  # Network Parameters Constants
+  vnetName: "eShopPetVnet"
+  subNetName: "eShopPetSubNet"
+  networkConnectionName: "eShopPetNetworkConnection"
+  # Management Parameters constants
+  logAnalyticsWorkspaceName: "eShopPetDevBoxLogAnalytics"
+
 jobs:
     Deploy-DevBox-To-Azure:
         runs-on: ubuntu-latest
@@ -24,3 +48,12 @@ jobs:
 
           - name: Create Resources Organization
             run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh
+
+          - name: Deploy Log Analytics
+            uses: azure/arm-deploy@v1
+            with:
+              subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
+              resourceGroupName: ${{ env.managementResourceGroupName }}
+              template: ./src/deploy/bicep/management/deploy.bicep
+              parameters: 'logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }}'
+
