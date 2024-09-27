@@ -1,4 +1,8 @@
 name: Build and Deploy DevBox as a Service for eShop
+
+permissions:
+    id-token: write
+    
 # note
 on:
   workflow_dispatch: # Manually trigger the workflow
