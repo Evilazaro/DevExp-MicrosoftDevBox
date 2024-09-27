@@ -1,4 +1,7 @@
 name: DevBox as a Service Continuous Integration
+
+permissions:
+    id-token: write
 # note
 on:
     workflow_dispatch: # Manually trigger the workflow
