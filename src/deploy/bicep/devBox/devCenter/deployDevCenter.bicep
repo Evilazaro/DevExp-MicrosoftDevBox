@@ -141,13 +141,14 @@ resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitio
   properties: {
     hibernateSupport: 'true'
     imageReference: {
-      id: format(
-        '/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/devcenters/{2}/galleries/Default/images/{3}',
-        subscription().subscriptionId,
-        resourceGroup().name,
-        devCenterName,
-        'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2'
-      )
+      id: resourceId('Microsoft.DevCenter/devcenters/galleries', 'Default', 'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2')
+      // id: format(
+      //   '/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/devcenters/{2}/galleries/Default/images/{3}',
+      //   subscription().subscriptionId,
+      //   resourceGroup().name,
+      //   devCenterName,
+      //   'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2'
+      // )
     }
     osStorageType: 'ssd_512gb'
     sku: {
@@ -161,6 +162,14 @@ resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitio
 output devBoxDefinitionBackEndId string = devBoxDefinitionBackEnd.id
 output devBoxDefinitionBackEndName string = devBoxDefinitionBackEnd.name
 
+resource test 'Microsoft.DevCenter/devcenters/galleries@2024-08-01-preview' = {
+  parent: deployDevCenter
+  name: 'Default'
+  properties: {
+    galleryResourceId: resourceId('Microsoft.Compute/galleries', 'Default')
+  }
+}
+
 @description('Create DevCenter DevBox Definition for FrontEnd Engineer')
 resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
   name: 'eShopPet-FrontEndEngineer'
@@ -169,13 +178,14 @@ resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefiniti
   properties: {
     hibernateSupport: 'true'
     imageReference: {
-      id: format(
-        '/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/devcenters/{2}/galleries/Default/images/{3}',
-        subscription().subscriptionId,
-        resourceGroup().name,
-        devCenterName,
-        'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
-      )
+      id: resourceId('Microsoft.DevCenter/devcenters/galleries', 'Default', 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365')
+      // id: format(
+      //   '/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/devcenters/{2}/galleries/Default/images/{3}',
+      //   subscription().subscriptionId,
+      //   resourceGroup().name,
+      //   devCenterName,
+      //   'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
+      // )
     }
     osStorageType: 'ssd_512gb'
     sku: {
@@ -243,30 +253,30 @@ resource frontEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
 output frontEndPoolId string = backEndPool.id
 output frontEndPoolName string = backEndPool.name
 
-resource eShopDevEnvironment 'Microsoft.DevCenter/projects/environmentTypes@2023-04-01' = {
-  name: 'eShopDevEnvironment'
-  location: resourceGroup().location
-  tags: {
-    tagName1: 'Development'
-    tagName2: 'eShop'
-  }
-  parent: eShopProject
-  identity: {
-    type: 'string'
-    userAssignedIdentities: {}
-  }
-  properties: {
-    creatorRoleAssignment: {
-      roles: {}
-    }
-    deploymentTargetId: subscription().subscriptionId
-    status: 'Enabled'
-    userRoleAssignments: {}
-  }
-}
+// resource eShopDevEnvironment 'Microsoft.DevCenter/projects/environmentTypes@2023-04-01' = {
+//   name: 'eShopDevEnvironment'
+//   location: resourceGroup().location
+//   tags: {
+//     tagName1: 'Development'
+//     tagName2: 'eShop'
+//   }
+//   parent: eShopProject
+//   identity: {
+//     type: 'string'
+//     userAssignedIdentities: {}
+//   }
+//   properties: {
+//     creatorRoleAssignment: {
+//       roles: {}
+//     }
+//     deploymentTargetId: subscription().subscriptionId
+//     status: 'Enabled'
+//     userRoleAssignments: {}
+//   }
+// }
 
-output eShopDevEnvironmentId string = eShopDevEnvironment.id
-output eShopDevEnvironmentName string = eShopDevEnvironment.name
+// output eShopDevEnvironmentId string = eShopDevEnvironment.id
+// output eShopDevEnvironmentName string = eShopDevEnvironment.name
 
 // resource eShopStagingEnvironment 'Microsoft.DevCenter/projects/environmentTypes@2023-04-01' = {
 //   name: 'eShopStagingEnvironment'
