@@ -141,7 +141,8 @@ resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitio
   properties: {
     hibernateSupport: 'true'
     imageReference: {
-      id: resourceId('Microsoft.DevCenter/devcenters/galleries', 'Default', 'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2')
+      //id: resourceId('Microsoft.DevCenter/devcenters/galleries', 'Default', 'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2')
+      id: resourceId('Microsoft.DevCenter/devcenters/galleries', deployDevCenter.name, 'Default','images','visualstudioplustools_vs-2022-ent-general-win11-m365-gen2')
     }
     osStorageType: 'ssd_512gb'
     sku: {
@@ -163,14 +164,7 @@ resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefiniti
   properties: {
     hibernateSupport: 'true'
     imageReference: {
-      id: resourceId('Microsoft.DevCenter/devcenters/galleries', 'Default', 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365')
-      // id: format(
-      //   '/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/devcenters/{2}/galleries/Default/images/{3}',
-      //   subscription().subscriptionId,
-      //   resourceGroup().name,
-      //   devCenterName,
-      //   'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
-      // )
+      id: resourceId('Microsoft.DevCenter/devcenters/galleries', 'Default','images', 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365')
     }
     osStorageType: 'ssd_512gb'
     sku: {
