@@ -82,7 +82,7 @@ deleteCustomRole() {
 # Function to delete role assignments
 deleteRoleAssignments() {
     # Deleting role assignments and role definitions
-    for roleName in 'Owner' 'Managed Identity Operator' 'DevCenter Dev Box User' "$customRoleName"; do
+    for roleName in 'Owner' 'Managed Identity Operator' "$customRoleName"; do
         echo "Getting the role ID for '$roleName'..."
         local roleId=$(az role definition list --name "$roleName" --query [].name --output tsv)
         if [[ -z "$roleId" ]]; then
