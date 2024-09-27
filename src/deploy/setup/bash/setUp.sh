@@ -1,4 +1,7 @@
 #!/bin/bash
 
+appName="eShop"
+displayName="eShop GitHub Actions Enterprise App"
+
 clear
-./GitHub/registerNewAppAzureAd.sh
+./GitHub/generateDeploymentCredentials.sh "$appName" "$displayName"
