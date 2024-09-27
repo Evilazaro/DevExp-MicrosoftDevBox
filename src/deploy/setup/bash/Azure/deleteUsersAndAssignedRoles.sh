@@ -5,13 +5,6 @@ subscriptionId="$(az account show --query id -o tsv)"
 # Function to delete user assignments and roles
 deleteUserAssignments() {
 
-    # Check if required parameter is provided
-    if [[ -z "$currentUser" ]]; then
-        echo "Error: Missing required parameter."
-        echo "Usage: deleteUserAssignments <currentUser>"
-        return 1
-    fi
-
     # Get the current signed-in user's object ID
     local currentUser
     currentUser=$(az ad signed-in-user show --query id -o tsv)
@@ -32,12 +25,6 @@ deleteUserAssignments() {
     removeRole "$currentUser" "DevCenter Dev Box User" "User"
     if [[ $? -ne 0 ]]; then
         echo "Error: Failed to remove role 'DevCenter Dev Box User' from current user with object ID: $currentUser"
-        return 1
-    fi
-
-    removeRole "$currentUser" "DevCenter Project Admin" "User"
-    if [[ $? -ne 0 ]]; then
-        echo "Error: Failed to remove role 'DevCenter Project Admin' from current user with object ID: $currentUser"
         return 1
     fi
 

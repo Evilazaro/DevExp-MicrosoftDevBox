@@ -15,7 +15,7 @@ deleteGhSecret() {
     echo "Deleting GitHub secret: $ghSecretName"
 
     # Delete the GitHub secret
-    gh secret delete "$ghSecretName"
+    gh secret remove "$ghSecretName"
     if [[ $? -ne 0 ]]; then
         echo "Error: Failed to delete GitHub secret: $ghSecretName"
         return 1
