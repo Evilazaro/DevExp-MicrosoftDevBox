@@ -142,13 +142,6 @@ resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitio
     hibernateSupport: 'true'
     imageReference: {
       id: resourceId('Microsoft.DevCenter/devcenters/galleries', 'Default', 'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2')
-      // id: format(
-      //   '/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/devcenters/{2}/galleries/Default/images/{3}',
-      //   subscription().subscriptionId,
-      //   resourceGroup().name,
-      //   devCenterName,
-      //   'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2'
-      // )
     }
     osStorageType: 'ssd_512gb'
     sku: {
@@ -161,14 +154,6 @@ resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitio
 
 output devBoxDefinitionBackEndId string = devBoxDefinitionBackEnd.id
 output devBoxDefinitionBackEndName string = devBoxDefinitionBackEnd.name
-
-resource test 'Microsoft.DevCenter/devcenters/galleries@2024-08-01-preview' = {
-  parent: deployDevCenter
-  name: 'Default'
-  properties: {
-    galleryResourceId: resourceId('Microsoft.Compute/galleries', 'Default')
-  }
-}
 
 @description('Create DevCenter DevBox Definition for FrontEnd Engineer')
 resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
