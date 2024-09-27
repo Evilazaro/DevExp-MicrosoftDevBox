@@ -14,4 +14,5 @@ setup() {
     echo "Deployment credentials set up successfully."
 }
 
+clear
 setup

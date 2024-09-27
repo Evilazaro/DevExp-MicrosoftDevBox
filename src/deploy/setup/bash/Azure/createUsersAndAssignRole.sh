@@ -1,6 +1,6 @@
 #!/bin/bash
 
-appId="$1"
+subscriptionId=$(az account show --query id -o tsv)
 
 # Function to assign a role to a user or service principal
 assignRole() {
@@ -28,29 +28,15 @@ assignRole() {
 
 # Function to create user assignments and assign roles
 createUserAssignments() {
-    local appId="$1"
-
-    # Check if required parameter is provided
-    if [[ -z "$appId" ]]; then
-        echo "Error: Missing required parameter."
-        echo "Usage: createUserAssigned <appId>"
-        return 1
-    fi
-
-    echo "Creating user assignments and assigning roles for appId: $appId"
-
+   
     # Get the current signed-in user's object ID
     local currentUser
-    currentUser=$(az ad signed-in-user show --query objectId -o tsv)
+    currentUser=$(az ad signed-in-user show --query id -o tsv)
+    
+    echo "Creating user assignments and assigning roles for currentUser: $currentUser"
+
     if [[ $? -ne 0 ]]; then
         echo "Error: Failed to retrieve current signed-in user's object ID."
-        return 1
-    fi
-
-    # Assign roles to the service principal and current user
-    assignRole "$appId" "DevCenter Project Admin" "ServicePrincipal"
-    if [[ $? -ne 0 ]]; then
-        echo "Error: Failed to assign role 'DevCenter Project Admin' to service principal with appId: $appId"
         return 1
     fi
 
@@ -66,19 +52,7 @@ createUserAssignments() {
         return 1
     fi
 
-    echo "User assignments and role assignments completed successfully for appId: $appId"
+    echo "User assignments and role assignments completed successfully for currentUser: $currentUser"
 }
 
-validateInput() {
-    local appId="$1"
-
-    # Check if required parameter is provided
-    if [[ -z "$appId" ]]; then
-        echo "Error: Missing required parameter."
-        echo "Usage: validateInput <appId>"
-        return 1
-    fi
-}
-
-validateInput "$appId"
-createUserAssignments "$appId"
+createUserAssignments

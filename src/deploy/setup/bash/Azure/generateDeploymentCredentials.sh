@@ -29,6 +29,7 @@ generateDeploymentCredentials() {
 
     # Create the service principal and capture the appId
     ghSecretBody=$(az ad sp create-for-rbac --name "$appName" --display-name "$displayName" --role "$role" --scopes "/subscriptions/$subscriptionId" --json-auth --output json)
+    appId=$(az ad sp list --display-name "$displayName" --query "[0].appId" -o tsv)
 
     echo "Service principal credentials"
     echo "$ghSecretBody"
@@ -43,29 +44,47 @@ generateDeploymentCredentials() {
     # Create users and assign roles
     createUsersAndAssignRole "$appId"
 
+    # Create GitHub secret for Azure credentials
+    createGitHubSecretAzureCredentials "$ghSecretBody"
+
 }
 
 # Function to create users and assign roles
 createUsersAndAssignRole() {
-    local appId="$1"
 
-    # Check if required parameter is provided
-    if [[ -z "$appId" ]]; then
-        echo "Error: Missing required parameter."
-        echo "Usage: createUsersAndAssignRole <appId>"
-        return 1
-    fi
-
-    echo "Creating users and assigning roles for appId: $appId"
+    echo "Creating users and assigning roles"
 
     # Execute the script to create users and assign roles
-    ./createUsersAndAssignRole.sh "$appId"
+    ./Azure/createUsersAndAssignRole.sh
     if [[ $? -ne 0 ]]; then
-        echo "Error: Failed to create users and assign roles for appId: $appId"
+        echo "Error: Failed to create users and assign roles"
         return 1
     fi
 
-    echo "Users created and roles assigned successfully for appId: $appId"
+    echo "Users created and roles assigned successfully"
+}
+
+# Function to create a GitHub secret for Azure credentials
+createGitHubSecretAzureCredentials() {
+    local ghSecretBody="$1"
+
+    # Check if required parameter is provided
+    if [[ -z "$ghSecretBody" ]]; then
+        echo "Error: Missing required parameter."
+        echo "Usage: createGitHubSecretAzureCredentials <ghSecretBody>"
+        return 1
+    fi
+
+    echo "Creating GitHub secret for Azure credentials..."
+
+    # Execute the script to create the GitHub secret
+    ./GitHub/createGitHubSecretAzureCredentials.sh "$ghSecretBody"
+    if [[ $? -ne 0 ]]; then
+        echo "Error: Failed to create GitHub secret for Azure credentials."
+        return 1
+    fi
+
+    echo "GitHub secret for Azure credentials created successfully."
 }
 
 validateInput "$1" "$2"
