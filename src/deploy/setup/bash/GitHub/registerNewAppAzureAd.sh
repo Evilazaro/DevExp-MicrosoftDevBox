@@ -1,6 +1,6 @@
 #!/bin/bash
 
-appName="GitHub Actions Enterprise App10"
+appName="eShop GitHub Actions Enterprise App2"
 
 # Function to create a new Azure AD application and service principal
 registerNewAppAzureAd() {
@@ -27,6 +27,12 @@ registerNewAppAzureAd() {
 
     # Create the service principal for the application
     createServicePrincipal "$appId"
+
+    # Assign roles to the service principal
+    assignRolesServicePrincipal "$appId"
+
+    # Create a client secret for the application
+    createClientSecretApp "$appId"
     
 }
 
@@ -122,12 +128,34 @@ assignRole() {
     echo "Role with roleDefinitionId: $roleDefinitionId assigned successfully to appId: $appId"
 }
 
-# Example usage
-# assignRolesServicePrincipal "your-app-id"
+#!/bin/bash
 
-createClientSecretApp(){
+# Function to create a client secret for an Azure AD application
+createClientSecretApp() {
     local appId="$1"
-    az ad app credential reset --id "$appId" --credential-description "GitHub Actions Enterprise App Secret" --query password -o tsv
+
+    # Check if required parameter is provided
+    if [[ -z "$appId" ]]; then
+        echo "Error: Missing required parameter."
+        echo "Usage: createClientSecretApp <appId>"
+        return 1
+    fi
+
+    echo "Creating client secret for Azure AD application with appId: $appId"
+
+    # Create the client secret and capture the result
+    local clientSecret
+    clientSecret=$(az ad app credential reset --id "$appId" --display-name "GitHub Actions Enterprise App Secret" --query password -o tsv)
+    if [[ $? -ne 0 ]]; then
+        echo "Error: Failed to create client secret for appId: $appId"
+        return 1
+    fi
+
+    displayName=$(az ad app credential list --id "$appId" --query "[].displayName" -o tsv)
+
+    echo "Client secret created successfully for appId: $appId"
+    echo "Client Secret: $clientSecret"
+    echo "Display Name: $displayName"
 }
 
 registerNewAppAzureAd "$appName"
