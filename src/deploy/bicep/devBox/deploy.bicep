@@ -4,7 +4,6 @@ param identityName string
 param customRoleName string 
 param computeGalleryName string
 param networkResourceGroupName string
-param currentUser string
 param logAnalyticsWorkspaceName string
 param managementResourceGroupName string
 
@@ -13,7 +12,6 @@ module identity '../identity/deploy.bicep' = {
   params: {
     identityName: identityName
     customRoleName: customRoleName
-    currentUser: currentUser
   }
 }
 
