@@ -3,6 +3,9 @@ name: Test Login To Azure
 on: 
     workflow_dispatch: # Manually trigger the workflow
 
+permissions:
+    id-token: write
+
 jobs:
   testLoginToAzure:
     runs-on: ubuntu-latest
