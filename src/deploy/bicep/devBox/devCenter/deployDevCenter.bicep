@@ -133,6 +133,24 @@ resource devCenterComputeGallery 'Microsoft.DevCenter/devcenters/galleries@2024-
 output devCenterName_computeGalleryImage_id string = devCenterComputeGallery.id
 output devCenterName_computeGalleryImage_name string = devCenterComputeGallery.name
 
+resource defaultComputeGallery 'Microsoft.DevCenter/devcenters/galleries@2024-02-01' = {
+  parent: deployDevCenter
+  name: 'Default'
+  properties: {
+    galleryResourceId: resourceId('Microsoft.Compute/galleries', 'Default')
+  }
+}
+
+output devCenterName_defaultComputeGalleryImage_id string = defaultComputeGallery.id
+output devCenterName_defaultComputeGalleryImage_name string = defaultComputeGallery.name
+
+resource backEndImage 'Microsoft.DevCenter/devcenters/galleries/images@2024-02-01' existing = {
+  parent: defaultComputeGallery
+  name: 'visualstudioplustools_vs-2022-ent-general-win11-m365-gen2'
+}
+
+output backEndImageId string = backEndImage.id
+
 @description('Create DevCenter DevBox Definition for BackEnd Engineer')
 resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
   name: 'eShopPet-BackEndEngineer'
@@ -141,8 +159,7 @@ resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitio
   properties: {
     hibernateSupport: 'true'
     imageReference: {
-      //id: resourceId('Microsoft.DevCenter/devcenters/galleries', 'Default', 'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2')
-      id: resourceId('Microsoft.DevCenter/devcenters/galleries', deployDevCenter.name, 'Default','images','visualstudioplustools_vs-2022-ent-general-win11-m365-gen2')
+      id: backEndImage.id
     }
     osStorageType: 'ssd_512gb'
     sku: {
@@ -156,6 +173,13 @@ resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitio
 output devBoxDefinitionBackEndId string = devBoxDefinitionBackEnd.id
 output devBoxDefinitionBackEndName string = devBoxDefinitionBackEnd.name
 
+resource frontEndImage 'Microsoft.DevCenter/devcenters/galleries/images@2024-02-01' existing = {
+  parent: defaultComputeGallery
+  name: 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
+}
+
+output frontEndImageId string = frontEndImage.id
+
 @description('Create DevCenter DevBox Definition for FrontEnd Engineer')
 resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
   name: 'eShopPet-FrontEndEngineer'
@@ -164,7 +188,7 @@ resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefiniti
   properties: {
     hibernateSupport: 'true'
     imageReference: {
-      id: resourceId('Microsoft.DevCenter/devcenters/galleries', 'Default','images', 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365')
+      id: frontEndImage.id
     }
     osStorageType: 'ssd_512gb'
     sku: {
