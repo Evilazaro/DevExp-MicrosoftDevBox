@@ -1,5 +1,6 @@
 param devCenterName string
 param logAnalyticsWorkspaceName string
+param managementResourceGroupName string
 
 resource devCenter 'Microsoft.DevCenter/devcenters@2024-02-01' existing = {
   name: devCenterName
@@ -7,7 +8,7 @@ resource devCenter 'Microsoft.DevCenter/devcenters@2024-02-01' existing = {
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
   name: logAnalyticsWorkspaceName
-  scope: resourceGroup('managementResourceGroupName')
+  scope: resourceGroup(managementResourceGroupName)
 }
 
 @description('Create DevCenter Diagnostic Settings')
