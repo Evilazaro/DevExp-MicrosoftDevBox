@@ -52,6 +52,7 @@ module configureDevCenterDiagnosticSettings 'configureDevCenterDiagnosticSetting
   params: {
     devCenterName: devCenterName
     logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
+    managementResourceGroupName: managementResourceGroupName
   }
 }
 
