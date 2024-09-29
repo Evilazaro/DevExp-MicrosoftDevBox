@@ -27,7 +27,7 @@ resource projectDevEnvironment 'Microsoft.DevCenter/projects/environmentTypes@20
     creatorRoleAssignment: {
       roles: {}
     }
-    deploymentTargetId: resourceId('Microsoft.Subscription', subscription().subscriptionId)
+    deploymentTargetId: guid(subscription().subscriptionId)
     status: 'Enabled'
     userRoleAssignments: {}
   }

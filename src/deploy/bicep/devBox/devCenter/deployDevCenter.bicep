@@ -38,7 +38,7 @@ output devCenterName string = deployDevCenter.name
 output devCenterIdentityId string = managedIdentity.id
 
 module configureDevCenterDiagnosticSettings 'configureDevCenterDiagnosticSettings.bicep' = {
-  name: 'configureDevCenterDiagnosticSettings'
+  name: 'DevCenterDiagnosticSettings'
   params: {
     devCenterName: devCenterName
     logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
@@ -51,7 +51,7 @@ output devCenterDiagnosticSettingsName string = configureDevCenterDiagnosticSett
 output devCenterDiagnosticSettingsWorkspaceId string = configureDevCenterDiagnosticSettings.outputs.devCenterDiagnosticSettingsWorkspaceId
 
 module devCenterCatalogs 'configureDevCenterCatalogs.bicep' = {
-  name: 'configureDevCenterCatalogs'
+  name: 'DevCenterCatalogs'
   params: {
     devCenterName: devCenterName
   }
@@ -61,7 +61,7 @@ output devCenterCatalogId string = devCenterCatalogs.outputs.devCenterName_quick
 output devCenterCatalogName string = devCenterCatalogs.outputs.devCenterName_quickstart_devbox_tasks_name
 
 module devCenterEnvironments 'configureDevCenterEnvironments.bicep' = {
-  name: 'configureDevCenterEnvironments'
+  name: 'DevCenterEnvironments'
   params: {
     devCenterName: devCenterName
   }
@@ -74,7 +74,7 @@ output devCenterStagingEnvironmentName string = devCenterEnvironments.outputs.de
 
 
 module configureDevCenterNetworkConnection 'configureDevCenterNetworkConnection.bicep' = {
-  name: 'configureDevCenterNetworkConnection'
+  name: 'DevCenterNetworkConnection'
   params: {
     devCenterName: devCenterName
     networkResourceGroupName: networkResourceGroupName
@@ -86,7 +86,7 @@ output devCenterNetworkConnectionId string = configureDevCenterNetworkConnection
 output devCenterNetworkConnectionName string = configureDevCenterNetworkConnection.outputs.devCenterName_networkConnection_name
 
 module configureDevCenterComputeGallery 'configureDevCenterComputeGallery.bicep' = {
-  name: 'configureDevCenterComputeGallery'
+  name: 'DevCenterComputeGallery'
   params: {
     devCenterName: devCenterName
     computeGalleryName: computeGalleryName
@@ -98,7 +98,7 @@ output devCenterComputeGalleryImageName string = configureDevCenterComputeGaller
 
 
 module configureDevBoxDefinitions 'configureDevBoxDefinitions.bicep' = {
-  name: 'configureDevBoxDefinitions'
+  name: 'DevBoxDefinitions'
   params: {
     devCenterName: devCenterName
   }
@@ -110,7 +110,7 @@ output devBoxDefinitionFrontEndId string = configureDevBoxDefinitions.outputs.de
 output devBoxDefinitionFrontEndName string = configureDevBoxDefinitions.outputs.devBoxDefinitionFrontEndName
 
 module createDevCenterProjects 'createDevCenterProjects.bicep' = {
-  name: 'createDevCenterProjects'
+  name: 'DevCenterProjects'
   params: {
     devCenterName: devCenterName
     networkConnectionName: networkConnectionName
@@ -133,7 +133,7 @@ output contosoProjectStagingEnvironmentId string = createDevCenterProjects.outpu
 output contosoProjectStagingEnvironmentName string = createDevCenterProjects.outputs.contosoTradersFrontEndPoolName
 
 module configureEshopEnvironments 'configureProjectEnvironments.bicep' = {
-  name: 'configureEshopEnvironments'
+  name: 'EshopEnvironments'
   params: {
     projectName: createDevCenterProjects.outputs.eShopProjectName
     identityName: identityName
@@ -144,7 +144,7 @@ output eShopDevEnvironmentId string = configureEshopEnvironments.outputs.project
 output eShopDevEnvironmentName string = configureEshopEnvironments.outputs.projectDevEnvironmentName
 
 module configureContosoTradersEnvironments 'configureProjectEnvironments.bicep' = {
-  name: 'configureContosoTradersEnvironments'
+  name: 'ContosoTradersEnvironments'
   params: {
     projectName: createDevCenterProjects.outputs.contosoTradersName
     identityName: identityName

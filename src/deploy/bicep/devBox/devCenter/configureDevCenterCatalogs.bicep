@@ -9,7 +9,7 @@ resource devCenter 'Microsoft.DevCenter/devcenters@2024-02-01' existing = {
 @description('Create DevCenter Catalogs with DevBox Tasks')
 resource devCenterCatalogs 'Microsoft.DevCenter/devcenters/catalogs@2024-02-01' = {
   parent: devCenter
-  name: 'eShopDevCenterCatalog'
+  name: 'DevCenterCatalog'
   properties: {
     gitHub: {
       uri: 'https://github.com/Evilazaro/MicrosoftDevBox.git'
