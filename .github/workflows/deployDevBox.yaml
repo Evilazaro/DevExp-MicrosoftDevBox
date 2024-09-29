@@ -65,8 +65,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
           resourceGroupName:  ${{ env.managementResourceGroupName }}
           template: ./src/deploy/bicep/management/deploy.bicep
-          parameters: |
-            'solutionName=${{ env.solutionName }}'
+          parameters: 'solutionName=${{ env.solutionName }}'
             
       - name: Deploy Network Connectivity Resources
         uses: azure/arm-deploy@v1
