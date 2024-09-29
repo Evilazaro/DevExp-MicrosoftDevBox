@@ -22,7 +22,7 @@ output vnetName string = virtualNetwork.name
 module networkConnection './networkConnection/createNetWorkConnection.bicep' = {
   name: 'networkConnection'
   params: {
-    vnetName: virtualNetwork.name
+    vnetName: virtualNetwork.outputs.vnetName
   }
   dependsOn: [
     virtualNetwork
