@@ -9,6 +9,7 @@ on:
 
 env:
   # Azure Resource Group Names Constants
+  solutionName: "eShopPetDevBox"
   devBoxResourceGroupName: "eShopPetDevBox-rg"
   networkResourceGroupName: "eShopPetDevBox-Network-rg"
   managementResourceGroupName: "eShopPetDevBox-Management-rg"
