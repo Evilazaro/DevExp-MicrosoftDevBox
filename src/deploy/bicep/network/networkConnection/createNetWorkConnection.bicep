@@ -15,7 +15,6 @@ resource deployNetworkConnection 'Microsoft.DevCenter/networkconnections@2023-04
   properties: {
     domainJoinType: 'AzureADJoin'
     subnetId: vNet.properties.subnets[0].id
-    networkingResourceGroupName: 'NI_${resourceGroup().name}_${resourceGroup().location}' 
   }
   dependsOn: [
     vNet
