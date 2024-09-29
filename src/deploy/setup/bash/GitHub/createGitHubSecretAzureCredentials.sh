@@ -45,6 +45,7 @@ setupGitHubSecretAuthentication() {
     fi
 
     echo "GitHub secret: $ghSecretName set successfully."
+    echo "GtHub secret body: $ghSecretBody"
 }
 
 validateInput() {
