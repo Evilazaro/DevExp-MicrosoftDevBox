@@ -9,10 +9,10 @@ on:
 
 env:
   # Azure Resource Group Names Constants
-solutionName: "eShopPetDevBox"
-devBoxResourceGroupName: "${{ env.solutionName }}-rg"
-networkResourceGroupName: "${{ env.solutionName }}-Network-rg"
-managementResourceGroupName: "${{ env.solutionName }}-Management-rg"
+solutionName: 'eShopPetDevBox'
+devBoxResourceGroupName: '${{ env.solutionName }}-rg'
+networkResourceGroupName: '${{ env.solutionName }}-Network-rg'
+managementResourceGroupName: '${{ env.solutionName }}-Management-rg'
 
 jobs:
   Build-And-Deploy-DevBox-As-A-Service-For-eShop:
