@@ -1,4 +1,6 @@
-param logAnalyticsWorkspaceName string
+param solutionName string
+
+var logAnalyticsWorkspaceName = format('{0}-logAnalytics', solutionName)
 
 module logAnalytics 'deployLogAnalytics.bicep' = {
   name: logAnalyticsWorkspaceName
@@ -10,13 +12,13 @@ module logAnalytics 'deployLogAnalytics.bicep' = {
 output logAnalyticsWorkspaceId string = logAnalytics.outputs.logAnalyticsWorkspaceId
 output logAnalyticsWorkspaceName string = logAnalytics.outputs.logAnalyticsWorkspaceName
 
-module dashboards 'deployDashboards.bicep' = {
-  name: 'dashboards'
-  dependsOn: [
-    logAnalytics
-  ]
-}
+// module dashboards 'deployDashboards.bicep' = {
+//   name: 'dashboards'
+//   dependsOn: [
+//     logAnalytics
+//   ]
+// }
 
-output dashboardsId string = dashboards.outputs.AzureInventoryId
-output dashboardsName string = dashboards.outputs.AzureInventoryName
-output dashboardsType string = dashboards.outputs.AzureInventoryType
+// output dashboardsId string = dashboards.outputs.AzureInventoryId
+// output dashboardsName string = dashboards.outputs.AzureInventoryName
+// output dashboardsType string = dashboards.outputs.AzureInventoryType

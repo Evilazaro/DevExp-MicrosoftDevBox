@@ -7,9 +7,10 @@ set -euo pipefail
 location="WestUS3"
 
 # Azure Resource Group Names Constants
-devBoxResourceGroupName="eShopPetDevBox-rg"
-networkResourceGroupName="eShopPetNetworkConnectivity-rg"
-managementResourceGroupName="eShopPetDevBoxManagement-rg"
+solutionName="eShopPetDevBox"
+devBoxResourceGroupName="$solutionName-rg"
+networkResourceGroupName="$solutionName-Management-rg"
+managementResourceGroupName="$solutionName-Network-rg"
 
 # Identity Parameters Constants
 identityName="eShopPetDevBoxImgBldId"

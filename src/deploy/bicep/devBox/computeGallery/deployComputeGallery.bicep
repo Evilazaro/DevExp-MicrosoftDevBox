@@ -1,4 +1,6 @@
-param computeGalleryName string
+param solutionName string
+
+var computeGalleryName = format('{0}-computeGallery', solutionName)
 
 resource deployComputeGallery 'Microsoft.Compute/galleries@2023-07-03' = {
   name: computeGalleryName

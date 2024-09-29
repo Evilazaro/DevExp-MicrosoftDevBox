@@ -8,26 +8,7 @@ on:
   workflow_dispatch: # Manually trigger the workflow
 
 env:
-  location: "WestUS3"
-
-  # Azure Resource Group Names Constants
-  devBoxResourceGroupName: "eShopPetDevBox-rg"
-  networkResourceGroupName: "eShopPetNetworkConnectivity-rg"
-  managementResourceGroupName: "eShopPetDevBoxManagement-rg"
-
-  # Identity Parameters Constants
-  identityName: "eShopPetDevBoxImgBldId"
-  customRoleName: "eShopPetBuilderRole"
-
-  # Image and DevCenter Parameters Constants
-  computeGalleryName: "eShopPetImageGallery"
-  devCenterName: "eShopPetDevCenter"
-
-  # Network Parameters Constants
-  vnetName: "eShopPetVnet"
-
-  # Management Parameters constants
-  logAnalyticsWorkspaceName: "eShopPetDevBoxLogAnalytics"
+  solutionName: "eShopPetDevBox"
 
 jobs:
   Build-And-Deploy-DevBox-As-A-Service-For-eShop:
@@ -51,8 +32,8 @@ jobs:
       - name: Validate Network Bicep Templates
         run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outfile ./artifactsBicep/network.json
 
-      - name: Validate DevCenter Bicep Templates
-        run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./artifactsBicep/devBox.json
+      # - name: Validate DevCenter Bicep Templates
+      #   run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./artifactsBicep/devBox.json
 
       - name: Upload Bicep Artifacts
         uses: actions/upload-artifact@v4
@@ -78,23 +59,23 @@ jobs:
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
-          resourceGroupName: ${{ env.managementResourceGroupName }}
+          resourceGroupName:  ${{ env.solutionName }}'-Management-rg'
           template: ./src/deploy/bicep/management/deploy.bicep
           parameters: |
-            logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }}
+            solutionName=${{ env.solutionName }}
             
       - name: Deploy Network Connectivity Resources
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
-          resourceGroupName: ${{ env.networkResourceGroupName }}
+          resourceGroupName: ${{ env.solutionName }}'-Network-rg'
           template: ./src/deploy/bicep/network/deploy.bicep
-          parameters: 'vnetName=${{ env.vnetName }} logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }} managementResourceGroupName=${{ env.managementResourceGroupName }}' 
+          parameters: 'solutionName=${{ env.solutionName }}' 
 
-      - name: Deploy DevCenter Resources
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
-          resourceGroupName: ${{ env.devBoxResourceGroupName }}
-          template: ./src/deploy/bicep/devBox/deploy.bicep
-          parameters: 'devCenterName=${{ env.devCenterName }} vNetName=${{ env.vnetName }} identityName=${{ env.identityName }} customRoleName=${{ env.customRoleName }} computeGalleryName=${{ env.computeGalleryName }} networkResourceGroupName=${{ env.networkResourceGroupName }} logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }} managementResourceGroupName=${{ env.managementResourceGroupName }}'
+      # - name: Deploy DevCenter Resources
+      #   uses: azure/arm-deploy@v1
+      #   with:
+      #     subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
+      #     resourceGroupName: ${{ env.solutionName }}'-rg'
+      #     template: ./src/deploy/bicep/devBox/deploy.bicep
+      #     parameters: 'devCenterName=${{ env.devCenterName }} vNetName=${{ env.vnetName }} identityName=${{ env.identityName }} computeGalleryName=${{ env.computeGalleryName }} networkResourceGroupName=${{ env.networkResourceGroupName }} logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }} managementResourceGroupName=${{ env.managementResourceGroupName }}'

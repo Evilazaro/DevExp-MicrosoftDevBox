@@ -1,13 +1,12 @@
-param vnetName string
-param logAnalyticsWorkspaceName string
-param managementResourceGroupName string
+param solutionName string
+
+var vnetName = format('{0}-vnet', solutionName)
+var networkConnectionName = format('{0}-networkConnection', vnetName)
 
 module virtualNetwork './virtualNetwork/deployVnet.bicep' = {
   name: 'virtualNetwork'
   params: {
     vnetName: vnetName
-    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
-    managementResourceGroupName: managementResourceGroupName
   }
 }
 

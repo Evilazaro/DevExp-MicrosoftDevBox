@@ -1,17 +1,11 @@
-param devCenterName string
-param vNetName string 
-param identityName string 
-param customRoleName string 
-param computeGalleryName string
-param networkResourceGroupName string
-param logAnalyticsWorkspaceName string
-param managementResourceGroupName string
+param solutionName string
+
+var devCenterName = format('{0}-devCenter', solutionName)
 
 module identity '../identity/deploy.bicep' = {
   name: 'identity'
   params: {
-    identityName: identityName
-    customRoleName: customRoleName
+    solutionName: solutionName
   }
 }
 
@@ -19,9 +13,9 @@ output userIdentityId string = identity.outputs.identityPrincipalId
 output userIdentityName string = identity.outputs.identityName
 
 module computeGallery './computeGallery/deployComputeGallery.bicep' = {
-  name: computeGalleryName
+  name: 'computeGallery'
   params: {
-    computeGalleryName: computeGalleryName
+    solutionName: solutionName
   }
   dependsOn: [
     identity
@@ -34,14 +28,7 @@ output computeGalleryName string = computeGallery.outputs.computeGalleryName
 module devCenter 'devCenter/deployDevCenter.bicep' = {
   name: 'devCenter'
   params: {
-    devCenterName: devCenterName
-    location: resourceGroup().location
-    vNetName: vNetName
-    identityName: identity.outputs.identityName
-    computeGalleryName: computeGalleryName
-    networkResourceGroupName: networkResourceGroupName
-    logAnalyticsWorkspaceName:logAnalyticsWorkspaceName
-    managementResourceGroupName: managementResourceGroupName
+    solutionName: solutionName
   }
   dependsOn: [
     computeGallery

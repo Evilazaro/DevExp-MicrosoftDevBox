@@ -1,5 +1,7 @@
-param identityName string
-param customRoleName string
+param solutionName string
+
+var identityName = format('{0}-identity', solutionName)
+var customRoleName = format('{0}-customRole', identityName)
 
 module identity 'deployIdentity.bicep' = {
   name: 'deployIdentity'

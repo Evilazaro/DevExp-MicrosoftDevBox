@@ -1,13 +1,12 @@
-param devCenterName string
-param location string
-param vNetName string
-param identityName string
-param computeGalleryName string
-param networkResourceGroupName string
-param logAnalyticsWorkspaceName string
-param managementResourceGroupName string
+param solutionName string
 
-
+var devCenterName = format('{0}-devCenter', solutionName)
+var logAnalyticsWorkspaceName = format('{0}-logAnalytics', solutionName)
+var managementResourceGroupName = format('{0}-Management-rg', solutionName)
+var networkResourceGroupName = format('{0}-Network-rg', solutionName)
+var vNetName = format('{0}-vnet', solutionName)
+var identityName = format('{0}-identity', solutionName)
+var computeGalleryName = format('{0}-computeGallery', solutionName)
 var netWorkConnectionName = format(vNetName, '-NetworkConnection')
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
@@ -22,7 +21,7 @@ resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-
 @description('Deploying DevCenter')
 resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' = {
   name: devCenterName
-  location: location
+  location: resourceGroup().location
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: {
