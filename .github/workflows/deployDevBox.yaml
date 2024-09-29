@@ -8,7 +8,11 @@ on:
   workflow_dispatch: # Manually trigger the workflow
 
 env:
-  solutionName: "eShopPetDevBox"
+  # Azure Resource Group Names Constants
+solutionName: "eShopPetDevBox"
+devBoxResourceGroupName: "${{ env.solutionName }}-rg"
+networkResourceGroupName: "${{ env.solutionName }}-Network-rg"
+managementResourceGroupName: "${{ env.solutionName }}-Management-rg"
 
 jobs:
   Build-And-Deploy-DevBox-As-A-Service-For-eShop:
@@ -59,7 +63,7 @@ jobs:
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
-          resourceGroupName:  ${{ env.solutionName }}'-Management-rg'
+          resourceGroupName:  ${{ env.managementResourceGroupName }}
           template: ./src/deploy/bicep/management/deploy.bicep
           parameters: |
             solutionName=${{ env.solutionName }}
@@ -68,7 +72,7 @@ jobs:
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
-          resourceGroupName: ${{ env.solutionName }}'-Network-rg'
+          resourceGroupName: $(${{ env.networkResourceGroupName }}
           template: ./src/deploy/bicep/network/deploy.bicep
           parameters: 'solutionName=${{ env.solutionName }}' 
 
