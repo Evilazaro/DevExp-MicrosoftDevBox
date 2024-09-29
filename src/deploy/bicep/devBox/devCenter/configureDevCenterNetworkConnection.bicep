@@ -4,7 +4,6 @@ param networkConnectionName string
 
 resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-02-01' existing = {
   name: networkConnectionName
-  scope: resourceGroup(networkResourceGroupName)
 }
 
 resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' existing = {

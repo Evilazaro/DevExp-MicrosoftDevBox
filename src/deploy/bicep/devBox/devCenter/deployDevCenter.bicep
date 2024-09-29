@@ -16,15 +16,6 @@ resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-
   name: identityName
 }
 
-resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-02-01' existing = {
-  name: networkConnectionName
-  scope: resourceGroup(networkResourceGroupName)
-}
-
-resource computeGallery 'Microsoft.Compute/galleries@2021-10-01' existing = {
-  name: computeGalleryName
-}
-
 @description('Deploying DevCenter')
 resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' = {
   name: devCenterName
@@ -36,7 +27,6 @@ resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' = {
     }
   }
   dependsOn: [
-    networkConnection
     logAnalyticsWorkspace
     managedIdentity
   ]
@@ -92,137 +82,42 @@ module configureDevCenterNetworkConnection 'configureDevCenterNetworkConnection.
   }
 }
 
-@description('Create DevCenter Compute Gallery')
-resource devCenterComputeGallery 'Microsoft.DevCenter/devcenters/galleries@2024-02-01' = {
-  parent: deployDevCenter
-  name: computeGallery.name
-  properties: {
-    galleryResourceId: resourceId('Microsoft.Compute/galleries', computeGallery.name)
+output devCenterNetworkConnectionId string = configureDevCenterNetworkConnection.outputs.devCenterName_networkConnection_id
+output devCenterNetworkConnectionName string = configureDevCenterNetworkConnection.outputs.devCenterName_networkConnection_name
+
+module configureDevCenterComputeGallery 'configureDevCenterComputeGallery.bicep' = {
+  name: 'configureDevCenterComputeGallery'
+  params: {
+    devCenterName: devCenterName
+    computeGalleryName: computeGalleryName
   }
 }
 
-output devCenterName_computeGalleryImage_id string = devCenterComputeGallery.id
-output devCenterName_computeGalleryImage_name string = devCenterComputeGallery.name
+output devCenterComputeGalleryImageId string = configureDevCenterComputeGallery.outputs.devCenterName_computeGalleryImage_id
+output devCenterComputeGalleryImageName string = configureDevCenterComputeGallery.outputs.devCenterName_computeGalleryImage_name
 
-resource defaultComputeGallery 'Microsoft.DevCenter/devcenters/galleries@2024-02-01' existing = {
-  parent: deployDevCenter
-  name: 'Default'
-}
 
-output defaultComputeGalleryId string = defaultComputeGallery.id
-output defaultComputeGalleryName string = defaultComputeGallery.name
-
-resource backEndImage 'Microsoft.DevCenter/devcenters/galleries/images@2024-02-01' existing = {
-  parent: defaultComputeGallery
-  name: 'visualstudioplustools_vs-2022-ent-general-win11-m365-gen2'
-}
-
-output backEndImageId string = backEndImage.id
-
-@description('Create DevCenter DevBox Definition for BackEnd Engineer')
-resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
-  name: 'eShopPet-BackEndEngineer'
-  location: resourceGroup().location
-  parent: deployDevCenter
-  properties: {
-    hibernateSupport: 'true'
-    imageReference: {
-      id: backEndImage.id
-    }
-    osStorageType: 'ssd_512gb'
-    sku: {
-      capacity: 10
-      family: 'string'
-      name: 'general_i_32c128gb512ssd_v2'
-    }
+module configureDevBoxDefinitions 'configureDevBoxDefinitions.bicep' = {
+  name: 'configureDevBoxDefinitions'
+  params: {
+    devCenterName: devCenterName
   }
 }
 
-output devBoxDefinitionBackEndId string = devBoxDefinitionBackEnd.id
-output devBoxDefinitionBackEndName string = devBoxDefinitionBackEnd.name
+output devBoxDefinitionBackEndId string = configureDevBoxDefinitions.outputs.devBoxDefinitionBackEndId
+output devBoxDefinitionBackEndName string = configureDevBoxDefinitions.outputs.devBoxDefinitionBackEndName
+output devBoxDefinitionFrontEndId string = configureDevBoxDefinitions.outputs.devBoxDefinitionFrontEndId
+output devBoxDefinitionFrontEndName string = configureDevBoxDefinitions.outputs.devBoxDefinitionFrontEndName
 
-resource frontEndImage 'Microsoft.DevCenter/devcenters/galleries/images@2024-02-01' existing = {
-  parent: defaultComputeGallery
-  name: 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
-}
-
-output frontEndImageId string = frontEndImage.id
-
-@description('Create DevCenter DevBox Definition for FrontEnd Engineer')
-resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
-  name: 'eShopPet-FrontEndEngineer'
-  location: resourceGroup().location
-  parent: deployDevCenter
-  properties: {
-    hibernateSupport: 'true'
-    imageReference: {
-      id: frontEndImage.id
-    }
-    osStorageType: 'ssd_512gb'
-    sku: {
-      capacity: 10
-      family: 'string'
-      name: 'general_i_32c128gb512ssd_v2'
-    }
+module createDevCenterProjects 'createDevCenterProjects.bicep' = {
+  name: 'createDevCenterProjects'
+  params: {
+    devCenterName: devCenterName
+    networkConnectionName: networkConnectionName
+    devBoxDefinitionBackEndName: configureDevBoxDefinitions.outputs.devBoxDefinitionBackEndName
+    devBoxDefinitionFrontEndName: configureDevBoxDefinitions.outputs.devBoxDefinitionFrontEndName
   }
 }
-
-output devBoxDefinitionFrontEndId string = devBoxDefinitionFrontEnd.id
-output devBoxDefinitionFrontEndName string = devBoxDefinitionFrontEnd.name
-
-@description('Create DevCenter eShop Project')
-resource eShopProject 'Microsoft.DevCenter/projects@2024-02-01' = {
-  name: 'eShop'
-  location: resourceGroup().location
-  properties: {
-    description: 'eShop Commerce'
-    devCenterId: deployDevCenter.id
-    maxDevBoxesPerUser: 10
-  }
-}
-
-output eShopProjectId string = eShopProject.id
-output eShopProjectName string = eShopProject.name
-
-@description('Create DevCenter DevBox Pools for BackEnd Engineers of eShop Project')
-resource backEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
-  name: 'backEndPool'
-  location: resourceGroup().location
-  parent: eShopProject
-  properties: {
-    devBoxDefinitionName: devBoxDefinitionBackEnd.name
-    licenseType: 'Windows_Client'
-    localAdministrator: 'Enabled'
-    networkConnectionName: configureDevCenterNetworkConnection.name
-    stopOnDisconnect: {
-      gracePeriodMinutes: 60
-      status: 'Disabled'
-    }
-  }
-}
-
-output backEndPoolId string = backEndPool.id
-output backEndPoolName string = backEndPool.name
-
-@description('Create DevCenter DevBox Pools for FrontEnd Engineers of eShop Project')
-resource frontEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
-  name: 'frontEndPool'
-  location: resourceGroup().location
-  parent: eShopProject
-  properties: {
-    devBoxDefinitionName: devBoxDefinitionFrontEnd.name
-    licenseType: 'Windows_Client'
-    localAdministrator: 'Enabled'
-    networkConnectionName: configureDevCenterNetworkConnection.name
-    stopOnDisconnect: {
-      gracePeriodMinutes: 60
-      status: 'Disabled'
-    }
-  }
-}
-
-output frontEndPoolId string = backEndPool.id
-output frontEndPoolName string = backEndPool.name
 
 // resource eShopDevEnvironment 'Microsoft.DevCenter/projects/environmentTypes@2023-04-01' = {
 //   name: 'eShopDevEnvironment'
