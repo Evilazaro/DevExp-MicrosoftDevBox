@@ -3,7 +3,7 @@ param solutionName string
 var logAnalyticsWorkspaceName = format('{0}-logAnalytics', solutionName)
 
 module logAnalytics 'deployLogAnalytics.bicep' = {
-  name: logAnalyticsWorkspaceName
+  name: 'logAnalytics'
   params: {
     logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
   }
