@@ -1,9 +1,10 @@
 param vnetName string
 param logAnalyticsWorkspaceName string
+param networkResourceGroupName string
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
   name: logAnalyticsWorkspaceName
-  scope: resourceGroup()
+  scope: resourceGroup(networkResourceGroupName)
 }
 
 var addressPrefixes = [
