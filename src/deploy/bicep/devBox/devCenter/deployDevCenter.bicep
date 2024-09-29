@@ -119,54 +119,37 @@ module createDevCenterProjects 'createDevCenterProjects.bicep' = {
   }
 }
 
-// resource eShopDevEnvironment 'Microsoft.DevCenter/projects/environmentTypes@2023-04-01' = {
-//   name: 'eShopDevEnvironment'
-//   location: resourceGroup().location
-//   tags: {
-//     tagName1: 'Development'
-//     tagName2: 'eShop'
-//   }
-//   parent: eShopProject
-//   identity: {
-//     type: 'string'
-//     userAssignedIdentities: {}
-//   }
-//   properties: {
-//     creatorRoleAssignment: {
-//       roles: {}
-//     }
-//     deploymentTargetId: subscription().subscriptionId
-//     status: 'Enabled'
-//     userRoleAssignments: {}
-//   }
-// }
+output eShopProjectId string = createDevCenterProjects.outputs.eShopProjectId
+output eShopProjectName string = createDevCenterProjects.outputs.eShopProjectName
+output backEndPoolId string = createDevCenterProjects.outputs.backEndPoolId
+output backEndPoolName string = createDevCenterProjects.outputs.backEndPoolName
+output frontEndPoolId string = createDevCenterProjects.outputs.frontEndPoolId
+output frontEndPoolName string = createDevCenterProjects.outputs.frontEndPoolName
+output contosoProjectId string = createDevCenterProjects.outputs.contosoTradersId 
+output contosoProjectName string = createDevCenterProjects.outputs.contosoTradersName
+output contosoProjectDevEnvironmentId string = createDevCenterProjects.outputs.contosoTradersBackEndPoolId
+output contosoProjectDevEnvironmentName string = createDevCenterProjects.outputs.contosoTradersBackEndPoolName
+output contosoProjectStagingEnvironmentId string = createDevCenterProjects.outputs.contosoTradersFrontEndPoolId
+output contosoProjectStagingEnvironmentName string = createDevCenterProjects.outputs.contosoTradersFrontEndPoolName
 
-// output eShopDevEnvironmentId string = eShopDevEnvironment.id
-// output eShopDevEnvironmentName string = eShopDevEnvironment.name
+module configureEshopEnvironments 'configureProjectEnvironments.bicep' = {
+  name: 'configureEshopEnvironments'
+  params: {
+    projectName: createDevCenterProjects.outputs.eShopProjectName
+    identityName: identityName
+  }
+}
 
-// resource eShopStagingEnvironment 'Microsoft.DevCenter/projects/environmentTypes@2023-04-01' = {
-//   name: 'eShopStagingEnvironment'
-//   location: resourceGroup().location
-//   tags: {
-//     tagName1: 'Staging'
-//     tagName2: 'eShop'
-//   }
-//   parent: eShopProject
-//   identity: {
-//     type: 'UserAssigned'
-//     userAssignedIdentities: {
-//       '${managedIdentity.id}': {}
-//     }
-//   }
-//   properties: {
-//     creatorRoleAssignment: {
-//       roles: {}
-//     }
-//     deploymentTargetId: subscription().subscriptionId
-//     status: 'Enabled'
-//     userRoleAssignments: {}
-//   }
-// }
+output eShopDevEnvironmentId string = configureEshopEnvironments.outputs.projectDevEnvironmentId
+output eShopDevEnvironmentName string = configureEshopEnvironments.outputs.projectDevEnvironmentName
 
-// output eShopStagingEnvironmentId string = eShopStagingEnvironment.id
-// output eShopStagingEnvironmentName string = eShopStagingEnvironment.name
+module configureContosoTradersEnvironments 'configureProjectEnvironments.bicep' = {
+  name: 'configureContosoTradersEnvironments'
+  params: {
+    projectName: createDevCenterProjects.outputs.contosoTradersName
+    identityName: identityName
+  }
+}
+
+output contosoTradersDevEnvironmentId string = configureContosoTradersEnvironments.outputs.projectDevEnvironmentId
+output contosoTradersDevEnvironmentName string = configureContosoTradersEnvironments.outputs.projectDevEnvironmentName  

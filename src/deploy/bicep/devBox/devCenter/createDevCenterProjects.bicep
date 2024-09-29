@@ -101,7 +101,7 @@ output contosoTradersBackEndPoolName string = contosoTradersBackEndPool.name
 resource contosoTradersFrontEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
   name: 'contosoTradersFrontEndPool'
   location: resourceGroup().location
-  parent: eShopProject
+  parent: contosoTraders
   properties: {
     devBoxDefinitionName: devBoxDefinitionFrontEndName
     licenseType: 'Windows_Client'
