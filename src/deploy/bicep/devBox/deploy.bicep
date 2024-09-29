@@ -19,7 +19,7 @@ output userIdentityId string = identity.outputs.identityPrincipalId
 output userIdentityName string = identity.outputs.identityName
 
 module computeGallery './computeGallery/deployComputeGallery.bicep' = {
-  name: 'computeGallery'
+  name: computeGalleryName
   params: {
     computeGalleryName: computeGalleryName
   }
