@@ -52,10 +52,6 @@ module devCenter 'devCenter/deployDevCenter.bicep' = {
 output devCenterId string = devCenter.outputs.devCenterId
 output devCenterName string = devCenter.outputs.devCenterName
 output devCenterIdentityId string = devCenter.outputs.devCenterIdentityId
-output devCenterName_quickstart_devbox_tasks_id string = devCenter.outputs.devCenterName_quickstart_devbox_tasks_id
-output devCenterName_quickstart_devbox_tasks_name string = devCenter.outputs.devCenterName_quickstart_devbox_tasks_name
-output devCenterName_networkConnection_id string = devCenter.outputs.devCenterName_networkConnection_id
-output devCenterName_networkConnection_name string = devCenter.outputs.devCenterName_networkConnection_name
-output devCenterName_computeGalleryImage_id string = devCenter.outputs.devCenterName_computeGalleryImage_id
-output devCenterName_computeGalleryImage_name string = devCenter.outputs.devCenterName_computeGalleryImage_name
-
+output devCenterDiagnosticSettingsId string = devCenter.outputs.devCenterDiagnosticSettingsId
+output devCenterDiagnosticSettingsName string = devCenter.outputs.devCenterDiagnosticSettingsName
+output devCenterDiagnosticSettingsWorkspaceId string = devCenter.outputs.devCenterDiagnosticSettingsWorkspaceId
