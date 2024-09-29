@@ -1,5 +1,4 @@
 param vnetName string
-param subnetName string
 param logAnalyticsWorkspaceName string
 param managementResourceGroupName string
 
@@ -23,7 +22,7 @@ resource deployVirtualNetwork 'Microsoft.Network/virtualNetworks@2024-01-01' = {
     }
     subnets: [
       {
-        name: subnetName
+        name: format('{0}-subnet', vnetName)
         properties: {
           addressPrefix: subnetPrefix
         }

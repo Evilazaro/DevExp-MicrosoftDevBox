@@ -1,11 +1,14 @@
 param devCenterName string
 param location string
-param networkConnectionName string
+param vNetName string
 param identityName string
 param computeGalleryName string
 param networkResourceGroupName string
 param logAnalyticsWorkspaceName string
 param managementResourceGroupName string
+
+
+var netWorkConnectionName = format(vNetName, '-NetworkConnection')
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
   name: logAnalyticsWorkspaceName
@@ -78,7 +81,7 @@ module configureDevCenterNetworkConnection 'configureDevCenterNetworkConnection.
   params: {
     devCenterName: devCenterName
     networkResourceGroupName: networkResourceGroupName
-    networkConnectionName: networkConnectionName
+    networkConnectionName: netWorkConnectionName
   }
 }
 
@@ -113,7 +116,7 @@ module createDevCenterProjects 'createDevCenterProjects.bicep' = {
   name: 'DevCenterProjects'
   params: {
     devCenterName: devCenterName
-    networkConnectionName: networkConnectionName
+    networkConnectionName: netWorkConnectionName
     devBoxDefinitionBackEndName: configureDevBoxDefinitions.outputs.devBoxDefinitionBackEndName
     devBoxDefinitionFrontEndName: configureDevBoxDefinitions.outputs.devBoxDefinitionFrontEndName
   }

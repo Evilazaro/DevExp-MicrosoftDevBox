@@ -1,5 +1,5 @@
 param devCenterName string
-param networkConnectionName string 
+param vNetName string 
 param identityName string 
 param customRoleName string 
 param computeGalleryName string
@@ -36,7 +36,7 @@ module devCenter 'devCenter/deployDevCenter.bicep' = {
   params: {
     devCenterName: devCenterName
     location: resourceGroup().location
-    networkConnectionName: networkConnectionName
+    vNetName: vNetName
     identityName: identity.outputs.identityName
     computeGalleryName: computeGalleryName
     networkResourceGroupName: networkResourceGroupName

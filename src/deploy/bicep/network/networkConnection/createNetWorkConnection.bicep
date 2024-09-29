@@ -1,13 +1,22 @@
-param name string
-param subnetId string
+param vnetName string
+
+
+resource vNet 'Microsoft.Network/virtualNetworks@2021-02-01' existing = {
+  name: vnetName
+}
+
+output vnetId string = vNet.id
+output addressPrefix string = vNet.properties.addressSpace.addressPrefixes[0]
+output vnetName string = vNet.name
+output subnetId string = vNet.properties.subnets[0].id
 
 resource deployNetworkConnection 'Microsoft.DevCenter/networkconnections@2023-04-01' = {
-  name: name
+  name: format(vNet.name, '-NetworkConnection')
   location: resourceGroup().location
   properties: {
     domainJoinType: 'AzureADJoin'
-    subnetId: subnetId
-    networkingResourceGroupName: 'NI_${name}_${resourceGroup().location}' 
+    subnetId: vNet.properties.subnets[0].id
+    networkingResourceGroupName: 'NI_${resourceGroup().name}_${resourceGroup().location}' 
   }
 }
 
