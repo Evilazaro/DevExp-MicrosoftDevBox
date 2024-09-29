@@ -38,10 +38,10 @@ jobs:
     Validate-and-Build-Bicep-Templates:
       runs-on: ubuntu-latest
       steps:
-        - name: Update Packages
-          run: |
-            sudo apt-get update && \
-            sudo apt-get upgrade -y
+        # - name: Update Packages
+        #   run: |
+        #     sudo apt-get update && \
+        #     sudo apt-get upgrade -y
 
         - name: Checkout repository
           uses: actions/checkout@v3
