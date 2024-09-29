@@ -104,16 +104,13 @@ resource devCenterComputeGallery 'Microsoft.DevCenter/devcenters/galleries@2024-
 output devCenterName_computeGalleryImage_id string = devCenterComputeGallery.id
 output devCenterName_computeGalleryImage_name string = devCenterComputeGallery.name
 
-resource defaultComputeGallery 'Microsoft.DevCenter/devcenters/galleries@2024-02-01' = {
+resource defaultComputeGallery 'Microsoft.DevCenter/devcenters/galleries@2024-02-01' existing = {
   parent: deployDevCenter
   name: 'Default'
-  properties: {
-    galleryResourceId: resourceId('Microsoft.Compute/galleries', 'Default')
-  }
 }
 
-output devCenterName_defaultComputeGalleryImage_id string = defaultComputeGallery.id
-output devCenterName_defaultComputeGalleryImage_name string = defaultComputeGallery.name
+output defaultComputeGalleryId string = defaultComputeGallery.id
+output defaultComputeGalleryName string = defaultComputeGallery.name
 
 resource backEndImage 'Microsoft.DevCenter/devcenters/galleries/images@2024-02-01' existing = {
   parent: defaultComputeGallery

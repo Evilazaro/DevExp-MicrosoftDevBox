@@ -154,4 +154,13 @@ tasks:
     parameters:
       command: "winget upgrade --all"
       runAsUser: true
-  
+  - name: git-clone
+    description: "Clone the eShopRepository repository"
+    parameters:
+      repository: "https://github.com/Evilazaro/eShop"
+      branch: "main"
+  - name: git-clone
+    description: "Clone the DevBox repository"
+    parameters:
+      repository: "https://github.com/Evilazaro/MicrosoftDevBox"
+      branch: "main"
