@@ -1,12 +1,13 @@
 param solutionName string
 
 var vnetName = format('{0}-vnet', solutionName)
-var networkConnectionName = format('{0}-networkConnection', vnetName)
+var logAnalyticsWorkspaceName = format('{0}-logAnalytics', solutionName)
 
 module virtualNetwork './virtualNetwork/deployVnet.bicep' = {
   name: 'virtualNetwork'
   params: {
     vnetName: vnetName
+    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
   }
 }
 
