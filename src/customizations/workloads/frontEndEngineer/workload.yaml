@@ -141,4 +141,8 @@ tasks:
     parameters:
       repository: "https://github.com/Evilazaro/MicrosoftDevBox"
       branch: "main"
-  
+  - name: git-clone
+    description: "Clone the Contoso Traders repository"
+    parameters:
+      repository: "https://github.com/Evilazaro/ContosoTraders.git"
+      branch: "main"
