@@ -56,7 +56,7 @@ jobs:
       - name: Give execute permissions to the script
         run: chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh
 
-      - name: Create Resources Organization
+      - name: Deploy Landing Zone Resources for ${{ env.solutionName }}
         run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh
 
       - name: Deploy Log Analytics
@@ -74,11 +74,3 @@ jobs:
           resourceGroupName: ${{ env.networkResourceGroupName }}
           template: ./src/deploy/bicep/network/deploy.bicep
           parameters: 'solutionName=${{ env.solutionName }}' 
-
-      # - name: Deploy DevCenter Resources
-      #   uses: azure/arm-deploy@v1
-      #   with:
-      #     subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
-      #     resourceGroupName: ${{ env.solutionName }}'-rg'
-      #     template: ./src/deploy/bicep/devBox/deploy.bicep
-      #     parameters: 'devCenterName=${{ env.devCenterName }} vNetName=${{ env.vnetName }} identityName=${{ env.identityName }} computeGalleryName=${{ env.computeGalleryName }} networkResourceGroupName=${{ env.networkResourceGroupName }} logAnalyticsWorkspaceName=${{ env.logAnalyticsWorkspaceName }} managementResourceGroupName=${{ env.managementResourceGroupName }}'
