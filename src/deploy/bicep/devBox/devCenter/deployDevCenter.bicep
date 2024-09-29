@@ -18,6 +18,7 @@ resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-
 
 resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-02-01' existing = {
   name: networkConnectionName
+  scope: resourceGroup(networkResourceGroupName)
 }
 
 resource computeGallery 'Microsoft.Compute/galleries@2021-10-01' existing = {
@@ -46,80 +47,49 @@ output devCenterId string = deployDevCenter.id
 output devCenterName string = deployDevCenter.name
 output devCenterIdentityId string = managedIdentity.id
 
-@description('Create DevCenter Diagnostic Settings')
-resource devCenterDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'devCenterDiagnosticSettings'
-  scope: deployDevCenter
-  properties: {
-    workspaceId: logAnalyticsWorkspace.id
-    logs: [
-      {
-        categoryGroup: 'allLogs'
-        enabled: true
-      }
-    ]
-    metrics: [
-      {
-        category: 'AllMetrics'
-        enabled: true
-      }
-    ]
+module configureDevCenterDiagnosticSettings 'configureDevCenterDiagnosticSettings.bicep' = {
+  name: 'configureDevCenterDiagnosticSettings'
+  params: {
+    devCenterName: devCenterName
+    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
   }
 }
 
-output devCenterDiagnosticSettingsId string = devCenterDiagnosticSettings.id
-output devCenterDiagnosticSettingsName string = devCenterDiagnosticSettings.name
+output devCenterDiagnosticSettingsId string = configureDevCenterDiagnosticSettings.outputs.devCenterDiagnosticSettingsId
+output devCenterDiagnosticSettingsName string = configureDevCenterDiagnosticSettings.outputs.devCenterDiagnosticSettingsName
+output devCenterDiagnosticSettingsWorkspaceId string = configureDevCenterDiagnosticSettings.outputs.devCenterDiagnosticSettingsWorkspaceId
 
-@description('Create DevCenter Catalogs with DevBox Tasks')
-resource devCenterCatalogs 'Microsoft.DevCenter/devcenters/catalogs@2024-02-01' = {
-  parent: deployDevCenter
-  name: 'eShopDevCenterCatalog'
-  properties: {
-    gitHub: {
-      uri: 'https://github.com/Evilazaro/MicrosoftDevBox.git'
-      branch: 'main'
-      path: 'src/customizations/tasks'
-    }
+module devCenterCatalogs 'configureDevCenterCatalogs.bicep' = {
+  name: 'configureDevCenterCatalogs'
+  params: {
+    devCenterName: devCenterName
   }
 }
 
-output devCenterName_quickstart_devbox_tasks_id string = devCenterCatalogs.id
-output devCenterName_quickstart_devbox_tasks_name string = devCenterCatalogs.name
+output devCenterCatalogId string = devCenterCatalogs.outputs.devCenterName_quickstart_devbox_tasks_id
+output devCenterCatalogName string = devCenterCatalogs.outputs.devCenterName_quickstart_devbox_tasks_name
 
-@description('Create DevCenter Development Environment for the eShop Project')
-resource devCenterDevEnvironment 'Microsoft.DevCenter/devcenters/environmenttypes@2024-02-01' = {
-  parent: deployDevCenter
-  name: 'Development'
-}
-
-output devCenterDevEnvironmentId string = devCenterDevEnvironment.id
-output devCenterDevEnvironmentName string = devCenterDevEnvironment.name
-
-@description('Create DevCenter Staging Environment for the eShop Project')
-resource devCenterStagingEnvironment 'Microsoft.DevCenter/devcenters/environmenttypes@2024-02-01' = {
-  parent: deployDevCenter
-  name: 'Staging'
-}
-
-output devCenterStagingEnvironmentId string = devCenterStagingEnvironment.id
-output devCenterStagingEnvironmentName string = devCenterStagingEnvironment.name
-
-@description('Create DevCenter Network Connection')
-resource devCenterNetworkConnection 'Microsoft.DevCenter/devcenters/attachednetworks@2024-02-01' = {
-  parent: deployDevCenter
-  name: networkConnection.name
-  properties: {
-    networkConnectionId: format(
-      '/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/networkConnections/{2}',
-      subscription().subscriptionId,
-      networkResourceGroupName,
-      networkConnection.name
-    )
+module devCenterEnvironments 'configureDevCenterEnvironments.bicep' = {
+  name: 'configureDevCenterEnvironments'
+  params: {
+    devCenterName: devCenterName
   }
 }
 
-output devCenterName_networkConnection_id string = devCenterNetworkConnection.id
-output devCenterName_networkConnection_name string = devCenterNetworkConnection.name
+output devCenterDevEnvironmentId string = devCenterEnvironments.outputs.devCenterDevEnvironmentId
+output devCenterDevEnvironmentName string = devCenterEnvironments.outputs.devCenterDevEnvironmentName
+output devCenterStagingEnvironmentId string = devCenterEnvironments.outputs.devCenterStagingEnvironmentId
+output devCenterStagingEnvironmentName string = devCenterEnvironments.outputs.devCenterStagingEnvironmentName
+
+
+module configureDevCenterNetworkConnection 'configureDevCenterNetworkConnection.bicep' = {
+  name: 'configureDevCenterNetworkConnection'
+  params: {
+    devCenterName: devCenterName
+    networkResourceGroupName: networkResourceGroupName
+    networkConnectionName: networkConnectionName
+  }
+}
 
 @description('Create DevCenter Compute Gallery')
 resource devCenterComputeGallery 'Microsoft.DevCenter/devcenters/galleries@2024-02-01' = {
@@ -225,7 +195,7 @@ resource backEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
     devBoxDefinitionName: devBoxDefinitionBackEnd.name
     licenseType: 'Windows_Client'
     localAdministrator: 'Enabled'
-    networkConnectionName: devCenterNetworkConnection.name
+    networkConnectionName: configureDevCenterNetworkConnection.name
     stopOnDisconnect: {
       gracePeriodMinutes: 60
       status: 'Disabled'
@@ -245,7 +215,7 @@ resource frontEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
     devBoxDefinitionName: devBoxDefinitionFrontEnd.name
     licenseType: 'Windows_Client'
     localAdministrator: 'Enabled'
-    networkConnectionName: devCenterNetworkConnection.name
+    networkConnectionName: configureDevCenterNetworkConnection.name
     stopOnDisconnect: {
       gracePeriodMinutes: 60
       status: 'Disabled'
