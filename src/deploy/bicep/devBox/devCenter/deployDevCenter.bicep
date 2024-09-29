@@ -131,25 +131,3 @@ output contosoProjectDevEnvironmentId string = createDevCenterProjects.outputs.c
 output contosoProjectDevEnvironmentName string = createDevCenterProjects.outputs.contosoTradersBackEndPoolName
 output contosoProjectStagingEnvironmentId string = createDevCenterProjects.outputs.contosoTradersFrontEndPoolId
 output contosoProjectStagingEnvironmentName string = createDevCenterProjects.outputs.contosoTradersFrontEndPoolName
-
-module configureEshopEnvironments 'configureProjectEnvironments.bicep' = {
-  name: 'EshopEnvironments'
-  params: {
-    projectName: createDevCenterProjects.outputs.eShopProjectName
-    identityName: identityName
-  }
-}
-
-output eShopDevEnvironmentId string = configureEshopEnvironments.outputs.projectDevEnvironmentId
-output eShopDevEnvironmentName string = configureEshopEnvironments.outputs.projectDevEnvironmentName
-
-module configureContosoTradersEnvironments 'configureProjectEnvironments.bicep' = {
-  name: 'ContosoTradersEnvironments'
-  params: {
-    projectName: createDevCenterProjects.outputs.contosoTradersName
-    identityName: identityName
-  }
-}
-
-output contosoTradersDevEnvironmentId string = configureContosoTradersEnvironments.outputs.projectDevEnvironmentId
-output contosoTradersDevEnvironmentName string = configureContosoTradersEnvironments.outputs.projectDevEnvironmentName  
