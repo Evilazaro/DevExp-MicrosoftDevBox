@@ -9,6 +9,9 @@ on:
         branches:
             - main
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
+
 jobs:
     Validate-and-Build-Bicep-Templates:
       runs-on: ubuntu-latest
@@ -41,19 +44,7 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
-            tag_name: "${{ github.run_number }}-GA"  
-            release_name: "Release ${{ github.ref_name }}"
-            body: |
-              Release notes for ${{ github.ref_name }}.
+            tag_name: ${{ github.sha }}
+            release_name: Release ${{ github.sha }}
             draft: false
             prerelease: false
-
-        - name: Upload Release Asset
-          uses: actions/upload-release-asset@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: ./releases
-            asset_name: devBox-CD
-            asset_content_type: application/zip

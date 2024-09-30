@@ -9,10 +9,11 @@ on:
 
 env:
   location: "westus3"
-  solutionName: "eShopPetDevBox"
-  devBoxResourceGroupName: "eShopPetDevBox-rg"
-  networkResourceGroupName: "eShopPetDevBox-Network-rg"
-  managementResourceGroupName: "eShopPetDevBox-Management-rg"
+  solutionName: "PetDevExperienceDevBox"
+  devBoxResourceGroupName: "PetDevExperienceDevBox-rg"
+  networkResourceGroupName: "PetDevExperienceDevBox-Network-rg"
+  managementResourceGroupName: "PetDevExperienceDevBox-Management-rg"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
 jobs:
   Build-And-Deploy-DevBox-As-A-Service-For-eShop:

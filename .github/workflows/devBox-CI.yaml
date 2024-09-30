@@ -9,6 +9,9 @@ on:
         branches:
             - main
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
+
 jobs:
     Validate-and-Build-Bicep-Templates:
       runs-on: ubuntu-latest
