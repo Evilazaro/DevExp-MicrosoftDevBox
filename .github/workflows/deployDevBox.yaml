@@ -18,17 +18,14 @@ jobs:
   Build-And-Deploy-DevBox-As-A-Service-For-eShop:
     runs-on: ubuntu-latest
     steps:
-      - name: Update Packages
+      - name: Update Packages and Upgrade Bicep
         run: |
           sudo apt-get update && \
-          sudo apt-get upgrade -y
+          sudo apt-get upgrade -y \
+          sudo az bicep upgrade
 
       - name: Checkout repository
         uses: actions/checkout@v4
-
-    
-      - name: Bicep Upgrade
-        run: az bicep upgrade
 
       - name: Validate Management Bicep Templates
         run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep --outfile ./artifactsBicep/management.json
