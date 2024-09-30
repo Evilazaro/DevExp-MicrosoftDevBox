@@ -1,4 +1,4 @@
-# Docsy Jekyll Theme
+# Developer Experience with Microsoft DevBox
 
 [![CircleCI](https://circleci.com/gh/evilazaro/docsy-jekyll/tree/master.svg?style=svg)](https://circleci.com/gh/evilazaro/docsy-jekyll/tree/master)
 <a href="https://jekyll-themes.com/docsy-jekyll/">
@@ -7,7 +7,7 @@
 
 ![https://raw.githubusercontent.com/evilazaro/docsy-jekyll/master/assets/img/docsy-jekyll.png](https://raw.githubusercontent.com/evilazaro/docsy-jekyll/master/assets/img/docsy-jekyll.png)
 
-This is a [starter template](https://evilazaro.github.com/docsy-jekyll/) for a Docsy jekyll theme, based
+This is a [starter template](https://evilazaro.github.com/docsy-jekyll/) for a Developer Experience with Microsoft DevBox, based
 on the Beautiful [Docsy](https://github.com/google/docsy) that renders with Hugo. This version is intended for
 native deployment on GitHub pages. The original [Apache License](https://github.com/Evilazaro/DevExp-MicrosoftDevBox/blob/master/LICENSE) is included.
 
