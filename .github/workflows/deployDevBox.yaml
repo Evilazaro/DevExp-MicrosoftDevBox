@@ -8,7 +8,7 @@ on:
   workflow_dispatch: # Manually trigger the workflow
 
 env:
-  # Azure Resource Group Names Constants
+  location: "westus3"
   solutionName: "eShopPetDevBox"
   devBoxResourceGroupName: "eShopPetDevBox-rg"
   networkResourceGroupName: "eShopPetDevBox-Network-rg"
@@ -54,7 +54,7 @@ jobs:
         run: chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh
 
       - name: Deploy Landing Zone Resources for ${{ env.solutionName }}
-        run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh
+        run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.managementResourceGroupName }} ${{ env.location }}
 
       - name: Deploy Log Analytics
         uses: azure/arm-deploy@v1

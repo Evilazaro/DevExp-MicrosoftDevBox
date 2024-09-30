@@ -36,33 +36,6 @@ output devCenterId string = deployDevCenter.id
 output devCenterName string = deployDevCenter.name
 output devCenterIdentityId string = managedIdentity.id
 
-@description('Create DevCenter Diagnostic Settings')
-resource devCenterDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'devCenterDiagnosticSettings'
-  scope: deployDevCenter
-  properties: {
-    workspaceId: logAnalyticsWorkspace.id
-    logs: [
-      {
-        categoryGroup: 'allLogs'
-        enabled: true
-      }
-    ]
-    metrics: [
-      {
-        category: 'AllMetrics'
-        enabled: true
-      }
-    ]
-  }
-}
-
-output devCenterDiagnosticSettingsId string = devCenterDiagnosticSettings.id
-output devCenterDiagnosticSettingsName string = devCenterDiagnosticSettings.name
-output devCenterDiagnosticSettingsWorkspaceId string = logAnalyticsWorkspace.id
-output devCenterDiagnosticSettingsDevCenterId string = deployDevCenter.id 
-output devCenterDiagnosticSettingsDevCenterName string = deployDevCenter.name
-
 module devCenterCatalogs 'configureDevCenterCatalogs.bicep' = {
   name: 'DevCenterCatalogs'
   params: {
@@ -144,3 +117,32 @@ output contosoProjectDevEnvironmentId string = createDevCenterProjects.outputs.c
 output contosoProjectDevEnvironmentName string = createDevCenterProjects.outputs.contosoTradersBackEndPoolName
 output contosoProjectStagingEnvironmentId string = createDevCenterProjects.outputs.contosoTradersFrontEndPoolId
 output contosoProjectStagingEnvironmentName string = createDevCenterProjects.outputs.contosoTradersFrontEndPoolName
+
+
+@description('Create DevCenter Diagnostic Settings')
+resource devCenterDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'devCenterDiagnosticSettings'
+  scope: deployDevCenter
+  properties: {
+    workspaceId: logAnalyticsWorkspace.id
+    logs: [
+      {
+        categoryGroup: 'allLogs'
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
+  }
+}
+
+output devCenterDiagnosticSettingsId string = devCenterDiagnosticSettings.id
+output devCenterDiagnosticSettingsName string = devCenterDiagnosticSettings.name
+output devCenterDiagnosticSettingsWorkspaceId string = logAnalyticsWorkspace.id
+output devCenterDiagnosticSettingsDevCenterId string = deployDevCenter.id 
+output devCenterDiagnosticSettingsDevCenterName string = deployDevCenter.name
+

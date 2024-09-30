@@ -1,11 +1,10 @@
 #!/bin/bash
 
-location="WestUS3"
 
-solutionName="eShopPetDevBox"
-devBoxResourceGroupName="$solutionName-rg"
-networkResourceGroupName="$solutionName-Management-rg"
-managementResourceGroupName="$solutionName-Network-rg"
+devBoxResourceGroupName="$1"
+networkResourceGroupName="$2"
+managementResourceGroupName="$3"
+location="$4"
 
 # Function to create an Azure resource group
 createResourceGroup() {
@@ -33,6 +32,14 @@ deployResourcesOrganization() {
     createResourceGroup "$devBoxResourceGroupName"
     createResourceGroup "$networkResourceGroupName"
     createResourceGroup "$managementResourceGroupName"
+}
+
+validateInputs() {
+    if [[ -z "$devBoxResourceGroupName" || -z "$networkResourceGroupName" || -z "$managementResourceGroupName" || -z "$location" ]]; then
+        echo "Error: Missing required parameters."
+        echo "Usage: deployResourcesOrganization <devBoxResourceGroupName> <networkResourceGroupName> <managementResourceGroupName> <location>"
+        return 1
+    fi
 }
 
 deployResourcesOrganization

@@ -8,7 +8,6 @@ on:
     push:
         branches:
             - main
-            - */main
 
 jobs:
     Validate-and-Build-Bicep-Templates:
@@ -35,3 +34,18 @@ jobs:
           with:
             name: artifactsBicep-ARM-Templates
             path: ./artifactsBicep/*.json
+      
+        - name: Generate Release
+          uses: GitHub/release-action@v2
+          with:
+            body: ${{ steps.release_notes.outputs.body }}
+            draft: false
+            name: ${{ steps.release_notes.outputs.release_name }}
+            tag_name: ${{ steps.release_notes.outputs.tag_name }}
+            token: ${{ secrets.GITHUB_TOKEN }}
+            commit: ${{ github.sha }}
+            prerelease: false
+            files: |
+              ./artifactsBicep/deployManagement.json
+              ./artifactsBicep/deployNetwork.json
+              ./artifactsBicep/deployDevBox.json
