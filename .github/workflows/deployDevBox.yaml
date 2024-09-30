@@ -59,18 +59,26 @@ jobs:
       - name: Deploy Landing Zone Resources for ${{ env.solutionName }}
         run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh
 
-      - name: Deploy Log Analytics
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
-          resourceGroupName:  ${{ env.managementResourceGroupName }}
-          template: ./src/deploy/bicep/management/deploy.bicep
-          parameters: 'solutionName=${{ env.solutionName }}'
+      # - name: Deploy Log Analytics
+      #   uses: azure/arm-deploy@v1
+      #   with:
+      #     subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
+      #     resourceGroupName:  ${{ env.managementResourceGroupName }}
+      #     template: ./src/deploy/bicep/management/deploy.bicep
+      #     parameters: 'solutionName=${{ env.solutionName }}'
             
-      - name: Deploy Network Connectivity Resources
+      # - name: Deploy Network Connectivity Resources
+      #   uses: azure/arm-deploy@v1
+      #   with:
+      #     subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
+      #     resourceGroupName: ${{ env.networkResourceGroupName }}
+      #     template: ./src/deploy/bicep/network/deploy.bicep
+      #     parameters: 'solutionName=${{ env.solutionName }}' 
+
+      - name: Deploy Network Dev Center Resources
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
           resourceGroupName: ${{ env.networkResourceGroupName }}
-          template: ./src/deploy/bicep/network/deploy.bicep
+          template: ./src/deploy/bicep/devBox/deploy.bicep
           parameters: 'solutionName=${{ env.solutionName }}' 

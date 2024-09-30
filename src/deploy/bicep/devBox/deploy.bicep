@@ -1,6 +1,10 @@
 param solutionName string
 
 var devCenterName = format('{0}-devCenter', solutionName)
+var logAnalyticsWorkspaceName = format('{0}-logAnalytics', solutionName)
+var managementResourceGroupName = format('{0}-Management-rg', solutionName)
+var networkResourceGroupName = format('{0}-Network-rg', solutionName)
+var netWorkConnectionName = format('{0}-netWorkConnection', solutionName)
 
 module identity '../identity/deploy.bicep' = {
   name: 'identity'
@@ -28,7 +32,13 @@ output computeGalleryName string = computeGallery.outputs.computeGalleryName
 module devCenter 'devCenter/deployDevCenter.bicep' = {
   name: 'devCenter'
   params: {
-    solutionName: solutionName
+    devCenterName: devCenterName
+    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
+    managementResourceGroupName: managementResourceGroupName
+    identityName: identity.outputs.identityName
+    computeGalleryName: computeGallery.outputs.computeGalleryName
+    netWorkConnectionName: netWorkConnectionName
+    networkResourceGroupName: networkResourceGroupName
   }
   dependsOn: [
     computeGallery

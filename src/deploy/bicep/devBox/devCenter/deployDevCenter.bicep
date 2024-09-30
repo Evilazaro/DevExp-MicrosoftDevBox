@@ -1,13 +1,10 @@
-param solutionName string
-
-var devCenterName = format('{0}-devCenter', solutionName)
-var logAnalyticsWorkspaceName = format('{0}-logAnalytics', solutionName)
-var managementResourceGroupName = format('{0}-Management-rg', solutionName)
-var networkResourceGroupName = format('{0}-Network-rg', solutionName)
-var vNetName = format('{0}-vnet', solutionName)
-var identityName = format('{0}-identity', solutionName)
-var computeGalleryName = format('{0}-computeGallery', solutionName)
-var netWorkConnectionName = format(vNetName, '-NetworkConnection')
+param devCenterName string
+param logAnalyticsWorkspaceName string
+param managementResourceGroupName  string 
+param networkResourceGroupName string
+param identityName string
+param computeGalleryName string
+param netWorkConnectionName string
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
   name: logAnalyticsWorkspaceName
