@@ -5,13 +5,13 @@ set -euo pipefail
 
 
 # Azure Resource Group Names Constants
-solutionName="eShopPetDevBox"
+solutionName="PetDevExperienceDevBox"
 devBoxResourceGroupName="$solutionName-rg"
 networkResourceGroupName="$solutionName-Management-rg"
 managementResourceGroupName="$solutionName-Network-rg"
 
 # Identity Parameters Constants
-customRoleName="PetDevExperienceBuilderRole"
+customRoleName="eShopPetBuilderRole"
 
 subscriptionId=$(az account show --query id --output tsv)
 
