@@ -4,7 +4,7 @@ title: Developer Experience with Microsoft DevBox
 permalink: /
 ---
 
-# Welcome to Docsy Jekyll
+# Welcome to Developer Experience with Microsoft DevBox
 
 This is a starter template for a Developer Experience with Microsoft DevBox.
 
