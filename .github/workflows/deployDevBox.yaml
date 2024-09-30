@@ -68,9 +68,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Bicep Upgrade
-        run: az bicep upgrade
-
       - name: Grant execute permissions to the script
         run: chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh
 
@@ -93,7 +90,7 @@ jobs:
           template: ./src/deploy/bicep/network/deploy.bicep
           parameters: 'solutionName=${{ env.solutionName }}' 
 
-      - name: Deploy Network Dev Center Resources
+      - name: Deploy Dev Center Resources
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
