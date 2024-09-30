@@ -23,4 +23,4 @@ This epository provides a collection of scripts to automate the provisioning and
 
 ## Solution Architecture
 
-![Solution Architecture](./images/ContosoDevBox.png)
+![Solution Architecture](../assets/img/ContosoDevBox.png)
