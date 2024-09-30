@@ -1,4 +1,4 @@
-name: Build and Deploy DevBox as a Service for eShop
+name: DevBox as a Service CI and CD
 
 permissions:
     id-token: write

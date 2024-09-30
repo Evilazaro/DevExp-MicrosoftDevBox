@@ -1,4 +1,4 @@
-name: DevBox as a Service Continuous Integration
+name: DevBox as a Service CI
 
 permissions:
     id-token: write

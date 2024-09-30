@@ -5,9 +5,6 @@ permissions:
 # note
 on:
     workflow_dispatch: # Manually trigger the workflow
-    push:
-        branches:
-            - main
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
