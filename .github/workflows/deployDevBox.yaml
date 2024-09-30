@@ -18,10 +18,10 @@ jobs:
   Build-And-Deploy-DevBox-As-A-Service-For-eShop:
     runs-on: ubuntu-latest
     steps:
-      # - name: Update Packages
-      #   run: |
-      #     sudo apt-get update && \
-      #     sudo apt-get upgrade -y
+      - name: Update Packages
+        run: |
+          sudo apt-get update && \
+          sudo apt-get upgrade -y
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -53,7 +53,7 @@ jobs:
       - name: Bicep Upgrade
         run: az bicep upgrade
 
-      - name: Give execute permissions to the script
+      - name: Grant execute permissions to the script
         run: chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh
 
       - name: Deploy Landing Zone Resources for ${{ env.solutionName }}
