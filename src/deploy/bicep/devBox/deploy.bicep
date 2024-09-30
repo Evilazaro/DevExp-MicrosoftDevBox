@@ -1,8 +1,6 @@
 param solutionName string
 
-
-var temp = 'PetDevEx'
-var devCenterName = format('{0}-devCenter', temp)
+var devCenterName = format('{0}-devCenter', solutionName)
 var logAnalyticsWorkspaceName = format('{0}-logAnalytics', solutionName)
 var managementResourceGroupName = format('{0}-Management-rg', solutionName)
 var networkResourceGroupName = format('{0}-Network-rg', solutionName)

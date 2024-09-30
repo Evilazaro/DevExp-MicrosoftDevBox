@@ -8,6 +8,7 @@ on:
     push:
         branches:
             - main
+            - devCenterNameFix
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
