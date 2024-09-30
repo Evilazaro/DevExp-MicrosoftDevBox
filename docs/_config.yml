@@ -14,30 +14,30 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Developer Experience with Microsoft DevBox Docs
-email: evilazaro@domain.com
-author: Evilazaro Alves
+title: Docsy Jekyll
+email: your-email@domain.com
+author: Dinosaur Avocado
 description: > # this means to ignore newlines until "baseurl:"
   Write an awesome description for your new site here. You can edit this
   line in _config.yml. It will appear in your document head meta (for
   Google search results) and in your feed.xml site description.
 
 # Add your baseurl here (your repository) but DO NOT CHANGE THE LINE NUMBER without editing .circleci/circle_urls.sh
-baseurl: "/evilazaro" # the subpath of your site, e.g. /blog
+baseurl: "/docsy-jekyll" # the subpath of your site, e.g. /blog
 
 # This is mostly for testing
-url: "https://evilazaro.github.io" # the base hostname & protocol for your site
+url: "https://vsoch.github.io" # the base hostname & protocol for your site
 
 # Social (First three Required)
-repo: "https://github.com/evilazaro/DevExp-MicrosoftDevBox"
-github_user: "evilazaro"
-github_repo: "DevExp-MicrosoftDevBox"
-github_branch: "main"
+repo: "https://github.com/vsoch/docsy-jekyll"
+github_user: "vsoch"
+github_repo: "docsy-jekyll"
+github_branch: "master"
 
 # Optional
-twitter: evilazaro
-linkedin: evilazaro
-dockerhub: evilazaro
+twitter: vsoch
+linkedin: vsochat
+dockerhub: vanessa
 
 # These options are used to configure the locations of your version history when you want to serve versioned documents
 version_params:
