@@ -36,18 +36,32 @@ output devCenterId string = deployDevCenter.id
 output devCenterName string = deployDevCenter.name
 output devCenterIdentityId string = managedIdentity.id
 
-module configureDevCenterDiagnosticSettings 'configureDevCenterDiagnosticSettings.bicep' = {
-  name: 'DevCenterDiagnosticSettings'
-  params: {
-    devCenterName: devCenterName
-    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
-    managementResourceGroupName: managementResourceGroupName
+@description('Create DevCenter Diagnostic Settings')
+resource devCenterDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'devCenterDiagnosticSettings'
+  scope: deployDevCenter
+  properties: {
+    workspaceId: logAnalyticsWorkspace.id
+    logs: [
+      {
+        categoryGroup: 'allLogs'
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
   }
 }
 
-output devCenterDiagnosticSettingsId string = configureDevCenterDiagnosticSettings.outputs.devCenterDiagnosticSettingsId
-output devCenterDiagnosticSettingsName string = configureDevCenterDiagnosticSettings.outputs.devCenterDiagnosticSettingsName
-output devCenterDiagnosticSettingsWorkspaceId string = configureDevCenterDiagnosticSettings.outputs.devCenterDiagnosticSettingsWorkspaceId
+output devCenterDiagnosticSettingsId string = devCenterDiagnosticSettings.id
+output devCenterDiagnosticSettingsName string = devCenterDiagnosticSettings.name
+output devCenterDiagnosticSettingsWorkspaceId string = logAnalyticsWorkspace.id
+output devCenterDiagnosticSettingsDevCenterId string = deployDevCenter.id 
+output devCenterDiagnosticSettingsDevCenterName string = deployDevCenter.name
 
 module devCenterCatalogs 'configureDevCenterCatalogs.bicep' = {
   name: 'DevCenterCatalogs'
