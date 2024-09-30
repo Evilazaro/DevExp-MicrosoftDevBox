@@ -35,17 +35,25 @@ jobs:
             name: artifactsBicep-ARM-Templates
             path: ./artifactsBicep/*.json
       
-        - name: Generate Release
-          uses: GitHub/release-action@v2
+        - name: Create GitHub Release
+          id: create_release
+          uses: actions/create-release@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
-            body: ${{ steps.release_notes.outputs.body }}
+            tag_name: ${{ github.ref }}
+            release_name: "Release ${{ github.ref }}"
+            body: |
+              Release notes for ${{ github.ref }}.
             draft: false
-            name: ${{ steps.release_notes.outputs.release_name }}
-            tag_name: ${{ steps.release_notes.outputs.tag_name }}
-            token: ${{ secrets.GITHUB_TOKEN }}
-            commit: ${{ github.sha }}
             prerelease: false
-            files: |
-              ./artifactsBicep/deployManagement.json
-              ./artifactsBicep/deployNetwork.json
-              ./artifactsBicep/deployDevBox.json
+
+        - name: Upload Release Asset
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: ./releases
+            asset_name: devBox-CD
+            asset_content_type: application/zip
