@@ -147,7 +147,7 @@ If you want to add an external url for a parent or child, do this:
 
 ```yaml
   - title: GitHub Repository
-    external_url: https://www.github.com/vsoch/mkdocs-jekyll
+    external_url: https://www.github.com/evilazaro/mkdocs-jekyll
 ```
 
 ### News Posts
