@@ -136,13 +136,16 @@ tasks:
     parameters:
       repository: "https://github.com/Evilazaro/eShop"
       branch: "main"
+      directory: $"C:\Workspaces\eShop"
   - name: git-clone
     description: "Clone the DevBox repository"
     parameters:
       repository: "https://github.com/Evilazaro/MicrosoftDevBox"
       branch: "main"
+      directory: $"C:\Workspaces\MicrosoftDevBox"
   - name: git-clone
     description: "Clone the Contoso Traders repository"
     parameters:
       repository: "https://github.com/Evilazaro/ContosoTraders.git"
       branch: "main"
+      directory: $"C:\Workspaces\ContosoTraders"
