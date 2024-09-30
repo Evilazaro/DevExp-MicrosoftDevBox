@@ -21,7 +21,7 @@ output backEndImageId string = backEndImage.id
 
 @description('Create DevCenter DevBox Definition for BackEnd Engineer')
 resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
-  name: 'eShopPet-BackEndEngineer'
+  name: 'PetDevExperience-BackEndEngineer'
   location: resourceGroup().location
   parent: deployDevCenter
   properties: {
@@ -50,7 +50,7 @@ output frontEndImageId string = frontEndImage.id
 
 @description('Create DevCenter DevBox Definition for FrontEnd Engineer')
 resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
-  name: 'eShopPet-FrontEndEngineer'
+  name: 'PetDevExperience-FrontEndEngineer'
   location: resourceGroup().location
   parent: deployDevCenter
   properties: {
