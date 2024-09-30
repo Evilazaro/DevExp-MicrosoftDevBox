@@ -1,0 +1,14 @@
+$schema: "1.0"
+name: devbox-customization
+tasks:
+  - name: powershell
+    parameters:
+      command: |
+        # Install WSL2 distros
+        wsl --install --force
+        wsl --install -d Ubuntu
+        # Install VSCode extensions
+        code --install-extension ms-python.python;
+        code --install-extension ms-vscode-remote.remote-wsl;
+        code --install-extension d-biehl.robotcode
+      runAsUser: true

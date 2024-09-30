@@ -1,4 +1,5 @@
-# Introduction
+# Developer Experience with Microsoft DevBox
+## Introduction
 
 This epository provides a collection of scripts to automate the provisioning and deployment of Microsoft DevBox environments in Azure.
 
@@ -10,7 +11,7 @@ This epository provides a collection of scripts to automate the provisioning and
 
 ### Deployment 
 
-[![Build and Deploy DevBox as a Service for eShop](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/deployDevBox.yaml/badge.svg)](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/deployDevBox.yaml) [![DevBox as a Service Continuous Deployment](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/devBox-CD.yaml/badge.svg)](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/devBox-CD.yaml)
+[![Build and Deploy DevBox as a Service for eShop](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/deployDevBox.yaml/badge.svg)](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/deployDevBox.yaml) 
 
 ## Solution Architecture
 
