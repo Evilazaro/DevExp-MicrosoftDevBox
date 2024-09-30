@@ -19,59 +19,59 @@ jobs:
   Build-And-Deploy-DevBox-As-A-Service-For-eShop:
     runs-on: ubuntu-latest
     steps:
-      # - name: Update Packages and Upgrade Bicep
-      #   run: |
-      #     sudo apt-get update && \
-      #     sudo apt-get upgrade -y && \
-      #     sudo az bicep upgrade
+      - name: Update Packages and Upgrade Bicep
+        run: |
+          sudo apt-get update && \
+          sudo apt-get upgrade -y && \
+          sudo az bicep upgrade
 
-      # - name: Checkout repository
-      #   uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # - name: Validate Management Bicep Templates
-      #   run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep --outfile ./artifactsBicep/management.json
+      - name: Validate Management Bicep Templates
+        run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep --outfile ./artifactsBicep/management.json
 
-      # - name: Validate Network Bicep Templates
-      #   run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outfile ./artifactsBicep/network.json
+      - name: Validate Network Bicep Templates
+        run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outfile ./artifactsBicep/network.json
 
-      # - name: Validate DevCenter Bicep Templates
-      #   run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./artifactsBicep/devBox.json
+      - name: Validate DevCenter Bicep Templates
+        run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./artifactsBicep/devBox.json
 
-      # - name: Upload Bicep Artifacts
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: artifactsBicep-ARM-Templates
-      #     path: ./artifactsBicep/*.json
+      - name: Upload Bicep Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifactsBicep-ARM-Templates
+          path: ./artifactsBicep/*.json
 
       - name: Log in to Azure
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # - name: Bicep Upgrade
-      #   run: az bicep upgrade
+      - name: Bicep Upgrade
+        run: az bicep upgrade
 
-      # - name: Grant execute permissions to the script
-      #   run: chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh
+      - name: Grant execute permissions to the script
+        run: chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh
 
-      # - name: Deploy Landing Zone Resources for ${{ env.solutionName }}
-      #   run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.managementResourceGroupName }} ${{ env.location }}
+      - name: Deploy Landing Zone Resources for ${{ env.solutionName }}
+        run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.managementResourceGroupName }} ${{ env.location }}
 
-      # - name: Deploy Log Analytics
-      #   uses: azure/arm-deploy@v1
-      #   with:
-      #     subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
-      #     resourceGroupName:  ${{ env.managementResourceGroupName }}
-      #     template: ./src/deploy/bicep/management/deploy.bicep
-      #     parameters: 'solutionName=${{ env.solutionName }}'
+      - name: Deploy Log Analytics
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
+          resourceGroupName:  ${{ env.managementResourceGroupName }}
+          template: ./src/deploy/bicep/management/deploy.bicep
+          parameters: 'solutionName=${{ env.solutionName }}'
             
-      # - name: Deploy Network Connectivity Resources
-      #   uses: azure/arm-deploy@v1
-      #   with:
-      #     subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
-      #     resourceGroupName: ${{ env.networkResourceGroupName }}
-      #     template: ./src/deploy/bicep/network/deploy.bicep
-      #     parameters: 'solutionName=${{ env.solutionName }}' 
+      - name: Deploy Network Connectivity Resources
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
+          resourceGroupName: ${{ env.networkResourceGroupName }}
+          template: ./src/deploy/bicep/network/deploy.bicep
+          parameters: 'solutionName=${{ env.solutionName }}' 
 
       - name: Deploy Network Dev Center Resources
         uses: azure/arm-deploy@v1
