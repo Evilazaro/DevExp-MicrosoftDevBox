@@ -41,6 +41,9 @@ module devCenterCatalogs 'configureDevCenterCatalogs.bicep' = {
   params: {
     devCenterName: devCenterName
   }
+  dependsOn: [
+    deployDevCenter
+  ]
 }
 
 output devCenterCatalogId string = devCenterCatalogs.outputs.devCenterName_quickstart_devbox_tasks_id
@@ -51,6 +54,9 @@ module devCenterEnvironments 'configureDevCenterEnvironments.bicep' = {
   params: {
     devCenterName: devCenterName
   }
+  dependsOn: [
+    devCenterCatalogs
+  ]
 }
 
 output devCenterDevEnvironmentId string = devCenterEnvironments.outputs.devCenterDevEnvironmentId
@@ -66,6 +72,9 @@ module configureDevCenterNetworkConnection 'configureDevCenterNetworkConnection.
     networkResourceGroupName: networkResourceGroupName
     networkConnectionName: netWorkConnectionName
   }
+  dependsOn:[
+    devCenterEnvironments
+  ]
 }
 
 output devCenterNetworkConnectionId string = configureDevCenterNetworkConnection.outputs.devCenterName_networkConnection_id
@@ -77,17 +86,22 @@ module configureDevCenterComputeGallery 'configureDevCenterComputeGallery.bicep'
     devCenterName: devCenterName
     computeGalleryName: computeGalleryName
   }
+  dependsOn:[
+    configureDevCenterNetworkConnection
+  ]
 }
 
 output devCenterComputeGalleryImageId string = configureDevCenterComputeGallery.outputs.devCenterName_computeGalleryImage_id
 output devCenterComputeGalleryImageName string = configureDevCenterComputeGallery.outputs.devCenterName_computeGalleryImage_name
-
 
 module configureDevBoxDefinitions 'configureDevBoxDefinitions.bicep' = {
   name: 'DevBoxDefinitions'
   params: {
     devCenterName: devCenterName
   }
+  dependsOn:[
+    configureDevCenterComputeGallery
+  ]
 }
 
 output devBoxDefinitionBackEndId string = configureDevBoxDefinitions.outputs.devBoxDefinitionBackEndId
@@ -103,6 +117,9 @@ module createDevCenterProjects 'createDevCenterProjects.bicep' = {
     devBoxDefinitionBackEndName: configureDevBoxDefinitions.outputs.devBoxDefinitionBackEndName
     devBoxDefinitionFrontEndName: configureDevBoxDefinitions.outputs.devBoxDefinitionFrontEndName
   }
+  dependsOn:[
+    configureDevBoxDefinitions
+  ]
 }
 
 output eShopProjectId string = createDevCenterProjects.outputs.eShopProjectId
@@ -138,6 +155,10 @@ resource devCenterDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021
       }
     ]
   }
+  dependsOn: [
+    logAnalyticsWorkspace
+    createDevCenterProjects
+  ]
 }
 
 output devCenterDiagnosticSettingsId string = devCenterDiagnosticSettings.id
