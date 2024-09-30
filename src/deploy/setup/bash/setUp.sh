@@ -1,7 +1,7 @@
 #!/bin/bash
 
 appName="eShop"
-displayName="eShop GitHub Actions Enterprise App"
+displayName="PetDx GitHub Actions Enterprise App"
 
 setup() {
     echo "Setting up deployment credentials..."

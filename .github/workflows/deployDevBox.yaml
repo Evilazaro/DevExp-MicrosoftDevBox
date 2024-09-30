@@ -9,10 +9,10 @@ on:
 
 env:
   location: "westus3"
-  solutionName: "PetDevExperienceDevBox"
-  devBoxResourceGroupName: "PetDevExperienceDevBox-rg"
-  networkResourceGroupName: "PetDevExperienceDevBox-Network-rg"
-  managementResourceGroupName: "PetDevExperienceDevBox-Management-rg"
+  solutionName: "PetDx"
+  devBoxResourceGroupName: "PetDx-rg"
+  networkResourceGroupName: "PetDx-Network-rg"
+  managementResourceGroupName: "PetDx-Management-rg"
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
 jobs:
