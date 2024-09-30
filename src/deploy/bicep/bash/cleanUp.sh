@@ -5,7 +5,7 @@ set -euo pipefail
 
 
 # Azure Resource Group Names Constants
-solutionName="PetDevExperienceDevBox"
+solutionName="eShopPetDevBox"
 devBoxResourceGroupName="$solutionName-rg"
 networkResourceGroupName="$solutionName-Management-rg"
 managementResourceGroupName="$solutionName-Network-rg"
