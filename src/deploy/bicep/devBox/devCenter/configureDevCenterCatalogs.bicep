@@ -14,7 +14,7 @@ resource devCenterCatalogs 'Microsoft.DevCenter/devcenters/catalogs@2024-02-01' 
     gitHub: {
       uri: 'https://github.com/Evilazaro/MicrosoftDevBox.git'
       branch: 'main'
-      path: 'src/customizations/tasks'
+      path: '/customizations/tasks'
     }
   }
 }

@@ -149,11 +149,6 @@ tasks:
     parameters:
       command: "dotnet workload update"
       runAsUser: true
-  - name: powershell
-    description: "Update all winget packages"
-    parameters:
-      command: "winget upgrade --all"
-      runAsUser: true
   - name: git-clone
     description: "Clone the eShopRepository repository"
     parameters:
