@@ -13,10 +13,8 @@ jobs:
     Validate-and-Build-Bicep-Templates:
       runs-on: ubuntu-latest
       steps:
-        - name: Update Packages and Upgrade Bicep
+        - name: Update Bicep
           run: |
-            sudo apt-get update && \
-            sudo apt-get upgrade -y && \
             sudo az bicep upgrade
 
         - name: Checkout repository

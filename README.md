@@ -4,7 +4,7 @@ This epository provides a collection of scripts to automate the provisioning and
 
 ### Build Status
 
-[![Test Login To Azure](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/testLoginToAzure.yaml/badge.svg)](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/testLoginToAzure.yaml)
+[![Test Login To Azure](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/testLoginToAzure.yaml/badge.svg)](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/testLoginToAzure.yaml)  [![DevBox as a Service Continuous Integration](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/devBox-CI.yaml/badge.svg)](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/devBox-CI.yaml)
 
 ### Solution Architecture
 
