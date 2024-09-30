@@ -4,11 +4,11 @@
     - title: "Getting Started"
       url: "docs/getting-started"
       children:
-        - title: Features
+        - title: Use Case
           url: "docs/getting-started#getting-started"
-        - title: Development
+        - title: Solution Architecture
           url: "docs/getting-started#development"
-        - title: Customization
+        - title: Set up
           url: "docs/getting-started#customization"
     - title: Versioning
       url: "docs/versioning"
