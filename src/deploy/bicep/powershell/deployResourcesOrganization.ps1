@@ -1,10 +1,10 @@
 # PowerShell script to deploy Azure resources for the organization
 
 param (
-    [string]$devBoxResourceGroupName,
-    [string]$networkResourceGroupName,
-    [string]$managementResourceGroupName,
-    [string]$location
+    [string]$devBoxResourceGroupName='PetDx-rg',
+    [string]$networkResourceGroupName='PetDx-Network-rg',
+    [string]$managementResourceGroupName='PetDx-Management-rg',
+    [string]$location='westus3'
 )
 
 # Function to create an Azure resource group
