@@ -55,7 +55,7 @@ module devCenterEnvironments 'configureDevCenterEnvironments.bicep' = {
     devCenterName: devCenterName
   }
   dependsOn: [
-    devCenterCatalogs
+    deployDevCenter
   ]
 }
 
@@ -73,7 +73,7 @@ module configureDevCenterNetworkConnection 'configureDevCenterNetworkConnection.
     networkConnectionName: netWorkConnectionName
   }
   dependsOn:[
-    devCenterEnvironments
+    deployDevCenter
   ]
 }
 
@@ -87,7 +87,7 @@ module configureDevCenterComputeGallery 'configureDevCenterComputeGallery.bicep'
     computeGalleryName: computeGalleryName
   }
   dependsOn:[
-    configureDevCenterNetworkConnection
+    deployDevCenter
   ]
 }
 
@@ -100,6 +100,7 @@ module configureDevBoxDefinitions 'configureDevBoxDefinitions.bicep' = {
     devCenterName: devCenterName
   }
   dependsOn:[
+    configureDevCenterNetworkConnection
     configureDevCenterComputeGallery
   ]
 }
