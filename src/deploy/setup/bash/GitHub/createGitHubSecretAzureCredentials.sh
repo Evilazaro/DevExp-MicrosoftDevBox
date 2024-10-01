@@ -31,7 +31,7 @@ setupGitHubSecretAuthentication() {
     echo "Setting up GitHub secret authentication..."
 
     # Log in to GitHub
-    loginToGitHub
+    #loginToGitHub
     if [[ $? -ne 0 ]]; then
         echo "Error: Failed to log in to GitHub."
         return 1
