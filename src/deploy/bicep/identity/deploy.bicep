@@ -2,12 +2,20 @@ param solutionName string
 
 var identityName = format('{0}-identity', solutionName)
 var customRoleName = format('{0}-customRole', identityName)
+var tags = {
+  division: 'PlatformEngineeringTeam-DX'
+  enrironment: 'Production'
+  offering: 'DevBox-as-a-Service'
+  solution: solutionName
+  landingZone: 'Identity'
+}
 
 module identity 'deployIdentity.bicep' = {
   name: 'deployIdentity'
   params: {
     location: resourceGroup().location
     identityName: identityName
+    tags: tags
   }
 }
 

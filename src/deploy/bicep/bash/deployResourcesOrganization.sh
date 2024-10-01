@@ -18,7 +18,12 @@ createResourceGroup() {
 
     echo "Creating Azure Resource Group: $resourceGroupName in $location"
 
-    if az group create --name "$resourceGroupName" --location "$location" --tags "division=PetDx-Platform" "Environment=Prod" "offer=PetDx-DevWorkstation-Service" "Team=Engineering" "solution=ContosoFabricDevWorkstation"; then
+    if az group create --name "$resourceGroupName" --location "$location" \
+        --tags \
+        "division=PlatformEngineeringTeam-DX" \
+        "Environment=Production" \
+        "offering=DevBox-as-a-Service"; then
+        
         echo "Resource group '$resourceGroupName' created successfully."
     else
         echo "Error: Failed to create resource group '$resourceGroupName'."
