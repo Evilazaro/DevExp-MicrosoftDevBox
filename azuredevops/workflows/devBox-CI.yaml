@@ -1,0 +1,56 @@
+trigger:
+  branches:
+    include:
+      - main
+      - devCenterNameFix
+
+pr: none
+
+variables:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
+
+stages:
+- stage: ValidateAndBuildBicepTemplates
+  jobs:
+  - job: ValidateAndBuildBicepTemplates
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: '$(AZURE_CREDENTIALS)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          sudo az bicep upgrade
+
+    - task: Checkout@v2
+
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: '$(AZURE_CREDENTIALS)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az bicep build --file ./src/deploy/bicep/management/deploy.bicep --outfile ./artifactsBicep/deployManagement.json
+
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: '$(AZURE_CREDENTIALS)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outfile ./artifactsBicep/deployNetwork.json
+
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: '$(AZURE_CREDENTIALS)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./artifactsBicep/deployDevBox.json
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.SourcesDirectory)/artifactsBicep'
+        ArtifactName: 'artifactsBicep-ARM-Templates'
