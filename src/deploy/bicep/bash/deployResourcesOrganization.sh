@@ -41,9 +41,10 @@ deployResourcesOrganization() {
 
 validateInputs() {
     if [[ -z "$devBoxResourceGroupName" || -z "$networkResourceGroupName" || -z "$managementResourceGroupName" || -z "$location" ]]; then
-        echo "Error: Missing required parameters."
-        echo "Usage: deployResourcesOrganization <devBoxResourceGroupName> <networkResourceGroupName> <managementResourceGroupName> <location>"
-        return 1
+        devBoxResourceGroupName='PetDx-rg'
+        networkResourceGroupName='PetDx-Network-rg'
+        managementResourceGroupName='PetDx-Management-rg'
+        location='westus3'
     fi
 }
 
