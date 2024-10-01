@@ -1,4 +1,5 @@
 param vnetName string
+param tags object
 
 resource vNet 'Microsoft.Network/virtualNetworks@2021-02-01' existing = {
   name: vnetName
@@ -16,6 +17,7 @@ resource deployNetworkConnection 'Microsoft.DevCenter/networkconnections@2023-04
     domainJoinType: 'AzureADJoin'
     subnetId: vNet.properties.subnets[0].id
   }
+  tags: tags
   dependsOn: [
     vNet
   ]

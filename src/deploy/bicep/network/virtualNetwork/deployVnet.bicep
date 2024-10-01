@@ -1,6 +1,7 @@
 param vnetName string
 param logAnalyticsWorkspaceName string
 param managementResourceGroupName string
+param tags object
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
   name: logAnalyticsWorkspaceName
@@ -29,6 +30,7 @@ resource deployVirtualNetwork 'Microsoft.Network/virtualNetworks@2024-01-01' = {
       }
     ]
   }
+  tags: tags
   dependsOn: [
     logAnalyticsWorkspace
   ]

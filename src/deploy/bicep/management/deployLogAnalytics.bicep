@@ -1,4 +1,5 @@
 param logAnalyticsWorkspaceName string
+param tags object
 
 resource deployLogAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
   name: logAnalyticsWorkspaceName
@@ -19,6 +20,7 @@ resource deployLogAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2
     publicNetworkAccessForIngestion: 'Enabled'
     publicNetworkAccessForQuery: 'Enabled'
   }
+  tags: tags
 }
 
 output logAnalyticsWorkspaceId string = deployLogAnalyticsWorkspace.id
