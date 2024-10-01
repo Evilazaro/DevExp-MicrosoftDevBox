@@ -5,6 +5,7 @@ param networkResourceGroupName string
 param identityName string
 param computeGalleryName string
 param netWorkConnectionName string
+param tags object
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
   name: logAnalyticsWorkspaceName
@@ -25,6 +26,7 @@ resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' = {
       '${managedIdentity.id}': {}
     }
   }
+  tags: tags
   dependsOn: [
     logAnalyticsWorkspace
     managedIdentity

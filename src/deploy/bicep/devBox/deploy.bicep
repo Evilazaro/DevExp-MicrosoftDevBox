@@ -6,6 +6,13 @@ var managementResourceGroupName = format('{0}-Management-rg', solutionName)
 var networkResourceGroupName = format('{0}-Network-rg', solutionName)
 var vnetName = format('{0}-vnet', solutionName)
 var netWorkConnectionName = format('{0}-netWorkConnection', vnetName)
+var tags = {
+  division: 'PlatformEngineeringTeam-DX'
+  enrironment: 'Production'
+  offering: 'DevBox-as-a-Service'
+  solution: solutionName
+  landingZone: 'DevBox'
+}
 
 module identity '../identity/deploy.bicep' = {
   name: 'identity'
@@ -21,6 +28,7 @@ module computeGallery './computeGallery/deployComputeGallery.bicep' = {
   name: 'computeGallery'
   params: {
     solutionName: solutionName
+    tags: tags
   }
   dependsOn: [
     identity
@@ -40,6 +48,7 @@ module devCenter 'devCenter/deployDevCenter.bicep' = {
     computeGalleryName: computeGallery.outputs.computeGalleryName
     netWorkConnectionName: netWorkConnectionName
     networkResourceGroupName: networkResourceGroupName
+    tags: tags
   }
   dependsOn: [
     computeGallery

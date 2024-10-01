@@ -19,6 +19,14 @@ resource backEndImage 'Microsoft.DevCenter/devcenters/galleries/images@2024-02-0
 
 output backEndImageId string = backEndImage.id
 
+var tagsBackEnd = {
+  division: 'PlatformEngineeringTeam-DX'
+  enrironment: 'Production'
+  offering: 'DevBox-as-a-Service'
+  landingZone: 'DevBox'
+  devBoxDefinition: 'PetDx-BackEndEngineer'
+}
+
 @description('Create DevCenter DevBox Definition for BackEnd Engineer')
 resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
   name: 'PetDx-BackEndEngineer'
@@ -36,6 +44,7 @@ resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitio
       name: 'general_i_32c128gb512ssd_v2'
     }
   }
+ tags: tagsBackEnd
 }
 
 output devBoxDefinitionBackEndId string = devBoxDefinitionBackEnd.id
@@ -47,6 +56,14 @@ resource frontEndImage 'Microsoft.DevCenter/devcenters/galleries/images@2024-02-
 }
 
 output frontEndImageId string = frontEndImage.id
+
+var tagsFrontEnd = {
+  division: 'PlatformEngineeringTeam-DX'
+  enrironment: 'Production'
+  offering: 'DevBox-as-a-Service'
+  landingZone: 'DevBox'
+  devBoxDefinition: 'PetDx-FrontEndEngineer'
+}
 
 @description('Create DevCenter DevBox Definition for FrontEnd Engineer')
 resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
@@ -65,6 +82,7 @@ resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefiniti
       name: 'general_i_32c128gb512ssd_v2'
     }
   }
+  tags: tagsFrontEnd
 }
 
 output devBoxDefinitionFrontEndId string = devBoxDefinitionFrontEnd.id

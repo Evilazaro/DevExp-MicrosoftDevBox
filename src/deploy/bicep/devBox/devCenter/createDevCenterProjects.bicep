@@ -8,6 +8,16 @@ resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' existing = 
   name: devCenterName
 } 
 
+var tagsEshop = {
+  division: 'PlatformEngineeringTeam-DX'
+  enrironment: 'Production'
+  offering: 'DevBox-as-a-Service'
+  landingZone: 'DevBox'
+  project: 'eShop'
+}
+
+
+
 @description('Create DevCenter eShop Project')
 resource eShopProject 'Microsoft.DevCenter/projects@2024-02-01' = {
   name: 'eShop'
@@ -17,6 +27,7 @@ resource eShopProject 'Microsoft.DevCenter/projects@2024-02-01' = {
     devCenterId: deployDevCenter.id
     maxDevBoxesPerUser: 10
   }
+  tags:tagsEshop
 }
 
 output eShopProjectId string = eShopProject.id
@@ -62,6 +73,14 @@ resource frontEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
 output frontEndPoolId string = backEndPool.id
 output frontEndPoolName string = backEndPool.name
 
+var tagsContoso = {
+  division: 'PlatformEngineeringTeam-DX'
+  enrironment: 'Production'
+  offering: 'DevBox-as-a-Service'
+  landingZone: 'DevBox'
+  project: 'Contoso Traders'
+}
+
 
 @description('Create DevCenter Contoso Traders Project')
 resource contosoTraders 'Microsoft.DevCenter/projects@2024-02-01' = {
@@ -72,6 +91,7 @@ resource contosoTraders 'Microsoft.DevCenter/projects@2024-02-01' = {
     devCenterId: deployDevCenter.id
     maxDevBoxesPerUser: 10
   }
+  tags:tagsContoso
 }
 
 output contosoTradersId string = contosoTraders.id
