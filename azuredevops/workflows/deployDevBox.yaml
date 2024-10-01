@@ -1,0 +1,103 @@
+trigger:
+- none
+
+pr:
+- none
+
+variables:
+  location: "westus3"
+  solutionName: "PetDx"
+  devBoxResourceGroupName: "PetDx-rg"
+  networkResourceGroupName: "PetDx-Network-rg"
+  managementResourceGroupName: "PetDx-Management-rg"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
+
+stages:
+- stage: TestAzureCredentialsAndLogin
+  jobs:
+  - job: TestAzureCredentialsAndLogin
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: '$(AZURE_CREDENTIALS)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          echo "Logging in to Azure..."
+          az login --service-principal -u $(servicePrincipalId) -p $(servicePrincipalKey) --tenant $(tenantId)
+
+- stage: Build
+  dependsOn: TestAzureCredentialsAndLogin
+  jobs:
+  - job: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: '$(AZURE_CREDENTIALS)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          sudo az bicep upgrade
+    - task: Checkout@v2
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: '$(AZURE_CREDENTIALS)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az bicep build --file ./src/deploy/bicep/management/deploy.bicep --outfile ./artifactsBicep/management.json
+          az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outfile ./artifactsBicep/network.json
+          az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./artifactsBicep/devBox.json
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.SourcesDirectory)/artifactsBicep'
+        ArtifactName: 'artifactsBicep-ARM-Templates'
+
+- stage: Deploy
+  dependsOn: Build
+  jobs:
+  - job: Deploy
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: '$(AZURE_CREDENTIALS)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          sudo apt-get update && sudo apt-get upgrade -y && sudo az bicep upgrade
+    - task: Checkout@v2
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: '$(AZURE_CREDENTIALS)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh
+          ./src/deploy/bicep/bash/deployResourcesOrganization.sh $(devBoxResourceGroupName) $(networkResourceGroupName) $(managementResourceGroupName) $(location)
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        azureSubscription: '$(AZURE_CREDENTIALS)'
+        resourceGroupName: '$(managementResourceGroupName)'
+        location: '$(location)'
+        csmFile: '$(Build.SourcesDirectory)/src/deploy/bicep/management/deploy.bicep'
+        csmParametersFile: '-solutionName $(solutionName)'
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        azureSubscription: '$(AZURE_CREDENTIALS)'
+        resourceGroupName: '$(networkResourceGroupName)'
+        location: '$(location)'
+        csmFile: '$(Build.SourcesDirectory)/src/deploy/bicep/network/deploy.bicep'
+        csmParametersFile: '-solutionName $(solutionName)'
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        azureSubscription: '$(AZURE_CREDENTIALS)'
+        resourceGroupName: '$(devBoxResourceGroupName)'
+        location: '$(location)'
+        csmFile: '$(Build.SourcesDirectory)/src/deploy/bicep/devBox/deploy.bicep'
+        csmParametersFile: '-solutionName $(solutionName)'
