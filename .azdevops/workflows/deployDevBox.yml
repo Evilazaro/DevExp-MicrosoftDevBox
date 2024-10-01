@@ -1,0 +1,113 @@
+trigger:
+
+- none
+
+pr:
+- none
+
+variables:
+  location: "westus3"
+  solutionName: "PetDx"
+  devBoxResourceGroupName: "PetDx-rg"
+  networkResourceGroupName: "PetDx-Network-rg"
+  managementResourceGroupName: "PetDx-Management-rg"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
+
+stages:
+  - stage: Test_Login_To_Azure
+    jobs:
+    - job: Test_Login_To_Azure
+      pool:
+        name: 'Default'
+        vmImage: 'windows-latest'
+      steps:
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: 'AzureDevOpsConnection'
+          scriptType: pscore
+          scriptLocation: inlineScript
+          inlineScript: |
+            az account list
+  - stage: Build
+    jobs:
+    - job: Build
+      pool:
+        name: 'Default'
+        vmImage: 'windows-latest'
+      steps:
+      - checkout: self
+      
+      - task: PowerShell@2
+        displayName: Updating Bicep 
+        inputs:
+          targetType: 'inline'
+          script: |
+            az bicep upgrade
+      - task: PowerShell@2
+        displayName: Building Management Resources Bicep Scripts 
+        inputs:
+          targetType: 'inline'
+          script: |
+            bicep build src\deploy\bicep\management\deploy.bicep --outfile .\artifactsBicep\management.json
+
+      - task: PowerShell@2
+        displayName: Building Network Resources Bicep Scripts 
+        inputs:
+          targetType: 'inline'
+          script: |
+            bicep build src\deploy\bicep\network\deploy.bicep --outfile .\artifactsBicep\network.json
+      
+      - task: PowerShell@2
+        displayName: Building DevBox (DevCenter) Resources Bicep Scripts 
+        inputs:
+          targetType: 'inline'
+          script: |
+            bicep build src\deploy\bicep\devbox\deploy.bicep --outfile .\artifactsBicep\devbox.json
+
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: '.\artifactsBicep'
+          artifact: 'artifactsBicep-ARM-Templates'
+          publishLocation: 'pipeline'
+          
+  - stage: Deploy
+    jobs:
+    - job: Deploy
+      pool:
+        name: 'Default'
+        vmImage: 'windows-latest'
+      steps:
+      - task: AzureCLI@2
+        displayName: Deploy Landing Zone for $(solutionName)
+        inputs:
+          azureSubscription: 'AzureDevOpsConnection'
+          scriptType: 'pscore'
+          scriptLocation: 'scriptPath'
+          scriptPath: '.\src\deploy\bicep\powershell\deployResourcesOrganization.ps1'
+          
+      - task: AzureCLI@2
+        displayName: Deploy Management Resources to '$(managementResourceGroupName)' Resource Group
+        inputs:
+          azureSubscription: 'AzureDevOpsConnection'
+          scriptType: 'pscore'
+          scriptLocation: inlineScript
+          inlineScript: |
+            az deployment group create --resource-group $(managementResourceGroupName) --template-file '.\src\deploy\bicep\management\deploy.bicep' --parameters 'solutionName=$(solutionName)'
+      
+      - task: AzureCLI@2
+        displayName: Deploy Network Resources to '$(networkResourceGroupName)' Resource Group
+        inputs:
+          azureSubscription: 'AzureDevOpsConnection'
+          scriptType: 'pscore'
+          scriptLocation: inlineScript
+          inlineScript: |
+            az deployment group create --resource-group $(networkResourceGroupName) --template-file '.\src\deploy\bicep\network\deploy.bicep' --parameters 'solutionName=$(solutionName)'
+      
+      - task: AzureCLI@2 
+        displayName: Deploy DevCenter Resources to '$(devBoxResourceGroupName)' Resource Group
+        inputs:
+          azureSubscription: 'AzureDevOpsConnection'
+          scriptType: 'pscore'
+          scriptLocation: inlineScript
+          inlineScript: |
+            az deployment group create --resource-group $(devBoxResourceGroupName) --template-file '.\src\deploy\bicep\devbox\deploy.bicep' --parameters 'solutionName=$(solutionName)'
