@@ -121,11 +121,6 @@ tasks:
 
         InstallVSCodeExtensions"
       runAsUser: true
-  - name: powershell
-    description: "Update dotnet workloads"
-    parameters:
-      command: "dotnet workload update"
-      runAsUser: true
   - name: git-clone
     description: "Clone the eShopRepository repository"
     parameters:
