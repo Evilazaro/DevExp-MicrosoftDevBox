@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: bicepArtifacts_v1.0.${{ github.run_number }}.zip
-          path: ./artifactsBicep/*.json
+          path: bicepArtifacts_v1.0.${{ github.run_number }}.zip
 
   Deploy:
     runs-on: ubuntu-latest
