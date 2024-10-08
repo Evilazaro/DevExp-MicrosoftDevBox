@@ -81,18 +81,16 @@ deleteCustomRole() {
 # Function to delete role assignments
 deleteRoleAssignments() {
     # Deleting role assignments and role definitions
-    for roleName in 'Owner' 'Managed Identity Operator' "$customRoleName"; do
-        echo "Getting the role ID for '$roleName'..."
-        local roleId=$(az role definition list --name "$roleName" --query [].name --output tsv)
-        if [[ -z "$roleId" ]]; then
-            echo "Role ID for '$roleName' not found. Skipping role assignment deletion."
-            continue
-        else
-            echo "Role ID for '$roleName' is '$roleId'."
-            echo "Removing '$roleName' role assignment..."
-        fi
-        removeRoleAssignment "$roleId" "$subscriptionId"
-    done
+   
+    echo "Getting the role ID for '$roleName'..."
+    local roleId=$(az role definition list --name "$roleName" --query [].name --output tsv)
+    if [[ -z "$roleId" ]]; then
+        echo "Role ID for '$roleName' not found. Skipping role assignment deletion."
+    else
+        echo "Role ID for '$roleName' is '$roleId'."
+        echo "Removing '$roleName' role assignment..."
+    fi
+    removeRoleAssignment "$roleId" "$subscriptionId"
 }
 
 # Function to clean up resources
