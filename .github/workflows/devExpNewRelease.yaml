@@ -170,7 +170,7 @@ jobs:
       
       - name: Grant execute permissions to the script
         run: | 
-          chmod +x ./src/deploy/setup/bash/cleanUp.sh
+          chmod +x ./src/deploy/bicep/bash/cleanUp.sh
 
       - name: Cleaning Up Azure Resources for ${{ env.solutionName }}
-        run: ./src/deploy/setup/bash/cleanUp.sh 
+        run: ./src/deploy/bicep/bash/cleanUp.sh 

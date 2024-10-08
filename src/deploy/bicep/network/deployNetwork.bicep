@@ -81,6 +81,32 @@ var securityRules = [
       direction: 'Inbound'
     }
   }
+  {
+    name: 'Allow-UDP'
+    properties: {
+      protocol: 'Udp'
+      sourcePortRange: '*'
+      destinationPortRange: '53'
+      sourceAddressPrefix: subnetAddressPrefix
+      destinationAddressPrefix: '*'
+      access: 'Allow'
+      priority: 130
+      direction: 'Inbound'
+    }
+  }
+  {
+    name: 'Allow-TCP'
+    properties: {
+      protocol: 'Tcp'
+      sourcePortRange: '*'
+      destinationPortRange: '53'
+      sourceAddressPrefix: subnetAddressPrefix
+      destinationAddressPrefix: '*'
+      access: 'Allow'
+      priority: 140
+      direction: 'Inbound'
+    }
+  }
 ]
 
 @description('Deploy the network security group')
