@@ -7,8 +7,9 @@ on:
     workflow_dispatch: # Manually trigger the workflow
     push:
         branches:
+            - 'feature/**' # Branches containing feature/ in the name
+            - 'bugfix/**' # Branches containing bugfix/ in the name
             - main
-            - devCenterNameFix
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
@@ -24,13 +25,13 @@ jobs:
         - name: Checkout repository
           uses: actions/checkout@v4
 
-        - name: Validate Management Bicep Templates
+        - name: Build Management Bicep Templates
           run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep --outfile ./artifactsBicep/deployManagement.json
 
-        - name: Validate Network Bicep Templates
+        - name: Build Network Bicep Templates
           run: az bicep build --file ./src/deploy/bicep/network/deployNetwork.bicep --outfile ./artifactsBicep/deployNetwork.json
 
-        - name: Validate DevCenter Bicep Templates
+        - name: Build DevCenter Bicep Templates
           run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./artifactsBicep/deployDevBox.json
 
         - name: Upload Bicep Artifacts

@@ -95,7 +95,7 @@ module nsg '../security/networkSecurityGroup.bicep' = {
 }
 
 @description('Deploy the subnet')
-module subnet 'virtualNetwork/subnet.bicep' = {
+module subnet './virtualNetwork/subNet.bicep' = {
   name: 'subnet'
   params: {
     virtualNetworkName: virtualNetwork.outputs.virtualNetworkName
