@@ -24,9 +24,6 @@ jobs:
               uses: azure/login@v2
               with:
                 creds: ${{ secrets.AZURE_CREDENTIALS }}
-            
-            - name: Clean Up DevBox Resource Group
-              run: az group delete --name ${{ env.devBoxResourceGroupName }} --yes
               
             - name: Grant execute permissions to the script
               run: | 
