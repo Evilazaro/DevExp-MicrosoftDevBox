@@ -1,5 +1,5 @@
 @description('Diagnostic Settings Name')
-param diagnosticSettingsName string = 'default'
+param diagnosticSettingsName string 
 
 @description('Log Analytics Worskpace Name')
 param logAnalyticsWorkspaceName string

@@ -128,7 +128,7 @@ module networkConnection './networkConnection/networkConnection.bicep' = {
 module diagnosticSettings '../management/diagnosticSettings.bicep' = {
   name: 'diagnosticSettings'
   params: {
-    diagnosticSettingsName: 'default'
+    diagnosticSettingsName: virtualNetwork.outputs.virtualNetworkName
     logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
     logAnalyticsResourceGroupName: managementResourceGroupName
   }
