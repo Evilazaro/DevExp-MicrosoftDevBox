@@ -22,7 +22,7 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
-              
+
             - name: Log in to Azure
               uses: azure/login@v2
               with:
@@ -30,8 +30,8 @@ jobs:
               
             - name: Grant execute permissions to the script
               run: | 
-                chmod +x ./src/deploy/bicep/bash/cleanUp.sh
+                chmod +x ./src/deploy/bicep/bash/cleanUpPipeline.sh
                 
       
             - name: Cleaning Up Azure Resources for ${{ env.solutionName }}
-              run: ./src/deploy/bicep/bash/cleanUp.sh 
+              run: ./src/deploy/bicep/bash/cleanUpPipeline.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.managementResourceGroupName }} ${{ env.location }}
