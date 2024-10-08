@@ -4,8 +4,7 @@ var devCenterName = format('{0}DevCenter', solutionName)
 var logAnalyticsWorkspaceName = format('{0}-logAnalytics', solutionName)
 var managementResourceGroupName = format('{0}-Management-rg', solutionName)
 var networkResourceGroupName = format('{0}-Network-rg', solutionName)
-var vnetName = format('{0}-vnet', solutionName)
-var netWorkConnectionName = format('{0}-netWorkConnection', vnetName)
+var virtualNetworkConnectionName = format('{0}-networkConnection', solutionName)
 var tags = {
   division: 'PlatformEngineeringTeam-DX'
   enrironment: 'Production'
@@ -46,7 +45,7 @@ module devCenter 'devCenter/deployDevCenter.bicep' = {
     managementResourceGroupName: managementResourceGroupName
     identityName: identity.outputs.identityName
     computeGalleryName: computeGallery.outputs.computeGalleryName
-    netWorkConnectionName: netWorkConnectionName
+    netWorkConnectionName: virtualNetworkConnectionName
     networkResourceGroupName: networkResourceGroupName
     tags: tags
   }
