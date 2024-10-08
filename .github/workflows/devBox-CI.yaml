@@ -29,7 +29,7 @@ jobs:
           run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep --outfile ./artifactsBicep/deployManagement.json
 
         - name: Build Network Bicep Templates
-          run: az bicep build --file ./src/deploy/bicep/network/deployNetwork.bicep --outfile ./artifactsBicep/deployNetwork.json
+          run: az bicep build --file ./src/deploy/bicep/network/deployNetwork.bicep --outdir ./bicepArtifacts
 
         - name: Build DevCenter Bicep Templates
           run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./artifactsBicep/deployDevBox.json

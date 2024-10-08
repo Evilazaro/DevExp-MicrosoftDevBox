@@ -36,13 +36,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Management Bicep Templates
-        run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep --outfile ./artifactsBicep/management.json
+        run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep --outdir ./bicepArtifacts
 
       - name: Build Network Bicep Templates
-        run: az bicep build --file ./src/deploy/bicep/network/deployNetwork.bicep --outfile ./artifactsBicep/deployNetwork.json
+        run: az bicep build --file ./src/deploy/bicep/network/deployNetwork.bicep --outdir ./bicepArtifacts
 
       - name: Build DevCenter Bicep Templates
-        run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./artifactsBicep/devBox.json
+        run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outdir ./bicepArtifacts
 
       - name: Upload Bicep Artifacts
         uses: actions/upload-artifact@v4
