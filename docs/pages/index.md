@@ -18,3 +18,10 @@ This epository provides a collection of scripts to automate the provisioning and
 ## Solution Architecture
 
 ![Solution Architecture](../assets/img/ContosoDevBox.png)
+
+## Technology Stack for Engineers
+
+.NET
+VS Studio
+Docker
+VS Code
