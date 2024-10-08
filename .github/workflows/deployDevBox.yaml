@@ -7,9 +7,6 @@ permissions:
 # note
 on:
   workflow_dispatch: # Manually trigger the workflow
-  push:
-    branches:
-      - main
 
 env:
   location: "westus3"
