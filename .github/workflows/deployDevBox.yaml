@@ -39,7 +39,7 @@ jobs:
         run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep --outfile ./artifactsBicep/management.json
 
       - name: Validate Network Bicep Templates
-        run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outfile ./artifactsBicep/network.json
+        run: az bicep build --file ./src/deploy/bicep/network/deployNetwork.bicep --outfile ./artifactsBicep/network.json
 
       - name: Validate DevCenter Bicep Templates
         run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./artifactsBicep/devBox.json
@@ -87,7 +87,7 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
           resourceGroupName: ${{ env.networkResourceGroupName }}
-          template: ./src/deploy/bicep/network/deploy.bicep
+          template: ./src/deploy/bicep/network/deployNetwork.bicep
           parameters: 'solutionName=${{ env.solutionName }}' 
 
       - name: Deploy Dev Center Resources
