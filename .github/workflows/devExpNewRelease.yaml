@@ -51,7 +51,7 @@ jobs:
       - name: Upload Bicep Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: artifactsBicep-ARM-Templates
+          name: bicepArtifacts_v1.0.${{ github.run_number }}.zip
           path: ./artifactsBicep/*.json
 
   Deploy:
