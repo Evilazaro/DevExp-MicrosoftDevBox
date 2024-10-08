@@ -99,7 +99,6 @@ deleteRoleAssignments() {
 
 # Function to clean up resources
 cleanUpResources() {
-    clear
     deleteRoleAssignments
     deleteResourceGroup "$devBoxResourceGroupName"
     deleteResourceGroup "$networkResourceGroupName"
@@ -111,4 +110,7 @@ cleanUpResources() {
 }
 
 # Main script execution
-cleanUpResources
+#cleanUpResources
+
+echo "Subscription do Azure"
+echo "$subscriptionId"

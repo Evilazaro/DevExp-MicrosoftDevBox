@@ -34,4 +34,4 @@ jobs:
                 
       
             - name: Cleaning Up Azure Resources for ${{ env.solutionName }}
-              run: ./src/deploy/bicep/bash/cleanUpPipeline.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.managementResourceGroupName }} ${{ env.location }} 'eShopPetBuilderRole' ${{ secrets.AZURE_CREDENTIALS.subscriptionId }} 
+              run: ./src/deploy/bicep/bash/cleanUpPipeline.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.managementResourceGroupName }} ${{ env.location }} 'eShopPetBuilderRole' ${{ secrets.AZURE_CREDENTIALS }} 
