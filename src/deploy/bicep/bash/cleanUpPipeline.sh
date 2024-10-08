@@ -90,13 +90,11 @@ deleteRoleAssignments() {
         echo "Role ID for '$customRoleName' is '$roleId'."
         echo "Removing '$customRoleName' role assignment..."
     fi
-    removeRoleAssignment "$roleId" "$subscriptionId"
+    removeRoleAssignment "$roleId"
 }
 
 # Function to clean up resources
 cleanUpResources() {
-    subscriptionId=$(az account show --query id --output tsv)
-    deleteRoleAssignments
     deleteResourceGroup "$devBoxResourceGroupName"
     deleteResourceGroup "$networkResourceGroupName"
     deleteResourceGroup "$managementResourceGroupName"
