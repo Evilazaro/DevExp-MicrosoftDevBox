@@ -6,6 +6,10 @@ permissions:
 # note
 on:
   workflow_dispatch: # Manually trigger the workflow
+  pull_request:
+    types: [closed]
+    branches:
+      - main
 
 env:
   location: "westus3"
@@ -35,13 +39,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Validate Management Bicep Templates
+      - name: Build Management Bicep Templates
         run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep --outfile ./artifactsBicep/management.json
 
-      - name: Validate Network Bicep Templates
-        run: az bicep build --file ./src/deploy/bicep/network/deployNetwork.bicep --outfile ./artifactsBicep/network.json
+      - name: Build Network Bicep Templates
+        run: az bicep build --file ./src/deploy/bicep/network/deployNetwork.bicep --outfile ./artifactsBicep/deployNetwork.json
 
-      - name: Validate DevCenter Bicep Templates
+      - name: Build DevCenter Bicep Templates
         run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./artifactsBicep/devBox.json
 
       - name: Upload Bicep Artifacts
