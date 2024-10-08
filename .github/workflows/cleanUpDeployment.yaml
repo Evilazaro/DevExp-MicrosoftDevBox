@@ -15,7 +15,6 @@ env:
   networkResourceGroupName: "PetDx-Network-rg"
   managementResourceGroupName: "PetDx-Management-rg"
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
-  SubscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
 
 jobs:    
     CleanUp:
@@ -35,4 +34,4 @@ jobs:
                 
       
             - name: Cleaning Up Azure Resources for ${{ env.solutionName }}
-              run: ./src/deploy/bicep/bash/cleanUpPipeline.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.managementResourceGroupName }} ${{ env.location }} 'eShopPetBuilderRole' ${{ secrets.AZURE_CREDENTIALS.subscriptionId }} 
+              run: ./src/deploy/bicep/bash/cleanUpPipeline.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.managementResourceGroupName }} ${{ env.location }} 'eShopPetBuilderRole' 

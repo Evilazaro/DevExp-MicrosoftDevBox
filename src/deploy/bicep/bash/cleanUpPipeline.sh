@@ -13,8 +13,6 @@ location="$4"
 # Identity Parameters Constants
 customRoleName="$5"
 
-subscriptionId="$6"
-
 # Function to delete a resource group
 deleteResourceGroup() {
     local resourceGroupName="$1"
@@ -99,6 +97,7 @@ deleteRoleAssignments() {
 
 # Function to clean up resources
 cleanUpResources() {
+    subscriptionId=$(az account show --query id --output tsv)
     deleteRoleAssignments
     deleteResourceGroup "$devBoxResourceGroupName"
     deleteResourceGroup "$networkResourceGroupName"
@@ -110,7 +109,4 @@ cleanUpResources() {
 }
 
 # Main script execution
-#cleanUpResources
-
-echo "Subscription do Azure"
-echo "$subscriptionId"
+cleanUpResources
