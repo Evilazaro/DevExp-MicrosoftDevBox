@@ -123,3 +123,16 @@ module networkConnection './networkConnection/networkConnection.bicep' = {
     subnet
   ]
 }
+
+@description('Deploy the diagnostic settings for the network')
+module diagnosticSettings '../management/diagnosticSettings.bicep' = {
+  name: 'diagnosticSettings'
+  params: {
+    diagnosticSettingsName: 'default'
+    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
+    logAnalyticsResourceGroupName: managementResourceGroupName
+  }
+  dependsOn: [
+    logAnalyticsWorkspace
+  ]
+}
