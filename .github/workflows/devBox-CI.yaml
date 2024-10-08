@@ -28,7 +28,7 @@ jobs:
           run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep --outfile ./artifactsBicep/deployManagement.json
 
         - name: Validate Network Bicep Templates
-          run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outfile ./artifactsBicep/deployNetwork.json
+          run: az bicep build --file ./src/deploy/bicep/network/deployNetwork.bicep --outfile ./artifactsBicep/deployNetwork.json
 
         - name: Validate DevCenter Bicep Templates
           run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./artifactsBicep/deployDevBox.json
