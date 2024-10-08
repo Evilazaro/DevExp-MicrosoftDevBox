@@ -11,9 +11,9 @@ managementResourceGroupName="$3"
 location="$4"
 
 # Identity Parameters Constants
-customRoleName="eShopPetBuilderRole"
+customRoleName="$5"
 
-subscriptionId=$(az account show --query id --output tsv)
+subscriptionId="$6"
 
 # Function to delete a resource group
 deleteResourceGroup() {
