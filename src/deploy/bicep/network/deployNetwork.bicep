@@ -134,5 +134,6 @@ module diagnosticSettings '../management/diagnosticSettings.bicep' = {
   }
   dependsOn: [
     logAnalyticsWorkspace
+    virtualNetwork
   ]
 }

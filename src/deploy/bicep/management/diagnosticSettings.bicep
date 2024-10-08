@@ -11,7 +11,7 @@ resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2023-09-01' exis
   name: logAnalyticsWorkspaceName
   scope: resourceGroup(logAnalyticsResourceGroupName)
 }
-
+@description('Diagnostic Settings for the Log Analytics Workspace')
 resource diagonisticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   name: diagnosticSettingsName
   properties: {
