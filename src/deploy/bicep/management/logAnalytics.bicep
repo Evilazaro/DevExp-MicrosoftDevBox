@@ -10,3 +10,9 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09
   location: resourceGroup().location
   tags: tags
 }
+
+@description('Log Analytics Workspace Name')
+output logAnalyticsWorkspaceName string = logAnalyticsWorkspace.name
+
+@description('Log Analytics Workspace ID')
+output logAnalyticsWorkspaceId string = logAnalyticsWorkspace.id

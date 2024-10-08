@@ -124,16 +124,26 @@ module networkConnection './networkConnection/networkConnection.bicep' = {
   ]
 }
 
-@description('Deploy the diagnostic settings for the network')
-module diagnosticSettings '../management/diagnosticSettings.bicep' = {
-  name: 'diagnosticSettings'
-  params: {
-    diagnosticSettingsName: virtualNetwork.outputs.virtualNetworkName
-    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
-    logAnalyticsResourceGroupName: managementResourceGroupName
+@description('Diagnostic Settings for the network Resource')
+resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'networkDiagnosticSettings'
+  scope: resourceGroup()
+  properties: {
+    logs: [
+      {
+        category: 'allLogs'
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
+    workspaceId: logAnalyticsWorkspace.id
   }
   dependsOn: [
     logAnalyticsWorkspace
-    virtualNetwork
   ]
 }
