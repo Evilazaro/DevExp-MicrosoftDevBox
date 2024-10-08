@@ -1,11 +1,15 @@
-name: DevBox as a Service CI and CD
+name: Deploy DevBox as a Service to Azure
 
 permissions:
     id-token: write
+    contents: write
     
 # note
 on:
   workflow_dispatch: # Manually trigger the workflow
+  push:
+    branches:
+      - main
 
 env:
   location: "westus3"
@@ -26,7 +30,6 @@ jobs:
 
   Build:
     runs-on: ubuntu-latest
-    needs: Test-Azure-Credentials-And-Login
     steps:
       - name: Upgrade Bicep
         run: |
@@ -44,11 +47,15 @@ jobs:
       - name: Build DevCenter Bicep Templates
         run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outdir ./bicepArtifacts
 
+      - name: Compress Bicep Artifacts
+        run: |
+          zip -r bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip ./bicepArtifacts
+
       - name: Upload Bicep Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: artifactsBicep-ARM-Templates
-          path: ./artifactsBicep/*.json
+          name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
+          path: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
 
   Deploy:
     runs-on: ubuntu-latest
@@ -96,3 +103,55 @@ jobs:
           resourceGroupName: ${{ env.devBoxResourceGroupName }}
           template: ./src/deploy/bicep/devBox/deploy.bicep
           parameters: 'solutionName=${{ env.solutionName }}' 
+
+  publish-bicep-artifacts:
+      runs-on: ubuntu-latest
+      needs: Build
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download Bicep Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
+
+      - name: Upload Bicep Artifacts to Storage
+        run: |
+          # Add your upload logic here
+          echo "Uploading Bicep artifacts"
+
+  create-release:
+      runs-on: ubuntu-latest
+      needs: Deploy
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download Bicep Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          release_name: Release v1.0.${{ github.run_number }}
+          body: |
+            Commits: ${{ toJson(github.event.commits) }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
+          asset_name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

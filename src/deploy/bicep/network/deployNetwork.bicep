@@ -37,6 +37,8 @@ module virtualNetwork 'virtualNetwork/virtualNetwork.bicep' = {
   ]
 }
 
+@description('The address prefix of the subnet')
+var subnetAddressPrefix = '10.0.0.0/24'
 
 @description('The security rules of the network security group')
 var securityRules = [
@@ -46,7 +48,7 @@ var securityRules = [
       protocol: 'Tcp'
       sourcePortRange: '*'
       destinationPortRange: '22'
-      sourceAddressPrefix: '*'
+      sourceAddressPrefix: subnetAddressPrefix
       destinationAddressPrefix: '*'
       access: 'Allow'
       priority: 100
@@ -59,7 +61,7 @@ var securityRules = [
       protocol: 'Tcp'
       sourcePortRange: '*'
       destinationPortRange: '80'
-      sourceAddressPrefix: '*'
+      sourceAddressPrefix: subnetAddressPrefix
       destinationAddressPrefix: '*'
       access: 'Allow'
       priority: 110
@@ -72,7 +74,7 @@ var securityRules = [
       protocol: 'Tcp'
       sourcePortRange: '*'
       destinationPortRange: '443'
-      sourceAddressPrefix: '*'
+      sourceAddressPrefix: subnetAddressPrefix
       destinationAddressPrefix: '*'
       access: 'Allow'
       priority: 120
