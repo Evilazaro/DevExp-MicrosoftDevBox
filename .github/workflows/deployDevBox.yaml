@@ -6,8 +6,7 @@ permissions:
 # note
 on:
   workflow_dispatch: # Manually trigger the workflow
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - main
 
