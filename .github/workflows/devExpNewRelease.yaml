@@ -17,14 +17,6 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
 jobs:
-  Test-Azure-Credentials-And-Login:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Log in to Azure
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
   Build:
     runs-on: ubuntu-latest
     steps:
