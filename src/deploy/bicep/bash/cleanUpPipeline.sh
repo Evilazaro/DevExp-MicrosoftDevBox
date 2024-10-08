@@ -82,13 +82,13 @@ deleteCustomRole() {
 deleteRoleAssignments() {
     # Deleting role assignments and role definitions
    
-    echo "Getting the role ID for '$roleName'..."
-    local roleId=$(az role definition list --name "$roleName" --query [].name --output tsv)
+    echo "Getting the role ID for '$customRoleName'..."
+    local roleId=$(az role definition list --name "$customRoleName" --query [].name --output tsv)
     if [[ -z "$roleId" ]]; then
-        echo "Role ID for '$roleName' not found. Skipping role assignment deletion."
+        echo "Role ID for '$customRoleName' not found. Skipping role assignment deletion."
     else
-        echo "Role ID for '$roleName' is '$roleId'."
-        echo "Removing '$roleName' role assignment..."
+        echo "Role ID for '$customRoleName' is '$roleId'."
+        echo "Removing '$customRoleName' role assignment..."
     fi
     removeRoleAssignment "$roleId" "$subscriptionId"
 }
