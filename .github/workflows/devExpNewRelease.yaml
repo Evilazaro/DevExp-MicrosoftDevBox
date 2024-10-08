@@ -61,7 +61,6 @@ jobs:
       - name: Update Packages and Upgrade Bicep
         run: |
           sudo apt-get update && \
-          sudo apt-get upgrade -y && \
           sudo az bicep upgrade
       
       - name: Checkout repository
@@ -138,7 +137,6 @@ jobs:
           tag_name: v1.0.${{ github.run_number }}
           release_name: Release v1.0.${{ github.run_number }}
           body: |
-            Pull Request Info: ${{ github.event.pull_request.html_url }}
             Commits: ${{ toJson(github.event.commits) }}
           draft: false
           prerelease: false
