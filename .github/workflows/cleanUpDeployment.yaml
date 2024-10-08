@@ -15,6 +15,7 @@ env:
   networkResourceGroupName: "PetDx-Network-rg"
   managementResourceGroupName: "PetDx-Management-rg"
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
+  SubscriptionId: ${{ secrets.AZURE_CREDENTIALS }}
 
 jobs:    
     CleanUp:
