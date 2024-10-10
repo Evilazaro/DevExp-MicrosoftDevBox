@@ -1,7 +1,7 @@
 # PowerShell script to set up deployment credentials
 
 # Define variables
-$appName = "eShop"
+$appName = "PetDxDevBox"
 $displayName = "PetDx GitHub Actions Enterprise App"
 
 # Function to set up deployment credentials
