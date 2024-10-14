@@ -113,7 +113,7 @@ var securityRules = [
 module nsg '../security/networkSecurityGroup.bicep' = {
   name: 'networkSecurityGroup'
   params: {
-    nsgName: vnetName
+    name: vnetName
     securityRules: securityRules
     tags: tags
   }
