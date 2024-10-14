@@ -72,5 +72,8 @@ module netConnection 'networkConnection/networkConnection.bicep' = [
       subnetName: subnet.name
       tags: tags
     }
+    dependsOn: [
+      virtualNetwork
+    ]
   }
 ]

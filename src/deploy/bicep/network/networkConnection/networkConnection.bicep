@@ -30,6 +30,9 @@ resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-08-01-pr
     domainJoinType: 'AzureADJoin'
     subnetId: subnet.id
   }
+  dependsOn: [
+    subnet
+  ]
 }
 
 @description('Network Connection Name')
