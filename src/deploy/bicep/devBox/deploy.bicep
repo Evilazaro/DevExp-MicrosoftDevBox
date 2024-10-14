@@ -1,10 +1,15 @@
+@description('Solution Name')
 param solutionName string
 
+@description('The name of the Dev Center')
 var devCenterName = format('{0}DevCenter', solutionName)
-var logAnalyticsWorkspaceName = format('{0}-logAnalytics', solutionName)
-var managementResourceGroupName = format('{0}-Management-rg', solutionName)
+
+@description('The name of the network resource group')
 var networkResourceGroupName = format('{0}-Network-rg', solutionName)
+
+@description('The name of the virtual network connection')
 var virtualNetworkConnectionName = format('{0}-networkConnection', solutionName)
+
 var tags = {
   division: 'PlatformEngineeringTeam-DX'
   enrironment: 'Production'
@@ -13,6 +18,7 @@ var tags = {
   landingZone: 'DevBox'
 }
 
+@description('Deploy the Managed Identity')
 module identity '../identity/deploy.bicep' = {
   name: 'identity'
   params: {
@@ -20,9 +26,7 @@ module identity '../identity/deploy.bicep' = {
   }
 }
 
-output userIdentityId string = identity.outputs.identityPrincipalId
-output userIdentityName string = identity.outputs.identityName
-
+@description('Deploy the Compute Gallery')
 module computeGallery './computeGallery/deployComputeGallery.bicep' = {
   name: 'computeGallery'
   params: {
@@ -34,30 +38,30 @@ module computeGallery './computeGallery/deployComputeGallery.bicep' = {
   ]
 }
 
-output computeGalleryId string = computeGallery.outputs.computeGalleryId
-output computeGalleryName string = computeGallery.outputs.computeGalleryName
 
+@description('The address prefix of the subnet')
+var projects = [
+  {
+    name: 'eShop'
+    networkConnectionName: virtualNetworkConnectionName
+  }
+  {
+    name: 'contosoTraders'
+    networkConnectionName: 'contosoTraders'
+  }
+]
+
+@description('Deploy the Dev Center')
 module devCenter 'devCenter/deployDevCenter.bicep' = {
   name: 'devCenter'
   params: {
     devCenterName: devCenterName
-    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
-    managementResourceGroupName: managementResourceGroupName
     identityName: identity.outputs.identityName
     computeGalleryName: computeGallery.outputs.computeGalleryName
-    netWorkConnectionName: virtualNetworkConnectionName
-    networkResourceGroupName: networkResourceGroupName
+    projects: projects
     tags: tags
   }
   dependsOn: [
     computeGallery
   ]
 }
-
-
-output devCenterId string = devCenter.outputs.devCenterId
-output devCenterName string = devCenter.outputs.devCenterName
-output devCenterIdentityId string = devCenter.outputs.devCenterIdentityId
-output devCenterDiagnosticSettingsId string = devCenter.outputs.devCenterDiagnosticSettingsId
-output devCenterDiagnosticSettingsName string = devCenter.outputs.devCenterDiagnosticSettingsName
-output devCenterDiagnosticSettingsWorkspaceId string = devCenter.outputs.devCenterDiagnosticSettingsWorkspaceId

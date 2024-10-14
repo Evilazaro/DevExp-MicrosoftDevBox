@@ -9,7 +9,7 @@ param tags object
 
 @description('Deploy a network security group to Azure')
 resource nsg 'Microsoft.Network/networkSecurityGroups@2024-01-01' = {
-  name: name
+  name: '${name}-nsg'
   location: resourceGroup().location
   tags: tags
   properties: {
@@ -17,5 +17,8 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2024-01-01' = {
   }
 }
 
-@description('The ID of the network security group')
+@description('Network security group id')
 output nsgId string = nsg.id
+
+@description('Network security group name')
+output nsgName string = nsg.name

@@ -25,14 +25,14 @@ jobs:
         - name: Checkout repository
           uses: actions/checkout@v4
 
-        - name: Build Management Bicep Templates
-          run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep --outdir ./bicepArtifacts
-
         - name: Build Network Bicep Templates
           run: az bicep build --file ./src/deploy/bicep/network/deployNetwork.bicep --outdir ./bicepArtifacts
 
         - name: Build DevCenter Bicep Templates
           run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outdir ./bicepArtifacts
+
+        - name: Build Management Bicep Templates
+          run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep --outdir ./bicepArtifacts
 
         - name: Compress Bicep Artifacts
           run: |

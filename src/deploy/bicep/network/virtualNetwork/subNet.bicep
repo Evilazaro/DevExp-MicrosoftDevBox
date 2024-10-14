@@ -1,27 +1,29 @@
-@description('Create a subnet in a virtual network')
-param virtualNetworkName string
+@description('The name of the subnet')
+param name string
+
+@description('The name of the virtual network')
+param vnetName string
 
 @description('The address prefix of the subnet')
-param subnetAddressPrefix array
+param subnetAddressPrefix string
 
-// @description('The ID of the network security group')
-// param nsgId string
+@description('The name of the Network Security Group')
+param nsgId string
 
-@description('The virtual network to deploy the subnet to')
+@description('Existing Virtual Network Name')
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-01-01' existing = {
-  name: virtualNetworkName
+  name: vnetName
+  scope: resourceGroup()
 }
 
-@description('Deploy a subnet to a virtual network')
-resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-01-01' = [
-  for prefix in subnetAddressPrefix: {
-    name: prefix.name
-    properties: {
-      addressPrefix: prefix.addressPrefix
-      // networkSecurityGroup: {
-      //   id: nsgId
-      // }
+@description('Deploys a subnet to an existing Virtual Network')
+resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-01-01' = {
+  name: name
+  parent: virtualNetwork
+  properties: {
+    addressPrefix: subnetAddressPrefix
+    networkSecurityGroup: {
+      id: nsgId
     }
-    parent: virtualNetwork
   }
-]
+}

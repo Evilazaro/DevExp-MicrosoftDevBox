@@ -8,7 +8,8 @@ resource deployIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-0
   tags: tags
 }
 
+@description('Identity Name')
 output identityName string = deployIdentity.name
-output identityResourceId string = deployIdentity.id
+
+@description('Identity Principal Id')
 output identityPrincipalId string = deployIdentity.properties.principalId
-output identityClientId string = deployIdentity.properties.clientId

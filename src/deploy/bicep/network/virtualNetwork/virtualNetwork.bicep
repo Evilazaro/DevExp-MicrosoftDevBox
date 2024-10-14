@@ -1,5 +1,5 @@
 @description('The name of the virtual network')
-param name string 
+param name string
 
 @description('The location of the virtual network')
 param location string = resourceGroup().location
@@ -8,10 +8,10 @@ param location string = resourceGroup().location
 param addressPrefix array
 
 @description('The tags of the virtual network')
-param tags object 
+param tags object
 
 @description('Deploy a virtual network to Azure')
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-01-01' =  {
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-01-01' = {
   name: name
   location: location
   properties: {
@@ -19,14 +19,14 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-01-01' =  {
       addressPrefixes: addressPrefix
     }
   }
-  tags: tags  
+  tags: tags
 }
 
-@description('The ID of the virtual network')
-output virtualNetworkId string = virtualNetwork.id
-
 @description('The name of the virtual network')
-output name string = name
+output vnetName string = virtualNetwork.name
 
-@description('Subnets of the virtual network')
-output subnets array = virtualNetwork.properties.subnets
+@description('Virtual Network Id')
+output vnetId string = virtualNetwork.id
+
+@description('Virtual Network IP Address Space')
+output vnetAddressSpace array = virtualNetwork.properties.addressSpace.addressPrefixes
