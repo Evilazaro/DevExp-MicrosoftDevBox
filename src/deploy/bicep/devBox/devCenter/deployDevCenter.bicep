@@ -1,17 +1,17 @@
 @description('DevCenter Name')
 param devCenterName string
 
-@description('Network Resource Group Name')
-param networkResourceGroupName string
-
 @description('Identity Name')
 param identityName string
 
 @description('Compute Gallery Name')
 param computeGalleryName string
 
-@description('Network Connection Name')
-param netWorkConnectionName string
+@description('Networks')
+param netWorkConnectionNames array
+
+@description('Projects')
+param projects array
 
 @description('Tags')
 param tags object
@@ -61,17 +61,18 @@ module devCenterEnvironments 'configureDevCenterEnvironments.bicep' = {
 }
 
 @description('Dev Center Network Connection')
-module configureDevCenterNetworkConnection 'configureDevCenterNetworkConnection.bicep' = {
-  name: 'devCenterNetworkConnection'
-  params: {
-    devCenterName: devCenterName
-    networkResourceGroupName: networkResourceGroupName
-    networkConnectionName: netWorkConnectionName
+module configureDevCenterNetworkConnection 'configureDevCenterNetworkConnection.bicep' = [
+  for networkConnection in netWorkConnectionNames: {
+    name: '${networkConnection.name}-Connection'
+    params: {
+      devCenterName: devCenterName
+      networkConnectionName: networkConnection.name
+    }
+    dependsOn: [
+      deployDevCenter
+    ]
   }
-  dependsOn:[
-    deployDevCenter
-  ]
-}
+]
 
 @description('Dev Center Compute Gallery')
 module configureDevCenterComputeGallery 'configureDevCenterComputeGallery.bicep' = {
@@ -80,7 +81,7 @@ module configureDevCenterComputeGallery 'configureDevCenterComputeGallery.bicep'
     devCenterName: devCenterName
     computeGalleryName: computeGalleryName
   }
-  dependsOn:[
+  dependsOn: [
     deployDevCenter
   ]
 }
@@ -91,7 +92,7 @@ module configureDevBoxDefinitions 'configureDevBoxDefinitions.bicep' = {
   params: {
     devCenterName: devCenterName
   }
-  dependsOn:[
+  dependsOn: [
     configureDevCenterNetworkConnection
     configureDevCenterComputeGallery
   ]
@@ -106,7 +107,7 @@ module createDevCenterProjects 'createDevCenterProjects.bicep' = {
     devBoxDefinitionBackEndName: configureDevBoxDefinitions.outputs.devBoxDefinitionBackEndName
     devBoxDefinitionFrontEndName: configureDevBoxDefinitions.outputs.devBoxDefinitionFrontEndName
   }
-  dependsOn:[
+  dependsOn: [
     configureDevBoxDefinitions
   ]
 }
