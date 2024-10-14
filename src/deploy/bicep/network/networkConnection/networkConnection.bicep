@@ -3,10 +3,23 @@
 param name string
 
 @description('Subnet Id')
-param subnetId string
+param vnetName string
+
+@description('Subnet Name')
+param subnetName string
 
 @description('Tags for the Network Connection')
 param tags object
+
+resource vnet 'Microsoft.Network/virtualNetworks@2024-01-01' existing = {
+  name: vnetName
+}
+
+resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-01-01' existing = {
+  name: subnetName
+  parent: vnet
+}
+
 
 @description('Deploy a network connection to Azure')
 resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-08-01-preview' = {
@@ -15,6 +28,12 @@ resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-08-01-pr
   tags: tags
   properties: {
     domainJoinType: 'AzureADJoin'
-    subnetId: subnetId
+    subnetId: subnet.id
   }
 }
+
+@description('Network Connection Name')
+output name string = networkConnection.name
+
+@description('Network Connection Id') 
+output id string = networkConnection.id

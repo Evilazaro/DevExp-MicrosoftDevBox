@@ -49,11 +49,8 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-01-01' = {
   ]
 }
 
-@description('The ID of the virtual network')
-output virtualNetworkId string = virtualNetwork.id
+@description('Virtual Network Name')
+output vnetName string = virtualNetwork.name
 
-@description('The name of the virtual network')
-output name string = name
-
-@description('Subnets of the virtual network')
-output subnets array = virtualNetwork.properties.subnets
+@description('Virtual Network Id')
+output vnetId string = virtualNetwork.id

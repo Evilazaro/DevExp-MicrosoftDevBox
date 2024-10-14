@@ -55,3 +55,22 @@ module virtualNetwork 'virtualNetwork/virtualNetwork.bicep' = {
     logAnalyticsWorkspace
   ]
 }
+
+@description('Virtual Network Name')
+output vnetName string = virtualNetwork.outputs.vnetName
+
+@description('Virtual Network Id')
+output vnetId string = virtualNetwork.outputs.vnetId
+
+@description('Deploy the network connection for each subnet')
+module netConnection 'networkConnection/networkConnection.bicep' = [
+  for subnet in subnetAddressPrefix: {
+    name: '${subnet.name}-Connection'
+    params: {
+      name: subnet.name
+      vnetName: virtualNetwork.name
+      subnetName: subnet.name
+      tags: tags
+    }
+  }
+]
