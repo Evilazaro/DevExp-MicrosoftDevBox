@@ -112,18 +112,18 @@ var securityRules = [
   }
 ]
 
-@description('Deploy the network security group')
-module nsg '../security/networkSecurityGroup.bicep' = {
-  name: 'networkSecurityGroup'
-  params: {
-    name: vnetName
-    securityRules: securityRules
-    tags: tags
-  }
-  dependsOn: [
-    virtualNetwork
-  ]
-}
+// @description('Deploy the network security group')
+// module nsg '../security/networkSecurityGroup.bicep' = {
+//   name: 'networkSecurityGroup'
+//   params: {
+//     name: vnetName
+//     securityRules: securityRules
+//     tags: tags
+//   }
+//   dependsOn: [
+//     virtualNetwork
+//   ]
+// }
 
 @description('The address prefix of the subnet')
 var subnetAddressPrefix = [
