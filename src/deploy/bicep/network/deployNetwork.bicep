@@ -4,9 +4,6 @@ param solutionName string
 @description('The name of the virtual network')
 var vnetName = format('{0}-vnet', solutionName)
 
-@description('The name of the management resource group')
-var managementResourceGroupName = format('{0}-Management-rg', solutionName)
-
 @description('The tags of the virtual network')
 var tags = {
   division: 'PlatformEngineeringTeam-DX'
@@ -22,7 +19,7 @@ var addressPrefix = [
 ]
 
 @description('The address prefix of the subnet')
-var subnetAddressPrefix = [
+var subNets = [
   {
     name: 'eShop'
     addressPrefix: '10.0.0.0/24'
@@ -39,23 +36,40 @@ module virtualNetwork 'virtualNetwork/virtualNetwork.bicep' = {
   params: {
     name: vnetName
     addressPrefix: addressPrefix
-    subnets: subnetAddressPrefix
     tags: tags
   }
 }
 
-@description('Virtual Network Name')
-output vnetName string = virtualNetwork.outputs.vnetName
+@description('Deploy Nsg')
+module nsg '../security/networkSecurityGroup.bicep' = {
+  name: 'nsg'
+  params: {
+    name: 'nsg'
+    tags: tags
+    securityRules:[]
+  }
+}
 
-@description('Virtual Network Id')
-output vnetId string = virtualNetwork.outputs.vnetId
-
-@description('Subnets')
-output subnets array = virtualNetwork.outputs.subnets
+@description('Deploy the subnet')
+module subNet 'virtualNetwork/subNet.bicep' = [
+  for subnet in subNets: {
+    name: '${subnet.name}-Deployment'
+    params: {
+      name: subnet.name
+      vnetName: virtualNetwork.outputs.vnetName
+      subnetAddressPrefix: subnet.addressPrefix
+      nsgId: nsg.outputs.nsgId
+    }
+    dependsOn: [
+      virtualNetwork
+      nsg
+    ]
+  }
+]
 
 @description('Deploy the network connection for each subnet')
 module netConnection 'networkConnection/networkConnection.bicep' = [
-  for subnet in subnetAddressPrefix: {
+  for subnet in subNets: {
     name: '${subnet.name}-Connection'
     params: {
       name: '${subnet.name}-Connection'
@@ -65,6 +79,7 @@ module netConnection 'networkConnection/networkConnection.bicep' = [
     }
     dependsOn: [
       virtualNetwork
+      subNet
     ]
   }
 ]
