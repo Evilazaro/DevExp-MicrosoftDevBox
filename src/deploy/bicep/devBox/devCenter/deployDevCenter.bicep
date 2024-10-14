@@ -111,6 +111,8 @@ module createDevCenterProjects 'createDevCenterProjects.bicep' = [
       networkConnectionName: project.networkConnectionName
       devBoxDefinitionBackEndName: configureDevBoxDefinitions.outputs.devBoxDefinitionBackEndName
       devBoxDefinitionFrontEndName: configureDevBoxDefinitions.outputs.devBoxDefinitionFrontEndName
+      tags: tags
+      name: project.name
     }
     dependsOn: [
       configureDevBoxDefinitions
