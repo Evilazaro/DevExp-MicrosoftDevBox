@@ -7,9 +7,6 @@ var devCenterName = format('{0}DevCenter', solutionName)
 @description('The name of the network resource group')
 var networkResourceGroupName = format('{0}-Network-rg', solutionName)
 
-@description('The name of the virtual network connection')
-var virtualNetworkConnectionName = format('{0}-networkConnection', solutionName)
-
 var tags = {
   division: 'PlatformEngineeringTeam-DX'
   enrironment: 'Production'
@@ -43,11 +40,11 @@ module computeGallery './computeGallery/deployComputeGallery.bicep' = {
 var projects = [
   {
     name: 'eShop'
-    networkConnectionName: virtualNetworkConnectionName
+    networkConnectionName: 'eShop-Connection'
   }
   {
     name: 'contosoTraders'
-    networkConnectionName: 'contosoTraders'
+    networkConnectionName: 'contosoTraders-Connection'
   }
 ]
 
