@@ -4,9 +4,13 @@ param devCenterName string
 @description('Network Connection Name')
 param networkConnectionName string
 
+@description('Network Resource Group Name')
+param networkResourceGroupName string
+
 @description('Existent Natwork Connection')
 resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-02-01' existing = {
   name: networkConnectionName
+  scope: resourceGroup()
 }
 
 @description('Existent DevCenter')

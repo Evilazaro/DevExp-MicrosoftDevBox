@@ -59,6 +59,7 @@ module devCenter 'devCenter/deployDevCenter.bicep' = {
     identityName: identity.outputs.identityName
     computeGalleryName: computeGallery.outputs.computeGalleryName
     projects: projects
+    networkResourceGroupName: networkResourceGroupName
     tags: tags
   }
   dependsOn: [
