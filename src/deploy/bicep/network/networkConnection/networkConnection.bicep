@@ -1,6 +1,6 @@
 
 @description('Network Connection Name')
-param virtualNetworkConnectionName string
+param name string
 
 @description('Subnet ID')
 param virtualNetwortkName string
@@ -15,7 +15,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-01-01' existing 
 
 @description('Deploy a network connection to Azure')
 resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-08-01-preview' = {
-  name: virtualNetworkConnectionName
+  name: name
   location: resourceGroup().location
   tags: tags
   properties: {
