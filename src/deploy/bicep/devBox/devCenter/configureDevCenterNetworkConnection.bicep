@@ -27,7 +27,7 @@ resource devCenterNetworkConnection 'Microsoft.DevCenter/devcenters/attachednetw
     networkConnectionId: format(
       '/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DevCenter/networkConnections/{2}',
       subscription().subscriptionId,
-      networkConnection.properties.networkingResourceGroupName,
+      networkResourceGroupName,
       networkConnection.name
     )
   }
