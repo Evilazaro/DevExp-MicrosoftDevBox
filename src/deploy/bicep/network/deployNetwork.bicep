@@ -68,7 +68,7 @@ module netConnection 'networkConnection/networkConnection.bicep' = [
     name: '${subnet.name}-Connection'
     params: {
       name: subnet.name
-      vnetName: virtualNetwork.name
+      vnetName: virtualNetwork.outputs.vnetName
       subnetName: subnet.name
       tags: tags
     }
