@@ -24,3 +24,9 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-01-01' = {
 
 @description('The name of the virtual network')
 output vnetName string = virtualNetwork.name
+
+@description('Virtual Network Id')
+output vnetId string = virtualNetwork.id
+
+@description('Virtual Network IP Address Space')
+output vnetAddressSpace array = virtualNetwork.properties.addressSpace.addressPrefixes

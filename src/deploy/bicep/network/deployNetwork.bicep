@@ -40,9 +40,18 @@ module virtualNetwork 'virtualNetwork/virtualNetwork.bicep' = {
   }
 }
 
+@description('The name of the virtual network')
+output vnetName string = virtualNetwork.outputs.vnetName
+
+@description('Virtual Network Id')
+output vnetId string = virtualNetwork.outputs.vnetId
+
+@description('Virtual Network IP Address Space')
+output vnetAddressSpace array = virtualNetwork.outputs.vnetAddressSpace
+
 @description('Deploy Nsg')
 module nsg '../security/networkSecurityGroup.bicep' = {
-  name: 'nsg'
+  name: 'networkSecurityGroup'
   params: {
     name: 'nsg'
     tags: tags
@@ -50,10 +59,16 @@ module nsg '../security/networkSecurityGroup.bicep' = {
   }
 }
 
+@description('Network security group id')
+output nsgId string = nsg.outputs.nsgId
+
+@description('Network security group name')
+output nsgName string = nsg.outputs.nsgName
+
 @description('Deploy the subnet')
 module subNet 'virtualNetwork/subNet.bicep' = [
   for subnet in subNets: {
-    name: '${subnet.name}-Deployment'
+    name: '${subnet.name}-Subnet'
     params: {
       name: subnet.name
       vnetName: virtualNetwork.outputs.vnetName
