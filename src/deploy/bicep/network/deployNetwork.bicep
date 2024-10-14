@@ -30,148 +30,28 @@ var addressPrefix = [
   '10.0.0.0/16'
 ]
 
+@description('The address prefix of the subnet')
+var subnetAddressPrefix = [
+  {
+    name: 'eShop'
+    addressPrefix: '10.0.0.0/24'
+  }
+  {
+    name: 'contosoTraders'
+    addressPrefix: '10.0.1.0/24'
+  }
+]
+
 @description('Deploy the virtual network')
 module virtualNetwork 'virtualNetwork/virtualNetwork.bicep' = {
   name: 'virtualNetwork'
   params: {
     name: vnetName
     addressPrefix: addressPrefix
+    subnets: subnetAddressPrefix
     tags: tags
   }
   dependsOn: [
     logAnalyticsWorkspace
-  ]
-}
-
-@description('The security rules of the network security group')
-var securityRules = [
-  {
-    name: 'Allow-SSH'
-    properties: {
-      protocol: 'Tcp'
-      sourcePortRange: '*'
-      destinationPortRange: '22'
-      sourceAddressPrefix: subnetAddressPrefix
-      destinationAddressPrefix: '*'
-      access: 'Allow'
-      priority: 100
-      direction: 'Inbound'
-    }
-  }
-  {
-    name: 'Allow-HTTP'
-    properties: {
-      protocol: 'Tcp'
-      sourcePortRange: '*'
-      destinationPortRange: '80'
-      sourceAddressPrefix: subnetAddressPrefix
-      destinationAddressPrefix: '*'
-      access: 'Allow'
-      priority: 110
-      direction: 'Inbound'
-    }
-  }
-  {
-    name: 'Allow-HTTPS'
-    properties: {
-      protocol: 'Tcp'
-      sourcePortRange: '*'
-      destinationPortRange: '443'
-      sourceAddressPrefix: subnetAddressPrefix
-      destinationAddressPrefix: '*'
-      access: 'Allow'
-      priority: 120
-      direction: 'Inbound'
-    }
-  }
-  {
-    name: 'Allow-UDP'
-    properties: {
-      protocol: 'Udp'
-      sourcePortRange: '*'
-      destinationPortRange: '53'
-      sourceAddressPrefix: subnetAddressPrefix
-      destinationAddressPrefix: '*'
-      access: 'Allow'
-      priority: 130
-      direction: 'Inbound'
-    }
-  }
-  {
-    name: 'Allow-TCP'
-    properties: {
-      protocol: 'Tcp'
-      sourcePortRange: '*'
-      destinationPortRange: '53'
-      sourceAddressPrefix: subnetAddressPrefix
-      destinationAddressPrefix: '*'
-      access: 'Allow'
-      priority: 140
-      direction: 'Inbound'
-    }
-  }
-]
-
-@description('Deploy the network security group')
-module nsg '../security/networkSecurityGroup.bicep' = {
-  name: 'networkSecurityGroup'
-  params: {
-    name: vnetName
-    securityRules: securityRules
-    tags: tags
-  }
-  dependsOn: [
-    virtualNetwork
-  ]
-}
-
-@description('The address prefix of the subnet')
-var subnetAddressPrefix = [
-  {
-    name: 'devBoxSubnet'
-    addressPrefix: '10.0.0.0/24'
-  }
-  {
-    name: 'FrontEndSubnet'
-    addressPrefix: '10.0.1.0/24'
-  }
-  // {
-  //   name: 'BackEndSubnet'
-  //   addressPrefix: '10.3.0.0/24'
-  // }
-  // {
-  //   name: 'dataBaseSubnet'
-  //   addressPrefix: '10.4.0.0/24'
-  // }
-]
-
-@description('Deploy the subnet')
-module subnet 'virtualNetwork/subNet.bicep' = {
-  name: 'subnet'
-  params: {
-    virtualNetworkName: virtualNetwork.outputs.name
-    subnetAddressPrefix: subnetAddressPrefix
-    nsgId: nsg.outputs.nsgId
-  }
-  dependsOn: [
-    virtualNetwork
-    nsg
-  ]
-}
-
-@description('Network Connection Name')
-var virtualNetworkConnectionName = format('{0}-networkConnection', solutionName)
-
-@description('Deploy the network connection')
-module networkConnection './networkConnection/networkConnection.bicep' = {
-  name: 'networkConnection'
-  params: {
-    virtualNetwortkName: virtualNetwork.outputs.name
-    tags: tags
-    name: virtualNetworkConnectionName
-  }
-  dependsOn: [
-    virtualNetwork
-    subnet
   ]
 }
