@@ -25,20 +25,23 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09
   scope: resourceGroup(managementResourceGroupName)
 }
 
+@description('The address prefix of the virtual network')
+var addressPrefix = [
+  '10.0.0.0/16'
+]
+
 @description('Deploy the virtual network')
 module virtualNetwork 'virtualNetwork/virtualNetwork.bicep' = {
   name: 'virtualNetwork'
   params: {
-    virtualNetworkName: vnetName 
+    name: vnetName
+    addressPrefix: addressPrefix
     tags: tags
   }
   dependsOn: [
     logAnalyticsWorkspace
   ]
 }
-
-@description('The address prefix of the subnet')
-var subnetAddressPrefix = '10.0.0.0/24'
 
 @description('The security rules of the network security group')
 var securityRules = [
@@ -122,11 +125,32 @@ module nsg '../security/networkSecurityGroup.bicep' = {
   ]
 }
 
+@description('The address prefix of the subnet')
+var subnetAddressPrefix = [
+  {
+    name: 'devBoxSubnet'
+    addressPrefix: '10.1.0.0/24'
+  }
+  {
+    name: 'FrontEndSubnet'
+    addressPrefix: '10.2.0.0/24'
+  }
+  {
+    name: 'BackEndSubnet'
+    addressPrefix: '10.3.0.0/24'
+  }
+  {
+    name: 'dataBaseSubnet'
+    addressPrefix: '10.4.0.0/24'
+  }
+]
+
 @description('Deploy the subnet')
-module subnet './virtualNetwork/subNet.bicep' = {
+module subnet 'virtualNetwork/subNet.bicep' = {
   name: 'subnet'
   params: {
-    virtualNetworkName: virtualNetwork.outputs.virtualNetworkName
+    virtualNetworkName: virtualNetwork.outputs.name
+    subnetAddressPrefix: subnetAddressPrefix
     nsgId: nsg.outputs.nsgId
   }
   dependsOn: [
@@ -142,9 +166,9 @@ var virtualNetworkConnectionName = format('{0}-networkConnection', solutionName)
 module networkConnection './networkConnection/networkConnection.bicep' = {
   name: 'networkConnection'
   params: {
-    virtualNetwortkName: virtualNetwork.outputs.virtualNetworkName
+    virtualNetwortkName: virtualNetwork.outputs.name
     tags: tags
-    virtualNetworkConnectionName: virtualNetworkConnectionName
+    name: virtualNetworkConnectionName
   }
   dependsOn: [
     virtualNetwork

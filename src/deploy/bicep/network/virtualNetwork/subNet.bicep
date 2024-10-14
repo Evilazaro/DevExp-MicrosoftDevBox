@@ -2,7 +2,7 @@
 param virtualNetworkName string
 
 @description('The address prefix of the subnet')
-param subnetAddressPrefix string = '10.0.0.0/24'
+param subnetAddressPrefix array
 
 @description('The ID of the network security group')
 param nsgId string
@@ -12,23 +12,16 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-01-01' existing 
   name: virtualNetworkName
 }
 
-@description('The name of the subnet')
-var subnetName = '${virtualNetworkName}-subnet'
-
 @description('Deploy a subnet to a virtual network')
-resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-01-01' = {
-  name: subnetName
-  properties: {
-    addressPrefix: subnetAddressPrefix
-    networkSecurityGroup: {
-      id: nsgId
+resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-01-01' = [
+  for prefix in subnetAddressPrefix: {
+    name: prefix.name
+    properties: {
+      addressPrefix: prefix.addressPrefix
+      networkSecurityGroup: {
+        id: nsgId
+      }
     }
+    parent: virtualNetwork
   }
-  parent: virtualNetwork
-}
-
-@description('The ID of the subnet')
-output subnetId string = subnet.id
-
-@description('The name of the subnet')
-output subnetName string = subnetName
+]
