@@ -7,9 +7,6 @@ param identityName string
 @description('Compute Gallery Name')
 param computeGalleryName string
 
-@description('Networks')
-param netWorkConnectionNames array
-
 @description('Projects')
 param projects array
 
@@ -62,17 +59,24 @@ module devCenterEnvironments 'configureDevCenterEnvironments.bicep' = {
 
 @description('Dev Center Network Connection')
 module configureDevCenterNetworkConnection 'configureDevCenterNetworkConnection.bicep' = [
-  for networkConnection in netWorkConnectionNames: {
-    name: '${networkConnection.name}-Connection'
+  for project in projects: {
+    name: '${project.networkConnectionName}'
     params: {
       devCenterName: devCenterName
-      networkConnectionName: networkConnection.name
+      networkConnectionName: project.networkConnectionName
     }
     dependsOn: [
       deployDevCenter
     ]
   }
 ]
+
+var connections = [
+  for i in range(0, length(projects)): {
+    name: projects[i].name
+  }
+]
+output connectionNames array = connections
 
 @description('Dev Center Compute Gallery')
 module configureDevCenterComputeGallery 'configureDevCenterComputeGallery.bicep' = {
@@ -99,15 +103,17 @@ module configureDevBoxDefinitions 'configureDevBoxDefinitions.bicep' = {
 }
 
 @description('Dev Center Projects')
-module createDevCenterProjects 'createDevCenterProjects.bicep' = {
-  name: 'devCenterProjects'
-  params: {
-    devCenterName: devCenterName
-    networkConnectionName: netWorkConnectionName
-    devBoxDefinitionBackEndName: configureDevBoxDefinitions.outputs.devBoxDefinitionBackEndName
-    devBoxDefinitionFrontEndName: configureDevBoxDefinitions.outputs.devBoxDefinitionFrontEndName
+module createDevCenterProjects 'createDevCenterProjects.bicep' = [
+  for project in projects: {
+    name: '${project.name}-Project'
+    params: {
+      devCenterName: devCenterName
+      networkConnectionName: project.networkConnectionName
+      devBoxDefinitionBackEndName: configureDevBoxDefinitions.outputs.devBoxDefinitionBackEndName
+      devBoxDefinitionFrontEndName: configureDevBoxDefinitions.outputs.devBoxDefinitionFrontEndName
+    }
+    dependsOn: [
+      configureDevBoxDefinitions
+    ]
   }
-  dependsOn: [
-    configureDevBoxDefinitions
-  ]
-}
+]

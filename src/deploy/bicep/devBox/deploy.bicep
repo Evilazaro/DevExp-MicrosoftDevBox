@@ -40,12 +40,14 @@ module computeGallery './computeGallery/deployComputeGallery.bicep' = {
 
 
 @description('The address prefix of the subnet')
-var networkConnectionNames = [
+var projects = [
   {
     name: 'eShop'
+    networkConnectionName: virtualNetworkConnectionName
   }
   {
     name: 'contosoTraders'
+    networkConnectionName: 'contosoTraders'
   }
 ]
 
@@ -56,8 +58,7 @@ module devCenter 'devCenter/deployDevCenter.bicep' = {
     devCenterName: devCenterName
     identityName: identity.outputs.identityName
     computeGalleryName: computeGallery.outputs.computeGalleryName
-    netWorkConnectionNames: networkConnectionNames
-    projects: networkConnectionNames
+    projects: projects
     tags: tags
   }
   dependsOn: [

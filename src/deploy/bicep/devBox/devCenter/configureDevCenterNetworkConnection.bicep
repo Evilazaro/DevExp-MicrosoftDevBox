@@ -29,3 +29,6 @@ resource devCenterNetworkConnection 'Microsoft.DevCenter/devcenters/attachednetw
   }
 }
 
+@description('DevCenter Network Connection Name')
+output devCenterNetworkConnectionName string = devCenterNetworkConnection.name
+
