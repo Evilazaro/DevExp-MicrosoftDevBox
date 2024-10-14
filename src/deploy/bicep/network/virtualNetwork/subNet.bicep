@@ -4,8 +4,8 @@ param virtualNetworkName string
 @description('The address prefix of the subnet')
 param subnetAddressPrefix array
 
-// @description('The ID of the network security group')
-// param nsgId string
+@description('The ID of the network security group')
+param nsgId string
 
 @description('The virtual network to deploy the subnet to')
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-01-01' existing = {
@@ -18,9 +18,9 @@ resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-01-01' = [
     name: prefix.name
     properties: {
       addressPrefix: prefix.addressPrefix
-      // networkSecurityGroup: {
-      //   id: nsgId
-      // }
+      networkSecurityGroup: {
+        id: nsgId
+      }
     }
     parent: virtualNetwork
   }

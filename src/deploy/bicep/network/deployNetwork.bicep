@@ -43,98 +43,98 @@ module virtualNetwork 'virtualNetwork/virtualNetwork.bicep' = {
   ]
 }
 
-// @description('The security rules of the network security group')
-// var securityRules = [
-//   {
-//     name: 'Allow-SSH'
-//     properties: {
-//       protocol: 'Tcp'
-//       sourcePortRange: '*'
-//       destinationPortRange: '22'
-//       sourceAddressPrefix: subnetAddressPrefix
-//       destinationAddressPrefix: '*'
-//       access: 'Allow'
-//       priority: 100
-//       direction: 'Inbound'
-//     }
-//   }
-//   {
-//     name: 'Allow-HTTP'
-//     properties: {
-//       protocol: 'Tcp'
-//       sourcePortRange: '*'
-//       destinationPortRange: '80'
-//       sourceAddressPrefix: subnetAddressPrefix
-//       destinationAddressPrefix: '*'
-//       access: 'Allow'
-//       priority: 110
-//       direction: 'Inbound'
-//     }
-//   }
-//   {
-//     name: 'Allow-HTTPS'
-//     properties: {
-//       protocol: 'Tcp'
-//       sourcePortRange: '*'
-//       destinationPortRange: '443'
-//       sourceAddressPrefix: subnetAddressPrefix
-//       destinationAddressPrefix: '*'
-//       access: 'Allow'
-//       priority: 120
-//       direction: 'Inbound'
-//     }
-//   }
-//   {
-//     name: 'Allow-UDP'
-//     properties: {
-//       protocol: 'Udp'
-//       sourcePortRange: '*'
-//       destinationPortRange: '53'
-//       sourceAddressPrefix: subnetAddressPrefix
-//       destinationAddressPrefix: '*'
-//       access: 'Allow'
-//       priority: 130
-//       direction: 'Inbound'
-//     }
-//   }
-//   {
-//     name: 'Allow-TCP'
-//     properties: {
-//       protocol: 'Tcp'
-//       sourcePortRange: '*'
-//       destinationPortRange: '53'
-//       sourceAddressPrefix: subnetAddressPrefix
-//       destinationAddressPrefix: '*'
-//       access: 'Allow'
-//       priority: 140
-//       direction: 'Inbound'
-//     }
-//   }
-// ]
+@description('The security rules of the network security group')
+var securityRules = [
+  {
+    name: 'Allow-SSH'
+    properties: {
+      protocol: 'Tcp'
+      sourcePortRange: '*'
+      destinationPortRange: '22'
+      sourceAddressPrefix: subnetAddressPrefix
+      destinationAddressPrefix: '*'
+      access: 'Allow'
+      priority: 100
+      direction: 'Inbound'
+    }
+  }
+  {
+    name: 'Allow-HTTP'
+    properties: {
+      protocol: 'Tcp'
+      sourcePortRange: '*'
+      destinationPortRange: '80'
+      sourceAddressPrefix: subnetAddressPrefix
+      destinationAddressPrefix: '*'
+      access: 'Allow'
+      priority: 110
+      direction: 'Inbound'
+    }
+  }
+  {
+    name: 'Allow-HTTPS'
+    properties: {
+      protocol: 'Tcp'
+      sourcePortRange: '*'
+      destinationPortRange: '443'
+      sourceAddressPrefix: subnetAddressPrefix
+      destinationAddressPrefix: '*'
+      access: 'Allow'
+      priority: 120
+      direction: 'Inbound'
+    }
+  }
+  {
+    name: 'Allow-UDP'
+    properties: {
+      protocol: 'Udp'
+      sourcePortRange: '*'
+      destinationPortRange: '53'
+      sourceAddressPrefix: subnetAddressPrefix
+      destinationAddressPrefix: '*'
+      access: 'Allow'
+      priority: 130
+      direction: 'Inbound'
+    }
+  }
+  {
+    name: 'Allow-TCP'
+    properties: {
+      protocol: 'Tcp'
+      sourcePortRange: '*'
+      destinationPortRange: '53'
+      sourceAddressPrefix: subnetAddressPrefix
+      destinationAddressPrefix: '*'
+      access: 'Allow'
+      priority: 140
+      direction: 'Inbound'
+    }
+  }
+]
 
-// @description('Deploy the network security group')
-// module nsg '../security/networkSecurityGroup.bicep' = {
-//   name: 'networkSecurityGroup'
-//   params: {
-//     name: vnetName
-//     securityRules: securityRules
-//     tags: tags
-//   }
-//   dependsOn: [
-//     virtualNetwork
-//   ]
-// }
+@description('Deploy the network security group')
+module nsg '../security/networkSecurityGroup.bicep' = {
+  name: 'networkSecurityGroup'
+  params: {
+    name: vnetName
+    securityRules: securityRules
+    tags: tags
+  }
+  dependsOn: [
+    virtualNetwork
+  ]
+}
 
 @description('The address prefix of the subnet')
 var subnetAddressPrefix = [
   {
     name: 'devBoxSubnet'
-    addressPrefix: '10.1.0.0/24'
+    addressPrefix: '10.0.0.0/24'
   }
-  // {
-  //   name: 'FrontEndSubnet'
-  //   addressPrefix: '10.2.0.0/24'
-  // }
+  {
+    name: 'FrontEndSubnet'
+    addressPrefix: '10.0.1.0/24'
+  }
   // {
   //   name: 'BackEndSubnet'
   //   addressPrefix: '10.3.0.0/24'
@@ -151,10 +151,11 @@ module subnet 'virtualNetwork/subNet.bicep' = {
   params: {
     virtualNetworkName: virtualNetwork.outputs.name
     subnetAddressPrefix: subnetAddressPrefix
-    //nsgId: '1'//nsg.outputs.nsgId
+    nsgId: nsg.outputs.nsgId
   }
   dependsOn: [
     virtualNetwork
+    nsg
   ]
 }
 
