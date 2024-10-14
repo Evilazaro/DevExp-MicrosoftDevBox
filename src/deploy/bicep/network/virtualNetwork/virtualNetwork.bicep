@@ -54,3 +54,6 @@ output vnetName string = virtualNetwork.name
 
 @description('Virtual Network Id')
 output vnetId string = virtualNetwork.id
+
+@description('Subnets')
+output subnets array = virtualNetwork.properties.subnets

@@ -4,9 +4,6 @@ param solutionName string
 @description('The name of the virtual network')
 var vnetName = format('{0}-vnet', solutionName)
 
-@description('The name of the log analytics workspace')
-var logAnalyticsWorkspaceName = format('{0}-logAnalytics', solutionName)
-
 @description('The name of the management resource group')
 var managementResourceGroupName = format('{0}-Management-rg', solutionName)
 
@@ -17,12 +14,6 @@ var tags = {
   offering: 'DevBox-as-a-Service'
   solution: solutionName
   landingZone: 'Network'
-}
-
-@description('Log Analytics deployed to the management resource group')
-resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
-  name: logAnalyticsWorkspaceName
-  scope: resourceGroup(managementResourceGroupName)
 }
 
 @description('The address prefix of the virtual network')
@@ -51,9 +42,6 @@ module virtualNetwork 'virtualNetwork/virtualNetwork.bicep' = {
     subnets: subnetAddressPrefix
     tags: tags
   }
-  dependsOn: [
-    logAnalyticsWorkspace
-  ]
 }
 
 @description('Virtual Network Name')
@@ -62,12 +50,15 @@ output vnetName string = virtualNetwork.outputs.vnetName
 @description('Virtual Network Id')
 output vnetId string = virtualNetwork.outputs.vnetId
 
+@description('Subnets')
+output subnets array = virtualNetwork.outputs.subnets
+
 @description('Deploy the network connection for each subnet')
 module netConnection 'networkConnection/networkConnection.bicep' = [
   for subnet in subnetAddressPrefix: {
     name: '${subnet.name}-Connection'
     params: {
-      name: subnet.name
+      name: '${subnet.name}-Connection'
       vnetName: virtualNetwork.outputs.vnetName
       subnetName: subnet.name
       tags: tags

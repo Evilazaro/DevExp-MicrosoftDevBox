@@ -1,3 +1,4 @@
+@description('Solution Name')
 param solutionName string
 
 var identityName = format('{0}-identity', solutionName)
@@ -10,6 +11,7 @@ var tags = {
   landingZone: 'Identity'
 }
 
+@description('Deploy the identity')
 module identity 'deployIdentity.bicep' = {
   name: 'deployIdentity'
   params: {
@@ -19,11 +21,10 @@ module identity 'deployIdentity.bicep' = {
   }
 }
 
+@description('Identity Name')
 output identityName string = identity.outputs.identityName
-output ideidentityClientIdntityId string = identity.outputs.identityClientId
-output identityPrincipalId string = identity.outputs.identityPrincipalId
-output identityResourceId string = identity.outputs.identityResourceId
 
+@description('Deploy the custom role')
 module customRole 'deployCustomRole.bicep' = {
   name: 'deployCustomRole'
   params: {
@@ -34,9 +35,7 @@ module customRole 'deployCustomRole.bicep' = {
   ]
 }
 
-output userAssignedIdentityId string = customRole.outputs.customRoleId
-output userAssignedIdentityName string = customRole.outputs.customRoleName
-
+@description('Deploy the custom role assignment')
 module identityCustomRoleAssignment 'customRoleAssignment.bicep' = {
   name: 'identityCustomRoleAssignment'
   params: {
@@ -49,8 +48,3 @@ module identityCustomRoleAssignment 'customRoleAssignment.bicep' = {
   ]
 }
 
-output customRoleAssignmentName string = identityCustomRoleAssignment.outputs.customRoleAssignmentName
-output customRoleAssignmentId string = identityCustomRoleAssignment.outputs.customRoleAssignmentId
-output customRoleAssignmentScope string = identityCustomRoleAssignment.outputs.customRoleAssignmentScope
-output customRoleAssignmentPrincipalId string = identityCustomRoleAssignment.outputs.customRoleAssignmentPrincipalId
-output customRoleAssignmentRoleDefinitionId string = identityCustomRoleAssignment.outputs.customRoleAssignmentRoleDefinitionId
