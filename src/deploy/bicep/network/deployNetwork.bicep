@@ -131,18 +131,18 @@ var subnetAddressPrefix = [
     name: 'devBoxSubnet'
     addressPrefix: '10.1.0.0/24'
   }
-  {
-    name: 'FrontEndSubnet'
-    addressPrefix: '10.2.0.0/24'
-  }
-  {
-    name: 'BackEndSubnet'
-    addressPrefix: '10.3.0.0/24'
-  }
-  {
-    name: 'dataBaseSubnet'
-    addressPrefix: '10.4.0.0/24'
-  }
+  // {
+  //   name: 'FrontEndSubnet'
+  //   addressPrefix: '10.2.0.0/24'
+  // }
+  // {
+  //   name: 'BackEndSubnet'
+  //   addressPrefix: '10.3.0.0/24'
+  // }
+  // {
+  //   name: 'dataBaseSubnet'
+  //   addressPrefix: '10.4.0.0/24'
+  // }
 ]
 
 @description('Deploy the subnet')
@@ -151,7 +151,7 @@ module subnet 'virtualNetwork/subNet.bicep' = {
   params: {
     virtualNetworkName: virtualNetwork.outputs.name
     subnetAddressPrefix: subnetAddressPrefix
-    nsgId: nsg.outputs.nsgId
+    nsgId: '1'//nsg.outputs.nsgId
   }
   dependsOn: [
     virtualNetwork
