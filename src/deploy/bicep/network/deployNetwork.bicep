@@ -151,7 +151,7 @@ module subnet 'virtualNetwork/subNet.bicep' = {
   params: {
     virtualNetworkName: virtualNetwork.outputs.name
     subnetAddressPrefix: subnetAddressPrefix
-    nsgId: '1'//nsg.outputs.nsgId
+    //nsgId: '1'//nsg.outputs.nsgId
   }
   dependsOn: [
     virtualNetwork
