@@ -1,9 +1,11 @@
-param customRoleName string
+@description('Custom Role Name')
+param name string
 
+@description('Deploy Custom Role to Azure')
 resource deployCustomRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
-  name: guid(subscription().subscriptionId, customRoleName)
+  name: guid(subscription().subscriptionId, name)
   properties: {
-    roleName: customRoleName
+    roleName: name
     description: 'Custom role for managing custom images'
     assignableScopes: [
       resourceGroup().id
@@ -24,5 +26,8 @@ resource deployCustomRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' =
   }
 }
 
+@description('Custom Role Name')
 output customRoleName string = deployCustomRole.name
+
+@description('Custom Role ID')
 output customRoleId string = deployCustomRole.id

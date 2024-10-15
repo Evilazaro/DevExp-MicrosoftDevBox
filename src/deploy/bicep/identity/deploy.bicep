@@ -1,8 +1,13 @@
 @description('Solution Name')
 param solutionName string
 
+@description('Identity Name')
 var identityName = format('{0}-identity', solutionName)
+
+@description('Custom Role Name')
 var customRoleName = format('{0}-customRole', identityName)
+
+@description('The tags of the identity')
 var tags = {
   division: 'PlatformEngineeringTeam-DX'
   enrironment: 'Production'
@@ -16,7 +21,7 @@ module identity 'deployIdentity.bicep' = {
   name: 'deployIdentity'
   params: {
     location: resourceGroup().location
-    identityName: identityName
+    name: identityName
     tags: tags
   }
 }
@@ -28,7 +33,7 @@ output identityName string = identity.outputs.identityName
 module customRole 'deployCustomRole.bicep' = {
   name: 'deployCustomRole'
   params: {
-    customRoleName: customRoleName
+    name: customRoleName
   }
   dependsOn: [
     identity

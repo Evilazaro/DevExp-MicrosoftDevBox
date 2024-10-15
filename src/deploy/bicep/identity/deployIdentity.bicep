@@ -1,9 +1,15 @@
-param identityName string
+@description('Identity Name')
+param name string
+
+@description('Identity Location')
 param location string
+
+@description('Identity Tags')
 param tags object
 
+@description('Deploy User Assigned Identity to Azure')
 resource deployIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
-  name: identityName
+  name: name
   location: location
   tags: tags
 }
