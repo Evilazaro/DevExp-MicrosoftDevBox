@@ -18,7 +18,7 @@ var projects = [
   {
     name: 'contosoTraders'
     description: 'Contoso Traders Reference Application - Contoso'
-    networkConnectionName: 'eShop-Connection'
+    networkConnectionName: 'contosoTraders-Connection'
     catalog: {
       name: 'contosoTraders'
       type: 'gitHub'
