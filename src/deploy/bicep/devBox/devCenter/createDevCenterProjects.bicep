@@ -10,10 +10,6 @@ resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' existing = 
   name: devCenterName
 } 
 
-resource netCon 'Microsoft.DevCenter/networkConnections@2024-08-01-preview' existing = {
-  name: networkConnectionName
-}
-
 @description('Create DevCenter eShop Project')
 resource devCenterPproject 'Microsoft.DevCenter/projects@2024-02-01' = {
   name: name
