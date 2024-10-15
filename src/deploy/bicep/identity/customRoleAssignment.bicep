@@ -1,5 +1,11 @@
+
+@description('Custom Role Name')
 param customRoleName string
+
+@description('Identity Principal Id')
 param identityId string
+
+@description('Custom Role ID')
 param customRoleId string
 
 @description('Deploy Custom Role Assignment')
@@ -12,9 +18,3 @@ resource deployCustomRoleAssignment 'Microsoft.Authorization/roleAssignments@202
     principalType: 'ServicePrincipal'
   } 
 }
-
-output customRoleAssignmentName string = deployCustomRoleAssignment.name
-output customRoleAssignmentId string = deployCustomRoleAssignment.id
-output customRoleAssignmentScope string = deployCustomRoleAssignment.properties.scope
-output customRoleAssignmentPrincipalId string = deployCustomRoleAssignment.properties.principalId
-output customRoleAssignmentRoleDefinitionId string = deployCustomRoleAssignment.properties.roleDefinitionId

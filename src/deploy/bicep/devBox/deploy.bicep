@@ -1,6 +1,34 @@
 @description('Solution Name')
 param solutionName string
 
+@description('Teams and Projects for the Dev Center')
+var projects = [
+  {
+    name: 'eShop'
+    description: 'eShop Reference Application - AdventureWorks'
+    networkConnectionName: 'eShop-Connection'
+    catalog: {
+      name: 'eShop'
+      type: 'gitHub'
+      uri: 'https://github.com/Evilazaro/eShop.git'
+      branch: 'main'
+      path: '/.devcenter/customizations/tasks'
+    }
+  }
+  {
+    name: 'contosoTraders'
+    description: 'Contoso Traders Reference Application - Contoso'
+    networkConnectionName: 'eShop-Connection'
+    catalog: {
+      name: 'contosoTraders'
+      type: 'gitHub'
+      uri: 'https://github.com/Evilazaro/ContosoTraders.git'
+      branch: 'main'
+      path: '/customizations/tasks'
+    }
+  }
+]
+
 @description('The name of the Dev Center')
 var devCenterName = format('{0}DevCenter', solutionName)
 
@@ -35,24 +63,11 @@ module computeGallery './computeGallery/deployComputeGallery.bicep' = {
   ]
 }
 
-
-@description('The address prefix of the subnet')
-var projects = [
-  {
-    name: 'eShop'
-    networkConnectionName: 'eShop-Connection'
-  }
-  {
-    name: 'contosoTraders'
-    networkConnectionName: 'contosoTraders-Connection'
-  }
-]
-
 @description('Deploy the Dev Center')
 module devCenter 'devCenter/deployDevCenter.bicep' = {
   name: 'devCenter'
   params: {
-    devCenterName: devCenterName
+    name: devCenterName
     identityName: identity.outputs.identityName
     computeGalleryName: computeGallery.outputs.computeGalleryName
     projects: projects

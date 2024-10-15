@@ -1,34 +1,53 @@
-param name string
 param devCenterName string
 param networkConnectionName string
 param devBoxDefinitionBackEndName string
 param devBoxDefinitionFrontEndName string
+param projectInfo object
 param tags object
 
-
-resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' existing = {
+@description('Existent DevCenter')
+resource devCenter 'Microsoft.DevCenter/devcenters@2024-02-01' existing = {
   name: devCenterName
-} 
-
-@description('Create DevCenter eShop Project')
-resource devCenterPproject 'Microsoft.DevCenter/projects@2024-02-01' = {
-  name: name
-  location: resourceGroup().location
-  properties: {
-    devCenterId: deployDevCenter.id
-    maxDevBoxesPerUser: 10
-  }
-  tags:tags
 }
 
-output projectId string = devCenterPproject.id
-output projectName string = devCenterPproject.name
+@description('Create DevCenter eShop Project')
+resource project 'Microsoft.DevCenter/projects@2024-02-01' = {
+  name: projectInfo.name
+  location: resourceGroup().location
+  properties: {
+    devCenterId: devCenter.id
+    maxDevBoxesPerUser: 10
+    catalogSettings: {
+      catalogItemSyncTypes: [
+        projectInfo.catalog.type
+      ]
+    }
+    description: projectInfo.description
+    displayName: projectInfo.name
+  }
+  dependsOn: [
+    devCenter
+  ]
+  tags: tags
+}
+
+@description('Create DevCenter Catalogs with DevBox Tasks')
+module projectCatalog 'configureDevCenterCatalogs.bicep' = {
+  name: 'projectCatalog'
+  params: {
+    catalog: projectInfo.catalog
+    devCenterName: devCenterName
+  }
+  dependsOn: [
+    project
+  ]
+}
 
 @description('Create DevCenter DevBox Pools for BackEnd Engineers of eShop Project')
 resource backEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
   name: 'backEndPool'
   location: resourceGroup().location
-  parent: devCenterPproject
+  parent: project
   properties: {
     devBoxDefinitionName: devBoxDefinitionBackEndName
     licenseType: 'Windows_Client'
@@ -45,7 +64,7 @@ resource backEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
 resource frontEndPool 'Microsoft.DevCenter/projects/pools@2023-04-01' = {
   name: 'frontEndPool'
   location: resourceGroup().location
-  parent: devCenterPproject
+  parent: project
   properties: {
     devBoxDefinitionName: devBoxDefinitionFrontEndName
     licenseType: 'Windows_Client'

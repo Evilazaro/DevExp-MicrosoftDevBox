@@ -1,20 +1,20 @@
+param catalog object
 param devCenterName string
 
-
+@description('Existent DevCenter')
 resource devCenter 'Microsoft.DevCenter/devcenters@2024-02-01' existing = {
   name: devCenterName
 }
 
-
 @description('Create DevCenter Catalogs with DevBox Tasks')
 resource devCenterCatalogs 'Microsoft.DevCenter/devcenters/catalogs@2024-02-01' = {
   parent: devCenter
-  name: 'DevCenterCatalog'
+  name: catalog.name
   properties: {
     gitHub: {
-      uri: 'https://github.com/Evilazaro/MicrosoftDevBox.git'
-      branch: 'main'
-      path: '/customizations/tasks'
+      uri: catalog.uri
+      branch: catalog.branch
+      path: catalog.path
     }
   }
 }
