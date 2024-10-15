@@ -1,24 +1,27 @@
+@description('DevCenter Name')
 param devCenterName string
 
-resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' existing = {
+@description('Existent DevCenter')
+resource devCenter 'Microsoft.DevCenter/devcenters@2024-02-01' existing = {
   name: devCenterName
 }
 
-resource defaultComputeGallery 'Microsoft.DevCenter/devcenters/galleries@2024-02-01' existing = {
-  parent: deployDevCenter
+@description('Existent Compute Gallery')
+resource computeGallery 'Microsoft.DevCenter/devcenters/galleries@2024-02-01' existing = {
+  parent: devCenter
   name: 'Default'
 }
 
-output defaultComputeGalleryId string = defaultComputeGallery.id
-output defaultComputeGalleryName string = defaultComputeGallery.name
-
+@description('Deploy a DevBox Image Definition for BackEnd Engineer')
 resource backEndImage 'Microsoft.DevCenter/devcenters/galleries/images@2024-02-01' existing = {
-  parent: defaultComputeGallery
+  parent: computeGallery
   name: 'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2'
 }
 
+@description('Output the BackEnd Image Id')
 output backEndImageId string = backEndImage.id
 
+@description('Tags for BackEnd Engineer')
 var tagsBackEnd = {
   division: 'PlatformEngineeringTeam-DX'
   enrironment: 'Production'
@@ -31,7 +34,7 @@ var tagsBackEnd = {
 resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
   name: 'PetDx-BackEndEngineer'
   location: resourceGroup().location
-  parent: deployDevCenter
+  parent: devCenter
   properties: {
     hibernateSupport: 'true'
     imageReference: {
@@ -50,13 +53,16 @@ resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitio
 output devBoxDefinitionBackEndId string = devBoxDefinitionBackEnd.id
 output devBoxDefinitionBackEndName string = devBoxDefinitionBackEnd.name
 
+@description('Deploy a DevBox Image Definition for FrontEnd Engineer')
 resource frontEndImage 'Microsoft.DevCenter/devcenters/galleries/images@2024-02-01' existing = {
-  parent: defaultComputeGallery
+  parent: computeGallery
   name: 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
 }
 
+@description('Output the FrontEnd Image Id')
 output frontEndImageId string = frontEndImage.id
 
+@description('Tags for FrontEnd Engineer')
 var tagsFrontEnd = {
   division: 'PlatformEngineeringTeam-DX'
   enrironment: 'Production'
@@ -69,7 +75,7 @@ var tagsFrontEnd = {
 resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
   name: 'PetDx-FrontEndEngineer'
   location: resourceGroup().location
-  parent: deployDevCenter
+  parent: devCenter
   properties: {
     hibernateSupport: 'true'
     imageReference: {

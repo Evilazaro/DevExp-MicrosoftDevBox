@@ -1,5 +1,5 @@
 @description('DevCenter Name')
-param devCenterName string
+param name string
 
 @description('Identity Name')
 param identityName string
@@ -23,7 +23,7 @@ resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-
 
 @description('Deploying DevCenter')
 resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' = {
-  name: devCenterName
+  name: name
   location: resourceGroup().location
   identity: {
     type: 'UserAssigned'
@@ -38,22 +38,11 @@ resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' = {
   properties: {}
 }
 
-@description('Dev Center Catalogs')
-module devCenterCatalogs 'configureDevCenterCatalogs.bicep' = {
-  name: 'devCenterCatalogs'
-  params: {
-    devCenterName: devCenterName
-  }
-  dependsOn: [
-    deployDevCenter
-  ]
-}
-
 @description('Dev Center Environments')
 module devCenterEnvironments 'configureDevCenterEnvironments.bicep' = {
   name: 'devCenterEnvironments'
   params: {
-    devCenterName: devCenterName
+    devCenterName: name
   }
   dependsOn: [
     deployDevCenter
@@ -65,7 +54,7 @@ module configureDevCenterNetworkConnection 'configureDevCenterNetworkConnection.
   for project in projects: {
     name: '${project.networkConnectionName}'
     params: {
-      devCenterName: devCenterName
+      devCenterName: name
       networkConnectionName: project.networkConnectionName
       networkResourceGroupName: networkResourceGroupName
     }
@@ -86,7 +75,7 @@ output connectionNames array = connections
 module configureDevCenterComputeGallery 'configureDevCenterComputeGallery.bicep' = {
   name: 'devCenterComputeGallery'
   params: {
-    devCenterName: devCenterName
+    devCenterName: name
     computeGalleryName: computeGalleryName
   }
   dependsOn: [
@@ -98,7 +87,7 @@ module configureDevCenterComputeGallery 'configureDevCenterComputeGallery.bicep'
 module configureDevBoxDefinitions 'configureDevBoxDefinitions.bicep' = {
   name: 'DevBoxDefinitions'
   params: {
-    devCenterName: devCenterName
+    devCenterName: name
   }
   dependsOn: [
     configureDevCenterNetworkConnection
@@ -111,12 +100,12 @@ module createDevCenterProjects 'createDevCenterProjects.bicep' = [
   for project in projects: {
     name: '${project.name}-Project'
     params: {
-      devCenterName: devCenterName
+      devCenterName: name
       networkConnectionName: project.networkConnectionName
       devBoxDefinitionBackEndName: configureDevBoxDefinitions.outputs.devBoxDefinitionBackEndName
       devBoxDefinitionFrontEndName: configureDevBoxDefinitions.outputs.devBoxDefinitionFrontEndName
       tags: tags
-      name: project.name
+      projectInfo: project
     }
     dependsOn: [
       configureDevBoxDefinitions
