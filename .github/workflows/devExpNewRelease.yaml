@@ -17,6 +17,14 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
 jobs:
+  Test-Azure-Credentials-And-Login:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
   Build:
     runs-on: ubuntu-latest
     steps:
@@ -38,13 +46,13 @@ jobs:
 
       - name: Compress Bicep Artifacts
         run: |
-          zip -r bicepArtifacts_v1.0.${{ github.run_number }}.zip ./bicepArtifacts
+          zip -r bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip ./bicepArtifacts
 
       - name: Upload Bicep Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: bicepArtifacts_v1.0.${{ github.run_number }}.zip
-          path: bicepArtifacts_v1.0.${{ github.run_number }}.zip
+          name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
+          path: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
 
   Deploy:
     runs-on: ubuntu-latest
@@ -53,6 +61,7 @@ jobs:
       - name: Update Packages and Upgrade Bicep
         run: |
           sudo apt-get update && \
+          sudo apt-get upgrade -y && \
           sudo az bicep upgrade
       
       - name: Checkout repository
@@ -68,14 +77,6 @@ jobs:
 
       - name: Deploy Landing Zone Resources for ${{ env.solutionName }}
         run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.managementResourceGroupName }} ${{ env.location }}
-
-      - name: Deploy Log Analytics
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
-          resourceGroupName:  ${{ env.managementResourceGroupName }}
-          template: ./src/deploy/bicep/management/deploy.bicep
-          parameters: 'solutionName=${{ env.solutionName }}'
             
       - name: Deploy Network Connectivity Resources
         uses: azure/arm-deploy@v1
@@ -91,7 +92,15 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
           resourceGroupName: ${{ env.devBoxResourceGroupName }}
           template: ./src/deploy/bicep/devBox/deploy.bicep
-          parameters: 'solutionName=${{ env.solutionName }}' 
+          parameters: 'solutionName=${{ env.solutionName }}'
+      
+      - name: Deploy Log Analytics
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
+          resourceGroupName:  ${{ env.managementResourceGroupName }}
+          template: ./src/deploy/bicep/management/deploy.bicep
+          parameters: 'solutionName=${{ env.solutionName }}'
 
   publish-bicep-artifacts:
       runs-on: ubuntu-latest
@@ -103,36 +112,16 @@ jobs:
       - name: Download Bicep Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: bicepArtifacts_v1.0.${{ github.run_number }}.zip
+          name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
 
       - name: Upload Bicep Artifacts to Storage
         run: |
           # Add your upload logic here
           echo "Uploading Bicep artifacts"
 
-  CleanUp:
-        runs-on: ubuntu-latest
-        needs: Deploy
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-
-            - name: Log in to Azure
-              uses: azure/login@v2
-              with:
-                creds: ${{ secrets.AZURE_CREDENTIALS }}
-              
-            - name: Grant execute permissions to the script
-              run: | 
-                chmod +x ./src/deploy/bicep/bash/cleanUpPipeline.sh
-                
-      
-            - name: Cleaning Up Azure Resources for ${{ env.solutionName }}
-              run: ./src/deploy/bicep/bash/cleanUpPipeline.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.managementResourceGroupName }} ${{ env.location }} 'eShopPetBuilderRole' 
-  
   create-release:
       runs-on: ubuntu-latest
-      needs: CleanUp
+      needs: Deploy
       steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -140,7 +129,7 @@ jobs:
       - name: Download Bicep Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: bicepArtifacts_v1.0.${{ github.run_number }}.zip
+          name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
 
       - name: Create GitHub Release
         id: create_release
@@ -159,8 +148,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: bicepArtifacts_v1.0.${{ github.run_number }}.zip
-          asset_name: bicepArtifacts_v1.0.${{ github.run_number }}.zip
+          asset_path: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
+          asset_name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

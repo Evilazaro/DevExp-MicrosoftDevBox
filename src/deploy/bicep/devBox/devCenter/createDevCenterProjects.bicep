@@ -28,7 +28,7 @@ resource project 'Microsoft.DevCenter/projects@2024-02-01' = {
 
 @description('Create DevCenter Catalogs with DevBox Tasks')
 module projectCatalog 'configureDevCenterCatalogs.bicep' = {
-  name: 'projectCatalog'
+  name: '${projectInfo.name}-catalog'
   params: {
     catalog: projectInfo.catalog
     devCenterName: devCenterName
