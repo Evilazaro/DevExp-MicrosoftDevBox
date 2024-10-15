@@ -54,6 +54,17 @@ module devCenterEnvironments 'configureDevCenterEnvironments.bicep' = {
   ]
 }
 
+@description('Dev Center Catalogs')
+module configureDevCenterCatalogs 'configureDevCenterCatalogs.bicep' = [
+  for project in projects: {
+    name: '${project.name}-Catalog'
+    params: {
+      devCenterName: deployDevCenter.name
+      projectInfo: project
+    }
+  }
+]
+
 @description('Dev Center Network Connection')
 module configureDevCenterNetworkConnection 'configureDevCenterNetworkConnection.bicep' = [
   for project in projects: {
