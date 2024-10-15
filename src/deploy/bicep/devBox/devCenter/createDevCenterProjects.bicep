@@ -19,6 +19,11 @@ resource project 'Microsoft.DevCenter/projects@2024-02-01' = {
     maxDevBoxesPerUser: 10
     description: projectInfo.description
     displayName: projectInfo.name
+    catalogSettings: {
+      catalogItemSyncTypes: [
+        'EnvironmentDefinition'
+      ]
+    }
   }
   dependsOn: [
     devCenter
@@ -30,8 +35,7 @@ resource project 'Microsoft.DevCenter/projects@2024-02-01' = {
 module projectCatalog 'configureDevCenterCatalogs.bicep' = {
   name: '${projectInfo.name}-catalog'
   params: {
-    catalog: projectInfo.catalog
-    devCenterName: devCenterName
+    projectInfo: projectInfo
   }
   dependsOn: [
     project
