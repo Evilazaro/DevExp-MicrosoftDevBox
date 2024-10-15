@@ -10,9 +10,9 @@ var projects = [
     catalog: {
       name: 'eShop'
       type: 'gitHub'
-      uri: 'https://github.com/Evilazaro/MicrosoftDevBox.git'
+      uri: 'https://github.com/Evilazaro/eShop.git'
       branch: 'main'
-      path: '/customizations/tasks'
+      path: '/.devcenter/customizations/tasks'
     }
   }
   {
@@ -20,9 +20,9 @@ var projects = [
     description: 'Contoso Traders Reference Application - Contoso'
     networkConnectionName: 'eShop-Connection'
     catalog: {
-      name: 'eShop'
+      name: 'contosoTraders'
       type: 'gitHub'
-      uri: 'https://github.com/Evilazaro/MicrosoftDevBox.git'
+      uri: 'https://github.com/Evilazaro/ContosoTraders.git'
       branch: 'main'
       path: '/customizations/tasks'
     }
