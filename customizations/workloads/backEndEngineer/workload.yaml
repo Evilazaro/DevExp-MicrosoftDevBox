@@ -90,7 +90,7 @@ tasks:
   - name: powershell
     description: "Install VS Code extensions"
     parameters:  
-      command: "../tasks/install-vs-extension/Install-VSIXExtension.ps1"
+      command: ".././tasks/install-vs-extension/Install-VSIXExtension.ps1"
       workingDirectory: C:\\provisioning\\temp
     runAsUser: true
   - name: git-clone
@@ -98,16 +98,16 @@ tasks:
     parameters:
       repositoryUrl: "https://github.com/Evilazaro/eShop"
       branch: "main"
-      directory: $"C:\projects\eShop"
+      directory: "C:\\projects\\eShop"
   - name: git-clone
     description: "Clone the DevBox repository"
     parameters:
       repositoryUrl: "https://github.com/Evilazaro/MicrosoftDevBox"
       branch: "main"
-      directory: $"C:\projects\MicrosoftDevBox"
+      directory: "C:\\projects\\MicrosoftDevBox"
   - name: git-clone
     description: "Clone the Contoso Traders repository"
     parameters:
       repositoryUrl: "https://github.com/Evilazaro/ContosoTraders.git"
       branch: "main"
-      directory: $"C:\projects\ContosoTraders"
+      directory: "C:\\projects\\ContosoTraders"
