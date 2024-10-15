@@ -6,7 +6,7 @@ var projects = [
   {
     name: 'eShop'
     description: 'eShop Reference Application - AdventureWorks'
-    networkConnectionName: 'eShop-Connection'
+    networkConnectionName: 'eShop-con'
     catalog: {
       name: 'eShop'
       type: 'gitHub'
@@ -18,7 +18,7 @@ var projects = [
   {
     name: 'contosoTraders'
     description: 'Contoso Traders Reference Application - Contoso'
-    networkConnectionName: 'contosoTraders-Connection'
+    networkConnectionName: 'contosoTraders-con'
     catalog: {
       name: 'contosoTraders'
       type: 'gitHub'

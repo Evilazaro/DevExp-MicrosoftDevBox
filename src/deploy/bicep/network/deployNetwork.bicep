@@ -85,9 +85,9 @@ module subNet 'virtualNetwork/subNet.bicep' = [
 @description('Deploy the network connection for each subnet')
 module netConnection 'networkConnection/networkConnection.bicep' = [
   for subnet in subNets: {
-    name: '${subnet.name}-Connection'
+    name: '${subnet.name}-con'
     params: {
-      name: '${subnet.name}-Connection'
+      name: '${subnet.name}-con'
       vnetName: virtualNetwork.outputs.vnetName
       subnetName: subnet.name
       tags: tags
