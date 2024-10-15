@@ -31,11 +31,16 @@ resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' = {
       '${managedIdentity.id}': {}
     }
   }
+  properties: {
+    projectCatalogSettings: {
+      catalogItemSyncEnableStatus: 'Enabled'
+    }
+    displayName: name
+  }
   tags: tags
   dependsOn: [
     managedIdentity
   ]
-  properties: {}
 }
 
 @description('Dev Center Environments')
