@@ -21,9 +21,7 @@ resource project 'Microsoft.DevCenter/projects@2024-02-01' = {
     displayName: projectInfo.name
     catalogSettings: {
       catalogItemSyncTypes: [
-        'DevBox'
         'EnvironmentDefinition'
-        'Task'
       ]
     }
   }
