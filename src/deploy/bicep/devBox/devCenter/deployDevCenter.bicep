@@ -13,6 +13,8 @@ param projects array
 @description('Network Resource Group Name')
 param networkResourceGroupName string
 
+param catalogInfo object
+
 @description('Tags')
 param tags object
 
@@ -55,15 +57,13 @@ module devCenterEnvironments 'configureDevCenterEnvironments.bicep' = {
 }
 
 @description('Dev Center Catalogs')
-module configureDevCenterCatalogs 'configureDevCenterCatalogs.bicep' = [
-  for project in projects: {
-    name: '${project.name}-Catalog'
-    params: {
-      devCenterName: deployDevCenter.name
-      projectInfo: project
-    }
+module configureDevCenterCatalogs 'configureDevCenterCatalogs.bicep' = {
+  name: '${deployDevCenter.name}-Catalog'
+  params: {
+    devCenterName: deployDevCenter.name
+    catalogInfo: catalogInfo
   }
-]
+}
 
 @description('Dev Center Network Connection')
 module configureDevCenterNetworkConnection 'configureDevCenterNetworkConnection.bicep' = [
@@ -101,7 +101,7 @@ module configureDevCenterComputeGallery 'configureDevCenterComputeGallery.bicep'
 
 @description('Dev Box Definitions')
 module configureDevBoxDefinitions 'configureDevBoxDefinitions.bicep' = {
-  name: 'DevBoxDefinitions'
+  name: 'devBoxDefinitions'
   params: {
     devCenterName: name
   }
