@@ -17,11 +17,6 @@ resource project 'Microsoft.DevCenter/projects@2024-02-01' = {
   properties: {
     devCenterId: devCenter.id
     maxDevBoxesPerUser: 10
-    catalogSettings: {
-      catalogItemSyncTypes: [
-        projectInfo.catalog.type
-      ]
-    }
     description: projectInfo.description
     displayName: projectInfo.name
   }
