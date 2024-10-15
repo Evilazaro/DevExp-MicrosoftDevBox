@@ -1,23 +1,20 @@
-param catalog object
-param devCenterName string
+param projectInfo object
 
-@description('Existent DevCenter')
-resource devCenter 'Microsoft.DevCenter/devcenters@2024-02-01' existing = {
-  name: devCenterName
+@description('Existent Project')
+resource project 'Microsoft.DevCenter/projects@2024-02-01' existing = {
+  name: projectInfo.name
 }
 
-@description('Create DevCenter Catalogs with DevBox Tasks')
-resource devCenterCatalogs 'Microsoft.DevCenter/devcenters/catalogs@2024-02-01' = {
-  parent: devCenter
-  name: catalog.name
+@description('Attache the DevCenter Catalog to the Project')
+resource projectCatalog 'Microsoft.DevCenter/projects/catalogs@2024-08-01-preview' = {
+  name: projectInfo.catalog.name
+  parent: project
   properties: {
     gitHub: {
-      uri: catalog.uri
-      branch: catalog.branch
-      path: catalog.path
+      uri: projectInfo.catalog.uri
+      branch: projectInfo.catalog.branch
+      path: projectInfo.catalog.path
     }
+    syncType: 'Scheduled'
   }
 }
-
-output devCenterName_quickstart_devbox_tasks_id string = devCenterCatalogs.id
-output devCenterName_quickstart_devbox_tasks_name string = devCenterCatalogs.name
