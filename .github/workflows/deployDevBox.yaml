@@ -27,6 +27,7 @@ jobs:
 
   Build:
     runs-on: ubuntu-latest
+    needs: Test-Azure-Credentials-And-Login
     steps:
       - name: Upgrade Bicep
         run: |
