@@ -100,7 +100,7 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
           resourceGroupName:  ${{ env.managementResourceGroupName }}
-          template: ./src/deploy/bicep/management/deploy.bicep
+          template: ./src/deploy/bicep/management/logAnalytics/deploy.bicep
           parameters: 'solutionName=${{ env.solutionName }}'
 
   publish-bicep-artifacts:
