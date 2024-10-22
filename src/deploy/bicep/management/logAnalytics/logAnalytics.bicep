@@ -16,3 +16,18 @@ output logAnalyticsWorkspaceName string = logAnalyticsWorkspace.name
 
 @description('Log Analytics Workspace ID')
 output logAnalyticsWorkspaceId string = logAnalyticsWorkspace.id
+
+module diagnosticsSettings 'diagnosticSettings.bicep' = {
+  name: 'diagnosticsSettings'
+  params: {
+    name: '${logAnalyticsWorkspace.name}-diagnosticSettings'
+    logAnalyticsWorkspaceName: logAnalyticsWorkspace.name
+  }
+}
+
+@description('Diagnostic Settings ID')
+output diagnosticSettingsId string = diagnosticsSettings.outputs.diagnosticSettingsId
+
+@description('Diagnostic Settings Name')
+output diagnosticSettingsName string = diagnosticsSettings.outputs.diagnosticSettingsName
+
