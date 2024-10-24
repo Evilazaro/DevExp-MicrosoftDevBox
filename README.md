@@ -1,7 +1,7 @@
 # Developer Experience with Microsoft DevBox
 ## Introduction
 
-This epository provides a collection of scripts to automate the provisioning and deployment of Microsoft DevBox environments in Azure.
+This repository provides a collection of scripts to automate the provisioning and deployment of Microsoft DevBox environments in Azure.
 
 ## Action Workflows Status
 
