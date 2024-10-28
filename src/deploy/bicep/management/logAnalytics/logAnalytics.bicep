@@ -24,7 +24,7 @@ resource logAnalyticsDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2
   properties: {
     logs: [
       {
-        category: 'AllLogs'
+        category: 'allLogs'
         enabled: true
       }
     ]

@@ -66,7 +66,7 @@ resource devCenterLogAnalyticsDiagnosticSettings 'Microsoft.Insights/diagnosticS
   properties: {
     logs: [
       {
-        category: 'AllLogs'
+        category: 'allLogs'
         enabled: true
       }
     ]

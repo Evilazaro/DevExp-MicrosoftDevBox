@@ -45,7 +45,7 @@ resource networkDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-0
   properties: {
     logs: [
       {
-        category: 'AllLogs'
+        category: 'allLogs'
         enabled: true
       }
     ]

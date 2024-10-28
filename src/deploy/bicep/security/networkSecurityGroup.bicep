@@ -38,7 +38,7 @@ resource nsgDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01
   properties: {
     logs: [
       {
-        category: 'AllLogs'
+        category: 'allLogs'
         enabled: true
       }
     ]
