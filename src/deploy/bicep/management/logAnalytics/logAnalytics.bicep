@@ -21,21 +21,6 @@ output logAnalyticsWorkspaceId string = logAnalyticsWorkspace.id
 resource logAnalyticsDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   name: logAnalyticsWorkspace.name
   scope: logAnalyticsWorkspace
-  properties: {
-    logs: [
-      {
-        category: 'allLogs'
-        enabled: true
-      }
-    ]
-    metrics: [
-      {
-        category: 'AllMetrics'
-        enabled: true
-      }
-    ]
-    workspaceId: logAnalyticsWorkspace.id
-  }
 }
 
 @description('Log Analytics Diagnostic Settings ID')
