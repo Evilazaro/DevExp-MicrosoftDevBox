@@ -55,7 +55,6 @@ output vnetAddressSpace array = virtualNetwork.outputs.vnetAddressSpace
 @description('Getting the new Virtual Network Deployed')
 resource vnetDeployed 'Microsoft.Network/virtualNetworks@2024-01-01' existing = {
   name: vnetName
-  scope: resourceGroup()
 }
 
 @description('The name of the log analytics workspace')
