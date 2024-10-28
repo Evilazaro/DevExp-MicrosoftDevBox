@@ -109,30 +109,30 @@ resource nsgDeployed 'Microsoft.Network/networkSecurityGroups@2024-01-01' existi
   name: nsg.name
 }
 
-@description('NSG Diagnostic Settings')
-resource nsgDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: '${nsg.name}-DiagnosticSettings'
-  scope: nsgDeployed
-  properties: {
-    logs: [
-      {
-        category: 'allLogs'
-        enabled: true
-      }
-    ]
-    metrics: [
-      {
-        category: 'AllMetrics'
-        enabled: true
-      }
-    ]
-    workspaceId: logAnalyticsWorkspace.id
-  }
-  dependsOn: [
-    nsgDeployed
-    logAnalyticsWorkspace
-  ]
-}
+// @description('NSG Diagnostic Settings')
+// resource nsgDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+//   name: '${nsg.name}-DiagnosticSettings'
+//   scope: nsgDeployed
+//   properties: {
+//     logs: [
+//       {
+//         category: 'allLogs'
+//         enabled: true
+//       }
+//     ]
+//     metrics: [
+//       {
+//         category: 'AllMetrics'
+//         enabled: true
+//       }
+//     ]
+//     workspaceId: logAnalyticsWorkspace.id
+//   }
+//   dependsOn: [
+//     nsgDeployed
+//     logAnalyticsWorkspace
+//   ]
+// }
 
 @description('Deploy the subnet')
 module subNet 'virtualNetwork/subNet.bicep' = [
