@@ -45,14 +45,25 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 ### Prerequisites
 
+### Prerequisites
+
 - [Azure Subscription](https://azure.microsoft.com/en-us/free/)
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 - [Bicep CLI](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/install)
+- [GitHub CLI](https://cli.github.com/)
+- [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli)
 
 ### Installation
 
 1. **Clone the repository:**
+    
+    Bash
     ```sh
+    git clone https://github.com/Evilazaro/MicrosoftDevBox.git
+    cd MicrosoftDevBox
+    ```
+    PowerShell
+    ```powershell
     git clone https://github.com/Evilazaro/MicrosoftDevBox.git
     cd MicrosoftDevBox
     ```
