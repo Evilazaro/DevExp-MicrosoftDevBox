@@ -54,7 +54,8 @@ output vnetAddressSpace array = virtualNetwork.outputs.vnetAddressSpace
 
 @description('Getting the new Virtual Network Deployed')
 resource vnetDeployed 'Microsoft.Network/virtualNetworks@2024-01-01' existing = {
-  name: vnetName
+  name: virtualNetwork.name
+  scope: resourceGroup()
 }
 
 @description('Getting the Log Analytics Deployed')
@@ -97,12 +98,6 @@ module nsg '../security/networkSecurityGroup.bicep' = {
     securityRules:[]
   }
 }
-
-@description('Network security group id')
-output nsgId string = nsg.outputs.nsgId
-
-@description('Network security group name')
-output nsgName string = nsg.outputs.nsgName
 
 // @description('Getting the new NSG Deployed')
 // resource nsgDeployed 'Microsoft.Network/networkSecurityGroups@2024-01-01' existing = {
