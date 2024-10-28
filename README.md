@@ -2,24 +2,31 @@
 
 Welcome to the Dev Experience with Microsoft DevBox repository! This repository demonstrates how to deploy Microsoft DevBox for Contoso's Software Development Engineers to expedite their onboarding process and streamline project integration.
 
+## Build and Deploy Status
+
+| Build | Deploy |
+|:-----:|:------:|
+| [![Test Login To Azure](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/testLoginToAzure.yaml/badge.svg)](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/testLoginToAzure.yaml) [![DevBox as a Service CI](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/devBox-CI.yaml/badge.svg)](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/devBox-CI.yaml) | [![DevBox as a Service CI and CD](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/deployDevBox.yaml/badge.svg)](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/deployDevBox.yaml) [![Clean UP Dev Experience with Microsoft DevBox Deployment](https://github.com/Evilazaro/DevExp-MicrosoftDevBox/actions/workflows/cleanUpDeployment.yaml/badge.svg)](https://github.com/Evilazaro/DevExp-MicrosoftDevBox/actions/workflows/cleanUpDeployment.yaml) [![Dev Experience with Microsoft DevBox New Release](https://github.com/Evilazaro/DevExp-MicrosoftDevBox/actions/workflows/devExpNewRelease.yaml/badge.svg)](https://github.com/Evilazaro/DevExp-MicrosoftDevBox/actions/workflows/devExpNewRelease.yaml) |
+
+
 ## Table of Contents
 
 - [Overview](#overview)
-- [Microsoft DevBox Overview](#microsoft-devbox-overview)
-- [Build and Deploy Status](#build-and-deploy-status)
+    - [Contoso](#contoso)
+    - [Microsoft DevBox Overview](#microsoft-devbox-overview)
 - [Solution Architecture](#solution-architecture)
 - [Getting Started](#getting-started)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
 - [Contributing](#contributing)
 - [License](#license)
 
 ## Overview
 
+### Contoso
 Contoso aims to enhance the developer experience by leveraging Microsoft DevBox. This repository provides a comprehensive guide and resources to deploy and manage Microsoft DevBox environments efficiently.
 
-## Microsoft DevBox Overview
+### Microsoft DevBox Overview
 
 Microsoft DevBox is a cloud-based service that provides pre-configured, secure, and scalable development environments. It allows developers to quickly set up and start coding without worrying about the underlying infrastructure. DevBox integrates seamlessly with Azure services, providing a robust platform for development and testing.
 
@@ -28,13 +35,6 @@ For more information, please refer to the official Microsoft DevBox documentatio
 - [Getting Started with Microsoft DevBox](https://docs.microsoft.com/en-us/azure/dev-box/get-started)
 - [Microsoft DevBox Pricing](https://azure.microsoft.com/en-us/pricing/details/dev-box/)
 
-
-## Build and Deploy Status
-
-| Build | Deploy |
-|:-----:|:------:|
-| [![Test Login To Azure](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/testLoginToAzure.yaml/badge.svg)](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/testLoginToAzure.yaml) [![DevBox as a Service CI](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/devBox-CI.yaml/badge.svg)](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/devBox-CI.yaml) | [![DevBox as a Service CI and CD](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/deployDevBox.yaml/badge.svg)](https://github.com/Evilazaro/MicrosoftDevBox/actions/workflows/deployDevBox.yaml) [![Clean UP Dev Experience with Microsoft DevBox Deployment](https://github.com/Evilazaro/DevExp-MicrosoftDevBox/actions/workflows/cleanUpDeployment.yaml/badge.svg)](https://github.com/Evilazaro/DevExp-MicrosoftDevBox/actions/workflows/cleanUpDeployment.yaml) [![Dev Experience with Microsoft DevBox New Release](https://github.com/Evilazaro/DevExp-MicrosoftDevBox/actions/workflows/devExpNewRelease.yaml/badge.svg)](https://github.com/Evilazaro/DevExp-MicrosoftDevBox/actions/workflows/devExpNewRelease.yaml) |
-
 ## Solution Architecture
 
 ![Solution Architecture](./images/ContosoDevBox.png)
@@ -42,8 +42,6 @@ For more information, please refer to the official Microsoft DevBox documentatio
 ## Getting Started
 
 Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
-
-### Prerequisites
 
 ### Prerequisites
 
@@ -82,10 +80,6 @@ Follow these instructions to get a copy of the project up and running on your lo
     ```sh
     az deployment group create --resource-group <your-resource-group> --template-file ./bicep/main.bicep
     ```
-
-## Usage
-
-After the deployment, you can manage and monitor the DevBox environments using the Azure portal or Azure CLI.
 
 ## Contributing
 
