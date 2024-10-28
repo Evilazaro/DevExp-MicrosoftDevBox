@@ -34,5 +34,6 @@ resource logAnalyticsDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2
         enabled: true
       }
     ]
+    workspaceId: logAnalyticsWorkspace.id
   }
 }
