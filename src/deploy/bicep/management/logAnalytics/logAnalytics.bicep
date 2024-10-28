@@ -17,18 +17,29 @@ output logAnalyticsWorkspaceName string = logAnalyticsWorkspace.name
 @description('Log Analytics Workspace ID')
 output logAnalyticsWorkspaceId string = logAnalyticsWorkspace.id
 
-module diagnosticsSettings 'diagnosticSettings.bicep' = {
-  name: 'diagnosticsSettings'
-  params: {
-    name: '${logAnalyticsWorkspace.name}-diagnosticSettings'
-    logAnalyticsWorkspaceName: logAnalyticsWorkspace.name
-    logAnalyticsResourceGroupName: resourceGroup().name
+@description('Log Analytics Diagnostic Settings')
+resource logAnalyticsDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: logAnalyticsWorkspace.name
+  scope: logAnalyticsWorkspace
+  properties: {
+    logs: [
+      {
+        category: 'AllLogs'
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
+    workspaceId: logAnalyticsWorkspace.id
   }
 }
 
-@description('Diagnostic Settings ID')
-output diagnosticSettingsId string = diagnosticsSettings.outputs.diagnosticSettingsId
+@description('Log Analytics Diagnostic Settings ID')
+output logAnalyticsDiagnosticSettingsId string = logAnalyticsDiagnosticSettings.id
 
-@description('Diagnostic Settings Name')
-output diagnosticSettingsName string = diagnosticsSettings.outputs.diagnosticSettingsName
-
+@description('Log Analytics Diagnostic Settings Name')
+output logAnalyticsDiagnosticSettingsName string = logAnalyticsDiagnosticSettings.name

@@ -31,7 +31,6 @@ var subNets = [
 ]
 
 var logAnalyticsWorkspaceName = '${solutionName}-logAnalytics'
-var logAnalyticsResourceGroupName = 'PetDx-Management-rg'
 
 @description('Deploy the virtual network')
 module virtualNetwork 'virtualNetwork/virtualNetwork.bicep' = {
@@ -40,6 +39,7 @@ module virtualNetwork 'virtualNetwork/virtualNetwork.bicep' = {
     name: vnetName
     addressPrefix: addressPrefix
     tags: tags
+    logAnalyticsName: logAnalyticsWorkspaceName
   }
 }
 
@@ -52,22 +52,6 @@ output vnetId string = virtualNetwork.outputs.vnetId
 @description('Virtual Network IP Address Space')
 output vnetAddressSpace array = virtualNetwork.outputs.vnetAddressSpace
 
-@description('Virtual Network Diagnostic Settings')
-module diagnosticsSettings '../management/logAnalytics/diagnosticSettings.bicep' = {
-  name: 'diagnosticsSettings'
-  params: {
-    name: '${vnetName}-diagnosticSettings'
-    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
-    logAnalyticsResourceGroupName: logAnalyticsResourceGroupName
-  }
-}
-
-@description('Diagnostic Settings ID')
-output diagnosticSettingsId string = diagnosticsSettings.outputs.diagnosticSettingsId
-
-@description('Diagnostic Settings Name')
-output diagnosticSettingsName string = diagnosticsSettings.outputs.diagnosticSettingsName
-
 @description('Deploy Nsg')
 module nsg '../security/networkSecurityGroup.bicep' = {
   name: 'networkSecurityGroup'
@@ -75,6 +59,7 @@ module nsg '../security/networkSecurityGroup.bicep' = {
     name: 'nsg'
     tags: tags
     securityRules:[]
+    logAnalyticsWorkSpaceName: logAnalyticsWorkspaceName
   }
 }
 
@@ -83,22 +68,6 @@ output nsgId string = nsg.outputs.nsgId
 
 @description('Network security group name')
 output nsgName string = nsg.outputs.nsgName
-
-
-module nsgDiagnosticSettings '../management/logAnalytics/diagnosticSettings.bicep' = {
-  name: 'nsgDiagnosticSettings'
-  params: {
-    name: '${nsg.outputs.nsgName}-diagnosticSettings'
-    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
-    logAnalyticsResourceGroupName: logAnalyticsResourceGroupName
-  }
-}
-
-@description('Diagnostic Settings ID')
-output nsgDiagnosticSettingsId string = nsgDiagnosticSettings.outputs.diagnosticSettingsId
-
-@description('Diagnostic Settings Name')
-output nsgDiagnosticSettingsName string = nsgDiagnosticSettings.outputs.diagnosticSettingsName
 
 @description('Deploy the subnet')
 module subNet 'virtualNetwork/subNet.bicep' = [
