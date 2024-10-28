@@ -104,10 +104,10 @@ output nsgId string = nsg.outputs.nsgId
 @description('Network security group name')
 output nsgName string = nsg.outputs.nsgName
 
-@description('Getting the new NSG Deployed')
-resource nsgDeployed 'Microsoft.Network/networkSecurityGroups@2024-01-01' existing = {
-  name: nsg.name
-}
+// @description('Getting the new NSG Deployed')
+// resource nsgDeployed 'Microsoft.Network/networkSecurityGroups@2024-01-01' existing = {
+//   name: nsg.name
+// }
 
 // @description('NSG Diagnostic Settings')
 // resource nsgDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
