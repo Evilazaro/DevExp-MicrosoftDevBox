@@ -83,9 +83,54 @@ module devCenter 'devCenter/deployDevCenter.bicep' = {
     networkResourceGroupName: networkResourceGroupName
     catalogInfo: catalogInfo
     tags: tags
-    logAnalyticsWorkspaceName: '${solutionName}-logAnalytics'
   }
   dependsOn: [
     computeGallery
   ]
 }
+
+var logAnalyticsWorkspaceName = '${solutionName}-logAnalytics'
+var managementResourceGroupName = 'PetDx-Management-rg'
+
+@description('Existing Log Analytics Workspace')
+resource devCenterLogAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
+  name: logAnalyticsWorkspaceName
+  scope: resourceGroup(managementResourceGroupName)
+}
+
+@description('Existent DevCenter')
+resource deployedDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' existing = {
+  name: devCenterName
+  scope: resourceGroup()
+}
+
+@description('Dev Center Log Analytics Diagnostic Settings')
+resource devCenterLogAnalyticsDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: devCenterLogAnalyticsWorkspace.name
+  scope: deployedDevCenter
+  properties: {
+    logs: [
+      {
+        categoryGroup: 'allLogs'
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
+    workspaceId: devCenterLogAnalyticsWorkspace.id
+  }
+  dependsOn: [
+    deployedDevCenter
+    devCenterLogAnalyticsWorkspace
+  ]
+}
+
+@description('Dev Center Log Analytics Diagnostic Settings Id')
+output devCenterLogAnalyticsDiagnosticSettingsId string = devCenterLogAnalyticsDiagnosticSettings.id
+
+@description('Dev Center Log Analytics Diagnostic Settings Name')
+output devCenterLogAnalyticsDiagnosticSettingsName string = devCenterLogAnalyticsDiagnosticSettings.name

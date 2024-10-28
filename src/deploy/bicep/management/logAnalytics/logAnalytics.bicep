@@ -16,3 +16,23 @@ output logAnalyticsWorkspaceName string = logAnalyticsWorkspace.name
 
 @description('Log Analytics Workspace ID')
 output logAnalyticsWorkspaceId string = logAnalyticsWorkspace.id
+
+@description('Log Analytics diagnostic settings')
+resource logAnalyticsDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: '${logAnalyticsWorkspace.name}-DiagnosticSettings'
+  scope: logAnalyticsWorkspace
+  properties: {
+    logs: [
+      {
+        categoryGroup: 'allLogs'
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
+  }
+}

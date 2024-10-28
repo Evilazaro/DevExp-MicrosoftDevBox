@@ -18,9 +18,6 @@ param catalogInfo object
 @description('Tags')
 param tags object
 
-@description('Log Analytics Workspace Name')
-param logAnalyticsWorkspaceName string
-
 @description('Managed Identity')
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
   name: identityName
@@ -53,38 +50,6 @@ output devCenterName string = deployDevCenter.name
 
 @description('Dev Center Id')
 output devCenterId string = deployDevCenter.id
-
-@description('Existing Log Analytics Workspace')
-resource devCenterLogAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
-  name: logAnalyticsWorkspaceName
-}
-
-@description('Dev Center Log Analytics Diagnostic Settings')
-resource devCenterLogAnalyticsDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: devCenterLogAnalyticsWorkspace.name
-  scope: devCenterLogAnalyticsWorkspace
-  properties: {
-    logs: [
-      {
-        category: 'allLogs'
-        enabled: true
-      }
-    ]
-    metrics: [
-      {
-        category: 'AllMetrics'
-        enabled: true
-      }
-    ]
-    workspaceId: devCenterLogAnalyticsWorkspace.id
-  }
-}
-
-@description('Dev Center Log Analytics Diagnostic Settings Id')
-output devCenterLogAnalyticsDiagnosticSettingsId string = devCenterLogAnalyticsDiagnosticSettings.id
-
-@description('Dev Center Log Analytics Diagnostic Settings Name')
-output devCenterLogAnalyticsDiagnosticSettingsName string = devCenterLogAnalyticsDiagnosticSettings.name
 
 @description('Dev Center Environments')
 module devCenterEnvironments 'configureDevCenterEnvironments.bicep' = {

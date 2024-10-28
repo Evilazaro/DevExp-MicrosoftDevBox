@@ -25,39 +25,39 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-  # Build:
-  #   runs-on: ubuntu-latest
-  #   needs: Test-Azure-Credentials-And-Login
-  #   steps:
-  #     - name: Upgrade Bicep
-  #       run: |
-  #         sudo az bicep upgrade
+  Build:
+    runs-on: ubuntu-latest
+    needs: Test-Azure-Credentials-And-Login
+    steps:
+      - name: Upgrade Bicep
+        run: |
+          sudo az bicep upgrade
 
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  #     - name: Build Management Bicep Templates
-  #       run: az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outdir ./bicepArtifacts
+      - name: Build Management Bicep Templates
+        run: az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outdir ./bicepArtifacts
 
-  #     - name: Build Network Bicep Templates
-  #       run: az bicep build --file ./src/deploy/bicep/network/deployNetwork.bicep --outdir ./bicepArtifacts
+      - name: Build Network Bicep Templates
+        run: az bicep build --file ./src/deploy/bicep/network/deployNetwork.bicep --outdir ./bicepArtifacts
 
-  #     - name: Build DevCenter Bicep Templates
-  #       run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outdir ./bicepArtifacts
+      - name: Build DevCenter Bicep Templates
+        run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outdir ./bicepArtifacts
 
-  #     - name: Compress Bicep Artifacts
-  #       run: |
-  #         zip -r bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip ./bicepArtifacts
+      - name: Compress Bicep Artifacts
+        run: |
+          zip -r bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip ./bicepArtifacts
 
-  #     - name: Upload Bicep Artifacts
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
-  #         path: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
+      - name: Upload Bicep Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
+          path: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
 
   Deploy:
     runs-on: ubuntu-latest
-    #needs: Build
+    needs: Build
     steps:
       - name: Update Packages and Upgrade Bicep
         run: |
@@ -78,13 +78,13 @@ jobs:
       - name: Deploy Landing Zone Resources for ${{ env.solutionName }}
         run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.managementResourceGroupName }} ${{ env.location }}
       
-      # - name: Deploy Log Analytics
-      #   uses: azure/arm-deploy@v1
-      #   with:
-      #     subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
-      #     resourceGroupName:  ${{ env.managementResourceGroupName }}
-      #     template: ./src/deploy/bicep/management/logAnalytics/deploy.bicep
-      #     parameters: 'solutionName=${{ env.solutionName }}'
+      - name: Deploy Log Analytics
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
+          resourceGroupName:  ${{ env.managementResourceGroupName }}
+          template: ./src/deploy/bicep/management/logAnalytics/deploy.bicep
+          parameters: 'solutionName=${{ env.solutionName }}'
       
       - name: Deploy Network Connectivity Resources
         uses: azure/arm-deploy@v1
@@ -94,27 +94,27 @@ jobs:
           template: ./src/deploy/bicep/network/deployNetwork.bicep
           parameters: 'solutionName=${{ env.solutionName }}' 
 
-  #     - name: Deploy Dev Center Resources
-  #       uses: azure/arm-deploy@v1
-  #       with:
-  #         subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
-  #         resourceGroupName: ${{ env.devBoxResourceGroupName }}
-  #         template: ./src/deploy/bicep/devBox/deploy.bicep
-  #         parameters: 'solutionName=${{ env.solutionName }}'
+      - name: Deploy Dev Center Resources
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
+          resourceGroupName: ${{ env.devBoxResourceGroupName }}
+          template: ./src/deploy/bicep/devBox/deploy.bicep
+          parameters: 'solutionName=${{ env.solutionName }}'
 
-  # publish-bicep-artifacts:
-  #     runs-on: ubuntu-latest
-  #     needs: Build
-  #     steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v2
+  publish-bicep-artifacts:
+      runs-on: ubuntu-latest
+      needs: Build
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-  #     - name: Download Bicep Artifacts
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
+      - name: Download Bicep Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
 
-  #     - name: Upload Bicep Artifacts to Storage
-  #       run: |
-  #         # Add your upload logic here
-  #         echo "Uploading Bicep artifacts"
+      - name: Upload Bicep Artifacts to Storage
+        run: |
+          # Add your upload logic here
+          echo "Uploading Bicep artifacts"
