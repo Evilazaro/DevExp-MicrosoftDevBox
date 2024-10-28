@@ -86,35 +86,35 @@ jobs:
           template: ./src/deploy/bicep/management/logAnalytics/deploy.bicep
           parameters: 'solutionName=${{ env.solutionName }}'
       
-      - name: Deploy Network Connectivity Resources
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
-          resourceGroupName: ${{ env.networkResourceGroupName }}
-          template: ./src/deploy/bicep/network/deployNetwork.bicep
-          parameters: 'solutionName=${{ env.solutionName }}' 
+  #     - name: Deploy Network Connectivity Resources
+  #       uses: azure/arm-deploy@v1
+  #       with:
+  #         subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
+  #         resourceGroupName: ${{ env.networkResourceGroupName }}
+  #         template: ./src/deploy/bicep/network/deployNetwork.bicep
+  #         parameters: 'solutionName=${{ env.solutionName }}' 
 
-      - name: Deploy Dev Center Resources
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
-          resourceGroupName: ${{ env.devBoxResourceGroupName }}
-          template: ./src/deploy/bicep/devBox/deploy.bicep
-          parameters: 'solutionName=${{ env.solutionName }}'
+  #     - name: Deploy Dev Center Resources
+  #       uses: azure/arm-deploy@v1
+  #       with:
+  #         subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
+  #         resourceGroupName: ${{ env.devBoxResourceGroupName }}
+  #         template: ./src/deploy/bicep/devBox/deploy.bicep
+  #         parameters: 'solutionName=${{ env.solutionName }}'
 
-  publish-bicep-artifacts:
-      runs-on: ubuntu-latest
-      needs: Build
-      steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+  # publish-bicep-artifacts:
+  #     runs-on: ubuntu-latest
+  #     needs: Build
+  #     steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v2
 
-      - name: Download Bicep Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
+  #     - name: Download Bicep Artifacts
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
 
-      - name: Upload Bicep Artifacts to Storage
-        run: |
-          # Add your upload logic here
-          echo "Uploading Bicep artifacts"
+  #     - name: Upload Bicep Artifacts to Storage
+  #       run: |
+  #         # Add your upload logic here
+  #         echo "Uploading Bicep artifacts"
