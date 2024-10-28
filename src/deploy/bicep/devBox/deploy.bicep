@@ -88,3 +88,14 @@ module devCenter 'devCenter/deployDevCenter.bicep' = {
     computeGallery
   ]
 }
+
+module devCenterDiagSettings  '../management/logAnalytics/diagnosticSettings.bicep' = {
+  name: 'devCenterDiagSettings'
+  params: {
+    name: '${devCenterName}-diagnosticSettings'
+    logAnalyticsWorkspaceName: '${solutionName}-logAnalytics'
+  }
+  dependsOn: [
+    devCenter
+  ]
+}

@@ -45,6 +45,12 @@ resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' = {
   ]
 }
 
+@description('Dev Center Name')
+output devCenterName string = deployDevCenter.name
+
+@description('Dev Center Id')
+output devCenterId string = deployDevCenter.id
+
 @description('Dev Center Environments')
 module devCenterEnvironments 'configureDevCenterEnvironments.bicep' = {
   name: 'devCenterEnvironments'
