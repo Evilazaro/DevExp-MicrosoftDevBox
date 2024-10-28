@@ -62,7 +62,6 @@ jobs:
       - name: Update Packages and Upgrade Bicep
         run: |
           sudo apt-get update && \
-          sudo apt-get upgrade -y && \
           sudo az bicep upgrade
       
       - name: Checkout repository
@@ -93,7 +92,8 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
           resourceGroupName: ${{ env.networkResourceGroupName }}
           template: ./src/deploy/bicep/network/deployNetwork.bicep
-          parameters: 'solutionName=${{ env.solutionName }}' 
+          parameters: |
+            'solutionName=${{ env.solutionName }} managementResourceGroupName=${{ env.managementResourceGroupName }}'
 
       - name: Deploy Dev Center Resources
         uses: azure/arm-deploy@v1
@@ -101,7 +101,8 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
           resourceGroupName: ${{ env.devBoxResourceGroupName }}
           template: ./src/deploy/bicep/devBox/deploy.bicep
-          parameters: 'solutionName=${{ env.solutionName }}'
+          parameters: |
+            'solutionName=${{ env.solutionName }} managementResourceGroupName=${{ env.managementResourceGroupName }}'
 
   publish-bicep-artifacts:
       runs-on: ubuntu-latest

@@ -93,7 +93,8 @@ jobs:
           resourceGroupName: ${{ env.networkResourceGroupName }}
           template: ./src/deploy/bicep/network/deployNetwork.bicep
           parameters: |
-            'solutionName=${{ env.solutionName }} managementResourceGroupName=${{ env.managementResourceGroupName }}'
+            solutionName=${{ env.solutionName }} 
+            managementResourceGroupName=${{ env.managementResourceGroupName }}
 
       - name: Deploy Dev Center Resources
         uses: azure/arm-deploy@v1
@@ -102,7 +103,8 @@ jobs:
           resourceGroupName: ${{ env.devBoxResourceGroupName }}
           template: ./src/deploy/bicep/devBox/deploy.bicep
           parameters: |
-            'solutionName=${{ env.solutionName }} managementResourceGroupName=${{ env.managementResourceGroupName }}'
+            solutionName=${{ env.solutionName }} 
+            managementResourceGroupName=${{ env.managementResourceGroupName }}
 
   publish-bicep-artifacts:
       runs-on: ubuntu-latest
