@@ -71,7 +71,7 @@ resource virtualNetworkDiagnosticSettings 'Microsoft.Insights/diagnosticSettings
   properties: {
     logs: [
       {
-        category: 'allLogs'
+        category: 'VMProtectionAlerts'
         enabled: true
       }
     ]
@@ -99,10 +99,10 @@ module nsg '../security/networkSecurityGroup.bicep' = {
   }
 }
 
-// @description('Getting the new NSG Deployed')
-// resource nsgDeployed 'Microsoft.Network/networkSecurityGroups@2024-01-01' existing = {
-//   name: nsg.name
-// }
+@description('Getting the new NSG Deployed')
+resource nsgDeployed 'Microsoft.Network/networkSecurityGroups@2024-01-01' existing = {
+  name: 'nsg'
+}
 
 // @description('NSG Diagnostic Settings')
 // resource nsgDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
