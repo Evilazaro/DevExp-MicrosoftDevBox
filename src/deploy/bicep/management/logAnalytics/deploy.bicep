@@ -1,24 +1,21 @@
-
-@description('Solution Name')
+@description('The name of the solution')
 param solutionName string
 
-@description('The name of the log analytics workspace')
-var logAnalyticsWorkspaceName = format('{0}-logAnalytics', solutionName)
-
-@description('The tags of the log analytics workspace')
 var tags = {
-  division: 'PlatformEngineeringTeam-DX'
-  enrironment: 'Production'
-  offering: 'DevBox-as-a-Service'
-  solution: solutionName
-  landingZone: 'Management'
+  displayName: 'Log Analytics Workspace'
 }
 
 @description('Deploy the log analytics workspace')
 module logAnalytics 'logAnalytics.bicep' = {
   name: 'logAnalytics'
   params: {
-    name: logAnalyticsWorkspaceName
+    name: '${solutionName}-logAnalytics'
     tags: tags
   }
 }
+
+@description('Log Analytics Workspace Name')
+output logAnalyticsWorkspaceName string = logAnalytics.outputs.logAnalyticsWorkspaceName
+
+@description('Log Analytics Workspace ID')
+output logAnalyticsWorkspaceId string = logAnalytics.outputs.logAnalyticsWorkspaceId

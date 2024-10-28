@@ -1,6 +1,9 @@
 @description('Solution Name')
 param solutionName string
 
+@description('Management Resource Group Name')
+param managementResourceGroupName string
+
 @description('The name of the virtual network')
 var vnetName = format('{0}-vnet', solutionName)
 
@@ -49,6 +52,46 @@ output vnetId string = virtualNetwork.outputs.vnetId
 @description('Virtual Network IP Address Space')
 output vnetAddressSpace array = virtualNetwork.outputs.vnetAddressSpace
 
+@description('Getting the new Virtual Network Deployed')
+resource vnetDeployed 'Microsoft.Network/virtualNetworks@2024-01-01' existing = {
+  name: vnetName
+  scope: resourceGroup()
+}
+
+@description('The name of the log analytics workspace')
+var logAnalyticsWorkspaceName = '${solutionName}-logAnalytics'
+
+@description('Getting the Log Analytics Deployed')
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
+  name: logAnalyticsWorkspaceName
+  scope: resourceGroup(managementResourceGroupName)
+}
+
+@description('Creating Virtual Network Diagnostic Settings')
+resource virtualNetworkDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: '${vnetName}-DiagnosticSettings'
+  scope: vnetDeployed
+  properties: {
+    logs: [
+      {
+        categoryGroup: 'allLogs'
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
+    workspaceId: logAnalyticsWorkspace.id
+  }
+  dependsOn: [
+    vnetDeployed
+    logAnalyticsWorkspace
+  ]
+}
+
 @description('Deploy Nsg')
 module nsg '../security/networkSecurityGroup.bicep' = {
   name: 'networkSecurityGroup'
@@ -59,11 +102,29 @@ module nsg '../security/networkSecurityGroup.bicep' = {
   }
 }
 
-@description('Network security group id')
-output nsgId string = nsg.outputs.nsgId
+@description('Getting the new NSG Deployed')
+resource nsgDeployed 'Microsoft.Network/networkSecurityGroups@2024-01-01' existing = {
+  name: 'nsg-nsg'
+}
 
-@description('Network security group name')
-output nsgName string = nsg.outputs.nsgName
+@description('NSG Diagnostic Settings')
+resource nsgDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: '${nsg.name}-DiagnosticSettings'
+  scope: nsgDeployed
+  properties: {
+    logs: [
+      {
+        categoryGroup: 'allLogs'
+        enabled: true
+      }
+    ]
+    workspaceId: logAnalyticsWorkspace.id
+  }
+  dependsOn: [
+    nsgDeployed
+    logAnalyticsWorkspace
+  ]
+}
 
 @description('Deploy the subnet')
 module subNet 'virtualNetwork/subNet.bicep' = [

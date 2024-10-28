@@ -62,7 +62,6 @@ jobs:
       - name: Update Packages and Upgrade Bicep
         run: |
           sudo apt-get update && \
-          sudo apt-get upgrade -y && \
           sudo az bicep upgrade
       
       - name: Checkout repository
@@ -78,22 +77,6 @@ jobs:
 
       - name: Deploy Landing Zone Resources for ${{ env.solutionName }}
         run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.managementResourceGroupName }} ${{ env.location }}
-            
-      - name: Deploy Network Connectivity Resources
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
-          resourceGroupName: ${{ env.networkResourceGroupName }}
-          template: ./src/deploy/bicep/network/deployNetwork.bicep
-          parameters: 'solutionName=${{ env.solutionName }}' 
-
-      - name: Deploy Dev Center Resources
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
-          resourceGroupName: ${{ env.devBoxResourceGroupName }}
-          template: ./src/deploy/bicep/devBox/deploy.bicep
-          parameters: 'solutionName=${{ env.solutionName }}'
       
       - name: Deploy Log Analytics
         uses: azure/arm-deploy@v1
@@ -102,6 +85,22 @@ jobs:
           resourceGroupName:  ${{ env.managementResourceGroupName }}
           template: ./src/deploy/bicep/management/logAnalytics/deploy.bicep
           parameters: 'solutionName=${{ env.solutionName }}'
+      
+      - name: Deploy Network Connectivity Resources
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
+          resourceGroupName: ${{ env.networkResourceGroupName }}
+          template: ./src/deploy/bicep/network/deployNetwork.bicep
+          parameters: 'solutionName=${{ env.solutionName }} managementResourceGroupName=${{ env.managementResourceGroupName }}'
+
+      - name: Deploy Dev Center Resources
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
+          resourceGroupName: ${{ env.devBoxResourceGroupName }}
+          template: ./src/deploy/bicep/devBox/deploy.bicep
+          parameters: 'solutionName=${{ env.solutionName }} managementResourceGroupName=${{ env.managementResourceGroupName }}'
 
   publish-bicep-artifacts:
       runs-on: ubuntu-latest

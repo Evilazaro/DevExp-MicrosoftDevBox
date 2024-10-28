@@ -7,7 +7,7 @@ param vnetName string
 @description('The address prefix of the subnet')
 param subnetAddressPrefix string
 
-@description('The name of the Network Security Group')
+@description('The Id of the Network Security Group')
 param nsgId string
 
 @description('Existing Virtual Network Name')
