@@ -4,10 +4,13 @@ param name string
 @description('The name of the log analytics workspace')
 param logAnalyticsWorkspaceName string
 
+@description('Log Analytics Resource Group Name')
+param logAnalyticsResourceGroupName string
+
 @description('Get an existent log analytics workspace')
 resource logAnalyticsWorkSpace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
   name: logAnalyticsWorkspaceName
-  scope: resourceGroup()
+  scope: resourceGroup(logAnalyticsResourceGroupName)
 }
 
 @description('Deploy the diagnostic settings')

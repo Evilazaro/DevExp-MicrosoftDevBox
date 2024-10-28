@@ -22,6 +22,7 @@ module diagnosticsSettings 'diagnosticSettings.bicep' = {
   params: {
     name: '${logAnalyticsWorkspace.name}-diagnosticSettings'
     logAnalyticsWorkspaceName: logAnalyticsWorkspace.name
+    logAnalyticsResourceGroupName: resourceGroup().name
   }
 }
 
