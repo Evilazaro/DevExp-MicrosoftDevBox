@@ -1,6 +1,9 @@
 @description('Solution Name')
 param solutionName string
 
+@description('Management Resource Group Name')
+param managementResourceGroupName string
+
 @description('Teams and Projects for the Dev Center')
 var projects = [
   {
@@ -90,7 +93,7 @@ module devCenter 'devCenter/deployDevCenter.bicep' = {
 }
 
 var logAnalyticsWorkspaceName = '${solutionName}-logAnalytics'
-var managementResourceGroupName = 'PetDx-Management-rg'
+
 
 @description('Existing Log Analytics Workspace')
 resource devCenterLogAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {

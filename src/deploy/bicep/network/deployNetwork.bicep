@@ -1,6 +1,9 @@
 @description('Solution Name')
 param solutionName string
 
+@description('Management Resource Group Name')
+param managementResourceGroupName string
+
 @description('The name of the virtual network')
 var vnetName = format('{0}-vnet', solutionName)
 
@@ -30,9 +33,6 @@ var subNets = [
   }
 ]
 
-var logAnalyticsWorkspaceName = '${solutionName}-logAnalytics'
-var managementResourceGroupName = 'PetDx-Management-rg'
-
 @description('Deploy the virtual network')
 module virtualNetwork 'virtualNetwork/virtualNetwork.bicep' = {
   name: 'virtualNetwork'
@@ -57,6 +57,9 @@ resource vnetDeployed 'Microsoft.Network/virtualNetworks@2024-01-01' existing = 
   name: vnetName
   scope: resourceGroup()
 }
+
+@description('The name of the log analytics workspace')
+var logAnalyticsWorkspaceName = '${solutionName}-logAnalytics'
 
 @description('Getting the Log Analytics Deployed')
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
@@ -112,12 +115,6 @@ resource nsgDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01
     logs: [
       {
         categoryGroup: 'allLogs'
-        enabled: true
-      }
-    ]
-    metrics: [
-      {
-        category: 'AllMetrics'
         enabled: true
       }
     ]
