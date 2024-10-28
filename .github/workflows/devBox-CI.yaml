@@ -32,7 +32,7 @@ jobs:
           run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outdir ./bicepArtifacts
 
         - name: Build Management Bicep Templates
-          run: az bicep build --file ./src/deploy/bicep/management/deploy.bicep --outdir ./bicepArtifacts
+          run: az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outdir ./bicepArtifacts
 
         - name: Compress Bicep Artifacts
           run: |
