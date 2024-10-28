@@ -24,22 +24,14 @@ resource logAnalyticsDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2
   properties: {
     logs: [
       {
-        category: 'Administrative'
+        category: 'allLogs'
         enabled: true
-        retentionPolicy: {
-          enabled: false
-          days: 0
-        }
       }
     ]
     metrics: [
       {
         category: 'AllMetrics'
         enabled: true
-        retentionPolicy: {
-          enabled: false
-          days: 0
-        }
       }
     ]
   }
