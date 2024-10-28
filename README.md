@@ -17,7 +17,7 @@ Welcome to the Dev Experience with Microsoft DevBox repository! This repository 
 - [Solution Architecture](#solution-architecture)
 - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
-    - [Installation](#installation)
+    - [Deployment](#installation)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -50,35 +50,60 @@ Follow these instructions to get a copy of the project up and running on your lo
 - [Bicep CLI](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/install)
 - [GitHub CLI](https://cli.github.com/)
 - [Azure Developer CLI](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli)
+- [Visual Studio Code](https://code.visualstudio.com/)
+- [Git](https://git-scm.com/)
 
-### Installation
+### Deployment
 
-1. **Clone the repository:**
+1. **Fork the repository:**
+
+    Navigate to the GitHub repository page and click on the "Fork" button at the top right corner of the page. This will create a copy of the repository under your GitHub account.
+
+2. **Clone your forked repository:**
+
+    On Windows, open the Terminal App.
+
+    ![alt text](./images/image-1.png)
+    
+    Type the following command line:
+
+    Bash or PowerShell
+    ```sh
+    git clone https://github.com/<your-username>/MicrosoftDevBox.git
+    cd MicrosoftDevBox
+    code .
+    ```
+   
+2. **Login to Azure:**
+    
+    Bash or PowerShell
+    ```sh
+    az login --use-device-code
+    ```
+
+3. **Set up your credentials for the GitHub Actions**
     
     Bash
     ```sh
-    git clone https://github.com/Evilazaro/MicrosoftDevBox.git
-    cd MicrosoftDevBox
-    ```
-    PowerShell
-    ```powershell
-    git clone https://github.com/Evilazaro/MicrosoftDevBox.git
-    cd MicrosoftDevBox
+    cd src/deploy/setup/bash/
+    ./setUp.sh
     ```
 
-2. **Login to Azure:**
-    
-    Bash 
-    ```sh
-    az login
-    ```
+    Outcome:
+
+
     PowerShell
     ```powershell
-    az login 
+    cd src\deploy\setup\powershell
+    .\setUp.ps1
     ```
-3. **Deploy the Bicep templates:**
-    ```sh
-    az deployment group create --resource-group <your-resource-group> --template-file ./bicep/main.bicep
+
+    Outcome:
+
+    The outcome must see like the following:
+
+    ```cmd
+    cd evi
     ```
 
 ## Contributing
