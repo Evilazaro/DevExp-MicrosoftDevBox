@@ -30,6 +30,8 @@ var subNets = [
   }
 ]
 
+var logAnalyticsWorkspaceName = '${solutionName}-logAnalytics'
+
 @description('Deploy the virtual network')
 module virtualNetwork 'virtualNetwork/virtualNetwork.bicep' = {
   name: 'virtualNetwork'
@@ -54,7 +56,7 @@ module diagnosticsSettings '../management/logAnalytics/diagnosticSettings.bicep'
   name: 'diagnosticsSettings'
   params: {
     name: '${vnetName}-diagnosticSettings'
-    logAnalyticsWorkspaceName: solutionName
+    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
   }
 }
 
@@ -79,6 +81,21 @@ output nsgId string = nsg.outputs.nsgId
 
 @description('Network security group name')
 output nsgName string = nsg.outputs.nsgName
+
+
+module nsgDiagnosticSettings '../management/logAnalytics/diagnosticSettings.bicep' = {
+  name: 'nsgDiagnosticSettings'
+  params: {
+    name: '${nsg.outputs.nsgName}-diagnosticSettings'
+    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
+  }
+}
+
+@description('Diagnostic Settings ID')
+output nsgDiagnosticSettingsId string = nsgDiagnosticSettings.outputs.diagnosticSettingsId
+
+@description('Diagnostic Settings Name')
+output nsgDiagnosticSettingsName string = nsgDiagnosticSettings.outputs.diagnosticSettingsName
 
 @description('Deploy the subnet')
 module subNet 'virtualNetwork/subNet.bicep' = [
