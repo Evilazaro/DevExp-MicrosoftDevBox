@@ -101,7 +101,7 @@ module nsg '../security/networkSecurityGroup.bicep' = {
 
 @description('Getting the new NSG Deployed')
 resource nsgDeployed 'Microsoft.Network/networkSecurityGroups@2024-01-01' existing = {
-  name: 'nsg'
+  name: 'nsg-nsg'
 }
 
 @description('NSG Diagnostic Settings')
