@@ -31,6 +31,7 @@ var subNets = [
 ]
 
 var logAnalyticsWorkspaceName = '${solutionName}-logAnalytics'
+var logAnalyticsResourceGroupName = 'PetDx-Management-rg'
 
 @description('Deploy the virtual network')
 module virtualNetwork 'virtualNetwork/virtualNetwork.bicep' = {
@@ -57,6 +58,7 @@ module diagnosticsSettings '../management/logAnalytics/diagnosticSettings.bicep'
   params: {
     name: '${vnetName}-diagnosticSettings'
     logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
+    logAnalyticsResourceGroupName: logAnalyticsResourceGroupName
   }
 }
 
@@ -88,6 +90,7 @@ module nsgDiagnosticSettings '../management/logAnalytics/diagnosticSettings.bice
   params: {
     name: '${nsg.outputs.nsgName}-diagnosticSettings'
     logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
+    logAnalyticsResourceGroupName: logAnalyticsResourceGroupName
   }
 }
 
