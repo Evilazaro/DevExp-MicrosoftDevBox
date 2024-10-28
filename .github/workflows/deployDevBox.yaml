@@ -62,7 +62,6 @@ jobs:
       - name: Update Packages and Upgrade Bicep
         run: |
           sudo apt-get update && \
-          sudo apt-get upgrade -y && \
           sudo az bicep upgrade
       
       - name: Checkout repository
