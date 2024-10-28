@@ -86,7 +86,7 @@ resource virtualNetworkDiagnosticSettings 'Microsoft.Insights/diagnosticSettings
     workspaceId: logAnalyticsWorkspace.id
   }
   dependsOn: [
-    vnetDeployed
+    virtualNetwork
     logAnalyticsWorkspace
   ]
 }
