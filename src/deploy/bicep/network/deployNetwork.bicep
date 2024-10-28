@@ -31,6 +31,7 @@ var subNets = [
 ]
 
 var logAnalyticsWorkspaceName = '${solutionName}-logAnalytics'
+var managementResourceGroupName = 'PetDx-Management-rg'
 
 @description('Deploy the virtual network')
 module virtualNetwork 'virtualNetwork/virtualNetwork.bicep' = {
@@ -39,7 +40,6 @@ module virtualNetwork 'virtualNetwork/virtualNetwork.bicep' = {
     name: vnetName
     addressPrefix: addressPrefix
     tags: tags
-    logAnalyticsName: logAnalyticsWorkspaceName
   }
 }
 
@@ -51,6 +51,42 @@ output vnetId string = virtualNetwork.outputs.vnetId
 
 @description('Virtual Network IP Address Space')
 output vnetAddressSpace array = virtualNetwork.outputs.vnetAddressSpace
+
+@description('Getting the new Virtual Network Deployed')
+resource vnetDeployed 'Microsoft.Network/virtualNetworks@2024-01-01' existing = {
+  name: vnetName
+}
+
+@description('Getting the Log Analytics Deployed')
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
+  name: logAnalyticsWorkspaceName
+  scope: resourceGroup(managementResourceGroupName)
+}
+
+@description('Creating Virtual Network Diagnostic Settings')
+resource virtualNetworkDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: '${vnetName}-DiagnosticSettings'
+  scope: vnetDeployed
+  properties: {
+    logs: [
+      {
+        category: 'allLogs'
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
+    workspaceId: logAnalyticsWorkspace.id
+  }
+  dependsOn: [
+    vnetDeployed
+    logAnalyticsWorkspace
+  ]
+}
 
 @description('Deploy Nsg')
 module nsg '../security/networkSecurityGroup.bicep' = {
