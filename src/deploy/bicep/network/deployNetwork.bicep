@@ -49,6 +49,21 @@ output vnetId string = virtualNetwork.outputs.vnetId
 @description('Virtual Network IP Address Space')
 output vnetAddressSpace array = virtualNetwork.outputs.vnetAddressSpace
 
+@description('Virtual Network Diagnostic Settings')
+module diagnosticsSettings '../management/logAnalytics/diagnosticSettings.bicep' = {
+  name: 'diagnosticsSettings'
+  params: {
+    name: '${vnetName}-diagnosticSettings'
+    logAnalyticsWorkspaceName: solutionName
+  }
+}
+
+@description('Diagnostic Settings ID')
+output diagnosticSettingsId string = diagnosticsSettings.outputs.diagnosticSettingsId
+
+@description('Diagnostic Settings Name')
+output diagnosticSettingsName string = diagnosticsSettings.outputs.diagnosticSettingsName
+
 @description('Deploy Nsg')
 module nsg '../security/networkSecurityGroup.bicep' = {
   name: 'networkSecurityGroup'
