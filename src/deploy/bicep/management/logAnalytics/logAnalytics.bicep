@@ -1,4 +1,4 @@
-@description('Log Analytics Worspace Name')
+@description('Log Analytics Workspace Name')
 param name string
 
 @description('Tags for the Log Analytics Workspace')
@@ -19,8 +19,30 @@ output logAnalyticsWorkspaceId string = logAnalyticsWorkspace.id
 
 @description('Log Analytics Diagnostic Settings')
 resource logAnalyticsDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: logAnalyticsWorkspace.name
+  name: '${logAnalyticsWorkspace.name}-diagnostic'
   scope: logAnalyticsWorkspace
+  properties: {
+    logs: [
+      {
+        category: 'Administrative'
+        enabled: true
+        retentionPolicy: {
+          enabled: false
+          days: 0
+        }
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+        retentionPolicy: {
+          enabled: false
+          days: 0
+        }
+      }
+    ]
+  }
 }
 
 @description('Log Analytics Diagnostic Settings ID')
