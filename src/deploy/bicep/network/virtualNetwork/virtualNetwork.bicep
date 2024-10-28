@@ -37,6 +37,7 @@ output vnetAddressSpace array = virtualNetwork.properties.addressSpace.addressPr
 @description('Get an existent log analytics workspace')
 resource logAnalyticsWorkSpace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
   name: logAnalyticsName
+  scope: resourceGroup()
 }
 
 resource networkDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
