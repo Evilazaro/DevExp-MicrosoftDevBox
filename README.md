@@ -73,13 +73,54 @@ Follow these instructions to get a copy of the project up and running on your lo
     cd MicrosoftDevBox
     code .
     ```
+
+    Visual Studio Code will open as showed below.
+    
+    ![Visual Studio Code](./images/vscode.png)
    
 2. **Login to Azure:**
+
+    Click on "Terminal" menu and start a new Terminal.
+
+    ![New Terminal](./images/newTerminal.png)
+
+    A new terminal will be started according with your terminal preferences. If you running VS Code on Windows, you problably will get a PowerShell Terminal but don't worry, I will explay how to set up the environment using PowerShell and Bash scripts.
     
     Bash or PowerShell
     ```sh
     az login --use-device-code
+
+    gh auth login
+
     ```
+
+    Select the GitHub.com option and press enter:
+
+    ![GitHub.com](./images/gh.com.png)
+
+    Select HTTPS and press enter:
+
+    ![HTTPS](./images/https.png)
+
+    Type Y and press enter:
+
+    ![Yes](./images/yes.png)
+
+    Select the "Login with a web browser" option and press enter:
+
+    ![login web](./images/loginWeb.png)  
+
+    Copy the code generated to your clipboard and press enter to open the browser:
+
+    ![Code](./images/code.png)
+
+    In the browser, click on the "Continue" button and paste the code on the text boxes:
+
+    ![Continue](./images/continue.png)
+
+    Clique on the "Continue" button and you will be authenticated.
+
+    ![auth](./images/auth.png)
 
 3. **Set up your credentials for the GitHub Actions**
     
