@@ -9,7 +9,7 @@ var tags = {
 module logAnalytics 'logAnalytics.bicep' = {
   name: 'logAnalytics'
   params: {
-    name: solutionName
+    name: '${solutionName}-logAnalytics'
     tags: tags
   }
 }
