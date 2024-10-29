@@ -1,5 +1,4 @@
 trigger:
-
 - none
 
 pr:
@@ -11,103 +10,127 @@ variables:
   devBoxResourceGroupName: "PetDx-rg"
   networkResourceGroupName: "PetDx-Network-rg"
   managementResourceGroupName: "PetDx-Management-rg"
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
-stages:
-  - stage: Test_Login_To_Azure
-    jobs:
-    - job: Test_Login_To_Azure
-      pool:
-        name: 'Default'
-        vmImage: 'windows-latest'
-      steps:
-      - task: AzureCLI@2
-        inputs:
-          azureSubscription: 'AzureDevOpsConnection'
-          scriptType: pscore
-          scriptLocation: inlineScript
-          inlineScript: |
-            az account list
-  - stage: Build
-    jobs:
-    - job: Build
-      pool:
-        name: 'Default'
-        vmImage: 'windows-latest'
-      steps:
-      - checkout: self
-      
-      - task: PowerShell@2
-        displayName: Updating Bicep 
-        inputs:
-          targetType: 'inline'
-          script: |
-            az bicep upgrade
-      - task: PowerShell@2
-        displayName: Building Management Resources Bicep Scripts 
-        inputs:
-          targetType: 'inline'
-          script: |
-            bicep build src\deploy\bicep\management\deploy.bicep --outfile .\artifactsBicep\management.json
+jobs:
+- job: TestAzureCredentialsAndLogin
+  displayName: 'Test Azure Credentials and Login'
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: '$(azureServiceConnection)'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: 'echo "Logged in to Azure"'
 
-      - task: PowerShell@2
-        displayName: Building Network Resources Bicep Scripts 
-        inputs:
-          targetType: 'inline'
-          script: |
-            bicep build src\deploy\bicep\network\deploy.bicep --outfile .\artifactsBicep\network.json
-      
-      - task: PowerShell@2
-        displayName: Building DevBox (DevCenter) Resources Bicep Scripts 
-        inputs:
-          targetType: 'inline'
-          script: |
-            bicep build src\deploy\bicep\devbox\deploy.bicep --outfile .\artifactsBicep\devbox.json
+- job: Build
+  displayName: 'Build Bicep Templates'
+  dependsOn: TestAzureCredentialsAndLogin
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: '$(azureServiceConnection)'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: 'az bicep upgrade'
 
-      - task: PublishPipelineArtifact@1
-        inputs:
-          targetPath: '.\artifactsBicep'
-          artifact: 'artifactsBicep-ARM-Templates'
-          publishLocation: 'pipeline'
-          
-  - stage: Deploy
-    jobs:
-    - job: Deploy
-      pool:
-        name: 'Default'
-        vmImage: 'windows-latest'
-      steps:
-      - task: AzureCLI@2
-        displayName: Deploy Landing Zone for $(solutionName)
-        inputs:
-          azureSubscription: 'AzureDevOpsConnection'
-          scriptType: 'pscore'
-          scriptLocation: 'scriptPath'
-          scriptPath: '.\src\deploy\bicep\powershell\deployResourcesOrganization.ps1'
-          
-      - task: AzureCLI@2
-        displayName: Deploy Management Resources to '$(managementResourceGroupName)' Resource Group
-        inputs:
-          azureSubscription: 'AzureDevOpsConnection'
-          scriptType: 'pscore'
-          scriptLocation: inlineScript
-          inlineScript: |
-            az deployment group create --resource-group $(managementResourceGroupName) --template-file '.\src\deploy\bicep\management\deploy.bicep' --parameters 'solutionName=$(solutionName)'
-      
-      - task: AzureCLI@2
-        displayName: Deploy Network Resources to '$(networkResourceGroupName)' Resource Group
-        inputs:
-          azureSubscription: 'AzureDevOpsConnection'
-          scriptType: 'pscore'
-          scriptLocation: inlineScript
-          inlineScript: |
-            az deployment group create --resource-group $(networkResourceGroupName) --template-file '.\src\deploy\bicep\network\deploy.bicep' --parameters 'solutionName=$(solutionName)'
-      
-      - task: AzureCLI@2 
-        displayName: Deploy DevCenter Resources to '$(devBoxResourceGroupName)' Resource Group
-        inputs:
-          azureSubscription: 'AzureDevOpsConnection'
-          scriptType: 'pscore'
-          scriptLocation: inlineScript
-          inlineScript: |
-            az deployment group create --resource-group $(devBoxResourceGroupName) --template-file '.\src\deploy\bicep\devbox\deploy.bicep' --parameters 'solutionName=$(solutionName)'
+  - task: Checkout@v2
+
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: '$(azureServiceConnection)'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outdir ./bicepArtifacts
+        az bicep build --file ./src/deploy/bicep/network/deployNetwork.bicep --outdir ./bicepArtifacts
+        az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outdir ./bicepArtifacts
+
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(Build.SourcesDirectory)/bicepArtifacts'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/bicepArtifacts_v1.0.0-deploy-$(Build.BuildId).zip'
+      replaceExistingArchive: true
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/bicepArtifacts_v1.0.0-deploy-$(Build.BuildId).zip'
+      ArtifactName: 'bicepArtifacts'
+
+- job: Deploy
+  displayName: 'Deploy Resources'
+  dependsOn: Build
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: '$(azureServiceConnection)'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        sudo apt-get update && sudo az bicep upgrade
+
+  - task: Checkout@v2
+
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: '$(azureServiceConnection)'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: 'chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh'
+
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: '$(azureServiceConnection)'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        ./src/deploy/bicep/bash/deployResourcesOrganization.sh $(devBoxResourceGroupName) $(networkResourceGroupName) $(managementResourceGroupName) $(location)
+
+  - task: AzureResourceManagerTemplateDeployment@3
+    inputs:
+      azureSubscription: '$(azureServiceConnection)'
+      resourceGroupName: '$(managementResourceGroupName)'
+      location: '$(location)'
+      csmFile: '$(Build.SourcesDirectory)/src/deploy/bicep/management/logAnalytics/deploy.bicep'
+      overrideParameters: '-solutionName $(solutionName)'
+
+  - task: AzureResourceManagerTemplateDeployment@3
+    inputs:
+      azureSubscription: '$(azureServiceConnection)'
+      resourceGroupName: '$(networkResourceGroupName)'
+      location: '$(location)'
+      csmFile: '$(Build.SourcesDirectory)/src/deploy/bicep/network/deployNetwork.bicep'
+      overrideParameters: '-solutionName $(solutionName) -managementResourceGroupName $(managementResourceGroupName)'
+
+  - task: AzureResourceManagerTemplateDeployment@3
+    inputs:
+      azureSubscription: '$(azureServiceConnection)'
+      resourceGroupName: '$(devBoxResourceGroupName)'
+      location: '$(location)'
+      csmFile: '$(Build.SourcesDirectory)/src/deploy/bicep/devBox/deploy.bicep'
+      overrideParameters: '-solutionName $(solutionName) -managementResourceGroupName $(managementResourceGroupName)'
+
+- job: PublishBicepArtifacts
+  displayName: 'Publish Bicep Artifacts'
+  dependsOn: Build
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - task: Checkout@v2
+
+  - task: DownloadPipelineArtifact@2
+    inputs:
+      artifactName: 'bicepArtifacts'
+      targetPath: '$(Build.ArtifactStagingDirectory)'
+
+  - script: |
+      # Add your upload logic here
+      echo "Uploading Bicep artifacts"
+    displayName: 'Upload Bicep Artifacts to Storage'
