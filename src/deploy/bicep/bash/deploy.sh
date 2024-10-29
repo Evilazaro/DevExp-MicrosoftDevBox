@@ -4,7 +4,7 @@
 set -e
 
 # Define variables
-location="westus3"
+location="northuscentral"
 solutionName="PetDx"
 devBoxResourceGroupName="PetDx-rg"
 networkResourceGroupName="PetDx-Network-rg"
@@ -18,7 +18,7 @@ deployManagementResources() {
 
     # Deploys Bicep template to Azure
     if az deployment group create --resource-group "$managementResourceGroupName" \
-        --template-file "./management/logAnalytics/deploy.bicep" --parameters solutionName="$solutionName"; then
+        --template-file "../management/logAnalytics/deploy.bicep" --parameters solutionName="$solutionName"; then
         echo "Management resources deployed successfully."
     else
         echo "Failed to deploy management resources." >&2
@@ -33,7 +33,7 @@ deployNetworkResources() {
 
     # Deploys Bicep template to Azure
     if az deployment group create --resource-group "$networkResourceGroupName" \
-        --template-file "./network/deployNetwork.bicep" --parameters solutionName="$solutionName" managementResourceGroupName="$managementResourceGroupName"; then
+        --template-file "../network/deployNetwork.bicep" --parameters solutionName="$solutionName" managementResourceGroupName="$managementResourceGroupName"; then
         echo "Network resources deployed successfully."
     else
         echo "Failed to deploy network resources." >&2
@@ -48,7 +48,7 @@ deployDevCenterResources() {
 
     # Deploys Bicep template to Azure
     if az deployment group create --resource-group "$devBoxResourceGroupName" \
-        --template-file "./devBox/deploy.bicep" --parameters solutionName="$solutionName" managementResourceGroupName="$managementResourceGroupName"; then
+        --template-file "../devBox/deploy.bicep" --parameters solutionName="$solutionName" managementResourceGroupName="$managementResourceGroupName"; then
         echo "Dev Center resources deployed successfully."
     else
         echo "Failed to deploy Dev Center resources." >&2

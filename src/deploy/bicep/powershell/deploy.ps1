@@ -3,7 +3,7 @@
 $ErrorActionPreference = "Stop"
 
 # Define variables
-$location = "westus3"
+$location = "northuscentral"
 $solutionName = "PetDx"
 $devBoxResourceGroupName = "PetDx-rg"
 $networkResourceGroupName = "PetDx-Network-rg"
@@ -17,7 +17,7 @@ function Deploy-ManagementResources {
 
     try {
         az deployment group create --resource-group $managementResourceGroupName `
-            --template-file "./management/logAnalytics/deploy.bicep" `
+            --template-file "..\management\logAnalytics\deploy.bicep" `
             --parameters solutionName=$solutionName
         Write-Output "Management resources deployed successfully."
     } catch {
@@ -34,7 +34,7 @@ function Deploy-NetworkResources {
 
     try {
         az deployment group create --resource-group $networkResourceGroupName `
-            --template-file "./network/deployNetwork.bicep" `
+            --template-file "..\network\deployNetwork.bicep" `
             --parameters solutionName=$solutionName managementResourceGroupName=$managementResourceGroupName
         Write-Output "Network resources deployed successfully."
     } catch {
@@ -51,7 +51,7 @@ function Deploy-DevCenterResources {
 
     try {
         az deployment group create --resource-group $devBoxResourceGroupName `
-            --template-file "./devBox/deploy.bicep" `
+            --template-file "..\devBox\deploy.bicep" `
             --parameters solutionName=$solutionName managementResourceGroupName=$managementResourceGroupName
         Write-Output "Dev Center resources deployed successfully."
     } catch {

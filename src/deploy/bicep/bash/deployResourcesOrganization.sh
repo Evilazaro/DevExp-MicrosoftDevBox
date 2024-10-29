@@ -44,7 +44,7 @@ validateInputs() {
         devBoxResourceGroupName='PetDx-rg'
         networkResourceGroupName='PetDx-Network-rg'
         managementResourceGroupName='PetDx-Management-rg'
-        location='westus3'
+        location='northuscentral'
     fi
 }
 
