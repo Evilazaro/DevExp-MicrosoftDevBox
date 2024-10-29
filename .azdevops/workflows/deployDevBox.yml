@@ -19,7 +19,7 @@ jobs:
   steps:
   - task: AzureCLI@2
     inputs:
-      azureSubscription: '$(azureServiceConnection)'
+      azureResourceManagerConnection: '$(azureServiceConnection)'
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: 'echo "Logged in to Azure"'
@@ -32,7 +32,7 @@ jobs:
   steps:
   - task: AzureCLI@2
     inputs:
-      azureSubscription: '$(azureServiceConnection)'
+      azureResourceManagerConnection: '$(azureServiceConnection)'
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: 'az bicep upgrade'
@@ -41,7 +41,7 @@ jobs:
 
   - task: AzureCLI@2
     inputs:
-      azureSubscription: '$(azureServiceConnection)'
+      azureResourceManagerConnection: '$(azureServiceConnection)'
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: |
@@ -70,7 +70,7 @@ jobs:
   steps:
   - task: AzureCLI@2
     inputs:
-      azureSubscription: '$(azureServiceConnection)'
+      azureResourceManagerConnection: '$(azureServiceConnection)'
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: |
@@ -80,14 +80,14 @@ jobs:
 
   - task: AzureCLI@2
     inputs:
-      azureSubscription: '$(azureServiceConnection)'
+      azureResourceManagerConnection: '$(azureServiceConnection)'
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: 'chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh'
 
   - task: AzureCLI@2
     inputs:
-      azureSubscription: '$(azureServiceConnection)'
+      azureResourceManagerConnection: '$(azureServiceConnection)'
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: |
@@ -95,7 +95,7 @@ jobs:
 
   - task: AzureResourceManagerTemplateDeployment@3
     inputs:
-      azureSubscription: '$(azureServiceConnection)'
+      azureResourceManagerConnection: '$(azureServiceConnection)'
       resourceGroupName: '$(managementResourceGroupName)'
       location: '$(location)'
       csmFile: '$(Build.SourcesDirectory)/src/deploy/bicep/management/logAnalytics/deploy.bicep'
@@ -103,7 +103,7 @@ jobs:
 
   - task: AzureResourceManagerTemplateDeployment@3
     inputs:
-      azureSubscription: '$(azureServiceConnection)'
+      azureResourceManagerConnection: '$(azureServiceConnection)'
       resourceGroupName: '$(networkResourceGroupName)'
       location: '$(location)'
       csmFile: '$(Build.SourcesDirectory)/src/deploy/bicep/network/deployNetwork.bicep'
@@ -111,7 +111,7 @@ jobs:
 
   - task: AzureResourceManagerTemplateDeployment@3
     inputs:
-      azureSubscription: '$(azureServiceConnection)'
+      azureResourceManagerConnection: '$(azureServiceConnection)'
       resourceGroupName: '$(devBoxResourceGroupName)'
       location: '$(location)'
       csmFile: '$(Build.SourcesDirectory)/src/deploy/bicep/devBox/deploy.bicep'
