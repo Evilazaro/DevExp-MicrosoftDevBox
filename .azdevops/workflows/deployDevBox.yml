@@ -5,136 +5,58 @@ pr:
 - none
 
 variables:
-  location: "northuscentral"
+  location: "westus3"
   solutionName: "PetDx"
   devBoxResourceGroupName: "PetDx-rg"
   networkResourceGroupName: "PetDx-Network-rg"
   managementResourceGroupName: "PetDx-Management-rg"
 
 jobs:
-- job: TestAzureCredentialsAndLogin
-  displayName: 'Test Azure Credentials and Login'
-  pool:
-    vmImage: 'windows-latest'
-    name: 'Desktop'
-  steps:
-  - task: AzureCLI@2
-    inputs:
-      connectedServiceNameARM: AzureDevOpsConnection
-      scriptType: 'bash'
-      scriptLocation: 'inlineScript'
-      inlineScript: 'echo "Logged in to Azure"'
-
-- job: Build
-  displayName: 'Build Bicep Templates'
-  dependsOn: TestAzureCredentialsAndLogin
-  pool:
-    vmImage: 'windows-latest'
-    name: 'Desktop'
-  steps:
-  - task: AzureCLI@2
-    inputs:
-      connectedServiceNameARM: AzureDevOpsConnection
-      scriptType: 'bash'
-      scriptLocation: 'inlineScript'
-      inlineScript: 'az bicep upgrade'
-
-  - checkout: self
-
-  - task: AzureCLI@2
-    inputs:
-      connectedServiceNameARM: AzureDevOpsConnection
-      scriptType: 'bash'
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outdir ./bicepArtifacts
-        az bicep build --file ./src/deploy/bicep/network/deployNetwork.bicep --outdir ./bicepArtifacts
-        az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outdir ./bicepArtifacts
-
-  - task: ArchiveFiles@2
-    inputs:
-      rootFolderOrFile: '$(Build.SourcesDirectory)/bicepArtifacts'
-      includeRootFolder: false
-      archiveType: 'zip'
-      archiveFile: '$(Build.ArtifactStagingDirectory)/bicepArtifacts_v1.0.0-deploy-$(Build.BuildId).zip'
-      replaceExistingArchive: true
-
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)/bicepArtifacts_v1.0.0-deploy-$(Build.BuildId).zip'
-      ArtifactName: 'bicepArtifacts'
 
 - job: Deploy
   displayName: 'Deploy Resources'
-  dependsOn: Build
   pool:
-    vmImage: 'windows-latest'
-    name: 'Desktop'
+    name: Linux
   steps:
-  - task: AzureCLI@2
-    inputs:
-      connectedServiceNameARM: AzureDevOpsConnection
-      scriptType: 'bash'
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        sudo apt-get update && sudo az bicep upgrade
-
   - checkout: self
+  - task: Bash@3
+    displayName: 'Update Packages and Install Bicep'
+    inputs:
+      targetType: 'inline'
+      script: |
+        az bicep upgrade
+  
+  - task: Bash@3
+    displayName: 'Compile Management Bicep files'
+    inputs:
+      targetType: 'inline'
+      script: |
+        az bicep build ./src/deploy/bicep/management/logAnalytics/deploy.bicep
+  
+  - task: Bash@3
+    displayName: 'Grant permissions to the Script'
+    inputs:
+      targetType: 'inline'
+      script: |
+        chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh
 
   - task: AzureCLI@2
+    displayName: 'Create Azure Resource Groups'
     inputs:
-      connectedServiceNameARM: AzureDevOpsConnection
-      scriptType: 'bash'
-      scriptLocation: 'inlineScript'
-      inlineScript: 'chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh'
-
-  - task: AzureCLI@2
-    inputs:
-      connectedServiceNameARM: AzureDevOpsConnection
+      azureSubscription: devOps
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: |
         ./src/deploy/bicep/bash/deployResourcesOrganization.sh $(devBoxResourceGroupName) $(networkResourceGroupName) $(managementResourceGroupName) $(location)
 
-  - task: AzureResourceManagerTemplateDeployment@3
+  - task: AzureCLI@2
+    displayName: 'Deploy Management Resources'
     inputs:
-      connectedServiceNameARM: AzureDevOpsConnection
-      resourceGroupName: '$(managementResourceGroupName)'
-      location: '$(location)'
-      csmFile: '$(Build.SourcesDirectory)/src/deploy/bicep/management/logAnalytics/deploy.bicep'
-      overrideParameters: '-solutionName $(solutionName)'
-
-  - task: AzureResourceManagerTemplateDeployment@3
-    inputs:
-      connectedServiceNameARM: AzureDevOpsConnection
-      resourceGroupName: '$(networkResourceGroupName)'
-      location: '$(location)'
-      csmFile: '$(Build.SourcesDirectory)/src/deploy/bicep/network/deployNetwork.bicep'
-      overrideParameters: '-solutionName $(solutionName) -managementResourceGroupName $(managementResourceGroupName)'
-
-  - task: AzureResourceManagerTemplateDeployment@3
-    inputs:
-      connectedServiceNameARM: AzureDevOpsConnection
-      resourceGroupName: '$(devBoxResourceGroupName)'
-      location: '$(location)'
-      csmFile: '$(Build.SourcesDirectory)/src/deploy/bicep/devBox/deploy.bicep'
-      overrideParameters: '-solutionName $(solutionName) -managementResourceGroupName $(managementResourceGroupName)'
-
-- job: PublishBicepArtifacts
-  displayName: 'Publish Bicep Artifacts'
-  dependsOn: Build
-  pool:
-    vmImage: 'windows-latest'
-    name: 'Desktop'
-  steps:
-  - checkout: self
-
-  - task: DownloadPipelineArtifact@2
-    inputs:
-      artifactName: 'bicepArtifacts'
-      targetPath: '$(Build.ArtifactStagingDirectory)'
-
-  - script: |
-      # Add your upload logic here
-      echo "Uploading Bicep artifacts"
-    displayName: 'Upload Bicep Artifacts to Storage'
+      azureSubscription: devOps
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az deployment group create \
+          --resource-group $(managementResourceGroupName) \
+          --template-file ./src/deploy/bicep/management/logAnalytics/deploy.bicep \
+          --parameters solutionName=$(solutionName)
