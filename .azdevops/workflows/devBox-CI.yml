@@ -35,7 +35,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outfile ./bicepArtifacts/deployNetwork.json
+        az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./bicepArtifacts/deployDevBox.json
 
   - task: Bash@3
     displayName: 'Build Dev Box DevCenter Resources Bicep files'

@@ -38,7 +38,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./bicepArtifacts/deployDevBox.json
+        az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outfile ./bicepArtifacts/deployDevBox.json
 
   - task: Bash@3
     displayName: 'Build Dev Box DevCenter Resources Bicep files'
@@ -47,6 +47,12 @@ jobs:
       script: |
         az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./bicepArtifacts/deployDevBox.json
   
+  - task: PublishBuildArtifacts@1
+    displayName: 'Upload Bicep Artifacts'
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/bicepArtifacts'
+      ArtifactName: 'bicepArtifacts'
+
 - job: Deploy
   displayName: 'Deploy Microsoft DevBox Resources to Azure'
   dependsOn: Build
