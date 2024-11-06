@@ -34,7 +34,7 @@ function Deploy-NetworkResources {
 
     try {
         az deployment group create --resource-group $networkResourceGroupName `
-            --template-file "..\network\deployNetwork.bicep" `
+            --template-file "..\network\deploy.bicep" `
             --parameters solutionName=$solutionName managementResourceGroupName=$managementResourceGroupName
         Write-Output "Network resources deployed successfully."
     } catch {
