@@ -13,8 +13,8 @@ variables:
 
 jobs:
 
-- job: Build_and_Deploy
-  displayName: 'Build and Deploy Microsoft DevBox Resources to Azure'
+- job: Build
+  displayName: 'Build Microsoft DevBox Bicep Files'
   pool:
     name: Linux
   steps:
@@ -31,22 +31,26 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outdir ./bicepArtifacts
+        az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outfile ./bicepArtifacts/deployManagement.json
 
   - task: Bash@3
     displayName: 'Build Dev Box Network Resources Bicep files'
     inputs:
       targetType: 'inline'
       script: |
-        az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outdir ./bicepArtifacts
+        az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./bicepArtifacts/deployDevBox.json
 
   - task: Bash@3
     displayName: 'Build Dev Box DevCenter Resources Bicep files'
     inputs:
       targetType: 'inline'
       script: |
-        az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outdir ./bicepArtifacts
+        az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./bicepArtifacts/deployDevBox.json
   
+- job: Deploy
+  displayName: 'Deploy Microsoft DevBox Resources to Azure'
+  dependsOn: Build
+  steps:
   - task: Bash@3
     displayName: 'Grant permissions to the Script'
     inputs:

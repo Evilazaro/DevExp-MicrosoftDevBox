@@ -1,57 +1,51 @@
 trigger:
-
-- none
-
-pr:
-- none
+- main
 
 variables:
-  location: "northuscentral"
+  location: "westus3"
   solutionName: "PetDx"
   devBoxResourceGroupName: "PetDx-rg"
   networkResourceGroupName: "PetDx-Network-rg"
   managementResourceGroupName: "PetDx-Management-rg"
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
-stages:
-  - stage: Build
-    jobs:
-    - job: Build
-      pool:
-        name: 'Default'
-        vmImage: 'windows-latest'
-      steps:
-      - checkout: self
-      
-      - task: PowerShell@2
-        displayName: Updating Bicep 
-        inputs:
-          targetType: 'inline'
-          script: |
-            az bicep upgrade
-      - task: PowerShell@2
-        displayName: Building Management Resources Bicep Scripts 
-        inputs:
-          targetType: 'inline'
-          script: |
-            bicep build src\deploy\bicep\management\deploy.bicep --outfile .\artifactsBicep\management.json
+jobs:
 
-      - task: PowerShell@2
-        displayName: Building Network Resources Bicep Scripts 
-        inputs:
-          targetType: 'inline'
-          script: |
-            bicep build src\deploy\bicep\network\deploy.bicep --outfile .\artifactsBicep\network.json
-      
-      - task: PowerShell@2
-        displayName: Building DevBox (DevCenter) Resources Bicep Scripts 
-        inputs:
-          targetType: 'inline'
-          script: |
-            bicep build src\deploy\bicep\devbox\deploy.bicep --outfile .\artifactsBicep\devbox.json
+- job: Build
+  displayName: 'Build Microsoft DevBox Bicep Files'
+  pool:
+    name: Linux
+  steps:
+  - checkout: self
+  - task: Bash@3
+    displayName: 'Update Packages and Install Bicep'
+    inputs:
+      targetType: 'inline'
+      script: |
+        az bicep upgrade
+  
+  - task: Bash@3
+    displayName: 'Build Dev Box Management Resources Bicep files'
+    inputs:
+      targetType: 'inline'
+      script: |
+        az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outfile ./bicepArtifacts/deployManagement.json
 
-      - task: PublishPipelineArtifact@1
-        inputs:
-          targetPath: '.\artifactsBicep'
-          artifact: 'artifactsBicep-ARM-Templates'
-          publishLocation: 'pipeline'
+  - task: Bash@3
+    displayName: 'Build Dev Box Network Resources Bicep files'
+    inputs:
+      targetType: 'inline'
+      script: |
+        az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outfile ./bicepArtifacts/deployNetwork.json
+
+  - task: Bash@3
+    displayName: 'Build Dev Box DevCenter Resources Bicep files'
+    inputs:
+      targetType: 'inline'
+      script: |
+        az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./bicepArtifacts/deployDevBox.json
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Upload Bicep Artifacts'
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/bicepArtifacts'
+      ArtifactName: 'bicepArtifacts'

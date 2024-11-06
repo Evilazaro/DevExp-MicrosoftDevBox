@@ -26,13 +26,13 @@ jobs:
           uses: actions/checkout@v4
 
         - name: Build Dev Box Management Bicep files
-          run: az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outdir ./bicepArtifacts  
+          run: az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outfile ./bicepArtifacts/deployManagement.json  
 
         - name: Build Dev Box Network Bicep files
-          run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outdir ./bicepArtifacts
+          run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outfile ./bicepArtifacts/deployNetwork.json
 
         - name: Build Dev Box DevCenter Bicep files
-          run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outdir ./bicepArtifacts        
+          run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./bicepArtifacts/deployDevBox.json        
 
         - name: Compress Bicep Artifacts
           run: |
