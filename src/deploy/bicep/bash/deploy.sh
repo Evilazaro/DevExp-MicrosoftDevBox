@@ -33,7 +33,7 @@ deployNetworkResources() {
 
     # Deploys Bicep template to Azure
     if az deployment group create --resource-group "$networkResourceGroupName" \
-        --template-file "../network/deployNetwork.bicep" --parameters solutionName="$solutionName" managementResourceGroupName="$managementResourceGroupName"; then
+        --template-file "../network/deploy.bicep" --parameters solutionName="$solutionName" managementResourceGroupName="$managementResourceGroupName"; then
         echo "Network resources deployed successfully."
     else
         echo "Failed to deploy network resources." >&2

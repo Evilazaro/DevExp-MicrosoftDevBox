@@ -40,7 +40,7 @@ jobs:
         run: az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outdir ./bicepArtifacts
 
       - name: Build Dev Box Network Bicep files
-        run: az bicep build --file ./src/deploy/bicep/network/deployNetwork.bicep --outdir ./bicepArtifacts
+        run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outdir ./bicepArtifacts
 
       - name: Build Dev Box DevCenter Bicep files
         run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outdir ./bicepArtifacts
@@ -91,7 +91,7 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId}}
           resourceGroupName: ${{ env.networkResourceGroupName }}
-          template: ./src/deploy/bicep/network/deployNetwork.bicep
+          template: ./src/deploy/bicep/network/deploy.bicep
           parameters: 'solutionName=${{ env.solutionName }} managementResourceGroupName=${{ env.managementResourceGroupName }}'
 
       - name: Deploy Dev Center Resources
