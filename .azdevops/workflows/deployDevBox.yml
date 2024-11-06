@@ -24,16 +24,28 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        apt-get update && \
-        apt-get upgrade -y && \
         az bicep upgrade
   
   - task: Bash@3
-    displayName: 'Compile Dev Box Management Resources Bicep files'
+    displayName: 'Build Dev Box Management Resources Bicep files'
     inputs:
       targetType: 'inline'
       script: |
         az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outdir ./bicepArtifacts
+
+  - task: Bash@3
+    displayName: 'Build Dev Box Network Resources Bicep files'
+    inputs:
+      targetType: 'inline'
+      script: |
+        az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outdir ./bicepArtifacts
+
+  - task: Bash@3
+    displayName: 'Build Dev Box DevCenter Resources Bicep files'
+    inputs:
+      targetType: 'inline'
+      script: |
+        az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outdir ./bicepArtifacts
   
   - task: Bash@3
     displayName: 'Grant permissions to the Script'
@@ -43,7 +55,7 @@ jobs:
         chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh
 
   - task: AzureCLI@2
-    displayName: 'Deploy Dev Box Management Resources to Azure'
+    displayName: 'Deploy Landing Zone Resources'
     inputs:
       azureSubscription: devOps
       scriptType: 'bash'
@@ -61,4 +73,31 @@ jobs:
         az deployment group create \
           --resource-group $(managementResourceGroupName) \
           --template-file ./src/deploy/bicep/management/logAnalytics/deploy.bicep \
-          --parameters solutionName=$(solutionName)
+          --parameters solutionName=$(solutionName) \
+          --mode Incremental 
+  
+  - task: AzureCLI@2
+    displayName: 'Deploy Dev Box Network Resources to Azure'
+    inputs:
+      azureSubscription: devOps
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az deployment group create \
+          --resource-group $(networkResourceGroupName) \
+          --template-file ./src/deploy/bicep/network/deployNetwork.bicep \
+          --parameters solutionName=$(solutionName) managementResourceGroupName=$(managementResourceGroupName) \
+          --mode Incremental
+
+  - task: AzureCLI@2
+    displayName: 'Deploy Dev Box DevCenter Resources to Azure'
+    inputs:
+      azureSubscription: devOps
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az deployment group create \
+          --resource-group $(devBoxResourceGroupName) \
+          --template-file ./src/deploy/bicep/devBox/deploy.bicep \
+          --parameters solutionName=$(solutionName) managementResourceGroupName=$(managementResourceGroupName) \
+          --mode Incremental
