@@ -13,8 +13,8 @@ variables:
 
 jobs:
 
-- job: Deploy
-  displayName: 'Deploy Resources'
+- job: Build_and_Deploy
+  displayName: 'Build and Deploy Microsoft DevBox Resources to Azure'
   pool:
     name: Linux
   steps:
@@ -24,10 +24,12 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
+        apt-get update && \
+        apt-get upgrade -y && \
         az bicep upgrade
   
   - task: Bash@3
-    displayName: 'Compile Management Bicep files'
+    displayName: 'Compile Dev Box Management Resources Bicep files'
     inputs:
       targetType: 'inline'
       script: |
@@ -41,7 +43,7 @@ jobs:
         chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh
 
   - task: AzureCLI@2
-    displayName: 'Create Azure Resource Groups'
+    displayName: 'Deploy Dev Box Management Resources to Azure'
     inputs:
       azureSubscription: devOps
       scriptType: 'bash'
@@ -50,7 +52,7 @@ jobs:
         ./src/deploy/bicep/bash/deployResourcesOrganization.sh $(devBoxResourceGroupName) $(networkResourceGroupName) $(managementResourceGroupName) $(location)
 
   - task: AzureCLI@2
-    displayName: 'Deploy Management Resources'
+    displayName: 'Deploy Dev Box Management Resources to Azure'
     inputs:
       azureSubscription: devOps
       scriptType: 'bash'
