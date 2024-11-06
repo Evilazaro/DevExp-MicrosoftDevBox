@@ -1,45 +1,53 @@
 name: DevBox as a Service CI
 
 permissions:
-    id-token: write
-# note
+  id-token: write
+
+# Trigger the workflow manually or on push to specific branches
 on:
-    workflow_dispatch: # Manually trigger the workflow
-    push:
-        branches:
-            - 'feature/**' # Branches containing feature/ in the name
-            - 'bugfix/**' # Branches containing bugfix/ in the name
-            - main
+  workflow_dispatch: # Manually trigger the workflow
+  push:
+    branches:
+      - 'feature/**' # Branches containing feature/ in the name
+      - 'bugfix/**' # Branches containing bugfix/ in the name
+      - main
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
 jobs:
-    Build:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Upgrade Bicep
-          run: |
-            sudo az bicep upgrade
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      # Upgrade Bicep to the latest version
+      - name: Upgrade Bicep
+        run: |
+          sudo az bicep upgrade
 
-        - name: Checkout repository
-          uses: actions/checkout@v4
+      # Checkout the repository to get the source code
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-        - name: Build Dev Box Management Bicep files
-          run: az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outfile ./bicepArtifacts/deployManagement.json  
+      # Build the Bicep files for Dev Box Management Resources
+      - name: Build Dev Box Management Bicep files
+        run: az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outfile ./bicepArtifacts/deployManagement.json  
 
-        - name: Build Dev Box Network Bicep files
-          run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outfile ./bicepArtifacts/deployNetwork.json
+      # Build the Bicep files for Dev Box Network Resources
+      - name: Build Dev Box Network Bicep files
+        run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outfile ./bicepArtifacts/deployNetwork.json
 
-        - name: Build Dev Box DevCenter Bicep files
-          run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./bicepArtifacts/deployDevBox.json        
+      # Build the Bicep files for Dev Box DevCenter Resources
+      - name: Build Dev Box DevCenter Bicep files
+        run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./bicepArtifacts/deployDevBox.json        
 
-        - name: Compress Bicep Artifacts
-          run: |
-            zip -r bicepArtifacts_v1.0.0-build-${{ github.run_number }}.zip ./bicepArtifacts
+      # Compress the built Bicep artifacts into a zip file
+      - name: Compress Bicep Artifacts
+        run: |
+          zip -r bicepArtifacts_v1.0.0-build-${{ github.run_number }}.zip ./bicepArtifacts
 
-        - name: Upload Bicep Artifacts
-          uses: actions/upload-artifact@v4
-          with:
-            name: bicepArtifacts_v1.0.0-build-${{ github.run_number }}.zip
-            path: bicepArtifacts_v1.0.0-build-${{ github.run_number }}.zip
+      # Upload the compressed Bicep artifacts
+      - name: Upload Bicep Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: bicepArtifacts_v1.0.0-build-${{ github.run_number }}.zip
+          path: bicepArtifacts_v1.0.0-build-${{ github.run_number }}.zip

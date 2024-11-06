@@ -7,6 +7,7 @@ variables:
   devBoxResourceGroupName: "PetDx-rg"
   networkResourceGroupName: "PetDx-Network-rg"
   managementResourceGroupName: "PetDx-Management-rg"
+  bicepArtifactsPath: '$(Build.SourcesDirectory)/bicepArtifacts'
 
 jobs:
 
@@ -16,6 +17,9 @@ jobs:
     name: Linux
   steps:
   - checkout: self
+    displayName: 'Checkout Source Code'
+
+  # Update packages and install the latest version of Bicep
   - task: Bash@3
     displayName: 'Update Packages and Install Bicep'
     inputs:
@@ -23,29 +27,33 @@ jobs:
       script: |
         az bicep upgrade
   
+  # Build the Bicep files for Dev Box Management Resources
   - task: Bash@3
     displayName: 'Build Dev Box Management Resources Bicep files'
     inputs:
       targetType: 'inline'
       script: |
-        az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outfile ./bicepArtifacts/deployManagement.json
+        az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outfile $(bicepArtifactsPath)/deployManagement.json
 
+  # Build the Bicep files for Dev Box Network Resources
   - task: Bash@3
     displayName: 'Build Dev Box Network Resources Bicep files'
     inputs:
       targetType: 'inline'
       script: |
-        az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./bicepArtifacts/deployDevBox.json
+        az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outfile $(bicepArtifactsPath)/deployNetwork.json
 
+  # Build the Bicep files for Dev Box DevCenter Resources
   - task: Bash@3
     displayName: 'Build Dev Box DevCenter Resources Bicep files'
     inputs:
       targetType: 'inline'
       script: |
-        az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./bicepArtifacts/deployDevBox.json
+        az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile $(bicepArtifactsPath)/deployDevBox.json
 
+  # Publish the built Bicep artifacts
   - task: PublishBuildArtifacts@1
     displayName: 'Upload Bicep Artifacts'
     inputs:
-      PathtoPublish: '$(Build.SourcesDirectory)/bicepArtifacts'
+      PathtoPublish: '$(bicepArtifactsPath)'
       ArtifactName: 'bicepArtifacts'
