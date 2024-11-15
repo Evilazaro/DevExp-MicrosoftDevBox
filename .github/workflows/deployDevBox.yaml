@@ -41,15 +41,15 @@ jobs:
         uses: actions/checkout@v4
 
       # Build the Bicep files for Dev Box Management Resources
-      - name: Build Dev Box Management Bicep files
+      - name: Build Dev Box Management Resources Bicep files
         run: az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outfile ./bicepArtifacts/deployManagement.json
 
       # Build the Bicep files for Dev Box Network Resources
-      - name: Build Dev Box Network Bicep files
+      - name: Build Dev Box Network Resources Bicep files
         run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outfile ./bicepArtifacts/deployNetwork.json
 
       # Build the Bicep files for Dev Box DevCenter Resources
-      - name: Build Dev Box DevCenter Bicep files
+      - name: Build Dev Box DevCenter Resources Bicep files
         run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./bicepArtifacts/deployDevBox.json
 
       # Compress the built Bicep artifacts into a zip file
@@ -94,7 +94,7 @@ jobs:
         run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.managementResourceGroupName }} ${{ env.location }}
       
       # Deploy Log Analytics resources using ARM template
-      - name: Deploy Log Analytics
+      - name: Deploy Dev Box Management Resources to Azure
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
@@ -103,7 +103,7 @@ jobs:
           parameters: 'solutionName=${{ env.solutionName }}'
       
       # Deploy Network Connectivity Resources using ARM template
-      - name: Deploy Network Connectivity Resources
+      - name: Deploy Dev Box Network Resources to Azure
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
@@ -112,7 +112,7 @@ jobs:
           parameters: 'solutionName=${{ env.solutionName }} managementResourceGroupName=${{ env.managementResourceGroupName }}'
 
       # Deploy Dev Center Resources using ARM template
-      - name: Deploy Dev Center Resources
+      - name: Deploy Dev Box DevCenter Resources to Azure
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
