@@ -109,7 +109,7 @@ resource deployedDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' existing 
 
 @description('Dev Center Log Analytics Diagnostic Settings')
 resource devCenterLogAnalyticsDiagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: devCenterLogAnalyticsWorkspace.name
+  name: '${devCenterName}-DiagnosticSettings'
   scope: deployedDevCenter
   properties: {
     logs: [
