@@ -127,5 +127,5 @@ jobs:
         az deployment group create \
           --resource-group $(devBoxResourceGroupName) \
           --template-file ./src/deploy/bicep/devBox/deploy.bicep \
-          --parameters solutionName=$(solutionName) managementResourceGroupName=$(managementResourceGroupName) \
+          --parameters solutionName=$(solutionName) \
           --mode Incremental

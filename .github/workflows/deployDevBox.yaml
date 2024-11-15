@@ -118,7 +118,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
           resourceGroupName: ${{ env.devBoxResourceGroupName }}
           template: ./src/deploy/bicep/devBox/deploy.bicep
-          parameters: 'solutionName=${{ env.solutionName }} managementResourceGroupName=${{ env.managementResourceGroupName }}'
+          parameters: 'solutionName=${{ env.solutionName }}'
 
   publish-bicep-artifacts:
     runs-on: ubuntu-latest
