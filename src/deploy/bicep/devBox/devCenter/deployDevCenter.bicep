@@ -13,8 +13,6 @@ param projects array
 @description('Network Resource Group Name')
 param networkResourceGroupName string
 
-param catalogInfo object
-
 @description('Tags')
 param tags object
 

@@ -63,15 +63,6 @@ module computeGallery './computeGallery/deployComputeGallery.bicep' = {
   ]
 }
 
-@description('Teams and Projects for the Dev Center')
-var catalogInfo = {
-  name: '${devCenterName}-catalog'
-  type: 'gitHub'
-  uri: 'https://github.com/Evilazaro/DevExp-MicrosoftDevBox.git'
-  branch: 'main'
-  path: '/customizations/tasks'
-}
-
 @description('Deploy the Dev Center')
 module devCenter 'devCenter/deployDevCenter.bicep' = {
   name: 'devCenter'
@@ -81,7 +72,6 @@ module devCenter 'devCenter/deployDevCenter.bicep' = {
     computeGalleryName: computeGallery.outputs.computeGalleryName
     projects: projects
     networkResourceGroupName: networkResourceGroupName
-    catalogInfo: catalogInfo
     tags: tags
   }
   dependsOn: [
