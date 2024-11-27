@@ -158,3 +158,16 @@ module netConnection 'networkConnection/networkConnection.bicep' = [
     ]
   }
 ]
+
+resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
+  name: 'petdevxstorage'
+  location: resourceGroup().location
+  sku: {
+    name: 'Standard_LRS'
+  }
+  kind: 'StorageV2'
+  tags: tags
+  properties: {
+    accessTier: 'Hot'
+  }
+}
