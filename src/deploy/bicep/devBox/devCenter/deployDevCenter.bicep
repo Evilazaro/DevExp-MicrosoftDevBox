@@ -36,7 +36,7 @@ resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' = {
       catalogItemSyncEnableStatus: 'Enabled'
     }
     devBoxProvisioningSettings: {
-      installAzureMonitorAgentEnableStatus: 'Disabled'
+      installAzureMonitorAgentEnableStatus: 'Enabled'
     }
     networkSettings: {
       microsoftHostedNetworkEnableStatus: 'Enabled'
