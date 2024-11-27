@@ -11,13 +11,13 @@ param subnetAddressPrefix string
 param nsgId string
 
 @description('Existing Virtual Network Name')
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-01-01' existing = {
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-03-01' existing = {
   name: vnetName
   scope: resourceGroup()
 }
 
 @description('Deploys a subnet to an existing Virtual Network')
-resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-01-01' = {
+resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-03-01' = {
   name: name
   parent: virtualNetwork
   properties: {

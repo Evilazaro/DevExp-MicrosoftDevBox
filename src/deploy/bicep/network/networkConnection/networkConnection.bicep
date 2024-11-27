@@ -11,18 +11,18 @@ param subnetName string
 @description('Tags for the Network Connection')
 param tags object
 
-resource vnet 'Microsoft.Network/virtualNetworks@2024-01-01' existing = {
+resource vnet 'Microsoft.Network/virtualNetworks@2024-03-01' existing = {
   name: vnetName
 }
 
-resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-01-01' existing = {
+resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-03-01' existing = {
   name: subnetName
   parent: vnet
 }
 
 
 @description('Deploy a network connection to Azure')
-resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-08-01-preview' = {
+resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-10-01-preview' = {
   name: name
   location: resourceGroup().location
   tags: tags

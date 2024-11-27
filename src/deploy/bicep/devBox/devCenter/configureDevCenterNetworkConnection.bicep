@@ -8,19 +8,19 @@ param networkConnectionName string
 param networkResourceGroupName string
 
 @description('Existent Natwork Connection')
-resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-02-01' existing = {
+resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-10-01-preview' existing = {
   name: networkConnectionName
   scope: resourceGroup(networkResourceGroupName)
 }
 
 @description('Existent DevCenter')
-resource devCenter 'Microsoft.DevCenter/devcenters@2024-02-01' existing = {
+resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' existing = {
   name: devCenterName
 }
 
 
 @description('Create DevCenter Network Connection')
-resource devCenterNetworkConnection 'Microsoft.DevCenter/devcenters/attachednetworks@2024-02-01' = {
+resource devCenterNetworkConnection 'Microsoft.DevCenter/devcenters/attachednetworks@2024-10-01-preview' = {
   parent: devCenter
   name: networkConnection.name
   properties: {

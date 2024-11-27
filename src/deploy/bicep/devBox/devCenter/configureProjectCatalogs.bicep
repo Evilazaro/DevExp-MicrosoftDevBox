@@ -1,7 +1,7 @@
 param projectInfo object
 
 @description('Existent Project')
-resource project 'Microsoft.DevCenter/projects@2024-02-01' existing = {
+resource project 'Microsoft.DevCenter/projects@2024-10-01-preview' existing = {
   name: projectInfo.name
 }
 

@@ -53,7 +53,7 @@ output vnetId string = virtualNetwork.outputs.vnetId
 output vnetAddressSpace array = virtualNetwork.outputs.vnetAddressSpace
 
 @description('Getting the new Virtual Network Deployed')
-resource vnetDeployed 'Microsoft.Network/virtualNetworks@2024-01-01' existing = {
+resource vnetDeployed 'Microsoft.Network/virtualNetworks@2024-03-01' existing = {
   name: vnetName
 }
 
@@ -102,7 +102,7 @@ module nsg '../security/networkSecurityGroup.bicep' = {
 }
 
 @description('Getting the new NSG Deployed')
-resource nsgDeployed 'Microsoft.Network/networkSecurityGroups@2024-01-01' existing = {
+resource nsgDeployed 'Microsoft.Network/networkSecurityGroups@2024-03-01' existing = {
   name: 'nsg-nsg'
 }
 

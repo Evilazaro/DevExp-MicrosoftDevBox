@@ -1,11 +1,11 @@
 param projectName string
 param identityName string
 
-resource project 'Microsoft.DevCenter/projects@2024-02-01' existing = {
+resource project 'Microsoft.DevCenter/projects@2024-10-01-preview' existing = {
   name: projectName
 }
 
-resource identity 'Microsoft.ManagedIdentity/identities@2023-01-31' existing = {
+resource identity 'Microsoft.ManagedIdentity/identities@2023-07-31-preview' existing = {
   name: identityName
 }
 

@@ -5,7 +5,7 @@ resource computeGallery 'Microsoft.Compute/galleries@2023-07-03' existing = {
   name: computeGalleryName
 }
 
-resource userIdentity 'Microsoft.ManagedIdentity/identities@2023-01-31' existing = {
+resource userIdentity 'Microsoft.ManagedIdentity/identities@2023-07-31-preview' existing = {
   name: userIdentityName
 } 
 
