@@ -16,5 +16,6 @@ resource projectCatalog 'Microsoft.DevCenter/devcenters/catalogs@2024-10-01-prev
       branch: catalogInfo.branch
       path: catalogInfo.path
     }
+    syncType: 'Scheduled'
   }
 }

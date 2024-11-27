@@ -22,6 +22,7 @@ resource project 'Microsoft.DevCenter/projects@2024-10-01-preview' = {
     catalogSettings: {
       catalogItemSyncTypes: [
         'EnvironmentDefinition'
+        'ImageDefinition'
       ]
     }
   }
@@ -54,8 +55,14 @@ resource backEndPool 'Microsoft.DevCenter/projects/pools@2024-10-01-preview' = {
     networkConnectionName: networkConnectionName
     stopOnDisconnect: {
       gracePeriodMinutes: 60
-      status: 'Disabled'
+      status: 'Enabled'
     }
+    stopOnNoConnect: {
+      gracePeriodMinutes: 60
+      status: 'Enabled'
+    }
+    singleSignOnStatus: 'Enabled'
+    virtualNetworkType: 'Unmanaged'
   }
 }
 
@@ -71,7 +78,13 @@ resource frontEndPool 'Microsoft.DevCenter/projects/pools@2024-10-01-preview' = 
     networkConnectionName: networkConnectionName
     stopOnDisconnect: {
       gracePeriodMinutes: 60
-      status: 'Disabled'
+      status: 'Enabled'
     }
+    stopOnNoConnect: {
+      gracePeriodMinutes: 60
+      status: 'Enabled'
+    }
+    singleSignOnStatus: 'Enabled'
+    virtualNetworkType: 'Unmanaged'
   }
 }

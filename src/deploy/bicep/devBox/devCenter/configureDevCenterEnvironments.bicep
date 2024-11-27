@@ -8,6 +8,9 @@ resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' exi
 resource devCenterDevEnvironment 'Microsoft.DevCenter/devcenters/environmentTypes@2024-10-01-preview' = {
   parent: deployDevCenter
   name: 'Development'
+  properties: {
+    displayName: 'Development'
+  }
 }
 
 output devCenterDevEnvironmentId string = devCenterDevEnvironment.id
@@ -17,6 +20,9 @@ output devCenterDevEnvironmentName string = devCenterDevEnvironment.name
 resource devCenterStagingEnvironment 'Microsoft.DevCenter/devcenters/environmentTypes@2024-10-01-preview' = {
   parent: deployDevCenter
   name: 'Staging'
+  properties: {
+    displayName: 'Staging'
+  }
 }
 
 output devCenterStagingEnvironmentId string = devCenterStagingEnvironment.id

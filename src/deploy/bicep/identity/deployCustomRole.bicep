@@ -23,6 +23,7 @@ resource deployCustomRole 'Microsoft.Authorization/roleDefinitions@2022-05-01-pr
         notDataActions: []
       }
     ]
+    type: 'CustomRole'
   }
 }
 
