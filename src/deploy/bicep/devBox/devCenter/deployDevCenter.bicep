@@ -37,6 +37,12 @@ resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' = {
     projectCatalogSettings: {
       catalogItemSyncEnableStatus: 'Enabled'
     }
+    devBoxProvisioningSettings: {
+      installAzureMonitorAgentEnableStatus: 'Enabled'
+    }
+    networkSettings: {
+      microsoftHostedNetworkEnableStatus: 'Enabled'
+    }
     displayName: name
   }
   tags: tags
@@ -60,15 +66,6 @@ module devCenterEnvironments 'configureDevCenterEnvironments.bicep' = {
   dependsOn: [
     deployDevCenter
   ]
-}
-
-@description('Dev Center Catalogs')
-module configureDevCenterCatalogs 'configureDevCenterCatalogs.bicep' = {
-  name: '${deployDevCenter.name}-Catalog'
-  params: {
-    devCenterName: deployDevCenter.name
-    catalogInfo: catalogInfo
-  }
 }
 
 @description('Dev Center Network Connection')
