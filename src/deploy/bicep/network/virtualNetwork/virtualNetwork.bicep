@@ -18,9 +18,6 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-03-01' = {
     addressSpace: {
       addressPrefixes: addressPrefix
     }
-    encryption: {
-      enabled: true
-    }
   }
   tags: tags
 }
