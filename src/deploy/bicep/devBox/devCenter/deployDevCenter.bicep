@@ -19,12 +19,12 @@ param catalogInfo object
 param tags object
 
 @description('Managed Identity')
-resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
+resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-07-31-preview' existing = {
   name: identityName
 }
 
 @description('Deploying DevCenter')
-resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-02-01' = {
+resource deployDevCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' = {
   name: name
   location: resourceGroup().location
   identity: {

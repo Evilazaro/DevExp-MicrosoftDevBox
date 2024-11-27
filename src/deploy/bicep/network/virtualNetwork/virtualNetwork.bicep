@@ -11,7 +11,7 @@ param addressPrefix array
 param tags object
 
 @description('Deploy a virtual network to Azure')
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-01-01' = {
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-03-01' = {
   name: name
   location: location
   properties: {

@@ -8,7 +8,7 @@ param location string
 param tags object
 
 @description('Deploy User Assigned Identity to Azure')
-resource deployIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
+resource deployIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-07-31-preview' = {
   name: name
   location: location
   tags: tags

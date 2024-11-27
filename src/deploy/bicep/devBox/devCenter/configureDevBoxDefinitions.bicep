@@ -2,18 +2,18 @@
 param devCenterName string
 
 @description('Existent DevCenter')
-resource devCenter 'Microsoft.DevCenter/devcenters@2024-02-01' existing = {
+resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' existing = {
   name: devCenterName
 }
 
 @description('Existent Compute Gallery')
-resource computeGallery 'Microsoft.DevCenter/devcenters/galleries@2024-02-01' existing = {
+resource computeGallery 'Microsoft.DevCenter/devcenters/galleries@2024-10-01-preview' existing = {
   parent: devCenter
   name: 'Default'
 }
 
 @description('Deploy a DevBox Image Definition for BackEnd Engineer')
-resource backEndImage 'Microsoft.DevCenter/devcenters/galleries/images@2024-02-01' existing = {
+resource backEndImage 'Microsoft.DevCenter/devcenters/galleries/images@2024-10-01-preview' existing = {
   parent: computeGallery
   name: 'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2'
 }
@@ -31,7 +31,7 @@ var tagsBackEnd = {
 }
 
 @description('Create DevCenter DevBox Definition for BackEnd Engineer')
-resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
+resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-10-01-preview' = {
   name: 'PetDx-BackEndEngineer'
   location: resourceGroup().location
   parent: devCenter
@@ -54,7 +54,7 @@ output devBoxDefinitionBackEndId string = devBoxDefinitionBackEnd.id
 output devBoxDefinitionBackEndName string = devBoxDefinitionBackEnd.name
 
 @description('Deploy a DevBox Image Definition for FrontEnd Engineer')
-resource frontEndImage 'Microsoft.DevCenter/devcenters/galleries/images@2024-02-01' existing = {
+resource frontEndImage 'Microsoft.DevCenter/devcenters/galleries/images@2024-10-01-preview' existing = {
   parent: computeGallery
   name: 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
 }
@@ -72,7 +72,7 @@ var tagsFrontEnd = {
 }
 
 @description('Create DevCenter DevBox Definition for FrontEnd Engineer')
-resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-02-01' = {
+resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-10-01-preview' = {
   name: 'PetDx-FrontEndEngineer'
   location: resourceGroup().location
   parent: devCenter

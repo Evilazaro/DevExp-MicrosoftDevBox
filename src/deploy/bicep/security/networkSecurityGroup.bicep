@@ -8,7 +8,7 @@ param securityRules array
 param tags object
 
 @description('Deploy a network security group to Azure')
-resource nsg 'Microsoft.Network/networkSecurityGroups@2024-01-01' = {
+resource nsg 'Microsoft.Network/networkSecurityGroups@2024-03-01' = {
   name: '${name}-nsg'
   location: resourceGroup().location
   tags: tags
