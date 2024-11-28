@@ -27,12 +27,12 @@ var tagsBackEnd = {
   enrironment: 'Production'
   offering: 'DevBox-as-a-Service'
   landingZone: 'DevBox'
-  devBoxDefinition: 'PetDx-BackEndEngineer'
+  devBoxDefinition: 'ContosoIpeDx-BackEndEngineer'
 }
 
 @description('Create DevCenter DevBox Definition for BackEnd Engineer')
 resource devBoxDefinitionBackEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-10-01-preview' = {
-  name: 'PetDx-BackEndEngineer'
+  name: 'ContosoIpeDx-BackEndEngineer'
   location: resourceGroup().location
   parent: devCenter
   properties: {
@@ -68,12 +68,12 @@ var tagsFrontEnd = {
   enrironment: 'Production'
   offering: 'DevBox-as-a-Service'
   landingZone: 'DevBox'
-  devBoxDefinition: 'PetDx-FrontEndEngineer'
+  devBoxDefinition: 'ContosoIpeDx-FrontEndEngineer'
 }
 
 @description('Create DevCenter DevBox Definition for FrontEnd Engineer')
 resource devBoxDefinitionFrontEnd 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-10-01-preview' = {
-  name: 'PetDx-FrontEndEngineer'
+  name: 'ContosoIpeDx-FrontEndEngineer'
   location: resourceGroup().location
   parent: devCenter
   properties: {

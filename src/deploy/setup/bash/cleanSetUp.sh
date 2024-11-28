@@ -3,7 +3,7 @@
 # Exit immediately if a command exits with a non-zero status, treat unset variables as an error, and propagate errors in pipelines.
 set -euo pipefail
 
-appDisplayName="PetDx GitHub Actions Enterprise App"
+appDisplayName="ContosoIpeDx GitHub Actions Enterprise App"
 ghSecretName="AZURE_CREDENTIALS"
 
 # Function to clean up the setup by deleting users, credentials, and GitHub secrets

@@ -5,10 +5,10 @@ set -e
 
 # Define variables
 location="northuscentral"
-solutionName="PetDx"
-devBoxResourceGroupName="PetDx-rg"
-networkResourceGroupName="PetDx-Network-rg"
-managementResourceGroupName="PetDx-Management-rg"
+solutionName="ContosoIpeDx"
+devBoxResourceGroupName="ContosoIpeDx-rg"
+networkResourceGroupName="ContosoIpeDx-Network-rg"
+managementResourceGroupName="ContosoIpeDx-Management-rg"
 
 # Function to deploy management resources
 deployManagementResources() {

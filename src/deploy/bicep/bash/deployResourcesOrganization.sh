@@ -41,9 +41,9 @@ deployResourcesOrganization() {
 
 validateInputs() {
     if [[ -z "$devBoxResourceGroupName" || -z "$networkResourceGroupName" || -z "$managementResourceGroupName" || -z "$location" ]]; then
-        devBoxResourceGroupName='PetDx-rg'
-        networkResourceGroupName='PetDx-Network-rg'
-        managementResourceGroupName='PetDx-Management-rg'
+        devBoxResourceGroupName='ContosoIpeDx-rg'
+        networkResourceGroupName='ContosoIpeDx-Network-rg'
+        managementResourceGroupName='ContosoIpeDx-Management-rg'
         location='northuscentral'
     fi
 }
