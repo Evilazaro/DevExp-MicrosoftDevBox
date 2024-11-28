@@ -1,9 +1,9 @@
 # PowerShell script to deploy Azure resources for the organization
 
 param (
-    [string]$devBoxResourceGroupName='ContosoIpeDx-rg',
-    [string]$networkResourceGroupName='ContosoIpeDx-Network-rg',
-    [string]$managementResourceGroupName='ContosoIpeDx-Management-rg',
+    [string]$devBoxResourceGroupName='ContosoDx-rg',
+    [string]$networkResourceGroupName='ContosoDx-Network-rg',
+    [string]$managementResourceGroupName='ContosoDx-Management-rg',
     [string]$location='northuscentral'
 )
 

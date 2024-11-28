@@ -4,7 +4,7 @@
 $ErrorActionPreference = "Stop"
 $WarningPreference = "Stop"
 
-$appDisplayName = "ContosoIpeDx GitHub Actions Enterprise App"
+$appDisplayName = "ContosoDx GitHub Actions Enterprise App"
 $ghSecretName = "AZURE_CREDENTIALS"
 
 # Function to clean up the setup by deleting users, credentials, and GitHub secrets

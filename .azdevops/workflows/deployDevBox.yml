@@ -6,10 +6,10 @@ pr:
 
 variables:
   location: "westus3"
-  solutionName: "ContosoIpeDx"
-  devBoxResourceGroupName: "ContosoIpeDx-rg"
-  networkResourceGroupName: "ContosoIpeDx-Network-rg"
-  managementResourceGroupName: "ContosoIpeDx-Management-rg"
+  solutionName: "ContosoDx"
+  devBoxResourceGroupName: "ContosoDx-rg"
+  networkResourceGroupName: "ContosoDx-Network-rg"
+  managementResourceGroupName: "ContosoDx-Management-rg"
   bicepArtifactsPath: '$(Build.SourcesDirectory)/bicepArtifacts'
 
 jobs:
