@@ -70,7 +70,7 @@ module devCenterEnvironments 'configureDevCenterEnvironments.bicep' = {
 var catalogInfo = {
   name: 'Contoso-Catalog'
   displayName: 'Contoso Catalog'
-  uri: 'https://github.com/Evilazaro/DevExp-MicrosoftDevBox'
+  uri: 'https://github.com/Evilazaro/DevExp-MicrosoftDevBox.git'
   path: '/customizations/tasks'
   branch: 'main'
 }

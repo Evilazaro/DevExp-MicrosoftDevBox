@@ -12,7 +12,7 @@ var projects = [
       type: 'gitHub'
       uri: 'https://github.com/Evilazaro/eShop.git'
       branch: 'main'
-      path: '/.devcenter/customizations/tasks'
+      path: '/customizations/tasks'
     }
   }
   {
