@@ -66,6 +66,26 @@ module devCenterEnvironments 'configureDevCenterEnvironments.bicep' = {
   ]
 }
 
+@description('Dev Center Catalog Info')
+var catalogInfo = {
+  name: 'Contoso-Catalog'
+  displayName: 'Contoso Catalog'
+  uri: 'https://github.com/Evilazaro/DevExp-MicrosoftDevBox'
+  path: '/customizations/tasks'
+}
+
+@description('Dev Center Catalog')
+module configureDevCenterCatalog 'configureDevCenterCatalogs.bicep' = {
+  name: 'devCenterCatalog'
+  params: {
+    devCenterName: name
+    catalogInfo: catalogInfo
+  }
+  dependsOn: [
+    deployDevCenter
+  ]
+}
+
 @description('Dev Center Network Connection')
 module configureDevCenterNetworkConnection 'configureDevCenterNetworkConnection.bicep' = [
   for project in projects: {
