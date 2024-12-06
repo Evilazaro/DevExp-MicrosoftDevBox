@@ -72,6 +72,7 @@ var catalogInfo = {
   displayName: 'Contoso Catalog'
   uri: 'https://github.com/Evilazaro/DevExp-MicrosoftDevBox'
   path: '/customizations/tasks'
+  branch: 'main'
 }
 
 @description('Dev Center Catalog')
