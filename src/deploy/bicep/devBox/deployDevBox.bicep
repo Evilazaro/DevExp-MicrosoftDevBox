@@ -88,3 +88,12 @@ module catalogs 'devCenter/environmentConfiguration/deployCatalog.bicep' = {
     devCenterName: deployDevCenter.outputs.devCenterName
   }
 }
+
+@description('Configure Projects')
+module projects 'devCenter/management/deployDevCenterProject.bicep' = {
+  name: 'Projects'
+  scope: resourceGroup()
+  params: {
+    devCenterName: deployDevCenter.outputs.devCenterName
+  }
+}
