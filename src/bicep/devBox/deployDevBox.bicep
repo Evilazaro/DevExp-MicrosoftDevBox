@@ -57,7 +57,7 @@ output installAzureMonitorAgentEnableStatus string = deployDevCenter.outputs.dev
 output devCenterLocation string = deployDevCenter.outputs.devCenterLocation
 
 @description('Attach Dev Center to Network Connection')
-module networkConnectionAttachment 'devCenter/networkConnectionAttachment.bicep' = [
+module networkConnectionAttachment 'devCenter/connectivity/networkConnectionAttachment.bicep' = [
   for networkConnection in networkConnections: {
     name: networkConnection
     params: {
@@ -69,7 +69,7 @@ module networkConnectionAttachment 'devCenter/networkConnectionAttachment.bicep'
 ]
 
 @description('Configure Environment Types')
-module environmentTypes 'devCenter/environmentConfiguration/deployEnvironmentType.bicep' = {
+module environmentTypes 'devCenter/environmentConfiguration/deployDevCenterEnvironmentType.bicep' = {
   name: 'EnvironmentTypes'
   scope: resourceGroup()
   params: {
