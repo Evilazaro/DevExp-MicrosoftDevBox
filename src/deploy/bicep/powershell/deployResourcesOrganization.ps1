@@ -24,7 +24,7 @@ function Create-ResourceGroup {
 
     $result = az group create --name $resourceGroupName --location $location `
         --tags `
-        "division=PlatformEngineeringTeam-DX" `
+        "division=PlatformEngineeringTeam-DevEx" `
         "Environment=Production" `
         "offering=DevBox-as-a-Service"
 

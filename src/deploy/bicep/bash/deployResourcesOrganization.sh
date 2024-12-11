@@ -3,8 +3,7 @@
 
 devBoxResourceGroupName="$1"
 networkResourceGroupName="$2"
-managementResourceGroupName="$3"
-location="$4"
+location="$3"
 
 # Function to create an Azure resource group
 createResourceGroup() {
@@ -20,7 +19,7 @@ createResourceGroup() {
 
     if az group create --name "$resourceGroupName" --location "$location" \
         --tags \
-        "division=PlatformEngineeringTeam-DX" \
+        "division=PlatformEngineeringTeam-DevEx" \
         "Environment=Production" \
         "offering=DevBox-as-a-Service"; then
         
@@ -36,14 +35,12 @@ deployResourcesOrganization() {
 
     createResourceGroup "$devBoxResourceGroupName"
     createResourceGroup "$networkResourceGroupName"
-    createResourceGroup "$managementResourceGroupName"
 }
 
 validateInputs() {
-    if [[ -z "$devBoxResourceGroupName" || -z "$networkResourceGroupName" || -z "$managementResourceGroupName" || -z "$location" ]]; then
+    if [[ -z "$devBoxResourceGroupName" || -z "$networkResourceGroupName" || -z "$location" ]]; then
         devBoxResourceGroupName='ContosoDx-rg'
         networkResourceGroupName='ContosoDx-Network-rg'
-        managementResourceGroupName='ContosoDx-Management-rg'
         location='northuscentral'
     fi
 }

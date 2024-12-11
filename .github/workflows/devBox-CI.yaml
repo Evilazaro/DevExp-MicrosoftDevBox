@@ -28,17 +28,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Build the Bicep files for Dev Box Management Resources
-      - name: Build Dev Box Management Bicep files
-        run: az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outfile ./bicepArtifacts/deployManagement.json  
-
-      # Build the Bicep files for Dev Box Network Resources
-      - name: Build Dev Box Network Bicep files
-        run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outfile ./bicepArtifacts/deployNetwork.json
-
-      # Build the Bicep files for Dev Box DevCenter Resources
-      - name: Build Dev Box DevCenter Bicep files
-        run: az bicep build --file ./src/deploy/bicep/devBox/deploy.bicep --outfile ./bicepArtifacts/deployDevBox.json        
+      # Build the Bicep files for Dev Box Resources
+      - name: Build Dev Box Bicep files
+        run: az bicep build --file ./src/deploy/bicep/deploy.bicep --outfile ./bicepArtifacts/deploy.json
 
       # Compress the built Bicep artifacts into a zip file
       - name: Compress Bicep Artifacts
