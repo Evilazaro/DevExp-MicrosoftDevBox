@@ -6,7 +6,7 @@ pr:
 
 variables:
   location: "westus3"
-  solutionName: "ContosoDx"
+  workloadName: "ContosoDx"
   devBoxResourceGroupName: "ContosoDx-rg"
   networkResourceGroupName: "ContosoDx-Network-rg"
   managementResourceGroupName: "ContosoDx-Management-rg"
@@ -89,18 +89,18 @@ jobs:
         ./src/deploy/bicep/bash/deployResourcesOrganization.sh $(devBoxResourceGroupName) $(networkResourceGroupName) $(managementResourceGroupName) $(location)
 
   # Deploy the Dev Box Management Resources to Azure
-  - task: AzureCLI@2
-    displayName: 'Deploy Dev Box Management Resources to Azure'
-    inputs:
-      azureSubscription: devOps
-      scriptType: 'bash'
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        az deployment group create \
-          --resource-group $(managementResourceGroupName) \
-          --template-file ./src/deploy/bicep/management/logAnalytics/deploy.bicep \
-          --parameters solutionName=$(solutionName) \
-          --mode Incremental 
+  # - task: AzureCLI@2
+  #   displayName: 'Deploy Dev Box Management Resources to Azure'
+  #   inputs:
+  #     azureSubscription: devOps
+  #     scriptType: 'bash'
+  #     scriptLocation: 'inlineScript'
+  #     inlineScript: |
+  #       az deployment group create \
+  #         --resource-group $(managementResourceGroupName) \
+  #         --template-file ./src/deploy/bicep/management/logAnalytics/deploy.bicep \
+  #         --parameters workloadName=$(workloadName) \
+  #         --mode Incremental 
 
   # Deploy the Dev Box Network Resources to Azure
   - task: AzureCLI@2
@@ -113,19 +113,19 @@ jobs:
         az deployment group create \
           --resource-group $(networkResourceGroupName) \
           --template-file ./src/deploy/bicep/network/deploy.bicep \
-          --parameters solutionName=$(solutionName) managementResourceGroupName=$(managementResourceGroupName) \
+          --parameters workloadName=$(workloadName) managementResourceGroupName=$(managementResourceGroupName) environmentType='prod' \
           --mode Incremental
 
-  # Deploy the Dev Box DevCenter Resources to Azure
-  - task: AzureCLI@2
-    displayName: 'Deploy Dev Box DevCenter Resources to Azure'
-    inputs:
-      azureSubscription: devOps
-      scriptType: 'bash'
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        az deployment group create \
-          --resource-group $(devBoxResourceGroupName) \
-          --template-file ./src/deploy/bicep/devBox/deploy.bicep \
-          --parameters solutionName=$(solutionName) \
-          --mode Incremental
+  # # Deploy the Dev Box DevCenter Resources to Azure
+  # - task: AzureCLI@2
+  #   displayName: 'Deploy Dev Box DevCenter Resources to Azure'
+  #   inputs:
+  #     azureSubscription: devOps
+  #     scriptType: 'bash'
+  #     scriptLocation: 'inlineScript'
+  #     inlineScript: |
+  #       az deployment group create \
+  #         --resource-group $(devBoxResourceGroupName) \
+  #         --template-file ./src/deploy/bicep/devBox/deploy.bicep \
+  #         --parameters workloadName=$(workloadName) \
+  #         --mode Incremental
