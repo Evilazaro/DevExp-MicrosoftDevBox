@@ -23,7 +23,7 @@ output backEndImageId string = backEndImage.id
 
 @description('Tags for BackEnd Engineer')
 var tagsBackEnd = {
-  division: 'PlatformEngineeringTeam-DX'
+  division: 'PlatformEngineeringTeam-DevEx'
   enrironment: 'Production'
   offering: 'DevBox-as-a-Service'
   landingZone: 'DevBox'
@@ -64,7 +64,7 @@ output frontEndImageId string = frontEndImage.id
 
 @description('Tags for FrontEnd Engineer')
 var tagsFrontEnd = {
-  division: 'PlatformEngineeringTeam-DX'
+  division: 'PlatformEngineeringTeam-DevEx'
   enrironment: 'Production'
   offering: 'DevBox-as-a-Service'
   landingZone: 'DevBox'

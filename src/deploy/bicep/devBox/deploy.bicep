@@ -36,7 +36,7 @@ var devCenterName = format('{0}DevCenter', solutionName)
 var networkResourceGroupName = format('{0}-Network-rg', solutionName)
 
 var tags = {
-  division: 'PlatformEngineeringTeam-DX'
+  division: 'PlatformEngineeringTeam-DevEx'
   enrironment: 'Production'
   offering: 'DevBox-as-a-Service'
   solution: solutionName

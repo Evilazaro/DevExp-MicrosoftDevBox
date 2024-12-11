@@ -9,7 +9,7 @@ var customRoleName = format('{0}-customRole', identityName)
 
 @description('The tags of the identity')
 var tags = {
-  division: 'PlatformEngineeringTeam-DX'
+  division: 'PlatformEngineeringTeam-DevEx'
   enrironment: 'Production'
   offering: 'DevBox-as-a-Service'
   solution: solutionName

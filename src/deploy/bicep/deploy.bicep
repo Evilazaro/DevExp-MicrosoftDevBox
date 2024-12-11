@@ -46,7 +46,7 @@ var tags = {
 }
 
 @description('Deploy Virtual Network Resource')
-module deployVirtualNetwork 'virtualNetwork/virtualNetwork.bicep' = {
+module deployVirtualNetwork 'network/virtualNetwork/virtualNetwork.bicep' = {
   name: 'VirtualNetwork'
   scope: resourceGroup()
   params: {
@@ -78,7 +78,7 @@ output virtualNetworkSubnets array = deployVirtualNetwork.outputs.virtualNetwork
 output virtualNetworkTags object = deployVirtualNetwork.outputs.virtualNetworkTags
 
 @description('Deploy Network Connection Resource')
-module deployNetWorkConnection 'networkConnection/networkConnection.bicep' = [for subnet in subnets:  {
+module deployNetWorkConnection 'network/networkConnection/networkConnection.bicep' = [for subnet in subnets:  {
   name: '${subnet.name}-connection'
   scope: resourceGroup()
   params: {
