@@ -7,7 +7,7 @@ set -euo pipefail
 # Azure Resource Group Names Constants
 solutionName="ContosoDx"
 devBoxResourceGroupName="$solutionName-rg"
-networkResourceGroupName="$solutionName-Management-rg"
+
 managementResourceGroupName="$solutionName-Network-rg"
 
 # Identity Parameters Constants
@@ -103,7 +103,6 @@ cleanUpResources() {
     deleteRoleAssignments
     deleteResourceGroup "$devBoxResourceGroupName"
     deleteResourceGroup "$networkResourceGroupName"
-    deleteResourceGroup "$managementResourceGroupName"
     deleteResourceGroup "NetworkWatcherRG"
     deleteResourceGroup "Default-ActivityLogAlerts"
     deleteResourceGroup "DefaultResourceGroup-WUS2"

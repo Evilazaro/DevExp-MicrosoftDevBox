@@ -8,7 +8,7 @@ $WarningPreference = "Stop"
 $solutionName = "ContosoDx"
 $devBoxResourceGroupName = "$solutionName-rg"
 $networkResourceGroupName = "$solutionName-Management-rg"
-$managementResourceGroupName = "$solutionName-Network-rg"
+
 
 # Identity Parameters Constants
 $customRoleName = "eShopPetBuilderRole"
@@ -111,7 +111,6 @@ function CleanUp-Resources {
     Delete-RoleAssignments
     Delete-ResourceGroup -resourceGroupName $devBoxResourceGroupName
     Delete-ResourceGroup -resourceGroupName $networkResourceGroupName
-    Delete-ResourceGroup -resourceGroupName $managementResourceGroupName
     Delete-ResourceGroup -resourceGroupName "NetworkWatcherRG"
     Delete-ResourceGroup -resourceGroupName "Default-ActivityLogAlerts"
     Delete-ResourceGroup -resourceGroupName "DefaultResourceGroup-WUS2"
