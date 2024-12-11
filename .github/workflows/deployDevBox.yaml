@@ -96,7 +96,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
           resourceGroupName: ${{ env.networkResourceGroupName }}
           template: ./src/deploy/bicep/network/deploy.bicep
-          parameters: 'workloadName=${{ env.workloadName }} environmentType=dev'
+          parameters: 'workloadName=${{ env.workloadName }} environmentType=prod'
           deploymentMode: 'Complete'
 
       # # Deploy Dev Center Resources using ARM template
