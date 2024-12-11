@@ -102,7 +102,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
           resourceGroupName: ${{ env.devBoxResourceGroupName }}
           template: ./src/deploy/bicep/deploy.bicep
-          parameters: 'workloadName=${{ env.workloadName }} environmentType=prod devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} networkResourceGroupName=${{ env.networkResourceGroupName }}'
+          parameters: 'workloadName=${{ env.workloadName }} environmentType=prod devCenterResourceGroupName=${{ env.devBoxResourceGroupName }} virtualNetworkResourceGroupName=${{ env.networkResourceGroupName }}'
           deploymentMode: 'Complete'
 
   publish-bicep-artifacts:
