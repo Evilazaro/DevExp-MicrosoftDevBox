@@ -21,7 +21,7 @@ param tags object
 param enableDdosProtection bool = false
 
 @description('DDoS Protection Plan')
-resource ddosProtectionPlan 'Microsoft.Network/ddosProtectionPlans@2024-05-01' = if (enableDdosProtection) {
+resource ddosProtectionPlan 'Microsoft.Network/ddosProtectionPlans@2024-01-01' = if (enableDdosProtection) {
   name: uniqueString(resourceGroup().id, 'ddosProtectionPlan')
   location: location
 }
