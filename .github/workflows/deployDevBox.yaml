@@ -10,7 +10,7 @@ on:
 
 env:
   location: "westus3"
-  solutionName: "ContosoDx"
+  workloadName: "ContosoDx"
   devBoxResourceGroupName: "ContosoDx-rg"
   networkResourceGroupName: "ContosoDx-Network-rg"
   managementResourceGroupName: "ContosoDx-Management-rg"
@@ -90,18 +90,18 @@ jobs:
         run: chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh
 
       # Deploy the Landing Zone Resources using the deployment script
-      - name: Deploy Landing Zone Resources for ${{ env.solutionName }}
+      - name: Deploy Landing Zone Resources for ${{ env.workloadName }}
         run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.managementResourceGroupName }} ${{ env.location }}
       
-      # Deploy Log Analytics resources using ARM template
-      - name: Deploy Dev Box Management Resources to Azure
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
-          resourceGroupName: ${{ env.managementResourceGroupName }}
-          template: ./src/deploy/bicep/management/logAnalytics/deploy.bicep
-          parameters: 'solutionName=${{ env.solutionName }}'
-          deploymentMode: 'Complete'
+      # # Deploy Log Analytics resources using ARM template
+      # - name: Deploy Dev Box Management Resources to Azure
+      #   uses: azure/arm-deploy@v1
+      #   with:
+      #     subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
+      #     resourceGroupName: ${{ env.managementResourceGroupName }}
+      #     template: ./src/deploy/bicep/management/logAnalytics/deploy.bicep
+      #     parameters: 'workloadName=${{ env.workloadName }}'
+      #     deploymentMode: 'Complete'
       
       # Deploy Network Connectivity Resources using ARM template
       - name: Deploy Dev Box Network Resources to Azure
@@ -110,18 +110,18 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
           resourceGroupName: ${{ env.networkResourceGroupName }}
           template: ./src/deploy/bicep/network/deploy.bicep
-          parameters: 'solutionName=${{ env.solutionName }} managementResourceGroupName=${{ env.managementResourceGroupName }}'
+          parameters: 'workloadName=${{ env.workloadName }} managementResourceGroupName=${{ env.managementResourceGroupName }} environmentType=prod'
           deploymentMode: 'Complete'
 
-      # Deploy Dev Center Resources using ARM template
-      - name: Deploy Dev Box DevCenter Resources to Azure
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
-          resourceGroupName: ${{ env.devBoxResourceGroupName }}
-          template: ./src/deploy/bicep/devBox/deploy.bicep
-          parameters: 'solutionName=${{ env.solutionName }}'
-          deploymentMode: 'Complete'
+      # # Deploy Dev Center Resources using ARM template
+      # - name: Deploy Dev Box DevCenter Resources to Azure
+      #   uses: azure/arm-deploy@v1
+      #   with:
+      #     subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
+      #     resourceGroupName: ${{ env.devBoxResourceGroupName }}
+      #     template: ./src/deploy/bicep/devBox/deploy.bicep
+      #     parameters: 'workloadName=${{ env.workloadName }}'
+      #     deploymentMode: 'Complete'
 
   publish-bicep-artifacts:
     runs-on: ubuntu-latest
