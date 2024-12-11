@@ -30,7 +30,7 @@ jobs:
 
       # Build the Bicep files for Dev Box Resources
       - name: Build Dev Box Bicep files
-        run: az bicep build --file ./src/deploy/bicep/deploy.bicep --outfile ./bicepArtifacts/deploy.json
+        run: az bicep build --file ./src/bicep/deploy.bicep --outfile ./bicepArtifacts/deploy.json
 
       # Compress the built Bicep artifacts into a zip file
       - name: Compress Bicep Artifacts
