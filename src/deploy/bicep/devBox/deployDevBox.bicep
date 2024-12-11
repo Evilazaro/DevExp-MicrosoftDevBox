@@ -59,10 +59,10 @@ output devCenterLocation string = deployDevCenter.outputs.devCenterLocation
 @description('Attach Dev Center to Network Connection')
 module networkConnectionAttachment 'devCenter/networkConnectionAttachment.bicep' = [
   for networkConnection in networkConnections: {
-    name: networkConnection.name
+    name: networkConnection
     params: {
       devCenterName: deployDevCenter.name
-      name: networkConnection.name
+      name: networkConnection
       networkConnectionResourceGroupName: networkConnectionResourceGroupName
     }
   }
