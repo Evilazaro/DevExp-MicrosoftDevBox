@@ -41,7 +41,7 @@ jobs:
 
       # Build the Bicep files for Dev Box Resources
       - name: Build Dev Box Bicep files
-        run: az bicep build --file ./src/deploy/bicep/deploy.bicep --outfile ./bicepArtifacts/deploy.json
+        run: az bicep build --file ./src/bicep/deploy.bicep --outfile ./bicepArtifacts/deploy.json
 
       # Compress the built Bicep artifacts into a zip file
       - name: Compress Bicep Artifacts
@@ -79,11 +79,11 @@ jobs:
 
       # Grant execute permissions to the deployment script
       - name: Grant execute permissions to the script
-        run: chmod +x ./src/deploy/bicep/bash/deployResourcesOrganization.sh
+        run: chmod +x ./deploy/bash/deployResourcesOrganization.sh
 
       # Deploy the Landing Zone Resources using the deployment script
       - name: Deploy Landing Zone Resources for ${{ env.workloadName }}
-        run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.location }}
+        run: ./deploy/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.location }}
       
       # # Deploy Network Connectivity Resources using ARM template
       # - name: Deploy Dev Box Network Resources to Azure
@@ -101,7 +101,7 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
           resourceGroupName: ${{ env.devBoxResourceGroupName }}
-          template: ./src/deploy/bicep/deploy.bicep
+          template: ./src/bicep/deploy.bicep
           parameters: 'workloadName=${{ env.workloadName }} environmentType=prod devCenterResourceGroupName=${{ env.devBoxResourceGroupName }} virtualNetworkResourceGroupName=${{ env.networkResourceGroupName }}'
           deploymentMode: 'Complete'
 
