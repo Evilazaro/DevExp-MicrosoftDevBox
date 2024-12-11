@@ -14,7 +14,7 @@ var projects = [
     }
   }
   {
-    name: 'Contoso Traders'
+    name: 'Contoso-Traders'
     tags: {
       division: 'PlatformEngineeringTeam-DevEx'
       enrironment: 'Production'
