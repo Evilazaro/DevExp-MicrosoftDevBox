@@ -1,86 +1,52 @@
-@description('Solution Name')
-param solutionName string
+@description('Workload Name')
+param workloadName string
 
-@description('Teams and Projects for the Dev Center')
-var projects = [
-  {
-    name: 'eShop'
-    description: 'eShop Reference Application - AdventureWorks'
-    networkConnectionName: 'eShop-con'
-    catalog: {
-      name: 'eShop'
-      type: 'gitHub'
-      uri: 'https://github.com/Evilazaro/eShop.git'
-      branch: 'main'
-      path: '/customizations/tasks'
-    }
-  }
-  {
-    name: 'contosoTraders'
-    description: 'Contoso Traders Reference Application - Contoso'
-    networkConnectionName: 'contosoTraders-con'
-    catalog: {
-      name: 'contosoTraders'
-      type: 'gitHub'
-      uri: 'https://github.com/Evilazaro/ContosoTraders.git'
-      branch: 'main'
-      path: '/customizations/tasks'
-    }
-  }
-]
+@description('Catalog Item Sync Enable Status')
+var catalogItemSyncEnableStatus = 'Enabled'
 
-@description('The name of the Dev Center')
-var devCenterName = format('{0}DevCenter', solutionName)
+@description('Microsoft Hosted Network Enable Status')
+var microsoftHostedNetworkEnableStatus = 'Enabled'
 
-@description('The name of the network resource group')
-var networkResourceGroupName = format('{0}-Network-rg', solutionName)
+@description('Install Azure Monitor Agent Enable Status')
+var installAzureMonitorAgentEnableStatus = 'Enabled'
 
+@description('Tags')
 var tags = {
   division: 'PlatformEngineeringTeam-DevEx'
   enrironment: 'Production'
   offering: 'DevBox-as-a-Service'
-  solution: solutionName
-  landingZone: 'DevBox'
+  solution: workloadName
+  landingZone: 'Dev Center'
 }
 
-@description('Deploy the Managed Identity')
-module identity '../identity/deploy.bicep' = {
-  name: 'identity'
+@description('Deploy Dev Center resource to Azure')
+module deployDevCenter 'devCenter/devCenter.bicep' = {
+  name: workloadName
+  scope: resourceGroup()
   params: {
-    solutionName: solutionName
-  }
-}
-
-@description('Deploy the Compute Gallery')
-module computeGallery './computeGallery/deployComputeGallery.bicep' = {
-  name: 'computeGallery'
-  params: {
-    solutionName: solutionName
+    name: workloadName
     tags: tags
+    location: resourceGroup().location
+    catalogItemSyncEnableStatus: catalogItemSyncEnableStatus
+    microsoftHostedNetworkEnableStatus: microsoftHostedNetworkEnableStatus
+    installAzureMonitorAgentEnableStatus: installAzureMonitorAgentEnableStatus
   }
-  dependsOn: [
-    identity
-  ]
 }
 
-@description('Deploy the Dev Center')
-module devCenter 'devCenter/deployDevCenter.bicep' = {
-  name: 'devCenter'
-  params: {
-    name: devCenterName
-    identityName: identity.outputs.identityName
-    computeGalleryName: computeGallery.outputs.computeGalleryName
-    projects: projects
-    networkResourceGroupName: networkResourceGroupName
-    tags: tags
-  }
-  dependsOn: [
-    computeGallery
-  ]
-}
+@description('Output Dev Center resource id')
+output devCenterId string = deployDevCenter.outputs.devCenterId
 
-@description('Dev Center Name')
-output devCenterName string = devCenter.outputs.devCenterName
+@description('Output Dev Center name')
+output devCenterName string = deployDevCenter.outputs.devCenterName
 
-@description('Dev Center Id')
-output devCenterId string = devCenter.outputs.devCenterId
+@description('Output Dev Center Catalog Item Sync Enable Status')
+output catalogItemSyncEnableStatus string = deployDevCenter.outputs.devCenterCatalogItemSyncEnableStatus
+
+@description('Output Dev Center Microsoft Hosted Network Enable Status')
+output microsoftHostedNetworkEnableStatus string = deployDevCenter.outputs.devCenterMicrosoftHostedNetworkEnableStatus
+
+@description('Output Dev Center Install Azure Monitor Agent Enable Status')
+output installAzureMonitorAgentEnableStatus string = deployDevCenter.outputs.devCenterInstallAzureMonitorAgentEnableStatus
+
+@description('Output Dev Center location')
+output devCenterLocation string = deployDevCenter.outputs.devCenterLocation

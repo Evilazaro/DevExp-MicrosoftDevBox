@@ -99,15 +99,15 @@ jobs:
           parameters: 'workloadName=${{ env.workloadName }} environmentType=prod'
           deploymentMode: 'Complete'
 
-      # # Deploy Dev Center Resources using ARM template
-      # - name: Deploy Dev Box DevCenter Resources to Azure
-      #   uses: azure/arm-deploy@v1
-      #   with:
-      #     subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
-      #     resourceGroupName: ${{ env.devBoxResourceGroupName }}
-      #     template: ./src/deploy/bicep/devBox/deploy.bicep
-      #     parameters: 'workloadName=${{ env.workloadName }}'
-      #     deploymentMode: 'Complete'
+      # Deploy Dev Center Resources using ARM template
+      - name: Deploy Dev Box DevCenter Resources to Azure
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
+          resourceGroupName: ${{ env.devBoxResourceGroupName }}
+          template: ./src/deploy/bicep/devBox/deploy.bicep
+          parameters: 'workloadName=${{ env.workloadName }}'
+          deploymentMode: 'Complete'
 
   publish-bicep-artifacts:
     runs-on: ubuntu-latest
