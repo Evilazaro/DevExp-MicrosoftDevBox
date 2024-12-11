@@ -33,8 +33,6 @@ jobs:
       # Upgrade Bicep to the latest version
       - name: Upgrade Bicep
         run: |
-          sudo apt-get update && \
-          sudo apt-get upgrade -y && \
           sudo az bicep upgrade
 
       # Checkout the repository to get the source code
@@ -70,6 +68,7 @@ jobs:
       - name: Update Packages and Upgrade Bicep
         run: |
           sudo apt-get update && \
+          sudo apt-get upgrade -y && \
           sudo az bicep upgrade
       
       # Checkout the repository to get the source code
