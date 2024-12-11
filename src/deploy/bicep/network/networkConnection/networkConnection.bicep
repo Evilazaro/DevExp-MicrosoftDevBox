@@ -17,7 +17,7 @@ param domainJoinType string
 
 @description('The network connection resource')
 resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-10-01-preview' = {
-  name: '${uniqueString(resourceGroup().id,virtualNetworkName)}-connection'
+  name: '${uniqueString(resourceGroup().id, '${virtualNetworkName}${subnetName}')}-connection'
   location: resourceGroup().location
   properties: {
     networkingResourceGroupName: virtualNetworkResourceGroupName
