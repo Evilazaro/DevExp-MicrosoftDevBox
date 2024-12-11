@@ -91,7 +91,7 @@ module deployNetWorkConnection 'network/networkConnection/networkConnection.bice
     params: {
       virtualNetworkName: deployVirtualNetwork.outputs.virtualNetworkName
       subnetName: subnet.name
-      virtualNetworkResourceGroupName: resourceGroup().name
+      virtualNetworkResourceGroupName: virtualNetworkResourceGroupName
       domainJoinType: 'AzureADJoin'
     }
   }
