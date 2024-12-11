@@ -15,13 +15,25 @@ param virtualNetworkResourceGroupName string
 ])
 param domainJoinType string 
 
+@description('Existing virtual network')
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-05-01' existing = {
+  name: virtualNetworkName
+  scope:resourceGroup(virtualNetworkResourceGroupName)
+}
+
+@description('Existing subnet resource')
+resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-05-01' existing = {
+  name: subnetName
+  parent: virtualNetwork
+}
+
 @description('The network connection resource')
 resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-10-01-preview' = {
-  name: '${uniqueString(resourceGroup().id, '${virtualNetworkName}${subnetName}')}-connection'
+  name: '${uniqueString(resourceGroup().id,virtualNetworkName)}-connection'
   location: resourceGroup().location
   properties: {
     networkingResourceGroupName: virtualNetworkResourceGroupName
-    subnetId: resourceId(virtualNetworkResourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', virtualNetworkName, subnetName)
+    subnetId: subnet.id
     domainJoinType: domainJoinType
   }
 }
