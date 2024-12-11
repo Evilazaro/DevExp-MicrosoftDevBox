@@ -35,7 +35,6 @@ deployResourcesOrganization() {
 
     createResourceGroup "$devBoxResourceGroupName"
     createResourceGroup "$networkResourceGroupName"
-    createResourceGroup "$managementResourceGroupName"
 }
 
 validateInputs() {
