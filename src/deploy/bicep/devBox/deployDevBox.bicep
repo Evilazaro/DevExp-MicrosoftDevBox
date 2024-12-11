@@ -67,3 +67,15 @@ module networkConnectionAttachment 'devCenter/networkConnectionAttachment.bicep'
     }
   }
 ]
+
+@description('Configure Environment Types')
+module environmentTypes 'devCenter/environmentConfiguration/deployEnvironmentType.bicep' = {
+  name: 'EnvironmentTypes'
+  scope: resourceGroup()
+  params: {
+    devCenterName: deployDevCenter.outputs.devCenterName
+  }
+}
+
+@description('Output Environment Types')
+output environmentTypes array = environmentTypes.outputs.environmentTypeNames
