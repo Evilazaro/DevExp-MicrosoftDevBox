@@ -29,7 +29,7 @@ resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-03-01' existing 
 
 @description('The network connection resource')
 resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-10-01-preview' = {
-  name: uniqueString(resourceGroup().id,'${virtualNetworkName}-${subnet.name}')
+  name: '${virtualNetworkName}-${subnetName}-con'
   location: resourceGroup().location
   properties: {
     subnetId: subnet.id
