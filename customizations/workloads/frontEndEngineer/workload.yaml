@@ -3,39 +3,29 @@ name: "devbox-backend-winget"
 description: "Customize the backend workload for the devbox"
 tasks:
   - name: winget
+    description: "Install App Microsoft.AppInstaller"
+    parameters:
+      package: "Microsoft.AppInstaller"
+      runAsUser: true
+  - name: winget
+    description: "Install Microsoft.PowerShell"
+    parameters:
+      package: Microsoft.PowerShell
+      runAsUser: true
+  - name: winget
     description: "Install App Microsoft.PowerToys"
     parameters:
       package: Microsoft.PowerToys
       runAsUser: true
-  - name: winget
-    description: "Install App Microsoft.DotNet.SDK.8"
-    parameters:
-      package: Microsoft.DotNet.SDK.8
-  - name: winget
-    description: "Install App Microsoft.DotNet.Runtime.8"
-    parameters:
-      package: Microsoft.DotNet.Runtime.8
   - name: winget
     description: "Install App Microsoft.WindowsTerminal"
     parameters:
       package: Microsoft.WindowsTerminal
       runAsUser: true
   - name: winget
-    description: "Install App Microsoft.AzureCLI"
-    parameters:
-      package: Microsoft.AzureCLI
-  - name: winget
-    description: "Install App Microsoft.Azd"
-    parameters:
-      package: Microsoft.Azd
-  - name: winget
     description: "Install App OpenJS.NodeJS"
     parameters:
       package: OpenJS.NodeJS
-  - name: winget
-    description: "Install App Microsoft.Azure.FunctionsCoreTools"
-    parameters:
-      package: Microsoft.Azure.FunctionsCoreTools
   - name: winget
     description: "Install App Git.Git"
     parameters:
@@ -60,21 +50,10 @@ tasks:
       package: "Postman.Postman"
       runAsUser: true
   - name: winget
-    description: "Install App Microsoft.Azure.StorageExplorer"
-    parameters:
-      package: Microsoft.Azure.StorageExplorer
-      runAsUser: true
-  - name: winget
     description: "Install App Microsoft.RemoteDesktopClient"
     parameters:
       package: Microsoft.RemoteDesktopClient
       runAsUser: true
-  - name: powershell
-    description: "Install VS Code extensions"
-    parameters:  
-      command: "../tasks/install-vs-extension/Install-VSIXExtension.ps1"
-      workingDirectory: C:\\provisioning\\temp
-    runAsUser: true
   - name: git-clone
     description: "Clone the eShopRepository repository"
     parameters:

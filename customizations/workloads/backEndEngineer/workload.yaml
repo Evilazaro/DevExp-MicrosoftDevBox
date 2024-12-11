@@ -8,14 +8,19 @@ tasks:
       package: "Microsoft.AppInstaller"
       runAsUser: true
   - name: winget
-    description: "Install App Microsoft.DotNet.SDK.8"
+    description: "Install Microsoft.PowerShell"
     parameters:
-      package: Microsoft.DotNet.SDK.8
+      package: Microsoft.PowerShell
       runAsUser: true
   - name: winget
-    description: "Install App Microsoft.DotNet.Runtime.8"
+    description: "Install App Microsoft.DotNet.SDK.9"
     parameters:
-      package: Microsoft.DotNet.Runtime.8
+      package: Microsoft.DotNet.SDK.9
+      runAsUser: true
+  - name: winget
+    description: "Install App Microsoft.DotNet.Runtime.9"
+    parameters:
+      package: Microsoft.DotNet.Runtime.9
       runAsUser: true
   - name: winget
     description: "Install App Microsoft.WindowsTerminal"
@@ -36,6 +41,16 @@ tasks:
     description: "Install App OpenJS.NodeJS"
     parameters:
       package: OpenJS.NodeJS
+      runAsUser: true
+  - name: winget
+    description: "Install Microsoft.Bicep"
+    parameters:
+      package: Microsoft.Bicep
+      runAsUser: true
+  - name: winget
+    description: "Install Dapr.CLI"
+    parameters:
+      package: Dapr.CLI
       runAsUser: true
   - name: winget
     description: "Install App Microsoft.Azure.FunctionsCoreTools"
