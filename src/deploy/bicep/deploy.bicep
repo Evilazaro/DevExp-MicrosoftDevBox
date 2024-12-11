@@ -87,7 +87,7 @@ output virtualNetworkTags object = deployVirtualNetwork.outputs.virtualNetworkTa
 module deployNetWorkConnection 'network/networkConnection/networkConnection.bicep' = [
   for subnet in subnets: {
     name: '${subnet.name}-connection'
-    scope: resourceGroup()
+    scope: resourceGroup(virtualNetworkResourceGroupName)
     params: {
       virtualNetworkName: deployVirtualNetwork.outputs.virtualNetworkName
       subnetName: subnet.name
@@ -126,9 +126,6 @@ module deployDevCenter 'devBox/devCenter/devCenter.bicep' = {
     microsoftHostedNetworkEnableStatus: microsoftHostedNetworkEnableStatus
     installAzureMonitorAgentEnableStatus: installAzureMonitorAgentEnableStatus
   }
-  dependsOn: [
-    deployVirtualNetwork
-  ]
 }
 
 @description('Output Dev Center resource id')
