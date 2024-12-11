@@ -28,10 +28,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Build the Bicep files for Dev Box Management Resources
-      - name: Build Dev Box Management Bicep files
-        run: az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outfile ./bicepArtifacts/deployManagement.json  
-
       # Build the Bicep files for Dev Box Network Resources
       - name: Build Dev Box Network Bicep files
         run: az bicep build --file ./src/deploy/bicep/network/deploy.bicep --outfile ./bicepArtifacts/deployNetwork.json

@@ -13,7 +13,6 @@ env:
   workloadName: "ContosoDx"
   devBoxResourceGroupName: "ContosoDx-rg"
   networkResourceGroupName: "ContosoDx-Network-rg"
-  managementResourceGroupName: "ContosoDx-Management-rg"
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
 jobs:
@@ -39,10 +38,6 @@ jobs:
       # Checkout the repository to get the source code
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      # Build the Bicep files for Dev Box Management Resources
-      - name: Build Dev Box Management Resources Bicep files
-        run: az bicep build --file ./src/deploy/bicep/management/logAnalytics/deploy.bicep --outfile ./bicepArtifacts/deployManagement.json
 
       # Build the Bicep files for Dev Box Network Resources
       - name: Build Dev Box Network Resources Bicep files
@@ -91,17 +86,7 @@ jobs:
 
       # Deploy the Landing Zone Resources using the deployment script
       - name: Deploy Landing Zone Resources for ${{ env.workloadName }}
-        run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.managementResourceGroupName }} ${{ env.location }}
-      
-      # # Deploy Log Analytics resources using ARM template
-      # - name: Deploy Dev Box Management Resources to Azure
-      #   uses: azure/arm-deploy@v1
-      #   with:
-      #     subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
-      #     resourceGroupName: ${{ env.managementResourceGroupName }}
-      #     template: ./src/deploy/bicep/management/logAnalytics/deploy.bicep
-      #     parameters: 'workloadName=${{ env.workloadName }}'
-      #     deploymentMode: 'Complete'
+        run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.location }}
       
       # Deploy Network Connectivity Resources using ARM template
       - name: Deploy Dev Box Network Resources to Azure
@@ -110,7 +95,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
           resourceGroupName: ${{ env.networkResourceGroupName }}
           template: ./src/deploy/bicep/network/deploy.bicep
-          parameters: 'workloadName=${{ env.workloadName }} managementResourceGroupName=${{ env.managementResourceGroupName }} environmentType=prod'
+          parameters: 'workloadName=${{ env.workloadName }} environmentType=prod'
           deploymentMode: 'Complete'
 
       # # Deploy Dev Center Resources using ARM template
