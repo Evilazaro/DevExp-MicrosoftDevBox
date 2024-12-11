@@ -93,3 +93,8 @@ module deployNetWorkConnection '../networkConnection/networkConnection.bicep' = 
     }
   }
 ]
+@description('Network Connection Resource IDs')
+output networkConnectionIds array = [for (subnet, i) in subnets: deployNetWorkConnection[i].outputs.networkConnectionId]
+
+@description('Network Connection Resource Names')
+output networkConnectionNames array = [for (subnet, i) in subnets: deployNetWorkConnection[i].outputs.networkConnectionName]

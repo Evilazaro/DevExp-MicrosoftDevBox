@@ -43,14 +43,18 @@ output virtualNetworkSubnets array = deployNetworkConnectivity.outputs.virtualNe
 @description('Tags')
 output virtualNetworkTags object = deployNetworkConnectivity.outputs.virtualNetworkTags
 
+@description('Network Connections names')
+var networkConnections = deployNetworkConnectivity.outputs.networkConnectionNames
+
 
 @description('Deploy Dev Box Resources')
 module deployDevBox 'devBox/deployDevBox.bicep' = {
   name: 'DevBox'
+  scope: resourceGroup(devCenterResourceGroupName)
   params: {
     workloadName: workloadName
-    devCenterResourceGroupName: devCenterResourceGroupName
-    virtualNetworkResourceGroupName: virtualNetworkResourceGroupName
+    networkConnectionResourceGroupName:virtualNetworkResourceGroupName
+    networkConnections: networkConnections
   }
 }
 

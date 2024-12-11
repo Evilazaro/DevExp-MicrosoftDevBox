@@ -1,11 +1,11 @@
-@description('Solution/Workload Name')
+@description('Workload Name')
 param workloadName string
 
-@description('Virtual Network Resource Group Name')
-param virtualNetworkResourceGroupName string
+@description('Network Connection Resource Group Name')
+param networkConnectionResourceGroupName string
 
-@description('Dev Center Resource Group Name')
-param devCenterResourceGroupName string
+@description('Network Connections')
+param networkConnections array
 
 @description('Catalog Item Sync Enable Status')
 var catalogItemSyncEnableStatus = 'Enabled'
@@ -16,21 +16,21 @@ var microsoftHostedNetworkEnableStatus = 'Enabled'
 @description('Install Azure Monitor Agent Enable Status')
 var installAzureMonitorAgentEnableStatus = 'Enabled'
 
-var devCenterTags = {
+@description('Tags')
+var tags = {
   division: 'PlatformEngineeringTeam-DevEx'
   enrironment: 'Production'
   offering: 'DevBox-as-a-Service'
   solution: workloadName
-  landingZone: 'Dev Center'
+  landingZone: 'DevBox'
 }
-
 @description('Deploy Dev Center resource to Azure')
 module deployDevCenter 'devCenter/devCenter.bicep' = {
   name: 'DevCenter'
-  scope: resourceGroup(devCenterResourceGroupName)
+  scope: resourceGroup()
   params: {
     name: workloadName
-    tags: devCenterTags
+    tags: tags
     location: resourceGroup().location
     catalogItemSyncEnableStatus: catalogItemSyncEnableStatus
     microsoftHostedNetworkEnableStatus: microsoftHostedNetworkEnableStatus
@@ -55,3 +55,15 @@ output installAzureMonitorAgentEnableStatus string = deployDevCenter.outputs.dev
 
 @description('Output Dev Center location')
 output devCenterLocation string = deployDevCenter.outputs.devCenterLocation
+
+@description('Attach Dev Center to Network Connection')
+module networkConnectionAttachment 'devCenter/networkConnectionAttachment.bicep' = [
+  for networkConnection in networkConnections: {
+    name: networkConnection.name
+    params: {
+      devCenterName: deployDevCenter.name
+      name: networkConnection.name
+      networkConnectionResourceGroupName: networkConnectionResourceGroupName
+    }
+  }
+]
