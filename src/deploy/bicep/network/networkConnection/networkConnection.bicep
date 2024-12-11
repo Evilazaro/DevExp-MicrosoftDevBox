@@ -32,7 +32,6 @@ resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-10-01-pr
   name: uniqueString(resourceGroup().id,'${virtualNetworkName}-${subnet.name}')
   location: resourceGroup().location
   properties: {
-    networkingResourceGroupName: virtualNetworkResourceGroupName
     subnetId: subnet.id
     domainJoinType: domainJoinType
   }
