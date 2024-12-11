@@ -89,15 +89,15 @@ jobs:
       - name: Deploy Landing Zone Resources for ${{ env.workloadName }}
         run: ./src/deploy/bicep/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.location }}
       
-      # Deploy Network Connectivity Resources using ARM template
-      - name: Deploy Dev Box Network Resources to Azure
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
-          resourceGroupName: ${{ env.networkResourceGroupName }}
-          template: ./src/deploy/bicep/network/deploy.bicep
-          parameters: 'workloadName=${{ env.workloadName }} environmentType=prod'
-          deploymentMode: 'Complete'
+      # # Deploy Network Connectivity Resources using ARM template
+      # - name: Deploy Dev Box Network Resources to Azure
+      #   uses: azure/arm-deploy@v1
+      #   with:
+      #     subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
+      #     resourceGroupName: ${{ env.networkResourceGroupName }}
+      #     template: ./src/deploy/bicep/network/deploy.bicep
+      #     parameters: 'workloadName=${{ env.workloadName }} environmentType=prod'
+      #     deploymentMode: 'Complete'
 
       # Deploy Dev Center Resources using ARM template
       - name: Deploy Dev Box DevCenter Resources to Azure
@@ -105,8 +105,8 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
           resourceGroupName: ${{ env.devBoxResourceGroupName }}
-          template: ./src/deploy/bicep/devBox/deploy.bicep
-          parameters: 'workloadName=${{ env.workloadName }}'
+          template: ./src/deploy/bicep/deploy.bicep
+          parameters: 'workloadName=${{ env.workloadName }} environmentType=prod devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} networkResourceGroupName=${{ env.networkResourceGroupName }}'
           deploymentMode: 'Complete'
 
   publish-bicep-artifacts:
