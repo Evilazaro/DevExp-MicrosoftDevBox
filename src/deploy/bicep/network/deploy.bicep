@@ -42,7 +42,7 @@ var tags = {
   enrironment: 'Production'
   offering: 'DevBox-as-a-Service'
   solution: workloadName
-  landingZone: 'DevBox'
+  landingZone: 'Networking'
 }
 
 @description('Deploy Virtual Network Resource')
