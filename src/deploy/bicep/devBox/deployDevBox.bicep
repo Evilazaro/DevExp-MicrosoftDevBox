@@ -61,7 +61,7 @@ module networkConnectionAttachment 'devCenter/networkConnectionAttachment.bicep'
   for networkConnection in networkConnections: {
     name: networkConnection
     params: {
-      devCenterName: deployDevCenter.name
+      devCenterName: deployDevCenter.outputs.devCenterName
       name: networkConnection
       networkConnectionResourceGroupName: networkConnectionResourceGroupName
     }
