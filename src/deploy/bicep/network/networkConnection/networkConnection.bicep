@@ -22,7 +22,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-05-01' existing 
 }
 
 @description('Existing subnet resource')
-resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-05-01' existing = {
+resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-03-01' existing = {
   name: subnetName
   parent: virtualNetwork
 }
