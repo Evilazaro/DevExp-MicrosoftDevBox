@@ -76,3 +76,17 @@ output virtualNetworkSubnets array = deployVirtualNetwork.outputs.virtualNetwork
 
 @description('Tags')
 output virtualNetworkTags object = deployVirtualNetwork.outputs.virtualNetworkTags
+
+@description('Deploy Network Connection Resource')
+module deployNetWorkConnection 'networkConnection/networkConnection.bicep' = [for subnet in subnets:  {
+  name: '${subnet.name}-connection'
+  scope: resourceGroup()
+  params: {
+    virtualNetworkName: deployVirtualNetwork.outputs.virtualNetworkName
+    subnetName: subnet.name
+    virtualNetworkResourceGroupName: resourceGroup().name
+    domainJoinType: 'AzureADJoin'
+  }
+}
+]
+

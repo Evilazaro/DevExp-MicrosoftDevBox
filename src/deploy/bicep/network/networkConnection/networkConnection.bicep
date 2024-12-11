@@ -1,42 +1,43 @@
+@description('Virtual Network Name')
+param virtualNetworkName string 
 
-@description('Network Connection Name')
-param name string
-
-@description('Subnet Id')
-param vnetName string
-
-@description('Subnet Name')
+@description('Subnet Name for the Virtual Network')
 param subnetName string
 
-@description('Tags for the Network Connection')
-param tags object
+@description('Virtual Network Resource Group Name')
+param virtualNetworkResourceGroupName string 
 
-resource vnet 'Microsoft.Network/virtualNetworks@2024-03-01' existing = {
-  name: vnetName
-}
+@description('Domain Join Type')
+@allowed([
+  'None'
+  'AzureADJoin'
+  'HybridADJoin'
+])
+param domainJoinType string 
 
-resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-03-01' existing = {
-  name: subnetName
-  parent: vnet
-}
-
-
-@description('Deploy a network connection to Azure')
+@description('The network connection resource')
 resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-10-01-preview' = {
-  name: name
+  name: '${uniqueString(resourceGroup().id,virtualNetworkName)}-connection'
   location: resourceGroup().location
-  tags: tags
   properties: {
-    domainJoinType: 'AzureADJoin'
-    subnetId: subnet.id
+    networkingResourceGroupName: virtualNetworkResourceGroupName
+    subnetId: resourceId(virtualNetworkResourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', virtualNetworkName, subnetName)
+    domainJoinType: domainJoinType
   }
-  dependsOn: [
-    subnet
-  ]
 }
 
-@description('Network Connection Name')
-output name string = networkConnection.name
+@description('The ID of the network connection')
+output networkConnectionId string = networkConnection.id
 
-@description('Network Connection Id') 
-output id string = networkConnection.id
+@description('The name of the network connection')
+output networkConnectionName string = networkConnection.name
+
+@description('The domain join type of the network connection')
+output domainJoinType string = networkConnection.properties.domainJoinType
+
+@description('Virtual Network Resource Group Name')
+output networkingResourceGroupName string = networkConnection.properties.networkingResourceGroupName
+
+@description('Subnet ID')
+output subnetId string = networkConnection.properties.subnetId
+ 
