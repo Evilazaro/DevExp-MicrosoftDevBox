@@ -16,7 +16,7 @@ param virtualNetworkResourceGroupName string
 param domainJoinType string 
 
 @description('Existing virtual network')
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-05-01' existing = {
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-03-01' existing = {
   name: virtualNetworkName
   scope:resourceGroup(virtualNetworkResourceGroupName)
 }
