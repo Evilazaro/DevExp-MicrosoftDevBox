@@ -37,7 +37,7 @@ var projects = [
 
 module deployDevCenterProject 'devCenterProject.bicep' = [
   for project in projects: {
-    name: 'Project-${project}'
+    name: 'Project-${project.name}'
     params: {
       devCenterName: devCenterName
       name: project.name
