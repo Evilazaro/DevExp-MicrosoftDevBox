@@ -4,10 +4,10 @@ $ErrorActionPreference = "Stop"
 
 # Define variables
 $location = "northuscentral"
-$solutionName = "ContosoDx"
-$devBoxResourceGroupName = "ContosoDx-rg"
-$networkResourceGroupName = "ContosoDx-Network-rg"
-$managementResourceGroupName = "ContosoDx-Management-rg"
+$solutionName = "ContosoDevEx"
+$devBoxResourceGroupName = "ContosoDevEx-rg"
+$networkResourceGroupName = "ContosoDevEx-Network-rg"
+$managementResourceGroupName = "ContosoDevEx-Management-rg"
 
 # Function to deploy management resources
 function Deploy-ManagementResources {

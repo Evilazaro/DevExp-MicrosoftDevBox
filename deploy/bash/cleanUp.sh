@@ -5,7 +5,7 @@ set -euo pipefail
 
 
 # Azure Resource Group Names Constants
-solutionName="ContosoDx"
+solutionName="ContosoDevEx"
 devBoxResourceGroupName="$solutionName-rg"
 
 managementResourceGroupName="$solutionName-Network-rg"

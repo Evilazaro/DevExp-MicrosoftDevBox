@@ -5,7 +5,7 @@ $ErrorActionPreference = "Stop"
 $WarningPreference = "Stop"
 
 # Azure Resource Group Names Constants
-$solutionName = "ContosoDx"
+$solutionName = "ContosoDevEx"
 $devBoxResourceGroupName = "$solutionName-rg"
 $networkResourceGroupName = "$solutionName-Management-rg"
 

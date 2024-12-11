@@ -1,7 +1,7 @@
 #!/bin/bash
 
 appName="eShop"
-displayName="ContosoDx GitHub Actions Enterprise App"
+displayName="ContosoDevEx GitHub Actions Enterprise App"
 
 setup() {
     echo "Setting up deployment credentials..."

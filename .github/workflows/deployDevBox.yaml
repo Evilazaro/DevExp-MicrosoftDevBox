@@ -10,9 +10,9 @@ on:
 
 env:
   location: "westus3"
-  workloadName: "ContosoDx"
-  devBoxResourceGroupName: "ContosoDx-rg"
-  networkResourceGroupName: "ContosoDx-Network-rg"
+  workloadName: "ContosoDevEx"
+  devBoxResourceGroupName: "ContosoDevEx-rg"
+  networkResourceGroupName: "ContosoDevEx-Network-rg"
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
 jobs:

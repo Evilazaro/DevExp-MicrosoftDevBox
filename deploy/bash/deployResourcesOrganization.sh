@@ -39,8 +39,8 @@ deployResourcesOrganization() {
 
 validateInputs() {
     if [[ -z "$devBoxResourceGroupName" || -z "$networkResourceGroupName" || -z "$location" ]]; then
-        devBoxResourceGroupName='ContosoDx-rg'
-        networkResourceGroupName='ContosoDx-Network-rg'
+        devBoxResourceGroupName='ContosoDevEx-rg'
+        networkResourceGroupName='ContosoDevEx-Network-rg'
         location='northuscentral'
     fi
 }
