@@ -21,20 +21,18 @@ var environments = [
   }
 ]
 
+@description('Tags')
 var tags = {
-  idp: 'DevEx'
-  source: 'InfrastructureAsCode'
-  platform: 'Azure'
-  versionControl: 'PlatformSourceCode'
-  environmentConfiguration: 'EnvironmentType'
-  environmentTypeVersion: '2024-10-01-preview'
-  environmentTypeSource: 'DevCenter'
+  division: 'PlatformEngineeringTeam-DevEx'
+  enrironment: 'Production'
+  offering: 'DevBox-as-a-Service'
+  landingZone: 'DevBox'
 }
 
 @description('Deploy Environment Type')
 module deployEnvironmentType 'environmentTypes.bicep' = [
   for environment in environments: {
-    name: environment.name
+    name: 'EnvironmentType-${environment.name}'
     params: {
       devCenterName: devCenterName
       name: environment.name

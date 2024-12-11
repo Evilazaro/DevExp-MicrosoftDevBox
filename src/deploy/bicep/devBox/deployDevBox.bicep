@@ -79,3 +79,12 @@ module environmentTypes 'devCenter/environmentConfiguration/deployEnvironmentTyp
 
 @description('Output Environment Types')
 output environmentTypes array = environmentTypes.outputs.environmentTypeNames
+
+@description('Configure Catalogs')
+module catalogs 'devCenter/environmentConfiguration/deployCatalog.bicep' = {
+  name: 'Catalogs'
+  scope: resourceGroup()
+  params: {
+    devCenterName: deployDevCenter.outputs.devCenterName
+  }
+}
