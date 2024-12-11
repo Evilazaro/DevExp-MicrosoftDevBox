@@ -46,9 +46,9 @@ output networkConnectionName string = networkConnection.name
 @description('The domain join type of the network connection')
 output domainJoinType string = networkConnection.properties.domainJoinType
 
-@description('Virtual Network Resource Group Name')
-output networkingResourceGroupName string = networkConnection.properties.networkingResourceGroupName
-
 @description('Subnet ID')
 output subnetId string = networkConnection.properties.subnetId
+
+@description('Virtual Network Resource Group name')
+output virtualNetworkResourceGroupName string = virtualNetworkResourceGroupName
  
