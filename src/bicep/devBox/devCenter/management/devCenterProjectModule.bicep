@@ -7,15 +7,19 @@ param projects array
 @description('DevBox Definitions')
 param devBoxDefinitions array
 
+@description('Network Connections')
+param networkConnections array
+
 @description('Projects Resoure')
 module deployDevCenterProject 'devCenterProjectResource.bicep' = [
-  for project in projects: {
-    name: 'Project-${project.name}'
+  for (project,i) in projects: {
+    name: 'Project-${project[i].name}'
     params: {
       devCenterName: devCenterName
-      name: project.name
-      tags: project.tags
+      name: project[i].name
+      tags: project[i].tags
       devBoxDefinitions: devBoxDefinitions
+      networkConnectionName: networkConnections[i]
     }
   }
 ]

@@ -171,5 +171,6 @@ module devCenterprojects 'devCenter/management/devCenterProjectModule.bicep' = {
     devCenterName: deployDevCenter.outputs.devCenterName
     projects: projects
     devBoxDefinitions: devBoxDefinitions
+    networkConnections: networkConnections
   }
 }

@@ -4,6 +4,9 @@ param projectName string
 @description('Dev Box Definition Name')
 param devBoxDefinitionName string
 
+@description('Network Connection Name')
+param networkConnectionName string
+
 @description('Dev Box Pool Resource Name')
 param name string
 
@@ -21,6 +24,11 @@ resource devBoxPool 'Microsoft.DevCenter/projects/pools@2024-10-01-preview' = {
   properties:{
     devBoxDefinitionName: devBoxDefinitionName
     displayName: name
+    networkConnectionName: networkConnectionName
+    localAdministrator:'Enabled'
+    singleSignOnStatus:'Enabled'
+    virtualNetworkType:'Managed'
+    licenseType:'Windows_Client'
   }
 } 
 

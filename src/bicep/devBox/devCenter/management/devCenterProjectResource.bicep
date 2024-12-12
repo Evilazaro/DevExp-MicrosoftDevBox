@@ -9,6 +9,9 @@ param devBoxDefinitions array
 @description('Tags')
 param tags object
 
+@description('Network Connection Name')
+param networkConnectionName string
+
 @description('Dev Center')
 resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview'existing = {
   name: devCenterName
@@ -38,5 +41,6 @@ module devBoxPool 'devBoxPool/devBoxPoolResource.bicep' = [for devBoxDefinition 
     projectName: name
     devBoxDefinitionName: devBoxDefinition.name
     name: 'DevBoxPool-${devBoxDefinition.name}-${name}'
+    networkConnectionName: networkConnectionName
   }
 }]
