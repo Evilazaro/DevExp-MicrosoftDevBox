@@ -133,6 +133,7 @@ module devBoxDefinition 'devCenter/devBoxDefinition/devBoxDefinitionModule.bicep
 var projects = [
   {
     name: 'eShop'
+    networkConnectionName: networkConnections[0]
     tags: {
       division: 'PlatformEngineeringTeam-DevEx'
       enrironment: 'Production'
@@ -143,8 +144,9 @@ var projects = [
   }
   {
     name: 'Contoso-Traders'
+    networkConnectionName: networkConnections[1]
     tags: {
-      division: 'PlatformEngineeringTeam-DevEx'
+      division: 'PlatformEngineeringTeam-DevEx' 
       enrironment: 'Production'
       offering: 'DevBox-as-a-Service'
       solution: 'Contoso Traders'
@@ -153,6 +155,7 @@ var projects = [
   }
   {
     name: 'DevBox'
+    networkConnectionName: networkConnections[2]
     tags: {
       division: 'PlatformEngineeringTeam-DevEx'
       enrironment: 'Production'
@@ -170,7 +173,15 @@ module devCenterprojects 'devCenter/management/devCenterProjectModule.bicep' = {
   params: {
     devCenterName: deployDevCenter.outputs.devCenterName
     projects: projects
+  }
+}
+
+@description('Dev Box Pool')
+module devBoxPools 'devCenter/management/devBoxPool/devCenterPoolModule.bicep' = {
+  name: 'DevBoxPools'
+  scope: resourceGroup()
+  params: {
+    projects: projects
     devBoxDefinitions: devBoxDefinitions
-    networkConnections: networkConnections
   }
 }
