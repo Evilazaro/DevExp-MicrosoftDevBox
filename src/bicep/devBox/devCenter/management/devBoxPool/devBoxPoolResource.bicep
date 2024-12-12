@@ -25,7 +25,7 @@ resource devBoxPool 'Microsoft.DevCenter/projects/pools@2024-10-01-preview' = [
       networkConnectionName: networkConnectionName
       localAdministrator: 'Enabled'
       singleSignOnStatus: 'Enabled'
-      virtualNetworkType: 'Managed'
+      virtualNetworkType: 'Unmanaged'
       licenseType: 'Windows_Client'
     }
   }
