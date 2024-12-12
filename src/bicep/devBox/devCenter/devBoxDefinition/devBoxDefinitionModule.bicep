@@ -11,6 +11,7 @@ var devBoxDefinitions = [
     sku: {
       name: 'general_i_32c128gb512ssd_v2'
       imageName: 'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2'
+      hibernateSupport: 'Disabled'
     }
     tags: {
       division: 'PlatformEngineeringTeam-DevEx'
@@ -25,6 +26,7 @@ var devBoxDefinitions = [
     sku: {
       name: 'general_i_16c64gb256ssd_v2'
       imageName: 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
+      hibernateSupport: 'Enabled'
     }
     tags: {
       division: 'PlatformEngineeringTeam-DevEx'
@@ -39,6 +41,7 @@ var devBoxDefinitions = [
     sku: {
       name: 'general_i_16c64gb256ssd_v2'
       imageName: 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
+      hibernateSupport: 'Enabled'
     }
     tags: {
       division: 'PlatformEngineeringTeam-DevEx'
@@ -59,7 +62,7 @@ module devBoxDefinition 'devBoxDefinitionResource.bicep' = [
       name: devBoxDefinition.name
       sku: devBoxDefinition.sku
       tags: devBoxDefinition.tags
-      hibernateSupport: hibernateSupport
+      hibernateSupport: devBoxDefinition.sku.hibernateSupport
     }
   }
 ]
