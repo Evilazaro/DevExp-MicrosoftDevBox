@@ -7,7 +7,7 @@ param projects array
 @description('Projects Resoure')
 module deployDevCenterProject 'devCenterProjectResource.bicep' = [
   for project in projects: {
-    name: 'Project-${project.name}'
+    name: project.name
     params: {
       devCenterName: devCenterName
       name: project.name
