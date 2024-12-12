@@ -28,4 +28,4 @@ resource devCenterProject 'Microsoft.DevCenter/projects@2024-10-01-preview'= {
 output devCenterProjectId string = devCenterProject.id
 
 @description('Dev Center Project Resource Name')
-output devCenterProjectName string = devCenterProject.name
+output projectName string = devCenterProject.name
