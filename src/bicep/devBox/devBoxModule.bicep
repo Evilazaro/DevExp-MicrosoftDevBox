@@ -16,6 +16,7 @@ var microsoftHostedNetworkEnableStatus = 'Enabled'
 @description('Install Azure Monitor Agent Enable Status')
 var installAzureMonitorAgentEnableStatus = 'Enabled'
 
+
 @description('Tags')
 var tags = {
   division: 'PlatformEngineeringTeam-DevEx'
@@ -69,20 +70,106 @@ module catalogs 'devCenter/environmentConfiguration/catalogModule.bicep' = {
   }
 }
 
-@description('Configure Projects')
-module projects 'devCenter/management/devCenterProjectModule.bicep' = {
-  name: 'Projects'
-  scope: resourceGroup()
-  params: {
-    devCenterName: deployDevCenter.outputs.devCenterName
-  }
-}
 
+@description('Dev Box Definitions')
+var devBoxDefinitions = [
+  {
+    name: 'backend-Engineer'
+    sku: {
+      name: 'general_i_32c128gb512ssd_v2'
+      imageName: 'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2'
+      hibernateSupport: 'Disabled'
+    }
+    tags: {
+      division: 'PlatformEngineeringTeam-DevEx'
+      enrironment: 'Production'
+      offering: 'DevBox-as-a-Service'
+      solution: deployDevCenter.outputs.devCenterName
+      landingZone: 'DevBox'
+    }
+  }
+  {
+    name: 'frontEnd-Engineer'
+    sku: {
+      name: 'general_i_16c64gb256ssd_v2'
+      imageName: 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
+      hibernateSupport: 'Enabled'
+    }
+    tags: {
+      division: 'PlatformEngineeringTeam-DevEx'
+      enrironment: 'Production'
+      offering: 'DevBox-as-a-Service'
+      solution: deployDevCenter.outputs.devCenterName
+      landingZone: 'DevBox'
+    }
+  }
+  {
+    name: 'web-designer'
+    sku: {
+      name: 'general_i_16c64gb256ssd_v2'
+      imageName: 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
+      hibernateSupport: 'Enabled'
+    }
+    tags: {
+      division: 'PlatformEngineeringTeam-DevEx'
+      enrironment: 'Production'
+      offering: 'DevBox-as-a-Service'
+      solution: deployDevCenter.outputs.devCenterName
+      landingZone: 'DevBox'
+    }
+  }
+]
 
 @description('Deploy DevBox Definitions')
 module devBoxDefinition 'devCenter/devBoxDefinition/devBoxDefinitionModule.bicep' = {
   name: 'DevBoxDefinition'
   params: {
     devCenterName: deployDevCenter.outputs.devCenterName
+    devBoxDefinitions: devBoxDefinitions
+  }
+}
+
+@description('Projects')
+var projects = [
+  {
+    name: 'eShop'
+    tags: {
+      division: 'PlatformEngineeringTeam-DevEx'
+      enrironment: 'Production'
+      offering: 'DevBox-as-a-Service'
+      solution: 'DevBox'
+      landingZone: 'eShop'
+    }
+  }
+  {
+    name: 'Contoso-Traders'
+    tags: {
+      division: 'PlatformEngineeringTeam-DevEx'
+      enrironment: 'Production'
+      offering: 'DevBox-as-a-Service'
+      solution: 'Contoso Traders'
+      landingZone: 'DevBox'
+    }
+  }
+  {
+    name: 'DevBox'
+    tags: {
+      division: 'PlatformEngineeringTeam-DevEx'
+      enrironment: 'Production'
+      offering: 'DevBox-as-a-Service'
+      solution: 'DevBox'
+      landingZone: 'DevBox'
+    }
+  }
+]
+
+@description('Configure Projects')
+module devCenterprojects 'devCenter/management/devCenterProjectModule.bicep' = {
+  name: 'Projects'
+  scope: resourceGroup()
+  params: {
+    devCenterName: deployDevCenter.outputs.devCenterName
+    projects: projects
+    devBoxDefinitions: devBoxDefinitions
   }
 }

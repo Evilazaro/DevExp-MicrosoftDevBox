@@ -2,39 +2,12 @@
 param devCenterName string
 
 @description('Projects')
-var projects = [
-  {
-    name: 'eShop'
-    tags: {
-      division: 'PlatformEngineeringTeam-DevEx'
-      enrironment: 'Production'
-      offering: 'DevBox-as-a-Service'
-      solution: 'DevBox'
-      landingZone: 'eShop'
-    }
-  }
-  {
-    name: 'Contoso-Traders'
-    tags: {
-      division: 'PlatformEngineeringTeam-DevEx'
-      enrironment: 'Production'
-      offering: 'DevBox-as-a-Service'
-      solution: 'Contoso Traders'
-      landingZone: 'DevBox'
-    }
-  }
-  {
-    name: 'DevBox'
-    tags: {
-      division: 'PlatformEngineeringTeam-DevEx'
-      enrironment: 'Production'
-      offering: 'DevBox-as-a-Service'
-      solution: 'DevBox'
-      landingZone: 'DevBox'
-    }
-  }
-]
+param projects array
 
+@description('DevBox Definitions')
+param devBoxDefinitions array
+
+@description('Projects Resoure')
 module deployDevCenterProject 'devCenterProjectResource.bicep' = [
   for project in projects: {
     name: 'Project-${project.name}'
@@ -42,6 +15,8 @@ module deployDevCenterProject 'devCenterProjectResource.bicep' = [
       devCenterName: devCenterName
       name: project.name
       tags: project.tags
+      devBoxDefinitions: devBoxDefinitions
     }
   }
 ]
+

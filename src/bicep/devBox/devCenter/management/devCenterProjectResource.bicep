@@ -3,6 +3,8 @@ param devCenterName string
 
 @description('Project Name')
 param name string
+@description('Dev Box Definitions')
+param devBoxDefinitions array
 
 @description('Tags')
 param tags object
@@ -29,3 +31,12 @@ output devCenterProjectId string = devCenterProject.id
 
 @description('Dev Center Project Resource Name')
 output devCenterProjectName string = devCenterProject.name
+
+module devBoxPool 'devBoxPool/devBoxPoolResource.bicep' = [for devBoxDefinition in devBoxDefinitions: {
+  name: 'DevBoxPool-${devBoxDefinition.name}-${name}'
+  params: {
+    projectName: name
+    devBoxDefinitionName: devBoxDefinition.name
+    name: 'DevBoxPool-${devBoxDefinition.name}-${name}'
+  }
+}]
