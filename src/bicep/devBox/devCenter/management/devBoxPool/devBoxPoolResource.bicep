@@ -21,7 +21,7 @@ resource devBoxPool 'Microsoft.DevCenter/projects/pools@2024-10-01-preview' = [
     parent: project
     properties: {
       devBoxDefinitionName: devBoxDefinitionName
-      displayName: '${project.name}-${devBoxDefinitionName}-pool'
+      displayName: '${projectName}-${devBoxDefinitionName}-pool'
       networkConnectionName: networkConnectionName
       localAdministrator: 'Enabled'
       singleSignOnStatus: 'Enabled'
