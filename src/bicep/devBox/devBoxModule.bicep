@@ -141,6 +141,7 @@ var projects = [
       solution: 'DevBox'
       landingZone: 'eShop'
     }
+    devBoxDefinitions: deployDevCenterDevBoxDefinitions.outputs.devBoxDefinitions 
   }
   {
     name: 'Contoso-Traders'
@@ -152,6 +153,7 @@ var projects = [
       solution: 'Contoso Traders'
       landingZone: 'DevBox'
     }
+    devBoxDefinitions: deployDevCenterDevBoxDefinitions.outputs.devBoxDefinitions
   }
   {
     name: 'Fabrikam'
@@ -163,6 +165,7 @@ var projects = [
       solution: 'Fabrikam'
       landingZone: 'DevBox'
     }
+    devBoxDefinitions: deployDevCenterDevBoxDefinitions.outputs.devBoxDefinitions
   }
 ]
 
@@ -174,9 +177,6 @@ module deployDevCenterprojects 'devCenter/management/devCenterProjectModule.bice
     devCenterName: deployDevCenter.outputs.devCenterName
     projects: projects
   }
-  dependsOn:  [
-    deployDevCenterDevBoxDefinitions
-  ]
 }
 
 @description('Dev Box Pool')
@@ -184,10 +184,7 @@ module deployDevBoxPools 'devCenter/management/devBoxPool/devCenterPoolModule.bi
   name: 'DevBoxPools'
   scope: resourceGroup()
   params: {
-    projects: projects
+    projects: deployDevCenterprojects.outputs.devCenterProjects
     devBoxDefinitions: deployDevCenterDevBoxDefinitions.outputs.devBoxDefinitions
   }
-  dependsOn: [
-    deployDevCenterprojects
-  ]
 }

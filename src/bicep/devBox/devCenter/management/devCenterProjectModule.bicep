@@ -17,4 +17,8 @@ module deployDevCenterProject 'devCenterProjectResource.bicep' = [
 ]
 
 @description('Projects Created')
-output devCenterProjects array = [for (project, i) in projects: deployDevCenterProject[i].outputs.projectName]
+output devCenterProjects array = [for (project, i) in projects: {
+  name: deployDevCenterProject[i].outputs.projectName
+  id: deployDevCenterProject[i].outputs.devCenterProjectId
+  networkConnectionName: projects[i].networkConnectionName
+}]
