@@ -31,7 +31,7 @@ resource devBoxDefinition 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024
       id: '${resourceId('Microsoft.DevCenter/devcenters/',devCenter.name)}/galleries/default/images/${sku.imageName}'
     }
     sku: {
-      name: sku.nam
+      name: sku.name
     }
   }
 }
