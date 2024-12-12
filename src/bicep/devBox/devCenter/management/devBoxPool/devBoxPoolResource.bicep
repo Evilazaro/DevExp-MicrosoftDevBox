@@ -15,13 +15,13 @@ resource project 'Microsoft.DevCenter/projects@2024-10-01-preview' existing = {
 
 @description('Dev Box Pool Resource')
 resource devBoxPool 'Microsoft.DevCenter/projects/pools@2024-10-01-preview' = [
-  for devBoxDefinitionName in devBoxDefinitions: {
-    name: '${projectName}-${devBoxDefinitionName}-pool'
+  for devBoxDefinition in devBoxDefinitions: {
+    name: '${projectName}-${devBoxDefinition.name}-pool'
     location: resourceGroup().location
     parent: project
     properties: {
-      devBoxDefinitionName: devBoxDefinitionName
-      displayName: '${projectName}-${devBoxDefinitionName}-pool'
+      devBoxDefinitionName: devBoxDefinition.name
+      displayName: '${projectName}-${devBoxDefinition.name}-pool'
       networkConnectionName: networkConnectionName
       localAdministrator: 'Enabled'
       singleSignOnStatus: 'Enabled'
