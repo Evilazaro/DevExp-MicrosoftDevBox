@@ -18,6 +18,7 @@ param environmentType string
 @description('Deploy Network Connectivity Resources')
 module deployNetworkConnectivity 'network/connectivityModule.bicep' = {
   name: 'Connectivity'
+  scope: resourceGroup(virtualNetworkResourceGroupName)
   params: {
     environmentType: environmentType
     virtualNetworkResourceGroupName: virtualNetworkResourceGroupName 

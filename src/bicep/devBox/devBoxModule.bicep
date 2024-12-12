@@ -43,6 +43,7 @@ module deployDevCenter 'devCenter/devCenterResource.bicep' = {
 module networkConnectionAttachment 'devCenter/connectivity/networkConnectionAttachmentResource.bicep' = [
   for networkConnection in networkConnections: {
     name: networkConnection
+    scope:resourceGroup()
     params: {
       devCenterName: deployDevCenter.outputs.devCenterName
       name: networkConnection
@@ -52,7 +53,7 @@ module networkConnectionAttachment 'devCenter/connectivity/networkConnectionAtta
 ]
 
 @description('Configure Environment Types')
-module environmentTypes 'devCenter/environmentConfiguration/environmentTypeModule.bicep' = {
+module deployDevCenterEnvironmentTypes 'devCenter/environmentConfiguration/environmentTypeModule.bicep' = {
   name: 'EnvironmentTypes'
   scope: resourceGroup()
   params: {
@@ -62,7 +63,7 @@ module environmentTypes 'devCenter/environmentConfiguration/environmentTypeModul
 
 
 @description('Configure Catalogs')
-module catalogs 'devCenter/environmentConfiguration/catalogModule.bicep' = {
+module deployDevCenterCatalogs 'devCenter/environmentConfiguration/catalogModule.bicep' = {
   name: 'Catalogs'
   scope: resourceGroup()
   params: {
@@ -121,8 +122,9 @@ var devBoxDefinitions = [
 ]
 
 @description('Deploy DevBox Definitions')
-module devBoxDefinition 'devCenter/devBoxDefinition/devBoxDefinitionModule.bicep' = {
+module deployDevCenterDevBoxDefinitions 'devCenter/devBoxDefinition/devBoxDefinitionModule.bicep' = {
   name: 'DevBoxDefinition'
+  scope: resourceGroup()
   params: {
     devCenterName: deployDevCenter.outputs.devCenterName
     devBoxDefinitions: devBoxDefinitions
@@ -167,7 +169,7 @@ var projects = [
 ]
 
 @description('Configure Projects')
-module devCenterprojects 'devCenter/management/devCenterProjectModule.bicep' = {
+module deployDevCenterprojects 'devCenter/management/devCenterProjectModule.bicep' = {
   name: 'Projects'
   scope: resourceGroup()
   params: {
@@ -175,20 +177,19 @@ module devCenterprojects 'devCenter/management/devCenterProjectModule.bicep' = {
     projects: projects
   }
   dependsOn:  [
-    devBoxDefinition
+    deployDevCenterDevBoxDefinitions
   ]
 }
 
 @description('Dev Box Pool')
-module devBoxPools 'devCenter/management/devBoxPool/devCenterPoolModule.bicep' = {
+module deployDevBoxPools 'devCenter/management/devBoxPool/devCenterPoolModule.bicep' = {
   name: 'DevBoxPools'
   scope: resourceGroup()
   params: {
     projects: projects
-    devBoxDefinitions: devBoxDefinitions
+    devBoxDefinitions: deployDevCenterDevBoxDefinitions.outputs.devBoxDefinitions
   }
   dependsOn: [
-    devBoxDefinition
-    devCenterprojects
+    deployDevCenterprojects
   ]
 }
