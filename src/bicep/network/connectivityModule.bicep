@@ -77,4 +77,10 @@ module deployNetWorkConnection 'networkConnection/networkConnectionResource.bice
 ]
 
 @description('Network Connection Resource Names')
-output networkConnectionNames array = [for (subnet, i) in subnets: deployNetWorkConnection[i].outputs.networkConnectionName]
+output networkConnections array = [
+  for (subnet, i) in subnets: {
+    id: deployNetWorkConnection[i].outputs.networkConnectionId
+    name: deployNetWorkConnection[i].outputs.networkConnectionName
+    domainJoinType: deployNetWorkConnection[i].outputs.domainJoinType
+  }
+]

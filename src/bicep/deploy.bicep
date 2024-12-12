@@ -18,7 +18,6 @@ param environmentType string
 @description('Deploy Network Connectivity Resources')
 module deployNetworkConnectivity 'network/connectivityModule.bicep' = {
   name: 'Connectivity'
-  scope: resourceGroup(virtualNetworkResourceGroupName)
   params: {
     environmentType: environmentType
     virtualNetworkResourceGroupName: virtualNetworkResourceGroupName 
@@ -27,7 +26,7 @@ module deployNetworkConnectivity 'network/connectivityModule.bicep' = {
 }
 
 @description('Network Connections names')
-var networkConnections = deployNetworkConnectivity.outputs.networkConnectionNames
+var networkConnections = deployNetworkConnectivity.outputs.networkConnections
 
 @description('Deploy Dev Box Resources')
 module deployDevBox 'devBox/devBoxModule.bicep' = {
@@ -39,5 +38,3 @@ module deployDevBox 'devBox/devBoxModule.bicep' = {
     networkConnections: networkConnections
   }
 }
-
-

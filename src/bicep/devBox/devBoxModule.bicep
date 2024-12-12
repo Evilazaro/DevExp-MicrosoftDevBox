@@ -42,11 +42,11 @@ module deployDevCenter 'devCenter/devCenterResource.bicep' = {
 @description('Attach Dev Center to Network Connection')
 module networkConnectionAttachment 'devCenter/connectivity/networkConnectionAttachmentResource.bicep' = [
   for networkConnection in networkConnections: {
-    name: networkConnection
+    name: networkConnection.name
     scope:resourceGroup()
     params: {
       devCenterName: deployDevCenter.outputs.devCenterName
-      name: networkConnection
+      name: networkConnection.name
       networkConnectionResourceGroupName: networkConnectionResourceGroupName
     }
   }
@@ -61,7 +61,6 @@ module deployDevCenterEnvironmentTypes 'devCenter/environmentConfiguration/envir
   }
 }
 
-
 @description('Configure Catalogs')
 module deployDevCenterCatalogs 'devCenter/environmentConfiguration/catalogModule.bicep' = {
   name: 'Catalogs'
@@ -70,7 +69,6 @@ module deployDevCenterCatalogs 'devCenter/environmentConfiguration/catalogModule
     devCenterName: deployDevCenter.outputs.devCenterName
   }
 }
-
 
 @description('Dev Box Definitions')
 var devBoxDefinitions = [
