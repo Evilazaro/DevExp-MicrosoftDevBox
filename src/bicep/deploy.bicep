@@ -39,11 +39,4 @@ module deployDevBox 'devBox/devBoxModule.bicep' = {
   }
 }
 
-@description('Deploy DevBox Definitions')
-module devBoxDefinition 'devBox/devCenter/devBoxDefinition/devBoxDefinitionModule.bicep' = {
-  name: 'DevBoxDefinition'
-  params: {
-    devCenterName: workloadName
-  }
-}
 

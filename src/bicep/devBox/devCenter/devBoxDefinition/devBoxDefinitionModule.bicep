@@ -21,10 +21,24 @@ var devBoxDefinitions = [
     }
   }
   {
-    name: 'devBoxDefinition2'
+    name: 'frontEnd-Engineer'
     sku: {
-      name: 'Standard_D4_v3'
-      tier: 'Standard'
+      name: 'general_i_16c64gb256ssd_v2'
+      imageName: 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
+    }
+    tags: {
+      division: 'PlatformEngineeringTeam-DevEx'
+      enrironment: 'Production'
+      offering: 'DevBox-as-a-Service'
+      solution: devCenterName
+      landingZone: 'DevBox'
+    }
+  }
+  {
+    name: 'web-designer'
+    sku: {
+      name: 'general_i_16c64gb256ssd_v2'
+      imageName: 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
     }
     tags: {
       division: 'PlatformEngineeringTeam-DevEx'
@@ -39,6 +53,7 @@ var devBoxDefinitions = [
 module devBoxDefinition 'devBoxDefinitionResource.bicep' = [
   for devBoxDefinition in devBoxDefinitions: {
     name: devBoxDefinition.name
+    scope:resourceGroup()
     params: {
       devCenterName: devCenterName
       name: devBoxDefinition.name

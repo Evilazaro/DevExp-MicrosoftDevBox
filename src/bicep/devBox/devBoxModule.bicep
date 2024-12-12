@@ -77,3 +77,12 @@ module projects 'devCenter/management/devCenterProjectModule.bicep' = {
     devCenterName: deployDevCenter.outputs.devCenterName
   }
 }
+
+
+@description('Deploy DevBox Definitions')
+module devBoxDefinition 'devCenter/devBoxDefinition/devBoxDefinitionModule.bicep' = {
+  name: 'DevBoxDefinition'
+  params: {
+    devCenterName: deployDevCenter.outputs.devCenterName
+  }
+}
