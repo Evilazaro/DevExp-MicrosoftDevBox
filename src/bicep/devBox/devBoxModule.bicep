@@ -154,7 +154,7 @@ var projects = [
     }
   }
   {
-    name: 'DevBox'
+    name: 'DevExBox'
     networkConnectionName: networkConnections[2]
     tags: {
       division: 'PlatformEngineeringTeam-DevEx'
