@@ -174,6 +174,9 @@ module devCenterprojects 'devCenter/management/devCenterProjectModule.bicep' = {
     devCenterName: deployDevCenter.outputs.devCenterName
     projects: projects
   }
+  dependsOn:  [
+    devBoxDefinition
+  ]
 }
 
 @description('Dev Box Pool')
