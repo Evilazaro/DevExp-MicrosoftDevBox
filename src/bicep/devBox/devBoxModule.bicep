@@ -184,4 +184,8 @@ module devBoxPools 'devCenter/management/devBoxPool/devCenterPoolModule.bicep' =
     projects: projects
     devBoxDefinitions: devBoxDefinitions
   }
+  dependsOn: [
+    devBoxDefinition
+    devCenterprojects
+  ]
 }
