@@ -25,7 +25,7 @@ var tags = {
   landingZone: 'DevBox'
 }
 @description('Deploy Dev Center resource to Azure')
-module deployDevCenter 'devCenter/devCenter.bicep' = {
+module deployDevCenter 'devCenter/devCenterResource.bicep' = {
   name: 'DevCenter'
   scope: resourceGroup()
   params: {
@@ -38,26 +38,8 @@ module deployDevCenter 'devCenter/devCenter.bicep' = {
   }
 }
 
-@description('Output Dev Center resource id')
-output devCenterId string = deployDevCenter.outputs.devCenterId
-
-@description('Output Dev Center name')
-output devCenterName string = deployDevCenter.outputs.devCenterName
-
-@description('Output Dev Center Catalog Item Sync Enable Status')
-output catalogItemSyncEnableStatus string = deployDevCenter.outputs.devCenterCatalogItemSyncEnableStatus
-
-@description('Output Dev Center Microsoft Hosted Network Enable Status')
-output microsoftHostedNetworkEnableStatus string = deployDevCenter.outputs.devCenterMicrosoftHostedNetworkEnableStatus
-
-@description('Output Dev Center Install Azure Monitor Agent Enable Status')
-output installAzureMonitorAgentEnableStatus string = deployDevCenter.outputs.devCenterInstallAzureMonitorAgentEnableStatus
-
-@description('Output Dev Center location')
-output devCenterLocation string = deployDevCenter.outputs.devCenterLocation
-
 @description('Attach Dev Center to Network Connection')
-module networkConnectionAttachment 'devCenter/connectivity/networkConnectionAttachment.bicep' = [
+module networkConnectionAttachment 'devCenter/connectivity/networkConnectionAttachmentResource.bicep' = [
   for networkConnection in networkConnections: {
     name: networkConnection
     params: {
@@ -69,7 +51,7 @@ module networkConnectionAttachment 'devCenter/connectivity/networkConnectionAtta
 ]
 
 @description('Configure Environment Types')
-module environmentTypes 'devCenter/environmentConfiguration/deployDevCenterEnvironmentType.bicep' = {
+module environmentTypes 'devCenter/environmentConfiguration/environmentTypeModule.bicep' = {
   name: 'EnvironmentTypes'
   scope: resourceGroup()
   params: {
@@ -77,11 +59,9 @@ module environmentTypes 'devCenter/environmentConfiguration/deployDevCenterEnvir
   }
 }
 
-@description('Output Environment Types')
-output environmentTypes array = environmentTypes.outputs.environmentTypeNames
 
 @description('Configure Catalogs')
-module catalogs 'devCenter/environmentConfiguration/deployCatalog.bicep' = {
+module catalogs 'devCenter/environmentConfiguration/catalogModule.bicep' = {
   name: 'Catalogs'
   scope: resourceGroup()
   params: {
@@ -90,7 +70,7 @@ module catalogs 'devCenter/environmentConfiguration/deployCatalog.bicep' = {
 }
 
 @description('Configure Projects')
-module projects 'devCenter/management/deployDevCenterProject.bicep' = {
+module projects 'devCenter/management/devCenterProjectModule.bicep' = {
   name: 'Projects'
   scope: resourceGroup()
   params: {

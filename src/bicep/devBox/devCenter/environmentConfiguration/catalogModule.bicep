@@ -48,7 +48,7 @@ var tags = {
 }
 
 @description('Deploy Catalogs')
-module deployCatalog 'catalogs.bicep' = [
+module deployCatalog 'catalogResource.bicep' = [
   for catalog in catalogs: {
     name: 'Catalog-${catalog.name}' 
     params: {

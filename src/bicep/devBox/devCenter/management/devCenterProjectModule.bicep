@@ -35,7 +35,7 @@ var projects = [
   }
 ]
 
-module deployDevCenterProject 'devCenterProject.bicep' = [
+module deployDevCenterProject 'devCenterProjectResource.bicep' = [
   for project in projects: {
     name: 'Project-${project.name}'
     params: {
@@ -45,9 +45,3 @@ module deployDevCenterProject 'devCenterProject.bicep' = [
     }
   }
 ]
-
-@description('Dev Center Project Resource IDs')
-output devCenterProjectIds array = [for (project,i) in projects: deployDevCenterProject[i].outputs.devCenterProjectId]
-
-@description('Dev Center Project Resource Names')
-output devCenterProjectNames array = [for (project,i) in projects: deployDevCenterProject[i].outputs.devCenterProjectName]

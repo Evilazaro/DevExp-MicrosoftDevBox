@@ -16,8 +16,8 @@ param devCenterResourceGroupName string
 param environmentType string
 
 @description('Deploy Network Connectivity Resources')
-module deployNetworkConnectivity 'network/virtualNetwork/deployVnet.bicep' = {
-  name: 'VirtualNetwork'
+module deployNetworkConnectivity 'network/connectivityModule.bicep' = {
+  name: 'Connectivity'
   params: {
     environmentType: environmentType
     virtualNetworkResourceGroupName: virtualNetworkResourceGroupName 
@@ -25,30 +25,11 @@ module deployNetworkConnectivity 'network/virtualNetwork/deployVnet.bicep' = {
   }
 }
 
-@description('Virtual Network Resource ID')
-output virtualNetworkId string = deployNetworkConnectivity.outputs.virtualNetworkId
-
-@description('Virtual Network Resource Name')
-output virtualNetworkName string = deployNetworkConnectivity.outputs.virtualNetworkName
-
-@description('Virtual Network Resource Location')
-output virtualNetworkLocation string = deployNetworkConnectivity.outputs.virtualNetworkLocation
-
-@description('Virtual Network Resource Address Prefixes')
-output virtualNetworkAddressPrefixes array = deployNetworkConnectivity.outputs.virtualNetworkAddressPrefixes
-
-@description('Virtual Network Resource Subnets')
-output virtualNetworkSubnets array = deployNetworkConnectivity.outputs.virtualNetworkSubnets
-
-@description('Tags')
-output virtualNetworkTags object = deployNetworkConnectivity.outputs.virtualNetworkTags
-
 @description('Network Connections names')
 var networkConnections = deployNetworkConnectivity.outputs.networkConnectionNames
 
-
 @description('Deploy Dev Box Resources')
-module deployDevBox 'devBox/deployDevBox.bicep' = {
+module deployDevBox 'devBox/devBoxModule.bicep' = {
   name: 'DevBox'
   scope: resourceGroup(devCenterResourceGroupName)
   params: {
@@ -57,22 +38,4 @@ module deployDevBox 'devBox/deployDevBox.bicep' = {
     networkConnections: networkConnections
   }
 }
-
-@description('Output Dev Center resource id')
-output devCenterId string = deployDevBox.outputs.devCenterId
-
-@description('Output Dev Center name')
-output devCenterName string = deployDevBox.outputs.devCenterName
-
-@description('Output Dev Center Catalog Item Sync Enable Status')
-output catalogItemSyncEnableStatus string = deployDevBox.outputs.catalogItemSyncEnableStatus
-
-@description('Output Dev Center Microsoft Hosted Network Enable Status')
-output microsoftHostedNetworkEnableStatus string = deployDevBox.outputs.microsoftHostedNetworkEnableStatus
-
-@description('Output Dev Center Install Azure Monitor Agent Enable Status')
-output installAzureMonitorAgentEnableStatus string = deployDevBox.outputs.installAzureMonitorAgentEnableStatus
-
-@description('Output Dev Center location')
-output devCenterLocation string = deployDevBox.outputs.devCenterLocation
 
