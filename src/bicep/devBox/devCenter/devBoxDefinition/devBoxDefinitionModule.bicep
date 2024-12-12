@@ -1,9 +1,6 @@
 @description('Dev Center Name')
 param devCenterName string
 
-@description('Hibernate Support')
-var hibernateSupport = 'Enabled'
-
 @description('Dev Box Definitions')
 var devBoxDefinitions = [
   {
