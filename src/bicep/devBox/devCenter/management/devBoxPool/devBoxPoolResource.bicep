@@ -16,7 +16,7 @@ resource project 'Microsoft.DevCenter/projects@2024-10-01-preview' existing = {
 @description('Dev Box Pool Resource')
 resource devBoxPool 'Microsoft.DevCenter/projects/pools@2024-10-01-preview' = [
   for devBoxDefinitionName in devBoxDefinitions: {
-    name: '${project.name}-${devBoxDefinitionName}-pool'
+    name: '${projectName}-${devBoxDefinitionName}-pool'
     location: resourceGroup().location
     parent: project
     properties: {
