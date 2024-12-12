@@ -49,7 +49,7 @@ var tags = {
 }
 
 @description('Deploy Virtual Network Resource')
-module deployVirtualNetwork 'virtualNetwork.bicep' = {
+module deployVirtualNetwork 'virtualNetwork/virtualNetworkResource.bicep' = {
   name: 'VirtualNetwork'
   scope: resourceGroup(virtualNetworkResourceGroupName)
   params: {
@@ -63,7 +63,7 @@ module deployVirtualNetwork 'virtualNetwork.bicep' = {
 }
 
 @description('Deploy Network Connection Resource')
-module deployNetWorkConnection '../networkConnection/networkConnection.bicep' = [
+module deployNetWorkConnection 'networkConnection/networkConnectionResource.bicep' = [
   for subnet in subnets: {
     name: '${subnet.name}-connection'
     scope: resourceGroup(virtualNetworkResourceGroupName)

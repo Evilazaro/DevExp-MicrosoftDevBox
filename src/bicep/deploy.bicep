@@ -16,7 +16,7 @@ param devCenterResourceGroupName string
 param environmentType string
 
 @description('Deploy Network Connectivity Resources')
-module deployNetworkConnectivity 'network/virtualNetwork/deployVnet.bicep' = {
+module deployNetworkConnectivity 'network/connectivityModule.bicep' = {
   name: 'Connectivity'
   params: {
     environmentType: environmentType
@@ -29,7 +29,7 @@ module deployNetworkConnectivity 'network/virtualNetwork/deployVnet.bicep' = {
 var networkConnections = deployNetworkConnectivity.outputs.networkConnectionNames
 
 @description('Deploy Dev Box Resources')
-module deployDevBox 'devBox/deployDevBox.bicep' = {
+module deployDevBox 'devBox/devBoxModule.bicep' = {
   name: 'DevBox'
   scope: resourceGroup(devCenterResourceGroupName)
   params: {

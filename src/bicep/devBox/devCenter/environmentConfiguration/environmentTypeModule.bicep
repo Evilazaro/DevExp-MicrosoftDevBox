@@ -30,7 +30,7 @@ var tags = {
 }
 
 @description('Deploy Environment Type')
-module deployEnvironmentType 'environmentTypes.bicep' = [
+module deployEnvironmentType 'environmentTypesResource.bicep' = [
   for environment in environments: {
     name: 'EnvironmentType-${environment.name}'
     params: {
@@ -40,6 +40,3 @@ module deployEnvironmentType 'environmentTypes.bicep' = [
     }
   }
 ]
-
-@description('Environment Type Names')
-output environmentTypeNames array = [for environment in environments: environment.name]
