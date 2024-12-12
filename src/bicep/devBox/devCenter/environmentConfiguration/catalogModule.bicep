@@ -3,31 +3,7 @@ param devCenterName string
 
 var catalogs = [
   {
-    name: 'catalog1'
-    uri: 'https://github.com/Evilazaro/DevExp-MicrosoftDevBox.git'
-    branch: 'main'
-    path: '/customizations/tasks'
-    syncType: 'Scheduled'
-    type: 'GitHub'
-  }
-  {
-    name: 'catalog2'
-    uri: 'https://github.com/Evilazaro/DevExp-MicrosoftDevBox.git'
-    branch: 'main'
-    path: '/customizations/tasks'
-    syncType: 'Scheduled'
-    type: 'GitHub'
-  }
-  {
-    name: 'catalog3'
-    uri: 'https://github.com/Evilazaro/DevExp-MicrosoftDevBox.git'
-    branch: 'main'
-    path: '/customizations/tasks'
-    syncType: 'Scheduled'
-    type: 'GitHub'
-  }
-  {
-    name: 'catalog4'
+    name: 'Contoso-DevEx-Custom-Tasks'
     uri: 'https://github.com/Evilazaro/DevExp-MicrosoftDevBox.git'
     branch: 'main'
     path: '/customizations/tasks'
