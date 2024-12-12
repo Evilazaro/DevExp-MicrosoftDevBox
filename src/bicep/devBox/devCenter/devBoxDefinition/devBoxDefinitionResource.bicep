@@ -28,7 +28,7 @@ resource devBoxDefinition 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024
   properties:{
     hibernateSupport: hibernateSupport
     imageReference: {
-      id: resourceId('Microsoft.DevCenter/devcenters/',devCenter.name,'galleries','default','images',sku.imageName)
+      id: '${resourceId('Microsoft.DevCenter/devcenters/',devCenter.name)}/galleries/default/images/${sku.imageName}'
     }
     sku: {
       name: sku.nam
