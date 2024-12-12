@@ -38,24 +38,6 @@ module deployDevCenter 'devCenter/devCenter.bicep' = {
   }
 }
 
-@description('Output Dev Center resource id')
-output devCenterId string = deployDevCenter.outputs.devCenterId
-
-@description('Output Dev Center name')
-output devCenterName string = deployDevCenter.outputs.devCenterName
-
-@description('Output Dev Center Catalog Item Sync Enable Status')
-output catalogItemSyncEnableStatus string = deployDevCenter.outputs.devCenterCatalogItemSyncEnableStatus
-
-@description('Output Dev Center Microsoft Hosted Network Enable Status')
-output microsoftHostedNetworkEnableStatus string = deployDevCenter.outputs.devCenterMicrosoftHostedNetworkEnableStatus
-
-@description('Output Dev Center Install Azure Monitor Agent Enable Status')
-output installAzureMonitorAgentEnableStatus string = deployDevCenter.outputs.devCenterInstallAzureMonitorAgentEnableStatus
-
-@description('Output Dev Center location')
-output devCenterLocation string = deployDevCenter.outputs.devCenterLocation
-
 @description('Attach Dev Center to Network Connection')
 module networkConnectionAttachment 'devCenter/connectivity/networkConnectionAttachment.bicep' = [
   for networkConnection in networkConnections: {

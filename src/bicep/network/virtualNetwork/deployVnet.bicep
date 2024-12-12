@@ -62,24 +62,6 @@ module deployVirtualNetwork 'virtualNetwork.bicep' = {
   }
 }
 
-@description('Virtual Network Resource ID')
-output virtualNetworkId string = deployVirtualNetwork.outputs.virtualNetworkId
-
-@description('Virtual Network Resource Name')
-output virtualNetworkName string = deployVirtualNetwork.outputs.virtualNetworkName
-
-@description('Virtual Network Resource Location')
-output virtualNetworkLocation string = deployVirtualNetwork.outputs.virtualNetworkLocation
-
-@description('Virtual Network Resource Address Prefixes')
-output virtualNetworkAddressPrefixes array = deployVirtualNetwork.outputs.virtualNetworkAddressPrefixes
-
-@description('Virtual Network Resource Subnets')
-output virtualNetworkSubnets array = deployVirtualNetwork.outputs.virtualNetworkSubnets
-
-@description('Tags')
-output virtualNetworkTags object = deployVirtualNetwork.outputs.virtualNetworkTags
-
 @description('Deploy Network Connection Resource')
 module deployNetWorkConnection '../networkConnection/networkConnection.bicep' = [
   for subnet in subnets: {
@@ -93,8 +75,6 @@ module deployNetWorkConnection '../networkConnection/networkConnection.bicep' = 
     }
   }
 ]
-@description('Network Connection Resource IDs')
-output networkConnectionIds array = [for (subnet, i) in subnets: deployNetWorkConnection[i].outputs.networkConnectionId]
 
 @description('Network Connection Resource Names')
 output networkConnectionNames array = [for (subnet, i) in subnets: deployNetWorkConnection[i].outputs.networkConnectionName]
