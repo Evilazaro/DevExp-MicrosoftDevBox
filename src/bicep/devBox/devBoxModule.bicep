@@ -154,13 +154,13 @@ var projects = [
     }
   }
   {
-    name: 'DevExBox'
+    name: 'Fabrikam'
     networkConnectionName: networkConnections[2]
     tags: {
       division: 'PlatformEngineeringTeam-DevEx'
       enrironment: 'Production'
       offering: 'DevBox-as-a-Service'
-      solution: 'DevBox'
+      solution: 'Fabrikam'
       landingZone: 'DevBox'
     }
   }
