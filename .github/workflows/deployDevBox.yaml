@@ -80,16 +80,11 @@ jobs:
       # Deploy the Landing Zone Resources using the deployment script
       - name: Deploy Dev Box DevCenter Resources for ${{ env.workloadName }} to Azure
         run: |
-          $subId=$(az account show --query id -o tsv) \
-          $subName=$(az account show --subscription $subId --query name -o tsv) \
-          echo 'Subscription Name: ' $subName \
-          echo 'Subscription ID: ' $subId
-          # sudo az account set -s $subName \
-          # sudo az deployment group create \
-          #   --resource-group ${{ env.devBoxResourceGroupName }} \
-          #   --template-file ./src/bicep/deploy.bicep \
-          #   --parameters workloadName=${{ env.workloadName }} devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
-          #   --mode Complete
+          sudo az deployment group create \
+            --resource-group ${{ env.devBoxResourceGroupName }} \
+            --template-file ./src/bicep/deploy.bicep \
+            --parameters workloadName=${{ env.workloadName }} devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
+            --mode Complete
       
     #   # Deploy Dev Center Resources using ARM template
     #   - name: Deploy Dev Box DevCenter Resources to Azure
