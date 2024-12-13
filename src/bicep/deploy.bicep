@@ -11,31 +11,41 @@ param connectivityResourceGroupName string
 var contosoProjectsInfo = [
   {
     name: 'eShop'
-    networkConnection:{
+    networkConnection: {
       domainJoinType: 'AzureADJoin'
     }
   }
   {
     name: 'Contoso-Traders'
-    networkConnection:{
+    networkConnection: {
       domainJoinType: 'AzureADJoin'
     }
   }
 ]
 
+@description('Contoso Dev Center Catalog')
+var contosoDevCenterCatalog = {
+  name: 'Contoso-DevCenter'
+  syncType: 'Scheduled'
+  type: 'GitHub'
+  uri: 'https://github.com/Evilazaro/DevExp-DevBox.git'
+  branch: 'main'
+  path: '/customizations/tasks'
+}
+
 @description('Deploy Connectivity Resources')
-module connectivityResources 'connectivity/connectivityWorkload.bicep'= {
+module connectivityResources 'connectivity/connectivityWorkload.bicep' = {
   name: 'connectivity'
   scope: resourceGroup(devBoxResourceGroupName)
   params: {
-    contosoProjectsInfo: contosoProjectsInfo 
+    contosoProjectsInfo: contosoProjectsInfo
     workloadName: workloadName
     connectivityResourceGroupName: connectivityResourceGroupName
   }
 }
 
 @description('Deploy DevEx Resources')
-module devExResources 'DevEx/devExWorkload.bicep'= {
+module devExResources 'DevEx/devExWorkload.bicep' = {
   name: 'DevBox'
   scope: resourceGroup(devBoxResourceGroupName)
   params: {
@@ -43,5 +53,6 @@ module devExResources 'DevEx/devExWorkload.bicep'= {
     contosoProjectsInfo: contosoProjectsInfo
     networkConnections: connectivityResources.outputs.networkConnections
     connectivityResourceGroupName: connectivityResourceGroupName
+    devCenterCatalog: contosoDevCenterCatalog
   }
 }

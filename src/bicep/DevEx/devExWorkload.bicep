@@ -10,6 +10,9 @@ param contosoProjectsInfo array
 @description('Network Connections')
 param networkConnections array
 
+@description('Dev Center Catalog')
+param devCenterCatalog object
+
 @description('Tags')
 var tags = {
   workload: workloadName
@@ -47,6 +50,22 @@ module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectio
     }
   }
 ]
+
+@description('Contoso Dev Center Catalog')
+module contosoDevCenterCatalog 'DevCenter/EnvironmentConfiguration/catalogs.bicep' = {
+  name: 'DevCenterCatalog'
+  scope: resourceGroup()
+  params: {
+    name: devCenterCatalog.name
+    tags: tags
+    branch: devCenterCatalog.branch
+    devCenterName: devCenter.outputs.devCenterName
+    path: devCenterCatalog.path
+    syncType: devCenterCatalog.syncType
+    type: devCenterCatalog.type
+    uri: devCenterCatalog.uri
+  }
+}
 
 // @description('Network Connection Attachments')
 // output networkConnectionAttachments array = [
