@@ -16,11 +16,11 @@ module contosoDevCenterProjects 'devCenterProjectResource.bicep' = [for contosoP
 }
 ]
 
-@description('Output Contoso Dev Center Projects created')
-output outPutcontosoProjectsCreated array = [for (contosoProject,i) in contosoProjectsInfo: {
-  name: contosoDevCenterProjects[i].outputs.devCenterProjectName
-  id: contosoDevCenterProjects[i].outputs.devCenterProjectId
-}]
+// @description('Output Contoso Dev Center Projects created')
+// output outPutcontosoProjectsCreated array = [for (contosoProject,i) in contosoProjectsInfo: {
+//   name: contosoDevCenterProjects[i].outputs.devCenterProjectName
+//   id: contosoDevCenterProjects[i].outputs.devCenterProjectId
+// }]
 
 
 // @description('Project Catalog')
