@@ -1,8 +1,17 @@
 @description('Project Name')
 param projectName string
 
-@description('Project Catalog Info')
-param projectCatalogInfo object
+@description('Project Catalog Name')
+param name string
+
+@description('Uri')
+param uri string
+
+@description('Branch')
+param branch string
+
+@description('Path')
+param path string
 
 @description('Project')
 resource project 'Microsoft.DevCenter/projects@2024-10-01-preview'existing = {
@@ -12,13 +21,13 @@ resource project 'Microsoft.DevCenter/projects@2024-10-01-preview'existing = {
 
 @description('Project Catalog Resource')
 resource projectCatalog 'Microsoft.DevCenter/projects/catalogs@2024-10-01-preview' = {
-  name: projectCatalogInfo.catalogName
+  name: name
   parent: project
   properties: {
     gitHub: {
-      uri: projectCatalogInfo.uri
-      branch: projectCatalogInfo.branch
-      path: projectCatalogInfo.path
+      uri: uri
+      branch: branch
+      path: path
     }
     syncType: 'Scheduled'
   }

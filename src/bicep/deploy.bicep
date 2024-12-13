@@ -14,7 +14,8 @@ var contosoProjectsInfo = [
     networkConnection: {
       domainJoinType: 'AzureADJoin'
     }
-    projectCatalog: {
+    catalog: {
+      projectName: 'eShop'
       catalogName: 'eShop'
       uri: 'https://github.com/Evilazaro/eShop.git'
       branch: 'main'
@@ -36,7 +37,8 @@ var contosoProjectsInfo = [
     networkConnection: {
       domainJoinType: 'AzureADJoin'
     }
-    projectCatalog: {
+    catalog: {
+      projectName: 'Contoso-Traders'
       catalogName: 'ContosoTraders'
       uri: 'https://github.com/Evilazaro/ContosoTraders.git'
       branch: 'main'
@@ -52,6 +54,23 @@ var contosoProjectsInfo = [
       offering: 'DevBox-as-a-Service'
       project: 'Contoso-Traders'
     }
+  }
+]
+
+var contosoProjectCatalogsInfo = [
+  {
+    projectName: 'eShop'
+    catalogName: 'eShop'
+    uri: 'https://github.com/Evilazaro/eShop.git'
+    branch: 'main'
+    path: '/customizations/tasks'
+  }
+  {
+    projectName: 'Contoso-Traders'
+    catalogName: 'ContosoTraders'
+    uri: 'https://github.com/Evilazaro/ContosoTraders.git'
+    branch: 'main'
+    path: '/customizations/tasks'
   }
 ]
 

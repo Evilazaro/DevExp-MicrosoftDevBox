@@ -66,12 +66,11 @@ jobs:
 
       # Deploy the Landing Zone Resources using the deployment script
       - name: Checking all changes for ${{ env.workloadName }} in the Connectivity Landing Zone environment before deploying
-        continue-on-error: true
         shell: bash
         id: check-changes-connectivity
         run: |
           az deployment group what-if \
-            --resource-group ${{ env.devBoxResourceGroupName }} \
+            --resource-group ${{ env.connectivityResourceGroupName }} \
             --template-file ./src/bicep/deploy.bicep \
             --parameters workloadName=${{ env.workloadName }} \
                 devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
@@ -80,7 +79,6 @@ jobs:
 
       # Deploy the Landing Zone Resources using the deployment script
       - name: Checking all changes for ${{ env.workloadName }} in the DevEX Landing Zone environment before deploying
-        continue-on-error: true
         shell: bash
         id: check-changes-dev-box
         run: |
@@ -93,7 +91,6 @@ jobs:
             --mode Complete
 
       - name: Deploy Dev Box DevCenter Resources for ${{ env.workloadName }} to Azure
-        continue-on-error: true
         shell: bash
         id: deploy-dev-center
         run: |
