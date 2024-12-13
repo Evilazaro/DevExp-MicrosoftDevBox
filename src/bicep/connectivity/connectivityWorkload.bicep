@@ -37,6 +37,7 @@ module virtualNetwork 'virtualNetwork/virtualNetworkResource.bicep'= {
     location: resourceGroup().location
     tags: tags
     addressPrefixes:addressPrefixes 
+    enableDdosProtection: true
     ddosProtectionPlanId: ddosProtectionPlan.outputs.ddosProtectionPlanId 
     subnets: projects
   }

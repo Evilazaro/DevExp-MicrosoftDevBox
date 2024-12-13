@@ -8,7 +8,7 @@ param devBoxResourceGroupName string
 param connectivityResourceGroupName string
 
 @description('Projects')
-var projects = [
+var contosoProjectsInfo = [
   {
     name: 'eShop'
     networkConnection:{
@@ -28,7 +28,7 @@ module connectivityResources 'connectivity/connectivityWorkload.bicep'= {
   name: 'connectivity'
   scope: resourceGroup(devBoxResourceGroupName)
   params: {
-    projects: projects 
+    projects: contosoProjectsInfo 
     workloadName: workloadName
     connectivityResourceGroupName: connectivityResourceGroupName
   }

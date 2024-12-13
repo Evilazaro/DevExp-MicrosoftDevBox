@@ -11,7 +11,7 @@ param addressPrefixes array
 param subnets array
 
 @description('Enable DDoS Protection Plan')
-param enableDdosProtection bool = false
+param enableDdosProtection bool
 
 @description('DDoS Protection Plan Resource ID')
 param ddosProtectionPlanId string
