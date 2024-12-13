@@ -9,7 +9,7 @@ param contosoProjectsInfo array
 
 @description('Address Prefixes')
 var addressPrefixes = [
-  '10.0.0.1/16'
+  '10.0.0.0/16'
 ]
 
 @description('Tags')
