@@ -76,9 +76,9 @@ jobs:
         run: ./deploy/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.connectivityResourceGroupName }} ${{ env.location }}
 
       # Deploy the Landing Zone Resources using the deployment script
-      - name: Deploy Landing Zone Resources for ${{ env.workloadName }}
+      - name: Deploy Dev Box DevCenter Resources for ${{ env.workloadName }} to Azure
         run: |
-          sudo az account set --subscription ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
+          sudo az account set --subscription $(az account show --subscription ${{ secrets.AZURE_CREDENTIALS.subscriptionId }} --query name -o tsv) 
           sudo az deployment group create \
             --resource-group ${{ env.devBoxResourceGroupName }} \
             --template-file ./src/bicep/deploy.bicep \
