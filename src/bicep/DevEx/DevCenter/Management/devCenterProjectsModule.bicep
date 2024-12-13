@@ -23,13 +23,13 @@ output outPutcontosoProjectsCreated array = [for (contosoProject,i) in contosoPr
 }]
 
 
-module projectCatalog 'projectCatalogResource.bicep' = {
-  name:'eShop-Catalog'
-  params: {
-    projectName: 'eShop'
-    projectCatalogInfo: contosoProjectsInfo[0].projectCatalog
-  }
-}
+// module projectCatalog 'projectCatalogResource.bicep' = {
+//   name:'eShop-Catalog'
+//   params: {
+//     projectName: 'eShop'
+//     projectCatalogInfo: contosoProjectsInfo[0].projectCatalog
+//   }
+// }
 
 
 // @description('Project Catalog')
