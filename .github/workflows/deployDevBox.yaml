@@ -55,6 +55,8 @@ jobs:
       # Update packages and upgrade Bicep
       - name: Update Packages and Upgrade Bicep
         run: |
+          sudo apt-get update && \
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash && \
           sudo az bicep upgrade
       
       # Checkout the repository to get the source code
