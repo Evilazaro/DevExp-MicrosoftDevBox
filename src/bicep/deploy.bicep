@@ -41,4 +41,7 @@ module devExResources 'DevEx/devExWorkload.bicep'= {
   params: {
     workloadName: workloadName
   }
+  dependsOn: [
+    connectivityResources
+  ]
 }
