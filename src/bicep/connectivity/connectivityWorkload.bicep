@@ -48,13 +48,13 @@ module virtualNetwork 'virtualNetwork/virtualNetworkResource.bicep'= {
 }
 
 @description('Network Connection Resource')
-module networkConnection 'networkConnection/networkConnectionResource.bicep' = [for netConnection in contosoProjectsInfo: {
+module networkConnection 'networkConnection/networkConnectionResource.bicep' = [for (netConnection,i) in contosoProjectsInfo: {
   name: 'netCon-${netConnection.name}'
   scope: resourceGroup(connectivityResourceGroupName)
   params: {
-    virtualNetworkName: virtualNetwork.outputs.virtualNetworkName
-    subnetName: netConnection.name
-    virtualNetworkResourceGroupName: resourceGroup().name
+    virtualNetworkName: virtualNetwork.name
+    subnetName: virtualNetwork.outputs.virtualNetworkSubnets[i].name
+    virtualNetworkResourceGroupName: connectivityResourceGroupName
     domainJoinType: netConnection.networkConnection.domainJoinType
   }
 }]
