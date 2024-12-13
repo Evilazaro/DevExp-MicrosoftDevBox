@@ -111,7 +111,7 @@ output environmentTypesCreated array = [for environmentType in environmentTypesI
 @description('Network Connection Attachment Resource')
 module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectionAttachmentResource.bicep' = [
   for (networkConnection, i) in networkConnections: {
-    name: '${contosoProjectsInfo[i].name}-${networkConnection.name}'
+    name: 'vnetCon-${contosoProjectsInfo[i].name}-${networkConnection.name}'
     scope: resourceGroup()
     params: {
       devCenterName: devCenter.outputs.devCenterName
@@ -158,7 +158,7 @@ var contosoDevCenterDevBoxDefinitionsInfo = [
 
 @description('Dev Center Dev Box Definitions')
 module devCenterDevBoxDefinitions 'DevCenter/EnvironmentConfiguration/devBoxDefinitionResource.bicep' = [for devBoxDefinition in contosoDevCenterDevBoxDefinitionsInfo: {
-  name: devBoxDefinition.name
+  name: 'DevBoxDefinition-${devBoxDefinition.name}'
   scope: resourceGroup()
   params:{
     devCenterName: devCenter.outputs.devCenterName
@@ -179,7 +179,7 @@ output devBoxDefinitionsCreated array = [for (devBoxDefinition,i) in contosoDevC
 
 @description('Contoso Dev Center Projects')
 module contosoDevCenterProjects 'DevCenter/Management/devCenterProjectResource.bicep' = [for contosoProject in contosoProjectsInfo: {
-  name: 'Contoso-${contosoProject.name}'
+  name: 'Project-${contosoProject.name}'
   scope: resourceGroup()
   params: {
     devCenterName: devCenter.outputs.devCenterName
