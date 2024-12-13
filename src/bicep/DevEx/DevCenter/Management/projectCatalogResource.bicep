@@ -1,0 +1,39 @@
+@description('Project Name')
+param name string
+
+@description('Project Catalog Info')
+param projectCatalogInfo object
+
+@description('Project')
+resource project 'Microsoft.DevCenter/projects@2024-10-01-preview'existing = {
+  name: name
+  scope: resourceGroup()
+}
+
+resource projectCatalog 'Microsoft.DevCenter/projects/catalogs@2024-10-01-preview' = {
+  name: 'projectCatalog'
+  parent: project
+  properties: {
+    adoGit: {
+      uri: projectCatalogInfo.uri
+      branch: projectCatalogInfo.branch
+      path: projectCatalogInfo.path
+    }
+  }
+}
+
+@description('Project Catalog Resource ID')
+output projectCatalogId string = projectCatalog.id
+
+@description('Project Catalog Resource Name')
+output projectCatalogName string = projectCatalog.name
+
+@description('Project Catalog URI') 
+output projectCatalogUri string = projectCatalog.properties.adoGit.uri
+
+@description('Project Catalog Branch')
+output projectCatalogBranch string = projectCatalog.properties.adoGit.branch
+
+@description('Project Catalog Path')
+output projectCatalogPath string = projectCatalog.properties.adoGit.path
+

@@ -14,11 +14,23 @@ var contosoProjectsInfo = [
     networkConnection: {
       domainJoinType: 'AzureADJoin'
     }
+    projectCatalog: {
+      name: 'eShop-Catalog'
+      uri: 'https://github.com/Evilazaro/eShop.git'
+      branch: 'main'
+      path: '/customizations/tasks'
+    }
   }
   {
     name: 'Contoso-Traders'
     networkConnection: {
       domainJoinType: 'AzureADJoin'
+    }
+    projectCatalog: {
+      name: 'ContosoTraders-Catalog'
+      uri: 'https://github.com/Evilazaro/ContosoTraders.git'
+      branch: 'main'
+      path: '/customizations/tasks'
     }
   }
 ]

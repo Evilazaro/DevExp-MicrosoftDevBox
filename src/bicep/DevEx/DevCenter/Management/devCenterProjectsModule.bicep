@@ -21,3 +21,24 @@ output contosoProjectsCreated array = [for (contosoProject,i) in contosoProjects
   name: contosoDevCenterProjects[i].outputs.devCenterProjectName
   id: contosoDevCenterProjects[i].outputs.devCenterProjectId
 }]
+
+@description('Project Catalog')
+module projectCatalog 'projectCatalogResource.bicep' = [for contosoProject in contosoProjectsInfo: {
+  name: 'ProjectCatalog-${contosoProject.name}'
+  scope: resourceGroup()
+  params: {
+    name: contosoProject.projectCatalog.name
+    projectCatalogInfo: contosoProject.projectCatalog
+  }
+}
+]
+
+@description('Output Project Catalog created')
+output projectCatalogCreated array = [for (contosoProject,i) in contosoProjectsInfo: {
+  name: projectCatalog[i].outputs.projectCatalogName
+  id: projectCatalog[i].outputs.projectCatalogId
+  uri: projectCatalog[i].outputs.projectCatalogUri
+  branch: projectCatalog[i].outputs.projectCatalogBranch
+  path: projectCatalog[i].outputs.projectCatalogPath
+}
+]
