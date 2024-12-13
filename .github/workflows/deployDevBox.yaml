@@ -78,7 +78,8 @@ jobs:
       # Deploy the Landing Zone Resources using the deployment script
       - name: Deploy Dev Box DevCenter Resources for ${{ env.workloadName }} to Azure
         run: |
-          sudo az account set --subscription $(az account show --subscription ${{ secrets.AZURE_CREDENTIALS.subscriptionId }} --query name -o tsv) 
+          $subName=$(az account show --subscription ${{ secrets.AZURE_CREDENTIALS.subscriptionId }} --query name -o tsv)
+          sudo az account set -s $subName 
           sudo az deployment group create \
             --resource-group ${{ env.devBoxResourceGroupName }} \
             --template-file ./src/bicep/deploy.bicep \
