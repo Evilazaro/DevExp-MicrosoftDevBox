@@ -8,7 +8,7 @@ param name string
 param networkConnectionResourceGroupName string
 
 @description('Network Connection Resource')
-resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-10-01-preview'existing = {
+resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-10-01-preview' existing = {
   name: name
   scope: resourceGroup(networkConnectionResourceGroupName)
 }
@@ -20,7 +20,7 @@ resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' existing 
 }
 
 @description('Network Connection Attachment resource')
-resource networkConnectionAttachment 'Microsoft.DevCenter/devcenters/attachednetworks@2024-10-01-preview'= {
+resource networkConnectionAttachment 'Microsoft.DevCenter/devcenters/attachednetworks@2024-10-01-preview' = {
   name: networkConnection.name
   parent: devCenter
   properties: {
@@ -29,10 +29,10 @@ resource networkConnectionAttachment 'Microsoft.DevCenter/devcenters/attachednet
 }
 
 @description('The ID of the network connection attachment')
-output networkConnectionAttachmentId string = networkConnectionAttachment.id
+output id string = networkConnectionAttachment.id
 
 @description('The name of the network connection attachment')
-output networkConnectionAttachmentName string = networkConnectionAttachment.name
+output name string = networkConnectionAttachment.name
 
 @description('The network connection ID of the network connection attachment')
 output networkConnectionId string = networkConnectionAttachment.properties.networkConnectionId

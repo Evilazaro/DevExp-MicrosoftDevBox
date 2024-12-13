@@ -2,7 +2,7 @@
 param name string
 
 @description('DDoS Protection Plan')
-resource ddosProtectionPlan 'Microsoft.Network/ddosProtectionPlans@2024-05-01' =  {
+resource ddosProtectionPlan 'Microsoft.Network/ddosProtectionPlans@2024-05-01' = {
   name: 'ddosPlan-${uniqueString(resourceGroup().id, '${name}')}'
   location: resourceGroup().location
 }

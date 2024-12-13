@@ -33,22 +33,26 @@ module devCenter 'DevCenter/devCenter.bicep' = {
     installAzureMonitorAgentEnableStatus: 'Enabled'
     tags: tags
   }
-}  
+}
 
 @description('Network Connection Attachment Resource')
-module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectionAttachment.bicep' = [for (networkConnection,i) in networkConnections: {
-  name: '${contosoProjectsInfo[i].name}-${networkConnection.name}'
-  scope: resourceGroup()
-  params: {
-    devCenterName: devCenter.outputs.devCenterName
-    networkConnectionResourceGroupName: connectivityResourceGroupName
-    name: networkConnection.name
+module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectionAttachment.bicep' = [
+  for (networkConnection, i) in networkConnections: {
+    name: '${contosoProjectsInfo[i].name}-${networkConnection.name}'
+    scope: resourceGroup()
+    params: {
+      devCenterName: devCenter.outputs.devCenterName
+      networkConnectionResourceGroupName: connectivityResourceGroupName
+      name: networkConnection.name
+    }
   }
-}]
+]
 
 @description('Network Connection Attachments')
-output networkConnectionAttachments array = [for (networkConnectionAttachment,i) in networkConnections: {
-  name: networkConnectionAttachment[i].outputs.networkConnectionAttachmentName
-  id: networkConnectionAttachment[i].outputs.networkConnectionAttachmentId
-  networkConnectionId: networkConnectionAttachment[i].outputs.networkConnectionId
-}]
+output networkConnectionAttachments array = [
+  for (networkConnectionAttachment, i) in networkConnections: {
+    name: networkConnectionAttachment[i].name
+    id: networkConnectionAttachment[i].id
+    networkConnectionId: networkConnectionAttachment[i].outputs.networkConnectionId
+  }
+]

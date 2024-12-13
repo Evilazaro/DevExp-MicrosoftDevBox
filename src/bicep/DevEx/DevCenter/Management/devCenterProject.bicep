@@ -8,20 +8,20 @@ param name string
 param tags object
 
 @description('Dev Center')
-resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview'existing = {
+resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' existing = {
   name: devCenterName
-  scope:resourceGroup()
+  scope: resourceGroup()
 }
 
 @description('Dev Center Project Resource')
-resource devCenterProject 'Microsoft.DevCenter/projects@2024-10-01-preview'= {
+resource devCenterProject 'Microsoft.DevCenter/projects@2024-10-01-preview' = {
   name: name
   location: resourceGroup().location
-  properties:{
+  properties: {
     displayName: name
     devCenterId: devCenter.id
   }
-  tags:tags
+  tags: tags
 }
 
 @description('Dev Center Project Resource ID')
