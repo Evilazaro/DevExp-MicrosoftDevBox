@@ -4,6 +4,7 @@ param name string
 @description('Project Catalog Info')
 param projectCatalogInfo object
 
+
 @description('Project')
 resource project 'Microsoft.DevCenter/projects@2024-10-01-preview'existing = {
   name: name
@@ -11,7 +12,7 @@ resource project 'Microsoft.DevCenter/projects@2024-10-01-preview'existing = {
 }
 
 resource projectCatalog 'Microsoft.DevCenter/projects/catalogs@2024-10-01-preview' = {
-  name: 'projectCatalog'
+  name: name
   parent: project
   properties: {
     adoGit: {

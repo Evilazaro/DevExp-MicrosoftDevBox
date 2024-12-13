@@ -229,6 +229,7 @@ output devBoxDefinitionsCreated array = [for (devBoxDefinition,i) in contosoDevC
 @description('Dev Center Projects')
 module devCenterProjects 'DevCenter/Management/devCenterProjectsModule.bicep'= {
   name: 'DevCenterProjects'
+  scope: resourceGroup()
   params: {
     contosoProjectsInfo: contosoProjectsInfo
     devCenterName: devCenter.outputs.devCenterName
