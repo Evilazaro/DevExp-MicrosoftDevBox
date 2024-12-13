@@ -25,7 +25,7 @@ output outPutcontosoProjectsCreated array = [for (contosoProject,i) in contosoPr
 
 @description('Project Catalog')
 module projectCatalog 'projectCatalogResource.bicep' = [for (contosoProject,i) in contosoProjectsInfo: {
-  name: 'ProjectCatalog-${contosoProject[i].name}'
+  name: 'ProjectCatalog-${i}'
   scope: resourceGroup()
   params: {
     projectName: contosoDevCenterProjects[i].outputs.devCenterProjectName
