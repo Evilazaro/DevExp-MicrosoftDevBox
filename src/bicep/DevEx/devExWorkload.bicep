@@ -152,6 +152,23 @@ var contosoDevCenterDevBoxDefinitionsInfo = [
       Environment: 'Production'
       Department: 'IT'
       offering: 'DevBox-as-a-Service'
+      roleName: 'BackEnd-Engineer'
+    }
+  }
+  {
+    name: 'FrontEnd-Engineer'
+    imageName: 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
+    sku: 'general_i_16c64gb256ssd_v2'
+    hibernateSupport: 'Enabled'
+    tags: {
+      workload: workloadName
+      landingZone: 'DevEx'
+      resourceType: 'DevCenter'
+      ProductTeam: 'Platform Engineering'
+      Environment: 'Production'
+      Department: 'IT'
+      offering: 'DevBox-as-a-Service'
+      roleName: 'FrontEnd-Engineer'
     }
   }
 ]
