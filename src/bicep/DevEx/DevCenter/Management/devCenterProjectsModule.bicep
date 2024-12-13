@@ -23,19 +23,27 @@ output outPutcontosoProjectsCreated array = [for (contosoProject,i) in contosoPr
 }]
 
 
-@description('Project Catalog')
-module projectCatalog 'projectCatalogResource.bicep' = [for (contosoProject,i) in contosoProjectsInfo: {
-  name: 'ProjectCatalog-${contosoProject.name}'
-  scope: resourceGroup()
+// @description('Project Catalog')
+// module projectCatalog 'projectCatalogResource.bicep' = [for (contosoProject,i) in contosoProjectsInfo: {
+//   name: 'ProjectCatalog-${contosoProject.name}'
+//   scope: resourceGroup()
+//   params: {
+//     projectName: contosoDevCenterProjects[i].outputs.devCenterProjectName
+//     projectCatalogInfo: contosoProject[i].projectCatalog
+//   }
+//   dependsOn: [
+//     contosoDevCenterProjects
+//   ]
+// }
+// ]
+
+module propjectCatalog 'projectCatalogResource.bicep' = {
+  name: contosoProjectsInfo[0].name
   params: {
-    projectName: contosoDevCenterProjects[i].outputs.devCenterProjectName
-    projectCatalogInfo: contosoProject[i].projectCatalog
+    projectCatalogInfo: contosoProjectsInfo[0].projectCatalog
+    projectName: contosoDevCenterProjects[0].outputs.devCenterProjectName
   }
-  dependsOn: [
-    contosoDevCenterProjects
-  ]
 }
-]
 
 // @description('Output Project Catalog created')
 // output projectCatalogCreated array = [for (contosoProject,i) in contosoProjectsInfo: {
@@ -47,9 +55,9 @@ module projectCatalog 'projectCatalogResource.bicep' = [for (contosoProject,i) i
 // }
 // ]
 
-@description('Output Project Catalogs created')
-output projectCatalogsCreated array = [for (contosoProject,i) in contosoProjectsInfo: {
-  name: projectCatalog[i].outputs.devCenterProjectCatalogCatalogName
-  id: projectCatalog[i].outputs.projectResource.id
-  info: projectCatalog[i].outputs.devCenterProjectCatalogInfo
-}]
+// @description('Output Project Catalogs created')
+// output projectCatalogsCreated array = [for (contosoProject,i) in contosoProjectsInfo: {
+//   name: projectCatalog[i].outputs.devCenterProjectCatalogCatalogName
+//   id: projectCatalog[i].outputs.projectResource.id
+//   info: projectCatalog[i].outputs.devCenterProjectCatalogInfo
+// }]
