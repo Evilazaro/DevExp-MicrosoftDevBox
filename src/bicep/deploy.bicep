@@ -15,7 +15,7 @@ var contosoProjectsInfo = [
       domainJoinType: 'AzureADJoin'
     }
     projectCatalog: {
-      name: 'eShop-Catalog'
+      catalogName: 'eShop'
       uri: 'https://github.com/Evilazaro/eShop.git'
       branch: 'main'
       path: '/customizations/tasks'
@@ -37,7 +37,7 @@ var contosoProjectsInfo = [
       domainJoinType: 'AzureADJoin'
     }
     projectCatalog: {
-      name: 'ContosoTraders-Catalog'
+      catalogName: 'ContosoTraders'
       uri: 'https://github.com/Evilazaro/ContosoTraders.git'
       branch: 'main'
       path: '/customizations/tasks'

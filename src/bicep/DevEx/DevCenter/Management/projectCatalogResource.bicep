@@ -12,7 +12,7 @@ resource project 'Microsoft.DevCenter/projects@2024-10-01-preview'existing = {
 
 @description('Project Catalog Resource')
 resource projectCatalog 'Microsoft.DevCenter/projects/catalogs@2024-10-01-preview' = {
-  name: projectCatalogInfo.name
+  name: projectCatalogInfo.catalogName
   parent: project
   properties: {
     gitHub: {
