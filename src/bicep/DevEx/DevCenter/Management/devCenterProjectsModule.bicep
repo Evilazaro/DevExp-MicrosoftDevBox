@@ -23,26 +23,26 @@ output outPutcontosoProjectsCreated array = [for (contosoProject,i) in contosoPr
 }]
 
 
-@description('Project Catalog')
-module projectCatalog 'projectCatalogResource.bicep' = [for (contosoProjectCatalog,i) in contosoProjectsInfo: {
-  name: contosoProjectCatalog[i].projectCatalog.catalogName
-  scope: resourceGroup()
-  params: {
-    projectName: contosoDevCenterProjects[i].outputs.devCenterProjectName
-    projectCatalogInfo: contosoProjectCatalog[i].projectCatalog
-  }
-  dependsOn: [
-    contosoDevCenterProjects
-  ]
-}
-]
+// @description('Project Catalog')
+// module projectCatalog 'projectCatalogResource.bicep' = [for (contosoProjectCatalog,i) in contosoProjectsInfo: {
+//   name: contosoProjectCatalog[i].projectCatalog.catalogName
+//   scope: resourceGroup()
+//   params: {
+//     projectName: contosoDevCenterProjects[i].outputs.devCenterProjectName
+//     projectCatalogInfo: contosoProjectCatalog[i].projectCatalog
+//   }
+//   dependsOn: [
+//     contosoDevCenterProjects
+//   ]
+// }
+// ]
 
-@description('Output Project Catalog created')
-output projectCatalogCreated array = [for (contosoProject,i) in contosoProjectsInfo: {
-  name: projectCatalog[i].outputs.projectCatalogName
-  id: projectCatalog[i].outputs.projectCatalogId
-  uri: projectCatalog[i].outputs.projectCatalogUri
-  branch: projectCatalog[i].outputs.projectCatalogBranch
-  path: projectCatalog[i].outputs.projectCatalogPath
-}
-]
+// @description('Output Project Catalog created')
+// output projectCatalogCreated array = [for (contosoProject,i) in contosoProjectsInfo: {
+//   name: projectCatalog[i].outputs.projectCatalogName
+//   id: projectCatalog[i].outputs.projectCatalogId
+//   uri: projectCatalog[i].outputs.projectCatalogUri
+//   branch: projectCatalog[i].outputs.projectCatalogBranch
+//   path: projectCatalog[i].outputs.projectCatalogPath
+// }
+// ]
