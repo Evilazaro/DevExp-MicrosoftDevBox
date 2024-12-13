@@ -22,7 +22,7 @@ var tags = {
 }
 
 @description('Dev Center Resource')
-module devCenter 'DevCenter/devCenter.bicep' = {
+module devCenter 'devCenter/devCenter.bicep' = {
   name: 'devCenter'
   scope: resourceGroup()
   params: {
@@ -36,7 +36,7 @@ module devCenter 'DevCenter/devCenter.bicep' = {
 }  
 
 @description('Network Connection Attachment Resource')
-module networkConnectionAttachment 'devCenter/NetworkConnection/networkConnectionAttachment.bicep' = [for (networkConnection,i) in networkConnections: {
+module networkConnectionAttachment 'devCenter/networkConnection/networkConnectionAttachment.bicep' = [for (networkConnection,i) in networkConnections: {
   name: '${contosoProjectsInfo[i].name}-${networkConnection.name}'
   scope: resourceGroup()
   params: {
