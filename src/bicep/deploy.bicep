@@ -20,6 +20,16 @@ var contosoProjectsInfo = [
       branch: 'main'
       path: '/customizations/tasks'
     }
+    tags: {
+      workload: workloadName
+      landingZone: 'DevEx'
+      resourceType: 'DevCenter'
+      ProductTeam: 'Platform Engineering'
+      Environment: 'Production'
+      Department: 'IT'
+      offering: 'DevBox-as-a-Service'
+      project: 'eShop'
+    }
   }
   {
     name: 'Contoso-Traders'
@@ -31,6 +41,16 @@ var contosoProjectsInfo = [
       uri: 'https://github.com/Evilazaro/ContosoTraders.git'
       branch: 'main'
       path: '/customizations/tasks'
+    }
+    tags: {
+      workload: workloadName
+      landingZone: 'DevEx'
+      resourceType: 'DevCenter'
+      ProductTeam: 'Platform Engineering'
+      Environment: 'Production'
+      Department: 'IT'
+      offering: 'DevBox-as-a-Service'
+      project: 'Contoso-Traders'
     }
   }
 ]
