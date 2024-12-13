@@ -14,15 +14,17 @@ resource project 'Microsoft.DevCenter/projects@2024-10-01-preview'existing = {
   scope: resourceGroup()
 }
 
+@description('Project Catalog Resource')
 resource projectCatalog 'Microsoft.DevCenter/projects/catalogs@2024-10-01-preview' = {
   name: name
   parent: project
   properties: {
-    adoGit: {
+    gitHub: {
       uri: projectCatalogInfo.uri
       branch: projectCatalogInfo.branch
       path: projectCatalogInfo.path
     }
+    syncType: 'Scheduled'
   }
 }
 
