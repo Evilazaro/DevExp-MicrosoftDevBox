@@ -1,4 +1,7 @@
 @description('Project Name')
+param projectName string
+
+@description('Project Catalog Name')
 param name string
 
 @description('Project Catalog Info')
@@ -7,7 +10,7 @@ param projectCatalogInfo object
 
 @description('Project')
 resource project 'Microsoft.DevCenter/projects@2024-10-01-preview'existing = {
-  name: name
+  name: projectName
   scope: resourceGroup()
 }
 
