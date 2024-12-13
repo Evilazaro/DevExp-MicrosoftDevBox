@@ -74,20 +74,30 @@ jobs:
       # Deploy the Landing Zone Resources using the deployment script
       - name: Deploy Landing Zone Resources for ${{ env.workloadName }}
         run: ./deploy/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.connectivityResourceGroupName }} ${{ env.location }}
+
+      # Deploy the Landing Zone Resources using the deployment script
+      - name: Deploy Landing Zone Resources for ${{ env.workloadName }}
+        run: |
+          sudo az account set --subscription ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
+          sudo az deployment group create \
+            --resource-group ${{ env.devBoxResourceGroupName }} \
+            --template-file ./src/bicep/deploy.bicep \
+            --parameters workloadName=${{ env.workloadName }} devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
+            --mode Complete
       
-      # Deploy Dev Center Resources using ARM template
-      - name: Deploy Dev Box DevCenter Resources to Azure
-        id: deploy-dev-center
-        uses: azure/arm-deploy@v1
-        continue-on-error: true
-        with:
-          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
-          resourceGroupName: ${{ env.devBoxResourceGroupName }}
-          template: ./src/bicep/deploy.bicep
-          parameters: 'workloadName=${{ env.workloadName }} devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} connectivityResourceGroupName=${{ env.connectivityResourceGroupName }}'
-          deploymentMode: 'Complete'
-    outputs:
-      deployOutput: ${{ steps.deploy-dev-center.outputs.outputs }}
+    #   # Deploy Dev Center Resources using ARM template
+    #   - name: Deploy Dev Box DevCenter Resources to Azure
+    #     id: deploy-dev-center
+    #     uses: azure/arm-deploy@v1
+    #     continue-on-error: true
+    #     with:
+    #       subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
+    #       resourceGroupName: ${{ env.devBoxResourceGroupName }}
+    #       template: ./src/bicep/deploy.bicep
+    #       parameters: 'workloadName=${{ env.workloadName }} devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} connectivityResourceGroupName=${{ env.connectivityResourceGroupName }}'
+    #       deploymentMode: 'Complete'
+    # outputs:
+    #   deployOutput: ${{ steps.deploy-dev-center.outputs.outputs }}
 
   publish-bicep-artifacts:
     runs-on: ubuntu-latest
