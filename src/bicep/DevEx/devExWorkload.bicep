@@ -236,6 +236,5 @@ module devCenterProjects 'DevCenter/Management/devCenterProjectsModule.bicep'= {
   params: {
     contosoProjectsInfo: contosoProjectsInfo
     devCenterName: devCenter.outputs.devCenterName
-    contosoProjectCatalogsInfo: contosoProjectCatalogsInfo
   }
 }
