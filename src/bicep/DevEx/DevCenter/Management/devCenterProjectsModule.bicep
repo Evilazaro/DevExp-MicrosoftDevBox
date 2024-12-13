@@ -17,18 +17,18 @@ module contosoDevCenterProjects 'devCenterProjectResource.bicep' = [for contosoP
 ]
 
 
-module projectCatalog 'projectCatalogResource.bicep' = {
-  name: 'eShop-Catalog'
+module projectCatalog 'projectCatalogResource.bicep' = [for (contosoProjectCatalog,i) in contosoProjectsInfo: {
+  name: contosoProjectCatalog[i].catalog.catalogName
   scope: resourceGroup()
   params: {
-    projectName: 'eShop'
-    projectCatalogInfo: contosoProjectsInfo[0].projectCatalog
+    projectName: contosoDevCenterProjects[i].outputs.devCenterProjectName
+    projectCatalogInfo: contosoProjectCatalog[i].catalog
   }
   dependsOn: [
     contosoDevCenterProjects
   ]
 }
-
+]
 
 // @description('Project Catalog')
 // module projectCatalog 'projectCatalogResource.bicep' = [for (contosoProjectCatalog,i) in contosoProjectsInfo: {
