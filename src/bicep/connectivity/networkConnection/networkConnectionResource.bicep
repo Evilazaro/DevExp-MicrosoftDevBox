@@ -29,7 +29,7 @@ resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-03-01' existing 
 
 @description('The network connection resource')
 resource networkConnection 'Microsoft.DevCenter/networkConnections@2024-10-01-preview' = {
-  name: '${virtualNetworkName}-${subnetName}-con'
+  name: uniqueString(resourceGroup().id,'${virtualNetworkName}-${subnetName}')
   location: resourceGroup().location
   properties: {
     subnetId: subnet.id
@@ -46,9 +46,9 @@ output networkConnectionName string = networkConnection.name
 @description('The domain join type of the network connection')
 output domainJoinType string = networkConnection.properties.domainJoinType
 
+@description('Virtual Network Resource Group Name')
+output networkingResourceGroupName string = networkConnection.properties.networkingResourceGroupName
+
 @description('Subnet ID')
 output subnetId string = networkConnection.properties.subnetId
-
-@description('Virtual Network Resource Group name')
-output virtualNetworkResourceGroupName string = virtualNetworkResourceGroupName
  
