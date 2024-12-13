@@ -48,11 +48,11 @@ module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectio
   }
 ]
 
-@description('Network Connection Attachments')
-output networkConnectionAttachments array = [
-  for (networkConnectionAttachment, i) in networkConnections: {
-    name: networkConnectionAttachment[i].name
-    id: networkConnectionAttachment[i].id
-    networkConnectionId: networkConnectionAttachment[i].outputs.networkConnectionId
-  }
-]
+// @description('Network Connection Attachments')
+// output networkConnectionAttachments array = [
+//   for (networkConnectionAttachment, i) in networkConnections: {
+//     name: networkConnectionAttachment[i].name
+//     id: networkConnectionAttachment[i].id
+//     networkConnectionId: networkConnectionAttachment[i].outputs.networkConnectionId
+//   }
+// ]
