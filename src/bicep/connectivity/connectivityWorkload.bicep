@@ -1,6 +1,9 @@
 @description('Workload name')
 param workloadName string
 
+@description('Connectivity Resource Group Name')
+param connectivityResourceGroupName string
+
 @description('Subnets')
 param projects array
 
@@ -19,7 +22,7 @@ var tags = {
 @description('DDoS Protection Plan')
 module ddosProtectionPlan 'DDoSPlan/DDoSPlanResource.bicep'= {
   name: 'ddosProtectionPlan'
-  scope: resourceGroup()
+  scope: resourceGroup(connectivityResourceGroupName)
   params: {
     name: workloadName
   }
@@ -28,7 +31,7 @@ module ddosProtectionPlan 'DDoSPlan/DDoSPlanResource.bicep'= {
 @description('Virtual Network Resource')
 module virtualNetwork 'virtualNetwork/virtualNetworkResource.bicep'= {
   name: 'virtualNetwork'
-  scope: resourceGroup()
+  scope: resourceGroup(connectivityResourceGroupName)
   params: {
     name: workloadName
     location: resourceGroup().location
@@ -42,7 +45,7 @@ module virtualNetwork 'virtualNetwork/virtualNetworkResource.bicep'= {
 @description('Network Connection Resource')
 module networkConnection 'networkConnection/networkConnectionResource.bicep' = [for netConnection in projects: {
   name: 'netCon-${netConnection.name}'
-  scope: resourceGroup()
+  scope: resourceGroup(connectivityResourceGroupName)
   params: {
     virtualNetworkName: virtualNetwork.outputs.virtualNetworkName
     subnetName: netConnection.name
