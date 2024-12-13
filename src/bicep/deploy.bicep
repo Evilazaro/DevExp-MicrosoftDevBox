@@ -105,6 +105,5 @@ module devExResources 'DevEx/devExWorkload.bicep' = {
     networkConnections: connectivityResources.outputs.networkConnections
     connectivityResourceGroupName: connectivityResourceGroupName
     devCenterCatalog: contosoDevCenterCatalog
-    contosoProjectCatalogsInfo: contosoProjectCatalogsInfo
   }
 }

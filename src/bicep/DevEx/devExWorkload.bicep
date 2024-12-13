@@ -13,9 +13,6 @@ param networkConnections array
 @description('Dev Center Catalog')
 param devCenterCatalog object
 
-@description('Project Catalogs')
-param contosoProjectCatalogsInfo array
-
 @description('Tags')
 var tags = {
   workload: workloadName
