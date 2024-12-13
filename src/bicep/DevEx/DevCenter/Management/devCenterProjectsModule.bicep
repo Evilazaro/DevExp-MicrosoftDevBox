@@ -28,7 +28,6 @@ module projectCatalog 'projectCatalogResource.bicep' = [for (contosoProject,i) i
   name: 'ProjectCatalog-${contosoProject.name}'
   scope: resourceGroup()
   params: {
-    name: contosoProject[i].projectCatalog.name
     projectName: contosoDevCenterProjects[i].outputs.devCenterProjectName
     projectCatalogInfo: contosoProject[i].projectCatalog
   }
