@@ -52,7 +52,7 @@ module networkConnection 'networkConnection/networkConnectionResource.bicep' = [
   name: 'netCon-${netConnection.name}'
   scope: resourceGroup(connectivityResourceGroupName)
   params: {
-    virtualNetworkName: virtualNetwork.name
+    virtualNetworkName: virtualNetwork.outputs.virtualNetworkName
     subnetName: virtualNetwork.outputs.virtualNetworkSubnets[i].name
     virtualNetworkResourceGroupName: connectivityResourceGroupName
     domainJoinType: netConnection.networkConnection.domainJoinType
