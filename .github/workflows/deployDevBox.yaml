@@ -71,7 +71,7 @@ jobs:
         id: check-changes-connectivity
         run: |
           az deployment group what-if \
-            --resource-group ${{ env.devBoxResourceGroupName }} \
+            --resource-group ${{ env.connectivityResourceGroupName }} \
             --template-file ./src/bicep/deploy.bicep \
             --parameters workloadName=${{ env.workloadName }} \
                 devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
