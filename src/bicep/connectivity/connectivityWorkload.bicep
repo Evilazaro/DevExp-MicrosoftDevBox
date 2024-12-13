@@ -17,6 +17,10 @@ var tags = {
   workload: workloadName
   landingZone: 'connectivity'
   resourceType: 'virtualNetwork'
+  ProductTeam: 'Platform Engineering'
+  Environment: 'Production'
+  Department: 'IT'
+  offering: 'DevBox-as-a-Service'
 }
 
 @description('DDoS Protection Plan')
