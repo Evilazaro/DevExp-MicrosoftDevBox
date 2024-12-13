@@ -50,6 +50,8 @@ jobs:
   Deploy:
     name: Deploy Dev Box Resources to Azure
     runs-on: ubuntu-latest
+    outputs:
+      steps: ${{ steps.deploy-dev-center.outputs }}
     #needs: Build
     steps:
       # Update packages and upgrade Bicep
@@ -102,7 +104,7 @@ jobs:
             --parameters workloadName=${{ env.workloadName }} \
                 devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
                 connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
-            --mode Complete
+            --mode Complete    
       
     #   # Deploy Dev Center Resources using ARM template
     #   - name: Deploy Dev Box DevCenter Resources to Azure
