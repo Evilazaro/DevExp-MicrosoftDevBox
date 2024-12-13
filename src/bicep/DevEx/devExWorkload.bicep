@@ -48,7 +48,7 @@ module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectio
 
 @description('Network Connection Attachments')
 output networkConnectionAttachments array = [for (networkConnectionAttachment,i) in networkConnections: {
-  name: networkConnectionAttachment.outputs.networkConnectionAttachmentName
-  id: networkConnectionAttachment.outputs.networkConnectionAttachmentId
-  networkConnectionId: networkConnectionAttachment.outputs.networkConnectionId
+  name: networkConnectionAttachment[i].outputs.networkConnectionAttachmentName
+  id: networkConnectionAttachment[i].outputs.networkConnectionAttachmentId
+  networkConnectionId: networkConnectionAttachment[i].outputs.networkConnectionId
 }]
