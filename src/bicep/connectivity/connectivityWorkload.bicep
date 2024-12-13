@@ -58,3 +58,9 @@ module networkConnection 'networkConnection/networkConnectionResource.bicep' = [
     domainJoinType: netConnection.networkConnection.domainJoinType
   }
 }]
+
+@description('Network Connections')
+output networkConnections array = [for (netConnection,i) in contosoProjectsInfo: {
+  name: networkConnection[i].outputs.networkConnectionName
+  id: networkConnection[i].outputs.networkConnectionId
+}]
