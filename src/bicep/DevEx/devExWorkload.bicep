@@ -111,7 +111,7 @@ output environmentTypesCreated array = [for environmentType in environmentTypesI
 @description('Network Connection Attachment Resource')
 module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectionAttachmentResource.bicep' = [
   for (networkConnection, i) in networkConnections: {
-    name: '${contosoProjectsInfo[i].name}-${networkConnection.name}'
+    name: 'vnetCon-${contosoProjectsInfo[i].name}-${networkConnection.name}'
     scope: resourceGroup()
     params: {
       devCenterName: devCenter.outputs.devCenterName
@@ -122,7 +122,7 @@ module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectio
 ]
 
 @description('Contoso Dev Center Catalog')
-module contosoDevCenterCatalog 'DevCenter/EnvironmentConfiguration/catalogsResource.bicep' = {
+module contosoDevCenterCatalog 'DevCenter/EnvironmentConfiguration/devCentercatalogsResource.bicep' = {
   name: 'DevCenterCatalog'
   scope: resourceGroup()
   params: {
@@ -152,13 +152,62 @@ var contosoDevCenterDevBoxDefinitionsInfo = [
       Environment: 'Production'
       Department: 'IT'
       offering: 'DevBox-as-a-Service'
+      roleName: 'BackEnd-Engineer'
+    }
+  }
+  {
+    name: 'FrontEnd-Engineer'
+    imageName: 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
+    sku: 'general_i_16c64gb256ssd_v2'
+    hibernateSupport: 'Enabled'
+    tags: {
+      workload: workloadName
+      landingZone: 'DevEx'
+      resourceType: 'DevCenter'
+      ProductTeam: 'Platform Engineering'
+      Environment: 'Production'
+      Department: 'IT'
+      offering: 'DevBox-as-a-Service'
+      roleName: 'FrontEnd-Engineer'
+    }
+  }
+  {
+    name: 'Web-Designer'
+    imageName: 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
+    sku: 'general_i_16c64gb256ssd_v2'
+    hibernateSupport: 'Enabled'
+    tags: {
+      workload: workloadName
+      landingZone: 'DevEx'
+      resourceType: 'DevCenter'
+      ProductTeam: 'Platform Engineering'
+      Environment: 'Production'
+      Department: 'IT'
+      offering: 'DevBox-as-a-Service'
+      roleName: 'Web-Designer-Engineer'
+    }
+  }
+  {
+    name: 'DevOps-Engineer'
+    imageName: 'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2'
+    sku: 'general_i_32c128gb512ssd_v2'
+    hibernateSupport: 'Disabled'
+    tags: {
+      workload: workloadName
+      landingZone: 'DevEx'
+      resourceType: 'DevCenter'
+      ProductTeam: 'Platform Engineering'
+      Environment: 'Production'
+      Department: 'IT'
+      offering: 'DevBox-as-a-Service'
+      roleName: 'DevOps-Engineer'
     }
   }
 ]
 
 @description('Dev Center Dev Box Definitions')
 module devCenterDevBoxDefinitions 'DevCenter/EnvironmentConfiguration/devBoxDefinitionResource.bicep' = [for devBoxDefinition in contosoDevCenterDevBoxDefinitionsInfo: {
-  name: devBoxDefinition.name
+  name: 'DevBoxDefinition-${devBoxDefinition.name}'
   scope: resourceGroup()
   params:{
     devCenterName: devCenter.outputs.devCenterName
@@ -177,20 +226,12 @@ output devBoxDefinitionsCreated array = [for (devBoxDefinition,i) in contosoDevC
   imageReferenceId: devCenterDevBoxDefinitions[i].outputs.devBoxDefinitionImageReferenceId
 }]
 
-@description('Contoso Dev Center Projects')
-module contosoDevCenterProjects 'DevCenter/Management/devCenterProjectResource.bicep' = [for contosoProject in contosoProjectsInfo: {
-  name: 'Contoso-${contosoProject.name}'
+@description('Dev Center Projects')
+module devCenterProjects 'DevCenter/Management/devCenterProjectsModule.bicep'= {
+  name: 'DevCenterProjects'
   scope: resourceGroup()
   params: {
+    contosoProjectsInfo: contosoProjectsInfo
     devCenterName: devCenter.outputs.devCenterName
-    name: contosoProject.name
-    tags: tags
   }
 }
-]
-
-@description('Output Contoso Dev Center Projects created')
-output contosoProjectsCreated array = [for (contosoProject,i) in contosoProjectsInfo: {
-  name: contosoDevCenterProjects[i].outputs.devCenterProjectName
-  id: contosoDevCenterProjects[i].outputs.devCenterProjectId
-}]

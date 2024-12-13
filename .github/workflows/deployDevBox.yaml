@@ -1,4 +1,5 @@
 name: Deploy DevBox as a Service to Azure
+ 
 
 permissions:
   id-token: write
@@ -16,20 +17,23 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
 jobs:
-  
-  Build:
-    name: Build Bicep Artifacts
+
+  Build-and-Deploy:
+    name: Deploy Dev Box Resources to Azure
     runs-on: ubuntu-latest
     steps:
-      # Upgrade Bicep to the latest version
-      - name: Upgrade Bicep
+      # Update packages and upgrade Bicep
+      - name: Update Packages and Upgrade Bicep
         run: |
+          sudo apt-get update && \
+          sudo apt-get upgrade -y && \
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash && \
           sudo az bicep upgrade
-
+      
       # Checkout the repository to get the source code
       - name: Checkout repository
         uses: actions/checkout@v4
-
+  
       # Build the Bicep files for Dev Box Resources
       - name: Build Dev Box Bicep files
         run: az bicep build --file ./src/bicep/deploy.bicep --outfile ./bicepArtifacts/deploy.json
@@ -46,20 +50,6 @@ jobs:
           name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
           path: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
 
-  Deploy:
-    name: Deploy Dev Box Resources to Azure
-    runs-on: ubuntu-latest
-    needs: Build
-    steps:
-      # Update packages and upgrade Bicep
-      - name: Update Packages and Upgrade Bicep
-        run: |
-          sudo az bicep upgrade
-      
-      # Checkout the repository to get the source code
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       # Log in to Azure using credentials stored in GitHub Secrets
       - name: Log in to Azure
         uses: azure/login@v2
@@ -73,30 +63,51 @@ jobs:
       # Deploy the Landing Zone Resources using the deployment script
       - name: Deploy Landing Zone Resources for ${{ env.workloadName }}
         run: ./deploy/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.connectivityResourceGroupName }} ${{ env.location }}
-      
-      # # Deploy Network Connectivity Resources using ARM template
-      # - name: Deploy Dev Box Network Resources to Azure
-      #   uses: azure/arm-deploy@v1
-      #   with:
-      #     subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
-      #     resourceGroupName: ${{ env.connectivityResourceGroupName }}
-      #     template: ./src/deploy/bicep/network/deploy.bicep
-      #     parameters: 'workloadName=${{ env.workloadName }} environmentType=prod'
-      #     deploymentMode: 'Complete'
 
-      # Deploy Dev Center Resources using ARM template
-      - name: Deploy Dev Box DevCenter Resources to Azure
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
-          resourceGroupName: ${{ env.devBoxResourceGroupName }}
-          template: ./src/bicep/deploy.bicep
-          parameters: 'workloadName=${{ env.workloadName }} devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} connectivityResourceGroupName=${{ env.connectivityResourceGroupName }}'
-          deploymentMode: 'Complete'
+      # Deploy the Landing Zone Resources using the deployment script
+      - name: Checking all changes for ${{ env.workloadName }} in the Connectivity Landing Zone environment before deploying
+        continue-on-error: true
+        shell: bash
+        id: check-changes-connectivity
+        run: |
+          az deployment group what-if \
+            --resource-group ${{ env.devBoxResourceGroupName }} \
+            --template-file ./src/bicep/deploy.bicep \
+            --parameters workloadName=${{ env.workloadName }} \
+                devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
+                connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
+            --mode Complete
+
+      # Deploy the Landing Zone Resources using the deployment script
+      - name: Checking all changes for ${{ env.workloadName }} in the DevEX Landing Zone environment before deploying
+        continue-on-error: true
+        shell: bash
+        id: check-changes-dev-box
+        run: |
+          az deployment group what-if \
+            --resource-group ${{ env.devBoxResourceGroupName }} \
+            --template-file ./src/bicep/deploy.bicep \
+            --parameters workloadName=${{ env.workloadName }} \
+                devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
+                connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
+            --mode Complete
+
+      - name: Deploy Dev Box DevCenter Resources for ${{ env.workloadName }} to Azure
+        continue-on-error: true
+        shell: bash
+        id: deploy-dev-center
+        run: |
+          az deployment group create \
+            --resource-group ${{ env.devBoxResourceGroupName }} \
+            --template-file ./src/bicep/deploy.bicep \
+            --parameters workloadName=${{ env.workloadName }} \
+                devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
+                connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
+            --mode Complete    
 
   publish-bicep-artifacts:
     runs-on: ubuntu-latest
-    needs: Build
+    needs: Build-and-Deploy
     steps:
       # Checkout the repository to get the source code
       - name: Checkout repository
@@ -113,3 +124,42 @@ jobs:
         run: |
           # Add your upload logic here
           echo "Uploading Bicep artifacts"
+
+  create-release:
+    runs-on: ubuntu-latest
+    needs: publish-bicep-artifacts
+    steps:
+      # Checkout the repository to get the source code
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Download the previously uploaded Bicep artifacts
+      - name: Download Bicep Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
+
+      # Create a new GitHub release
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          release_name: Release v1.0.${{ github.run_number }}
+          body: |
+            Commits: ${{ toJson(github.event.Commits) }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Upload the release asset to the GitHub release
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
+          asset_name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

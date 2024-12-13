@@ -14,11 +14,43 @@ var contosoProjectsInfo = [
     networkConnection: {
       domainJoinType: 'AzureADJoin'
     }
+    projectCatalog: {
+      catalogName: 'eShop'
+      uri: 'https://github.com/Evilazaro/eShop.git'
+      branch: 'main'
+      path: '/customizations/tasks'
+    }
+    tags: {
+      workload: workloadName
+      landingZone: 'DevEx'
+      resourceType: 'DevCenter'
+      ProductTeam: 'Platform Engineering'
+      Environment: 'Production'
+      Department: 'IT'
+      offering: 'DevBox-as-a-Service'
+      project: 'eShop'
+    }
   }
   {
     name: 'Contoso-Traders'
     networkConnection: {
       domainJoinType: 'AzureADJoin'
+    }
+    projectCatalog: {
+      catalogName: 'ContosoTraders'
+      uri: 'https://github.com/Evilazaro/ContosoTraders.git'
+      branch: 'main'
+      path: '/customizations/tasks'
+    }
+    tags: {
+      workload: workloadName
+      landingZone: 'DevEx'
+      resourceType: 'DevCenter'
+      ProductTeam: 'Platform Engineering'
+      Environment: 'Production'
+      Department: 'IT'
+      offering: 'DevBox-as-a-Service'
+      project: 'Contoso-Traders'
     }
   }
 ]

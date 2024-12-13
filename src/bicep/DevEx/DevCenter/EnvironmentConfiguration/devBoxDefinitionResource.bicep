@@ -25,6 +25,7 @@ resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' existing 
 @description('Dev Box Definition Resource')
 resource devBoxDefinition 'Microsoft.DevCenter/devcenters/devboxdefinitions@2024-10-01-preview' = {
   name: name
+  parent: devCenter
   location: resourceGroup().location
   tags: tags
   properties: {
