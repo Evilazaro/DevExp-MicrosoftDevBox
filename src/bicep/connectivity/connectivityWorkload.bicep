@@ -5,7 +5,7 @@ param workloadName string
 param connectivityResourceGroupName string
 
 @description('Subnets')
-param projects array
+param contosoProjectsInfo array
 
 @description('Address Prefixes')
 var addressPrefixes = [
@@ -39,12 +39,12 @@ module virtualNetwork 'virtualNetwork/virtualNetworkResource.bicep'= {
     addressPrefixes:addressPrefixes 
     enableDdosProtection: true
     ddosProtectionPlanId: ddosProtectionPlan.outputs.ddosProtectionPlanId 
-    subnets: projects
+    subnets: contosoProjectsInfo
   }
 }
 
 @description('Network Connection Resource')
-module networkConnection 'networkConnection/networkConnectionResource.bicep' = [for netConnection in projects: {
+module networkConnection 'networkConnection/networkConnectionResource.bicep' = [for netConnection in contosoProjectsInfo: {
   name: 'netCon-${netConnection.name}'
   scope: resourceGroup(connectivityResourceGroupName)
   params: {

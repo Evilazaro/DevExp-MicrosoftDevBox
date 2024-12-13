@@ -28,7 +28,7 @@ module connectivityResources 'connectivity/connectivityWorkload.bicep'= {
   name: 'connectivity'
   scope: resourceGroup(devBoxResourceGroupName)
   params: {
-    projects: contosoProjectsInfo 
+    contosoProjectsInfo: contosoProjectsInfo 
     workloadName: workloadName
     connectivityResourceGroupName: connectivityResourceGroupName
   }
