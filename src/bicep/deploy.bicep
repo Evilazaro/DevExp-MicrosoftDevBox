@@ -1,6 +1,9 @@
 @description('Workload Name')
 param workloadName string
 
+@description('DevBox Workload Resource Group Name')
+param devBoxResourceGroupName string
+
 @description('Connectivity Resource Group Name')
 param connectivityResourceGroupName string
 
@@ -23,7 +26,7 @@ var projects = [
 @description('Deploy Connectivity Resources')
 module connectivityResources 'connectivity/connectivityWorkload.bicep'= {
   name: 'connectivity'
-  scope: resourceGroup()
+  scope: resourceGroup(devBoxResourceGroupName)
   params: {
     projects: projects 
     workloadName: workloadName

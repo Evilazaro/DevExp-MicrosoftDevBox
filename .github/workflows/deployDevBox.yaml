@@ -12,7 +12,7 @@ env:
   location: "westus3"
   workloadName: "ContosoDevEx"
   devBoxResourceGroupName: "ContosoDevEx-rg"
-  networkResourceGroupName: "ContosoDevEx-Network-rg"
+  connectivityResourceGroupName: "ContosoDevEx-Network-rg"
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
 jobs:
@@ -82,14 +82,14 @@ jobs:
 
       # Deploy the Landing Zone Resources using the deployment script
       - name: Deploy Landing Zone Resources for ${{ env.workloadName }}
-        run: ./deploy/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.networkResourceGroupName }} ${{ env.location }}
+        run: ./deploy/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.connectivityResourceGroupName }} ${{ env.location }}
       
       # # Deploy Network Connectivity Resources using ARM template
       # - name: Deploy Dev Box Network Resources to Azure
       #   uses: azure/arm-deploy@v1
       #   with:
       #     subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
-      #     resourceGroupName: ${{ env.networkResourceGroupName }}
+      #     resourceGroupName: ${{ env.connectivityResourceGroupName }}
       #     template: ./src/deploy/bicep/network/deploy.bicep
       #     parameters: 'workloadName=${{ env.workloadName }} environmentType=prod'
       #     deploymentMode: 'Complete'
@@ -101,7 +101,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_CREDENTIALS.subscriptionId }}
           resourceGroupName: ${{ env.devBoxResourceGroupName }}
           template: ./src/bicep/deploy.bicep
-          parameters: 'workloadName=${{ env.workloadName }} environmentType=prod devCenterResourceGroupName=${{ env.devBoxResourceGroupName }} virtualNetworkResourceGroupName=${{ env.networkResourceGroupName }}'
+          parameters: 'workloadName=${{ env.workloadName }} devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} connectivityResourceGroupName=${{ env.connectivityResourceGroupName }}'
           deploymentMode: 'Complete'
 
   publish-bicep-artifacts:
