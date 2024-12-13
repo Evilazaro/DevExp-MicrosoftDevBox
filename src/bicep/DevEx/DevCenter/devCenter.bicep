@@ -2,7 +2,7 @@
 param name string
 
 @description('Location')
-param location string 
+param location string
 
 @description('Catalog Item Sync Enable Status')
 @allowed([
@@ -17,7 +17,6 @@ param catalogItemSyncEnableStatus string
   'Disabled'
 ])
 param microsoftHostedNetworkEnableStatus string
-
 
 @description('Install Azure Monitor Agent Enable Status')
 @allowed([
@@ -37,12 +36,12 @@ resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' = {
     projectCatalogSettings: {
       catalogItemSyncEnableStatus: catalogItemSyncEnableStatus
     }
-    networkSettings:{
+    networkSettings: {
       microsoftHostedNetworkEnableStatus: microsoftHostedNetworkEnableStatus
     }
-    devBoxProvisioningSettings:{
+    devBoxProvisioningSettings: {
       installAzureMonitorAgentEnableStatus: installAzureMonitorAgentEnableStatus
-    } 
+    }
   }
 }
 

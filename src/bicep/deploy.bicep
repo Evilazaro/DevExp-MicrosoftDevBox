@@ -1,40 +1,47 @@
-@description('Solution/Workload Name')
+@description('Workload Name')
 param workloadName string
 
-@description('Virtual Network Resource Group Name')
-param virtualNetworkResourceGroupName string
+@description('DevBox Workload Resource Group Name')
+param devBoxResourceGroupName string
 
-@description('Dev Center Resource Group Name')
-param devCenterResourceGroupName string
+@description('Connectivity Resource Group Name')
+param connectivityResourceGroupName string
 
-@description('Environment Type')
-@allowed([
-  'nonprod'
-  'prod'
-  'dev'
-])
-param environmentType string
+@description('Projects')
+var contosoProjectsInfo = [
+  {
+    name: 'eShop'
+    networkConnection:{
+      domainJoinType: 'AzureADJoin'
+    }
+  }
+  {
+    name: 'Contoso-Traders'
+    networkConnection:{
+      domainJoinType: 'AzureADJoin'
+    }
+  }
+]
 
-@description('Deploy Network Connectivity Resources')
-module deployNetworkConnectivity 'network/connectivityModule.bicep' = {
-  name: 'Connectivity'
+@description('Deploy Connectivity Resources')
+module connectivityResources 'connectivity/connectivityWorkload.bicep'= {
+  name: 'connectivity'
+  scope: resourceGroup(devBoxResourceGroupName)
   params: {
-    environmentType: environmentType
-    virtualNetworkResourceGroupName: virtualNetworkResourceGroupName 
+    contosoProjectsInfo: contosoProjectsInfo 
     workloadName: workloadName
+    connectivityResourceGroupName: connectivityResourceGroupName
   }
 }
 
-@description('Network Connections names')
-var networkConnections = deployNetworkConnectivity.outputs.networkConnections
-
-@description('Deploy Dev Box Resources')
-module deployDevBox 'devBox/devBoxModule.bicep' = {
+@description('Deploy DevEx Resources')
+module devExResources 'DevEx/devExWorkload.bicep'= {
   name: 'DevBox'
-  scope: resourceGroup(devCenterResourceGroupName)
+  scope: resourceGroup(devBoxResourceGroupName)
   params: {
     workloadName: workloadName
-    networkConnectionResourceGroupName:virtualNetworkResourceGroupName
-    networkConnections: networkConnections
+    contosoProjectsInfo: contosoProjectsInfo
+    networkConnections: connectivityResources.outputs.networkConnections
+    connectivityResourceGroupName: connectivityResourceGroupName
   }
 }
