@@ -4,6 +4,9 @@ param devCenterName string
 @description('Contoso Projects Info')
 param contosoProjectsInfo array
 
+@description('Project Catalogs')
+param contosoProjectCatalogsInfo array
+
 @description('Contoso Dev Center Projects')
 module contosoDevCenterProjects 'devCenterProjectResource.bicep' = [for contosoProject in contosoProjectsInfo: {
   name: 'Project-${contosoProject.name}'
@@ -17,12 +20,15 @@ module contosoDevCenterProjects 'devCenterProjectResource.bicep' = [for contosoP
 ]
 
 
-module projectCatalog 'projectCatalogResource.bicep' = [for (contosoProjectCatalog,i) in contosoProjectsInfo: {
-  name: contosoProjectCatalog[i].catalog.catalogName
+module projectCatalog 'projectCatalogResource.bicep' = [for (catalogInfo,i) in contosoProjectCatalogsInfo: {
+  name: catalogInfo[i].catalogName
   scope: resourceGroup()
   params: {
     projectName: contosoDevCenterProjects[i].outputs.devCenterProjectName
-    projectCatalogInfo: contosoProjectCatalog[i].catalog
+    branch: catalogInfo[i].branch
+    uri: catalogInfo[i].uri
+    name: catalogInfo[i].catalogName
+    path: catalogInfo[i].path
   }
   dependsOn: [
     contosoDevCenterProjects

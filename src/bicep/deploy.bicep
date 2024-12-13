@@ -57,6 +57,23 @@ var contosoProjectsInfo = [
   }
 ]
 
+var contosoProjectCatalogsInfo = [
+  {
+    projectName: 'eShop'
+    catalogName: 'eShop'
+    uri: 'https://github.com/Evilazaro/eShop.git'
+    branch: 'main'
+    path: '/customizations/tasks'
+  }
+  {
+    projectName: 'Contoso-Traders'
+    catalogName: 'ContosoTraders'
+    uri: 'https://github.com/Evilazaro/ContosoTraders.git'
+    branch: 'main'
+    path: '/customizations/tasks'
+  }
+]
+
 @description('Contoso Dev Center Catalog')
 var contosoDevCenterCatalog = {
   name: 'Contoso-DevCenter'
@@ -88,5 +105,6 @@ module devExResources 'DevEx/devExWorkload.bicep' = {
     networkConnections: connectivityResources.outputs.networkConnections
     connectivityResourceGroupName: connectivityResourceGroupName
     devCenterCatalog: contosoDevCenterCatalog
+    contosoProjectCatalogsInfo: contosoProjectCatalogsInfo
   }
 }
