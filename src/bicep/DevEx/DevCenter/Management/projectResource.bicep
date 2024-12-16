@@ -10,6 +10,16 @@ param tags object
 @description('Project Catalog Info')
 param projectCatalogInfo object
 
+@description('Dev Box Definitions')
+param devBoxDefinitions array
+
+@description('Network Connection Name')
+param networkConnectionName string
+
+
+// @description('Projects Environment Types Info')
+// param projectsEnvironmentTypesInfo array
+
 @description('Dev Center')
 resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' existing = {
   name: devCenterName
@@ -72,4 +82,27 @@ output projectCatalogBranch string = projectCatalog.properties.gitHub.branch
 @description('Project Catalog Path')
 output projectCatalogPath string = projectCatalog.properties.gitHub.path
 
+@description('Dev Center Project Pools')
+resource devCenterProjectPools 'Microsoft.DevCenter/projects/pools@2024-10-01-preview' = [for pool in devBoxDefinitions: {
+  name: '${name}-${pool.name}-pool'
+  parent: devCenterProject
+  location: resourceGroup().location
+  properties: {
+    displayName: '${name}-${pool.name}-pool'
+    devBoxDefinitionName: pool.name
+    licenseType: 'Windows_Client'
+    localAdministrator: 'Enabled'
+    networkConnectionName: networkConnectionName
+  }
+}
+]
 
+@description('Dev Center Project Pools')
+output devCenterProjectPools array = [for (pool, i) in devBoxDefinitions: {
+  name: devCenterProjectPools[i].name
+  id: devCenterProjectPools[i].id
+  devBoxDefinitionName: devCenterProjectPools[i].properties.devBoxDefinitionName
+  licenseType: devCenterProjectPools[i].properties.licenseType
+  localAdministrator: devCenterProjectPools[i].properties.localAdministrator
+  networkConnectionName: devCenterProjectPools[i].properties.networkConnectionName
+}]

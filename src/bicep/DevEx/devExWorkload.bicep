@@ -162,24 +162,19 @@ module devCenter 'DevCenter/devCenterResource.bicep' = {
   }
 }
 
-
 @description('Environment Type Resource')
-module environmentTypes 'DevCenter/EnvironmentConfiguration/environmentTypesResource.bicep' = [for environmentType in environmentTypesInfo:  {
-  name: 'EnvironmentTypes-${environmentType.name}'
-  scope: resourceGroup()
-  params: {
-    devCenterName: devCenter.outputs.devCenterName
-    name: environmentType.name
-    tags: tags
+module environmentTypes 'DevCenter/EnvironmentConfiguration/environmentTypesResource.bicep' = [
+  for environmentType in environmentTypesInfo: {
+    name: 'EnvironmentTypes-${environmentType.name}'
+    scope: resourceGroup()
+    params: {
+      devCenterName: devCenter.outputs.devCenterName
+      name: environmentType.name
+      tags: tags
+    }
   }
-}
 ]
 
-@description('Output Environment Types created')
-output environmentTypesCreated array = [for environmentType in environmentTypesInfo: {
-  name: environmentType.name
-  tags: environmentType.tags
-}]
 
 @description('Network Connection Attachment Resource')
 module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectionAttachmentResource.bicep' = [
@@ -194,12 +189,6 @@ module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectio
   }
 ]
 
-@description('Output Network Connection Attachments created')
-output networkConnectionAttachmentsCreated array = [for (networkConnection, i) in networkConnections: {
-  name: networkConnectionAttachment[i].outputs.name
-  id: networkConnectionAttachment[i].outputs.networkConnectionId
-}]
-
 @description('Projects')
 var contosoProjectsInfo = [
   {
@@ -211,7 +200,7 @@ var contosoProjectsInfo = [
       uri: 'https://github.com/Evilazaro/eShop.git'
       branch: 'main'
       path: '/customizations/tasks'
-    }    
+    }
     tags: {
       workload: workloadName
       landingZone: 'DevEx'
@@ -232,7 +221,7 @@ var contosoProjectsInfo = [
       uri: 'https://github.com/Evilazaro/ContosoTraders.git'
       branch: 'main'
       path: '/customizations/tasks'
-    }    
+    }
     tags: {
       workload: workloadName
       landingZone: 'DevEx'
@@ -245,7 +234,6 @@ var contosoProjectsInfo = [
     }
   }
 ]
-
 
 @description('Contoso Dev Center Catalog')
 module contosoDevCenterCatalog 'DevCenter/EnvironmentConfiguration/devCentercatalogsResource.bicep' = {
@@ -264,32 +252,27 @@ module contosoDevCenterCatalog 'DevCenter/EnvironmentConfiguration/devCentercata
 }
 
 @description('Dev Center Dev Box Definitions')
-module devCenterDevBoxDefinitions 'DevCenter/EnvironmentConfiguration/devBoxDefinitionResource.bicep' = [for devBoxDefinition in contosoDevCenterDevBoxDefinitionsInfo: {
-  name: 'DevBoxDefinition-${devBoxDefinition.name}'
-  scope: resourceGroup()
-  params:{
-    devCenterName: devCenter.outputs.devCenterName
-    name: devBoxDefinition.name
-    tags: devBoxDefinition.tags
-    hibernateSupport: devBoxDefinition.hibernateSupport
-    imageName: devBoxDefinition.imageName 
-    skuName: devBoxDefinition.sku
+module devCenterDevBoxDefinitions 'DevCenter/EnvironmentConfiguration/devBoxDefinitionResource.bicep' = { 
+    name: 'DevBoxDefinitions'
+    scope: resourceGroup()
+    params: {
+      devCenterName: devCenter.outputs.devCenterName
+      devBoxDefinitionsInfo: contosoDevCenterDevBoxDefinitionsInfo
+    }
   }
-}]
-
-@description('Output Dev Center Dev Box Definitions created')
-output devBoxDefinitionsCreated array = [for (devBoxDefinition,i) in contosoDevCenterDevBoxDefinitionsInfo: {
-  name: devCenterDevBoxDefinitions[i].outputs.devBoxDefinitionName
-  tags: devCenterDevBoxDefinitions[i].outputs.devBoxDefinitionTags
-  imageReferenceId: devCenterDevBoxDefinitions[i].outputs.devBoxDefinitionImageReferenceId
-}]
 
 @description('Contoso Dev Center Projects')
-module contosoDevCenterProjects 'DevCenter/Management/projectModule.bicep'= {
-  name: 'DevCenterProjects'
-  scope: resourceGroup()
-  params: {
-    contosoProjectsInfo: contosoProjectsInfo
-    devCenterName: devCenter.outputs.devCenterName
+module contosoDevCenterProjects 'DevCenter/Management/projectResource.bicep' = [
+  for project in contosoProjectsInfo: {
+    name: 'Project-${project.name}'
+    scope: resourceGroup()
+    params: {
+      devCenterName: devCenter.outputs.devCenterName
+      name: project.name
+      tags: project.tags
+      projectCatalogInfo: project.catalog
+      devBoxDefinitions: devCenterDevBoxDefinitions.outputs.devBoxDefinitions
+      networkConnectionName: project.networkConnectionName
+    }
   }
-}
+]
