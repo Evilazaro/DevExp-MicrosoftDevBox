@@ -93,15 +93,3 @@ resource devCenterProjectPools 'Microsoft.DevCenter/projects/pools@2024-10-01-pr
     }
   }
 ]
-
-@description('Dev Center Project Pools')
-output devCenterProjectPools array = [
-  for (pool, i) in devBoxDefinitions: {
-    name: devCenterProjectPools[i].name
-    id: devCenterProjectPools[i].id
-    devBoxDefinitionName: devCenterProjectPools[i].properties.devBoxDefinitionName
-    licenseType: devCenterProjectPools[i].properties.licenseType
-    localAdministrator: devCenterProjectPools[i].properties.localAdministrator
-    networkConnectionName: devCenterProjectPools[i].properties.networkConnectionName
-  }
-]
