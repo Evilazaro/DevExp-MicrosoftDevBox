@@ -162,7 +162,7 @@ module devCenter 'DevCenter/devCenterResource.bicep' = {
 @description('Environment Type Resource')
 module environmentTypes 'DevCenter/EnvironmentConfiguration/environmentTypesResource.bicep' = [
   for environmentType in environmentTypesInfo: {
-    name: 'EnvironmentTypes-${environmentType.name}'
+    name: '${environmentType.name}-environmentType'
     scope: resourceGroup()
     params: {
       devCenterName: devCenter.outputs.devCenterName
@@ -174,7 +174,7 @@ module environmentTypes 'DevCenter/EnvironmentConfiguration/environmentTypesReso
 
 @description('Network Connection Attachment Resource')
 module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectionAttachmentResource.bicep' = {
-  name: 'NetworkConnectionAttachment'
+  name: 'networkAttachments'
   scope: resourceGroup()
   params: {
     devCenterName: devCenter.outputs.devCenterName
@@ -256,7 +256,7 @@ param contosoProjectsInfo array = [
 
 @description('Contoso Dev Center Catalog')
 module contosoDevCenterCatalog 'DevCenter/EnvironmentConfiguration/devCentercatalogsResource.bicep' = {
-  name: 'DevCenterCatalog'
+  name: 'devCenterCatalog'
   scope: resourceGroup()
   params: {
     name: contosoDevCenterCatalogInfo.name
@@ -272,7 +272,7 @@ module contosoDevCenterCatalog 'DevCenter/EnvironmentConfiguration/devCentercata
 
 @description('Dev Center Dev Box Definitions')
 module devCenterDevBoxDefinitions 'DevCenter/EnvironmentConfiguration/devBoxDefinitionResource.bicep' = {
-  name: 'DevBoxDefinitions'
+  name: 'devBoxDefinitions'
   scope: resourceGroup()
   params: {
     devCenterName: devCenter.outputs.devCenterName
@@ -283,7 +283,7 @@ module devCenterDevBoxDefinitions 'DevCenter/EnvironmentConfiguration/devBoxDefi
 @description('Contoso Dev Center Projects')
 module contosoDevCenterProjects 'DevCenter/Management/projectResource.bicep' = [
   for project in contosoProjectsInfo: {
-    name: 'Project-${project.name}'
+    name: '${project.name}-project'
     scope: resourceGroup()
     params: {
       devCenterName: devCenter.outputs.devCenterName

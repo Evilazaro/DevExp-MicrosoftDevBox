@@ -83,7 +83,7 @@ resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@
   }
   properties: {
     displayName: environmentType.name
-    deploymentTargetId: resourceId('Microsoft.Subscription/subscriptions', subscription().subscriptionId)
+    deploymentTargetId: resourceId('Microsoft.Resources/subscriptions', subscription().subscriptionId)
     status: 'Enabled'
     creatorRoleAssignment: {
       roles: {
@@ -92,3 +92,4 @@ resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@
     }
   }  
 }]
+

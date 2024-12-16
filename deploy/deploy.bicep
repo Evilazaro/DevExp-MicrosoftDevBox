@@ -19,7 +19,7 @@ module connectivityResources '../src/bicep/connectivity/connectivityWorkload.bic
 
 @description('Deploy DevEx Resources')
 module devExResources '../src/bicep/DevEx/devExWorkload.bicep' = {
-  name: 'DevBox'
+  name: 'devBox'
   scope: resourceGroup(devBoxResourceGroupName)
   params: {
     workloadName: workloadName
