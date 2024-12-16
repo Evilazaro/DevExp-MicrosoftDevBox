@@ -71,10 +71,10 @@ output devCenterTags object = devCenter.tags
 
 @description('Role Assignment')
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(devCenter.name) 
+  name: guid(subscription().id, devCenter.name, '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')
   properties: {
     principalId: devCenter.identity.principalId
-    roleDefinitionId: '8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions','8e3af657-a8ff-443c-a75c-2fe8c4bcb635')
     principalType: 'ServicePrincipal'
   }
 }
