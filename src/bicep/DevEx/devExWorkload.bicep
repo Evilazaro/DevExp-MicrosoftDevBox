@@ -311,10 +311,8 @@ module devCenterProjects 'DevCenter/Management/devCenterProjectsModule.bicep'= {
   name: 'DevCenterProjects'
   scope: resourceGroup()
   params: {
-    contosoProjectsInfo: contosoProjectsInfo
     devCenterName: devCenter.outputs.devCenterName
-    contosoProjectsCatalogsInfo: contosoProjectCatalogsInfo
-    devBoxDefinitionsInfo: contosoDevCenterDevBoxDefinitionsInfo
-    networkConnections: networkConnections
+    contosoProjectsInfo: contosoProjectsInfo
+    tags: tags
   }
 }

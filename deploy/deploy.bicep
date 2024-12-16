@@ -24,7 +24,7 @@ var contosoConnectivityInfo = [
 ]
 
 @description('Deploy Connectivity Resources')
-module connectivityResources 'connectivity/connectivityWorkload.bicep' = {
+module connectivityResources '../src/bicep/connectivity/connectivityWorkload.bicep' = {
   name: 'connectivity'
   scope: resourceGroup(devBoxResourceGroupName)
   params: {
@@ -35,7 +35,7 @@ module connectivityResources 'connectivity/connectivityWorkload.bicep' = {
 }
 
 @description('Deploy DevEx Resources')
-module devExResources 'DevEx/devExWorkload.bicep' = {
+module devExResources '../src/bicep/DevEx/devExWorkload.bicep' = {
   name: 'DevBox'
   scope: resourceGroup(devBoxResourceGroupName)
   params: {

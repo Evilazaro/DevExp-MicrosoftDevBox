@@ -4,26 +4,26 @@ param devCenterName string
 @description('Contoso Projects Info')
 param contosoProjectsInfo array
 
-@description('Contoso Dev Center Projects Catalogs Info')
-param contosoProjectsCatalogsInfo array
+// @description('Contoso Dev Center Projects Catalogs Info')
+// param contosoProjectsCatalogsInfo object
 
-@description('Contoso Dev Center Network Connection Name ')
-param networkConnections array
+// @description('Contoso Dev Center Network Connection Name ')
+// param networkConnectionName string
 
-@description('Contoso Dev Center DevBox Definitions Info ')
-param devBoxDefinitionsInfo array
+// @description('Contoso Dev Center DevBox Definitions Info ')
+// param devBoxDefinitionsInfo array
+
+@description('Contoso Projects Tags')
+param tags object
 
 @description('Contoso Dev Center Projects')
-module contosoDevCenterProjects 'projectResource.bicep' = [for (contosoProject,i) in contosoProjectsInfo: {
-  name: 'Project-${contosoProject[i].name}'
+module contosoDevCenterProjects 'projectResource.bicep' =  [for project in contosoProjectsInfo: {
+  name: 'Project-${project.name}'
   scope: resourceGroup()
   params: {
     devCenterName: devCenterName
-    name: contosoProject[i].name
-    tags: contosoProject[i].tags
-    devBoxDefinitionsInfo: devBoxDefinitionsInfo
-    devCenterProjectCatalogInfo: contosoProjectsCatalogsInfo[0]
-    networkConnectionName: networkConnections[0].name
+    name: project.name
+    tags: tags
   }
 }
 ]
