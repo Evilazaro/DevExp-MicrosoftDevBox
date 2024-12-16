@@ -103,6 +103,6 @@ resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@
   parent: devCenterProject
   properties: {
     displayName: environmentType.name
-    deploymentTargetId: resourceId('Microsoft.Subscription', subscription().subscriptionId)
+    deploymentTargetId: resourceId('Microsoft.Subscription/subscriptions', subscription().subscriptionId)
   }  
 }]
