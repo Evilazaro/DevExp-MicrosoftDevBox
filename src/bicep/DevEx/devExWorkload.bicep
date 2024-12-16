@@ -306,13 +306,21 @@ output devBoxDefinitionsCreated array = [for (devBoxDefinition,i) in contosoDevC
   imageReferenceId: devCenterDevBoxDefinitions[i].outputs.devBoxDefinitionImageReferenceId
 }]
 
-@description('Dev Center Projects')
-module devCenterProjects 'DevCenter/Management/devCenterProjectsModule.bicep'= {
-  name: 'DevCenterProjects'
+@description('Contoso Dev Center Projects')
+module contosoDevCenterProjects 'DevCenter/Management/projectResource.bicep' =  [for project in contosoProjectsInfo: {
+  name: 'Project-${project.name}'
   scope: resourceGroup()
   params: {
     devCenterName: devCenter.outputs.devCenterName
-    contosoProjectsInfo: contosoProjectsInfo
-    tags: tags
+    name: project.name
+    tags: project.tags
   }
 }
+]
+
+@description('Output Contoso Dev Center Projects created')
+output devCenterProjectsCreated array = [for (project,i) in contosoProjectsInfo: {
+  name: contosoDevCenterProjects[i].outputs.devCenterProjectName
+  tags: contosoDevCenterProjects[i].outputs.devCenterProjectTags
+  id: contosoDevCenterProjects[i].outputs.devCenterProjectId
+}]

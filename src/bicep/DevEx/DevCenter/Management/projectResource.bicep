@@ -4,15 +4,6 @@ param devCenterName string
 @description('Project Name')
 param name string
 
-// @description('network connection name')
-// param networkConnectionName string
-
-// @description('Dev Box Definitions Info')
-// param devBoxDefinitionsInfo array
-
-// @description('Dev Center Project Catalog Info')
-// param devCenterProjectCatalogInfo object
-
 @description('Tags')
 param tags object
 
@@ -40,3 +31,12 @@ resource devCenterProject 'Microsoft.DevCenter/projects@2024-10-01-preview' = {
   }
   tags: tags
 }
+
+@description('Output Dev Center Project ID')
+output devCenterProjectId string = devCenterProject.id
+
+@description('Output Dev Center Project Name')
+output devCenterProjectName string = devCenterProject.name
+
+@description('Output Dev Center Project Tags')
+output devCenterProjectTags object = devCenterProject.tags
