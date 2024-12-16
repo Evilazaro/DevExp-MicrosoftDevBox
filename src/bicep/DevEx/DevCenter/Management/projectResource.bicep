@@ -16,8 +16,8 @@ param devBoxDefinitions array
 @description('Network Connection Name')
 param networkConnectionName string
 
-@description('Project Environment Types Info')
-param projectEnvironmentTypesInfo array
+// @description('Project Environment Types Info')
+// param projectEnvironmentTypesInfo array
 
 @description('Dev Center')
 resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' existing = {
