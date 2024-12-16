@@ -7,6 +7,9 @@ param name string
 @description('Tags')
 param tags object
 
+@description('Project Catalog Info')
+param projectCatalogInfo object
+
 @description('Dev Center')
 resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' existing = {
   name: devCenterName
@@ -40,3 +43,33 @@ output devCenterProjectName string = devCenterProject.name
 
 @description('Output Dev Center Project Tags')
 output devCenterProjectTags object = devCenterProject.tags
+
+@description('Project Catalog Resource')
+resource projectCatalog 'Microsoft.DevCenter/projects/catalogs@2024-10-01-preview'= {
+  name: '${name}-catalog'
+  parent: devCenterProject
+  properties: {
+    gitHub: {
+      uri: projectCatalogInfo.uri
+      branch: projectCatalogInfo.branch
+      path: projectCatalogInfo.path
+    }
+}
+}
+
+@description('Project Catalog Resource ID')
+output projectCatalogId string = projectCatalog.id
+
+@description('Project Catalog Resource Name')
+output projectCatalogName string = projectCatalog.name
+
+@description('Project Catalog URI')
+output projectCatalogUri string = projectCatalog.properties.gitHub.uri
+
+@description('Project Catalog Branch')
+output projectCatalogBranch string = projectCatalog.properties.gitHub.branch
+
+@description('Project Catalog Path')
+output projectCatalogPath string = projectCatalog.properties.gitHub.path
+
+

@@ -12,6 +12,7 @@ module projects 'projectResource.bicep' = [for project in contosoProjectsInfo: {
     devCenterName: devCenterName
     name: project.name
     tags: project.tags
+    projectCatalogInfo: project.catalog
   }
 }
 ]
