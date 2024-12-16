@@ -122,38 +122,6 @@ param contosoDevCenterDevBoxDefinitionsInfo array = [
       roleName: 'FrontEnd-Engineer'
     }
   }
-  {
-    name: 'Web-Designer'
-    imageName: 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
-    sku: 'general_i_16c64gb256ssd_v2'
-    hibernateSupport: 'Enabled'
-    tags: {
-      workload: workloadName
-      landingZone: 'DevEx'
-      resourceType: 'DevCenter'
-      ProductTeam: 'Platform Engineering'
-      Environment: 'Production'
-      Department: 'IT'
-      offering: 'DevBox-as-a-Service'
-      roleName: 'Web-Designer-Engineer'
-    }
-  }
-  {
-    name: 'DevOps-Engineer'
-    imageName: 'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2'
-    sku: 'general_i_32c128gb512ssd_v2'
-    hibernateSupport: 'Disabled'
-    tags: {
-      workload: workloadName
-      landingZone: 'DevEx'
-      resourceType: 'DevCenter'
-      ProductTeam: 'Platform Engineering'
-      Environment: 'Production'
-      Department: 'IT'
-      offering: 'DevBox-as-a-Service'
-      roleName: 'DevOps-Engineer'
-    }
-  }
 ]
 
 @description('Dev Center Resource')
