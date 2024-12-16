@@ -16,6 +16,9 @@ param devBoxDefinitions array
 @description('Network Connection Name')
 param networkConnectionName string
 
+@description('Project Environment Types Info')
+param projectEnvironmentTypesInfo array
+
 @description('Dev Center')
 resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' existing = {
   name: devCenterName
@@ -93,3 +96,13 @@ resource devCenterProjectPools 'Microsoft.DevCenter/projects/pools@2024-10-01-pr
     }
   }
 ]
+
+@description('Project Environment Types Resources')
+resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@2024-10-01-preview' = [for environmentType in projectEnvironmentTypesInfo: {
+  name: '${environmentType.name}-environmentType'
+  parent: devCenterProject
+  properties: {
+    displayName: environmentType.name
+    deploymentTargetId: resourceId('Microsoft.Subscription', subscription().subscriptionId)
+  }  
+}]

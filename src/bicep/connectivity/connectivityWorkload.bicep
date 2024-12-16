@@ -4,16 +4,29 @@ param workloadName string
 @description('Connectivity Resource Group Name')
 param connectivityResourceGroupName string
 
-@description('Subnets')
-param contosoProjectsInfo array
+@description('Connectivity Info')
+param contosoConnectivityInfo array = [
+  {
+    name: 'eShop'
+    networkConnection: {
+      domainJoinType: 'AzureADJoin'
+    }
+  }
+  {
+    name: 'Contoso-Traders'
+    networkConnection: {
+      domainJoinType: 'AzureADJoin'
+    }
+  }
+]
 
 @description('Address Prefixes')
-var addressPrefixes = [
+param addressPrefixes array = [
   '10.0.0.0/16'
 ]
 
 @description('Tags')
-var tags = {
+param tags object = {
   workload: workloadName
   landingZone: 'connectivity'
   resourceType: 'virtualNetwork'
@@ -43,13 +56,13 @@ module virtualNetwork 'virtualNetwork/virtualNetworkResource.bicep' = {
     addressPrefixes: addressPrefixes
     enableDdosProtection: true
     ddosProtectionPlanId: ddosProtectionPlan.outputs.ddosProtectionPlanId
-    subnets: contosoProjectsInfo
+    subnets: contosoConnectivityInfo
   }
 }
 
 @description('Network Connection Resource')
 module networkConnection 'networkConnection/networkConnectionResource.bicep' = [
-  for (netConnection, i) in contosoProjectsInfo: {
+  for (netConnection, i) in contosoConnectivityInfo: {
     name: 'netCon-${netConnection.name}'
     scope: resourceGroup(connectivityResourceGroupName)
     params: {
@@ -63,7 +76,7 @@ module networkConnection 'networkConnection/networkConnectionResource.bicep' = [
 
 @description('Network Connections')
 output networkConnectionsCreated array = [
-  for (netConnection, i) in contosoProjectsInfo: {
+  for (netConnection, i) in contosoConnectivityInfo: {
     name: networkConnection[i].outputs.networkConnectionName
     id: networkConnection[i].outputs.networkConnectionId
   }

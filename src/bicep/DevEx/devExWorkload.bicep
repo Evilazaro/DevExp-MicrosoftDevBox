@@ -1,14 +1,11 @@
 @description('Workload Name')
 param workloadName string
 
-@description('Connectivity Resource Group Name')
-param connectivityResourceGroupName string
-
 @description('Network Connections')
 param networkConnectionsCreated array
 
 @description('Contoso Dev Center Catalog')
-var contosoDevCenterCatalogInfo = {
+param contosoDevCenterCatalogInfo object = {
   name: 'Contoso-DevCenter'
   syncType: 'Scheduled'
   type: 'GitHub'
@@ -18,7 +15,7 @@ var contosoDevCenterCatalogInfo = {
 }
 
 @description('Tags')
-var tags = {
+param tags object = {
   workload: workloadName
   landingZone: 'DevEx'
   resourceType: 'DevCenter'
@@ -29,7 +26,7 @@ var tags = {
 }
 
 @description('Environment Types Info')
-var environmentTypesInfo = [
+param environmentTypesInfo array = [
   {
     name: 'DEV'
     tags: {
@@ -81,7 +78,7 @@ var environmentTypesInfo = [
 ]
 
 @description('Contoso Dev Center Dev Box Definitions')
-var contosoDevCenterDevBoxDefinitionsInfo = [
+param contosoDevCenterDevBoxDefinitionsInfo array = [
   {
     name: 'BackEnd-Engineer'
     imageName: 'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2'
@@ -186,7 +183,7 @@ module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectio
 }
 
 @description('Projects')
-var contosoProjectsInfo = [
+param contosoProjectsInfo array = [
   {
     name: 'eShop'
     networkConnectionName: networkConnectionsCreated[0].name
@@ -269,6 +266,7 @@ module contosoDevCenterProjects 'DevCenter/Management/projectResource.bicep' = [
       projectCatalogInfo: project.catalog
       devBoxDefinitions: devCenterDevBoxDefinitions.outputs.devBoxDefinitions
       networkConnectionName: project.networkConnectionName
+      projectEnvironmentTypesInfo: environmentTypesInfo
     }
   }
 ]
