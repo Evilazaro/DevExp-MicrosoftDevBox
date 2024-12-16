@@ -32,6 +32,9 @@ resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' = {
   name: '${uniqueString(resourceGroup().id, name)}-devcenter'
   location: location
   tags: tags
+  identity: {
+    type: 'SystemAssigned'
+  }
   properties: {
     projectCatalogSettings: {
       catalogItemSyncEnableStatus: catalogItemSyncEnableStatus
@@ -65,3 +68,13 @@ output devCenterInstallAzureMonitorAgentEnableStatus string = devCenter.properti
 
 @description('DevCenter Resource Tags')
 output devCenterTags object = devCenter.tags
+
+@description('Role Assignment')
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: 'devCenterRoleAssignment'
+  properties: {
+    principalId: devCenter.identity.principalId
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')
+    principalType: 'ServicePrincipal'
+  }
+}
