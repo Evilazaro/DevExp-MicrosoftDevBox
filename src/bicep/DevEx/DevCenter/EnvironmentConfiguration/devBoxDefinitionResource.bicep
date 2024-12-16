@@ -22,7 +22,7 @@ resource devBoxDefinitionResource 'Microsoft.DevCenter/devcenters/devboxdefiniti
       id: '${resourceId('Microsoft.DevCenter/devcenters', devCenter.name)}/galleries/default/images/${devBoxDefinition.imageName}'
     }
     sku: {
-      name: devBoxDefinition.skuName
+      name: devBoxDefinition.sku
     }
   }
 }
