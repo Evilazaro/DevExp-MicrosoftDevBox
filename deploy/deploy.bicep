@@ -17,6 +17,14 @@ module connectivityResources '../src/bicep/connectivity/connectivityWorkload.bic
   }
 }
 
+@description('Identity Resources')
+module customRole '../src/bicep/identity/customRoleResource.bicep' = {
+  name: 'customRole'
+  params: {
+  
+  }
+}
+
 @description('Deploy DevEx Resources')
 module devExResources '../src/bicep/DevEx/devExWorkload.bicep' = {
   name: 'devBox'
@@ -24,5 +32,6 @@ module devExResources '../src/bicep/DevEx/devExWorkload.bicep' = {
   params: {
     workloadName: workloadName
     networkConnectionsCreated: connectivityResources.outputs.networkConnectionsCreated
+    customRoleInfo: customRole.outputs.customRoleInfo    
   }
 }

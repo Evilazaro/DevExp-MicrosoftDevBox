@@ -15,6 +15,9 @@ param networkConnectionsCreated array = [
   }
 ]
 
+@description('Custom Role Info')
+param customRoleInfo object
+
 @description('Contoso Dev Center Catalog')
 param contosoDevCenterCatalogInfo object = {
   name: 'Contoso-Custom-Tasks'
@@ -135,6 +138,7 @@ module devCenter 'DevCenter/devCenterResource.bicep' = {
     microsoftHostedNetworkEnableStatus: 'Enabled'
     installAzureMonitorAgentEnableStatus: 'Enabled'
     tags: tags
+    customRoleInfo: customRoleInfo
   }
 }
 
@@ -259,7 +263,7 @@ module contosoDevCenterProjects 'DevCenter/Management/projectResource.bicep' = [
       projectCatalogsInfo: project.catalogs
       devBoxDefinitions: devCenterDevBoxDefinitions.outputs.devBoxDefinitions
       networkConnectionName: project.networkConnectionName
-      //projectEnvironmentTypesInfo: environmentTypesInfo
+      projectEnvironmentTypesInfo: environmentTypesInfo
     }
   }
 ]

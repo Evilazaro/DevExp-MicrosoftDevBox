@@ -16,8 +16,8 @@ param devBoxDefinitions array
 @description('Network Connection Name')
 param networkConnectionName string
 
-// @description('Project Environment Types Info')
-// param projectEnvironmentTypesInfo array
+@description('Project Environment Types Info')
+param projectEnvironmentTypesInfo array
 
 @description('Dev Center')
 resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' existing = {
@@ -30,7 +30,7 @@ resource devCenterProject 'Microsoft.DevCenter/projects@2024-10-01-preview' = {
   name: name
   location: resourceGroup().location
   identity: {
-    type: 'SystemAssigned'
+    type:  'SystemAssigned'
   }
   properties: {
     displayName: name
@@ -46,16 +46,6 @@ resource devCenterProject 'Microsoft.DevCenter/projects@2024-10-01-preview' = {
   }
   tags: tags
 }
-
-// @description('Project Role Assignment')
-// resource projectRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-//   name: devCenterProject.name
-//   properties: {
-//     principalId: devCenterProject.identity.principalId
-//     roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')
-//     principalType: 'ServicePrincipal'
-//   }
-// }
 
 @description('Project Catalog Resource')
 resource projectCatalogs 'Microsoft.DevCenter/projects/catalogs@2024-10-01-preview' = [for projectCataLog in projectCatalogsInfo:  {
@@ -87,22 +77,17 @@ resource devCenterProjectPools 'Microsoft.DevCenter/projects/pools@2024-10-01-pr
   }
 ]
 
-// @description('Project Environment Types Resources')
-// resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@2024-10-01-preview' = [for environmentType in projectEnvironmentTypesInfo: {
-//   name: '${environmentType.name}-environmentType'
-//   parent: devCenterProject
-//   identity: {
-//     type: 'SystemAssigned'
-//   }
-//   properties: {
-//     displayName: environmentType.name
-//     deploymentTargetId: resourceId('Microsoft.Resources/subscriptions', subscription().subscriptionId)
-//     status: 'Enabled'
-//     creatorRoleAssignment: {
-//       roles: {
-//         '8e3af657-a8ff-443c-a75c-2fe8c4bcb635': {}
-//       }
-//     }
-//   }  
-// }]
+@description('Project Environment Types Resources')
+resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@2024-10-01-preview' = [for environmentType in projectEnvironmentTypesInfo: {
+  name: '${environmentType.name}-environmentType'
+  parent: devCenterProject
+  identity: {
+    type: 'SystemAssigned'
+  }
+  properties: {
+    displayName: environmentType.name
+    deploymentTargetId: resourceId('Microsoft.Resources/subscriptions', subscription().subscriptionId)
+    status: 'Enabled'
+  }  
+}]
 

@@ -1,11 +1,13 @@
 @description('Dev Center Name')
 param principalId string
 
+@description('Role Definition Ids')
+param roleDefinitionIds array
+
 targetScope = 'subscription'
-var roleDefinitionId = '8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
 
 @description('Role Assignment')
-resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = [for roleDefinitionId in roleDefinitionIds:  {
   name: guid(subscription().id, principalId, roleDefinitionId)
   properties: {
     principalId: principalId
@@ -13,3 +15,4 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
     principalType: 'ServicePrincipal'
   }
 }
+]
