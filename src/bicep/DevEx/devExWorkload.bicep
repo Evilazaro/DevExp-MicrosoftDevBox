@@ -7,74 +7,6 @@ param connectivityResourceGroupName string
 @description('Network Connections')
 param networkConnections array
 
-@description('Projects')
-var contosoProjectsInfo = [
-  {
-    name: 'eShop'
-    networkConnection: {
-      domainJoinType: 'AzureADJoin'
-    }
-    catalog: {
-      projectName: 'eShop'
-      catalogName: 'eShop'
-      uri: 'https://github.com/Evilazaro/eShop.git'
-      branch: 'main'
-      path: '/customizations/tasks'
-    }
-    tags: {
-      workload: workloadName
-      landingZone: 'DevEx'
-      resourceType: 'DevCenter'
-      ProductTeam: 'Platform Engineering'
-      Environment: 'Production'
-      Department: 'IT'
-      offering: 'DevBox-as-a-Service'
-      project: 'eShop'
-    }
-  }
-  {
-    name: 'Contoso-Traders'
-    networkConnection: {
-      domainJoinType: 'AzureADJoin'
-    }
-    catalog: {
-      projectName: 'Contoso-Traders'
-      catalogName: 'ContosoTraders'
-      uri: 'https://github.com/Evilazaro/ContosoTraders.git'
-      branch: 'main'
-      path: '/customizations/tasks'
-    }
-    tags: {
-      workload: workloadName
-      landingZone: 'DevEx'
-      resourceType: 'DevCenter'
-      ProductTeam: 'Platform Engineering'
-      Environment: 'Production'
-      Department: 'IT'
-      offering: 'DevBox-as-a-Service'
-      project: 'Contoso-Traders'
-    }
-  }
-]
-
-@description('Contoso Project Catalogs Info')
-var contosoProjectCatalogsInfo = [
-  {
-    projectName: 'eShop'
-    catalogName: 'eShop'
-    uri: 'https://github.com/Evilazaro/eShop.git'
-    branch: 'main'
-    path: '/customizations/tasks'
-  }
-  {
-    projectName: 'Contoso-Traders'
-    catalogName: 'ContosoTraders'
-    uri: 'https://github.com/Evilazaro/ContosoTraders.git'
-    branch: 'main'
-    path: '/customizations/tasks'
-  }
-]
-
 @description('Contoso Dev Center Catalog')
 var contosoDevCenterCatalogInfo = {
   name: 'Contoso-DevCenter'
@@ -252,7 +184,7 @@ output environmentTypesCreated array = [for environmentType in environmentTypesI
 @description('Network Connection Attachment Resource')
 module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectionAttachmentResource.bicep' = [
   for (networkConnection, i) in networkConnections: {
-    name: 'vnetCon-${contosoProjectsInfo[i].name}-${networkConnection.name}'
+    name: 'vnetCon-${networkConnection.name}'
     scope: resourceGroup()
     params: {
       devCenterName: devCenter.outputs.devCenterName
@@ -267,6 +199,52 @@ output networkConnectionAttachmentsCreated array = [for (networkConnection, i) i
   name: networkConnectionAttachment[i].outputs.name
   id: networkConnectionAttachment[i].outputs.networkConnectionId
 }]
+
+@description('Projects')
+var contosoProjectsInfo = [
+  {
+    name: 'eShop'
+    networkConnectionName: networkConnectionAttachment[0].name
+    catalog: {
+      projectName: 'eShop'
+      catalogName: 'eShop'
+      uri: 'https://github.com/Evilazaro/eShop.git'
+      branch: 'main'
+      path: '/customizations/tasks'
+    }    
+    tags: {
+      workload: workloadName
+      landingZone: 'DevEx'
+      resourceType: 'DevCenter'
+      ProductTeam: 'Platform Engineering'
+      Environment: 'Production'
+      Department: 'IT'
+      offering: 'DevBox-as-a-Service'
+      project: 'eShop'
+    }
+  }
+  {
+    name: 'Contoso-Traders'
+    networkConnectionName: networkConnectionAttachment[1].name
+    catalog: {
+      projectName: 'Contoso-Traders'
+      catalogName: 'ContosoTraders'
+      uri: 'https://github.com/Evilazaro/ContosoTraders.git'
+      branch: 'main'
+      path: '/customizations/tasks'
+    }    
+    tags: {
+      workload: workloadName
+      landingZone: 'DevEx'
+      resourceType: 'DevCenter'
+      ProductTeam: 'Platform Engineering'
+      Environment: 'Production'
+      Department: 'IT'
+      offering: 'DevBox-as-a-Service'
+      project: 'Contoso-Traders'
+    }
+  }
+]
 
 
 @description('Contoso Dev Center Catalog')
@@ -307,20 +285,10 @@ output devBoxDefinitionsCreated array = [for (devBoxDefinition,i) in contosoDevC
 }]
 
 @description('Contoso Dev Center Projects')
-module contosoDevCenterProjects 'DevCenter/Management/projectResource.bicep' =  [for project in contosoProjectsInfo: {
-  name: 'Project-${project.name}'
-  scope: resourceGroup()
+module contosoDevCenterProjects 'DevCenter/Management/projectModule.bicep'= {
+  name: 'ContosoDevCenterProjects'
   params: {
+    contosoProjectsInfo: contosoProjectsInfo
     devCenterName: devCenter.outputs.devCenterName
-    name: project.name
-    tags: project.tags
   }
 }
-]
-
-@description('Output Contoso Dev Center Projects created')
-output devCenterProjectsCreated array = [for (project,i) in contosoProjectsInfo: {
-  name: contosoDevCenterProjects[i].outputs.devCenterProjectName
-  tags: contosoDevCenterProjects[i].outputs.devCenterProjectTags
-  id: contosoDevCenterProjects[i].outputs.devCenterProjectId
-}]
