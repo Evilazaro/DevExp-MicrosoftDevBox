@@ -1,3 +1,0 @@
-$schema: "1.0"
-name: install-postman
-command: './main.ps1'

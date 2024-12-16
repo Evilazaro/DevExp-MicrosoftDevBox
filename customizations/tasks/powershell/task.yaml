@@ -4,7 +4,7 @@ $schema: 1.0
 name: powershell
 description: Execute a powershell command.
 author: Microsoft Corporation
-command: ".\\Run-Command.ps1 -Command {{command}} -WorkingDirectory {{workingDirectory}} -RunAsUser {{runAsUser}}"
+command: ".\\Run-Command.ps1 -Command {{command}} -WorkingDirectory {{workingDirectory}}"
 parameters:
   command:
     type: string
@@ -16,13 +16,6 @@ parameters:
     default: ""
     required: false
     description: The working directory to execute the command in.
-  runAsUser:
-    default: false
-    type: 'boolean'
-    required: false
-    description: |
-      Whether to run the installation as the current user or as an administrator. 
-      If set to true, the installation will run during the user's first login to the machine.
 documentation:
   notes: This task is used to execute a powershell command.
   examples:

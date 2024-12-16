@@ -224,19 +224,19 @@ param contosoProjectsInfo array = [
     catalogs: [
       {
         catalogName: 'tasks'
-        uri: 'https://github.com/Evilazaro/eShop.git'
+        uri: 'https://github.com/Evilazaro/contosotraders.git'
         branch: 'main'
         path: '/devEx/tasks'
       }
       {
         catalogName: 'workloads'
-        uri: 'https://github.com/Evilazaro/eShop.git'
+        uri: 'https://github.com/Evilazaro/contosotraders.git'
         branch: 'main'
         path: '/devEx/customizations'
       }
       {
         catalogName: 'environments'
-        uri: 'https://github.com/Evilazaro/eShop.git'
+        uri: 'https://github.com/Evilazaro/contosotraders.git'
         branch: 'main'
         path: '/devEx/environments'
       }
