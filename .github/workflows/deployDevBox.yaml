@@ -36,7 +36,7 @@ jobs:
   
       # Build the Bicep files for Dev Box Resources
       - name: Build Dev Box Bicep files
-        run: az bicep build --file ./src/bicep/deploy.bicep --outfile ./bicepArtifacts/deploy.json
+        run: az bicep build --file ./deploy/deploy.bicep --outfile ./bicepArtifacts/deploy.json
 
       # Compress the built Bicep artifacts into a zip file
       - name: Compress Bicep Artifacts
@@ -71,7 +71,7 @@ jobs:
         run: |
           az deployment group what-if \
             --resource-group ${{ env.connectivityResourceGroupName }} \
-            --template-file ./src/bicep/deploy.bicep \
+            --template-file ./deploy/deploy.bicep \
             --parameters workloadName=${{ env.workloadName }} \
                 devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
                 connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
@@ -84,7 +84,7 @@ jobs:
         run: |
           az deployment group what-if \
             --resource-group ${{ env.devBoxResourceGroupName }} \
-            --template-file ./src/bicep/deploy.bicep \
+            --template-file ./deploy/deploy.bicep \
             --parameters workloadName=${{ env.workloadName }} \
                 devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
                 connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
@@ -96,7 +96,7 @@ jobs:
         run: |
           az deployment group create \
             --resource-group ${{ env.devBoxResourceGroupName }} \
-            --template-file ./src/bicep/deploy.bicep \
+            --template-file ./deploy/deploy.bicep \
             --parameters workloadName=${{ env.workloadName }} \
                 devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
                 connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
