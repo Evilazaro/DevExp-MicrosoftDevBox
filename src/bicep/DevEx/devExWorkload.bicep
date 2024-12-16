@@ -200,13 +200,7 @@ param contosoProjectsInfo array = [
     networkConnectionName: networkConnectionsCreated[0].name
     catalogs: [
       {
-        catalogName: 'tasks'
-        uri: 'https://github.com/Evilazaro/eShop.git'
-        branch: 'main'
-        path: '/devEx/tasks'
-      }
-      {
-        catalogName: 'workloads'
+        catalogName: 'imageDefinitions'
         uri: 'https://github.com/Evilazaro/eShop.git'
         branch: 'main'
         path: '/devEx/customizations'
@@ -234,13 +228,7 @@ param contosoProjectsInfo array = [
     networkConnectionName: networkConnectionsCreated[1].name
     catalogs: [
       {
-        catalogName: 'tasks'
-        uri: 'https://github.com/Evilazaro/contosotraders.git'
-        branch: 'main'
-        path: '/devEx/tasks'
-      }
-      {
-        catalogName: 'workloads'
+        catalogName: 'imageDefinitions'
         uri: 'https://github.com/Evilazaro/contosotraders.git'
         branch: 'main'
         path: '/devEx/customizations'
