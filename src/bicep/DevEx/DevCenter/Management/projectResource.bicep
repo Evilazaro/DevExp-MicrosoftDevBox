@@ -8,7 +8,7 @@ param name string
 param tags object
 
 @description('Project Catalog Info')
-param projectCatalogInfo object
+param projectCatalogsInfo array
 
 @description('Dev Box Definitions')
 param devBoxDefinitions array
@@ -44,42 +44,19 @@ resource devCenterProject 'Microsoft.DevCenter/projects@2024-10-01-preview' = {
   tags: tags
 }
 
-@description('Output Dev Center Project ID')
-output devCenterProjectId string = devCenterProject.id
-
-@description('Output Dev Center Project Name')
-output devCenterProjectName string = devCenterProject.name
-
-@description('Output Dev Center Project Tags')
-output devCenterProjectTags object = devCenterProject.tags
-
 @description('Project Catalog Resource')
-resource projectCatalog 'Microsoft.DevCenter/projects/catalogs@2024-10-01-preview' = {
-  name: '${name}-catalog'
+resource projectCatalogs 'Microsoft.DevCenter/projects/catalogs@2024-10-01-preview' = [for projectCataLog in projectCatalogsInfo:  {
+  name: '${projectCataLog.catalogName}'
   parent: devCenterProject
   properties: {
     gitHub: {
-      uri: projectCatalogInfo.uri
-      branch: projectCatalogInfo.branch
-      path: projectCatalogInfo.path
+      uri: projectCataLog.uri
+      branch: projectCataLog.branch
+      path: projectCataLog.path
     }
   }
 }
-
-@description('Project Catalog Resource ID')
-output projectCatalogId string = projectCatalog.id
-
-@description('Project Catalog Resource Name')
-output projectCatalogName string = projectCatalog.name
-
-@description('Project Catalog URI')
-output projectCatalogUri string = projectCatalog.properties.gitHub.uri
-
-@description('Project Catalog Branch')
-output projectCatalogBranch string = projectCatalog.properties.gitHub.branch
-
-@description('Project Catalog Path')
-output projectCatalogPath string = projectCatalog.properties.gitHub.path
+]
 
 @description('Dev Center Project Pools')
 resource devCenterProjectPools 'Microsoft.DevCenter/projects/pools@2024-10-01-preview' = [
@@ -97,12 +74,21 @@ resource devCenterProjectPools 'Microsoft.DevCenter/projects/pools@2024-10-01-pr
   }
 ]
 
-@description('Project Environment Types Resources')
-resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@2024-10-01-preview' = [for environmentType in projectEnvironmentTypesInfo: {
-  name: '${environmentType.name}-environmentType'
-  parent: devCenterProject
-  properties: {
-    displayName: environmentType.name
-    deploymentTargetId: resourceId('Microsoft.Subscription/subscriptions', subscription().subscriptionId)
-  }  
-}]
+// @description('Project Environment Types Resources')
+// resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@2024-10-01-preview' = [for environmentType in projectEnvironmentTypesInfo: {
+//   name: '${environmentType.name}-environmentType'
+//   parent: devCenterProject
+//   identity: {
+//     type: 'SystemAssigned'
+//   }
+//   properties: {
+//     displayName: environmentType.name
+//     deploymentTargetId: resourceId('Microsoft.Subscription/subscriptions', subscription().subscriptionId)
+//     status: 'Enabled'
+//     creatorRoleAssignment: {
+//       roles: {
+//         '8e3af657-a8ff-443c-a75c-2fe8c4bcb635': {}
+//       }
+//     }
+//   }  
+// }]

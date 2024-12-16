@@ -187,13 +187,26 @@ param contosoProjectsInfo array = [
   {
     name: 'eShop'
     networkConnectionName: networkConnectionsCreated[0].name
-    catalog: {
-      projectName: 'eShop'
-      catalogName: 'eShop'
-      uri: 'https://github.com/Evilazaro/eShop.git'
-      branch: 'main'
-      path: '/customizations/tasks'
-    }
+    catalogs: [
+      {
+        catalogName: 'tasks'
+        uri: 'https://github.com/Evilazaro/eShop.git'
+        branch: 'main'
+        path: '/devEx/tasks'
+      }
+      {
+        catalogName: 'workloads'
+        uri: 'https://github.com/Evilazaro/eShop.git'
+        branch: 'main'
+        path: '/devEx/customizations'
+      }
+      {
+        catalogName: 'environments'
+        uri: 'https://github.com/Evilazaro/eShop.git'
+        branch: 'main'
+        path: '/devEx/environments'
+      }
+    ]
     tags: {
       workload: workloadName
       landingZone: 'DevEx'
@@ -208,13 +221,26 @@ param contosoProjectsInfo array = [
   {
     name: 'Contoso-Traders'
     networkConnectionName: networkConnectionsCreated[1].name
-    catalog: {
-      projectName: 'Contoso-Traders'
-      catalogName: 'ContosoTraders'
-      uri: 'https://github.com/Evilazaro/ContosoTraders.git'
-      branch: 'main'
-      path: '/customizations/tasks'
-    }
+    catalogs: [
+      {
+        catalogName: 'tasks'
+        uri: 'https://github.com/Evilazaro/eShop.git'
+        branch: 'main'
+        path: '/devEx/tasks'
+      }
+      {
+        catalogName: 'workloads'
+        uri: 'https://github.com/Evilazaro/eShop.git'
+        branch: 'main'
+        path: '/devEx/customizations'
+      }
+      {
+        catalogName: 'environments'
+        uri: 'https://github.com/Evilazaro/eShop.git'
+        branch: 'main'
+        path: '/devEx/environments'
+      }
+    ]
     tags: {
       workload: workloadName
       landingZone: 'DevEx'
@@ -263,7 +289,7 @@ module contosoDevCenterProjects 'DevCenter/Management/projectResource.bicep' = [
       devCenterName: devCenter.outputs.devCenterName
       name: project.name
       tags: project.tags
-      projectCatalogInfo: project.catalog
+      projectCatalogsInfo: project.catalogs
       devBoxDefinitions: devCenterDevBoxDefinitions.outputs.devBoxDefinitions
       networkConnectionName: project.networkConnectionName
       projectEnvironmentTypesInfo: environmentTypesInfo
