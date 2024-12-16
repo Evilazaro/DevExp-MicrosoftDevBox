@@ -16,8 +16,8 @@ param networkConnectionsCreated array = [
 ]
 
 @description('Custom Role Info')
-param customRoleInfo object
-
+param customRoleInfo object = {}
+  
 @description('Contoso Dev Center Catalog')
 param contosoDevCenterCatalogInfo object = {
   name: 'Contoso-Custom-Tasks'
