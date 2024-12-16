@@ -6,7 +6,7 @@ param networkConnectionsCreated array
 
 @description('Contoso Dev Center Catalog')
 param contosoDevCenterCatalogInfo object = {
-  name: 'Contoso-DevCenter'
+  name: 'Contoso-Custom-Tasks'
   syncType: 'Scheduled'
   type: 'GitHub'
   uri: 'https://github.com/Evilazaro/DevExp-DevBox.git'
