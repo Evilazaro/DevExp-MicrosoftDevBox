@@ -73,7 +73,6 @@ jobs:
             --resource-group ${{ env.connectivityResourceGroupName }} \
             --template-file ./src/bicep/connectivity/connectivityWorkload.bicep \
             --parameters workloadName=${{ env.workloadName }} \
-                devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
                 connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
             --mode Complete
 
@@ -86,8 +85,6 @@ jobs:
             --resource-group ${{ env.devBoxResourceGroupName }} \
             --template-file ./src/bicep/DevEx/devExWorkload.bicep \
             --parameters workloadName=${{ env.workloadName }} \
-                devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
-                connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
             --mode Complete
 
       - name: Deploy Dev Box DevCenter Resources for ${{ env.workloadName }} to Azure

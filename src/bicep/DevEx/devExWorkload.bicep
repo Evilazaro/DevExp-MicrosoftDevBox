@@ -2,7 +2,18 @@
 param workloadName string
 
 @description('Network Connections')
-param networkConnectionsCreated array
+param networkConnectionsCreated array = [
+  {
+    name: 'eShop'
+    domainJoinType: 'AzureADJoin'
+    id: 'eShop'
+  }
+  {
+    name: 'Contoso-Traders'
+    domainJoinType: 'AzureADJoin'
+    id: 'Contoso-Traders'
+  }
+]
 
 @description('Contoso Dev Center Catalog')
 param contosoDevCenterCatalogInfo object = {
