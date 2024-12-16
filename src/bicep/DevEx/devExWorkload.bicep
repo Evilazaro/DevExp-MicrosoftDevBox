@@ -210,7 +210,7 @@ var contosoProjectsInfo = [
   }
   {
     name: 'Contoso-Traders'
-    networkConnectionName: networkConnectionsCreated[0].name
+    networkConnectionName: networkConnectionsCreated[1].name
     catalog: {
       projectName: 'Contoso-Traders'
       catalogName: 'ContosoTraders'
