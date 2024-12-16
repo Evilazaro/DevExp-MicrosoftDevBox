@@ -1,10 +1,11 @@
 resource customRole 'Microsoft.Authorization/roleDefinitions@2022-05-01-preview' = {
-  name: guid(subscription().subscriptionId,'ContosoDevCenterDevBoxRole')
+  name: guid('ContosoDevCenterDevBoxRole')
   properties: {
     assignableScopes: [
       subscription().id
+      resourceGroup().id
     ]
-    roleName: 'Contoso Dev Center Dev Box Role'
+    roleName: 'ContosoDevCenterDevBoxRole'
     type: 'CustomRole'
     description: 'Contoso Dev Center Dev Box Role'
     permissions: [

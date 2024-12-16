@@ -28,6 +28,14 @@ function Delete-UserAssignments {
     }
 
     Write-Output "User assignments and role removals completed successfully for currentUser: $currentUser"
+
+    Remove-Role -userIdentityId $currentUser -roleName "ContosoDevCenterDevBoxRole" -idType "User"
+    if ($LASTEXITCODE -ne 0) {
+        Write-Output "Error: Failed to remove role 'ContosoDevCenterDevBoxRole' from current user with object ID: $currentUser"
+        return 1
+    }
+
+    Write-Output "User assignments and role removals completed successfully for currentUser: $currentUser"
 }
 
 # Function to remove a role from a user or service principal
