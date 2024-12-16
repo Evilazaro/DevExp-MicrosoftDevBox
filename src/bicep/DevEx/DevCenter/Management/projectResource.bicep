@@ -74,21 +74,21 @@ resource devCenterProjectPools 'Microsoft.DevCenter/projects/pools@2024-10-01-pr
   }
 ]
 
-// @description('Project Environment Types Resources')
-// resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@2024-10-01-preview' = [for environmentType in projectEnvironmentTypesInfo: {
-//   name: '${environmentType.name}-environmentType'
-//   parent: devCenterProject
-//   identity: {
-//     type: 'SystemAssigned'
-//   }
-//   properties: {
-//     displayName: environmentType.name
-//     deploymentTargetId: resourceId('Microsoft.Subscription/subscriptions', subscription().subscriptionId)
-//     status: 'Enabled'
-//     creatorRoleAssignment: {
-//       roles: {
-//         '8e3af657-a8ff-443c-a75c-2fe8c4bcb635': {}
-//       }
-//     }
-//   }  
-// }]
+@description('Project Environment Types Resources')
+resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@2024-10-01-preview' = [for environmentType in projectEnvironmentTypesInfo: {
+  name: '${environmentType.name}-environmentType'
+  parent: devCenterProject
+  identity: {
+    type: 'SystemAssigned'
+  }
+  properties: {
+    displayName: environmentType.name
+    deploymentTargetId: resourceId('Microsoft.Subscription/subscriptions', subscription().subscriptionId)
+    status: 'Enabled'
+    creatorRoleAssignment: {
+      roles: {
+        '8e3af657-a8ff-443c-a75c-2fe8c4bcb635': {}
+      }
+    }
+  }  
+}]
