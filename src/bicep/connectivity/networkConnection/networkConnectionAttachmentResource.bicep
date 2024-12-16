@@ -27,12 +27,3 @@ resource networkConnectionAttachment 'Microsoft.DevCenter/devcenters/attachednet
     networkConnectionId: networkConnection.id
   }
 }
-
-@description('The ID of the network connection attachment')
-output networkConnectionAttachmentId string = networkConnectionAttachment.id
-
-@description('The name of the network connection attachment')
-output networkConnectionAttachmentName string = networkConnectionAttachment.name
-
-@description('The network connection ID of the network connection attachment')
-output networkConnectionId string = networkConnectionAttachment.properties.networkConnectionId

@@ -7,29 +7,12 @@ param devBoxResourceGroupName string
 @description('Connectivity Resource Group Name')
 param connectivityResourceGroupName string
 
-@description('Projects')
-var contosoProjectsInfo = [
+@description('Connectivity Info')
+var contosoConnectivityInfo = [
   {
     name: 'eShop'
     networkConnection: {
       domainJoinType: 'AzureADJoin'
-    }
-    catalog: {
-      projectName: 'eShop'
-      catalogName: 'eShop'
-      uri: 'https://github.com/Evilazaro/eShop.git'
-      branch: 'main'
-      path: '/customizations/tasks'
-    }
-    tags: {
-      workload: workloadName
-      landingZone: 'DevEx'
-      resourceType: 'DevCenter'
-      ProductTeam: 'Platform Engineering'
-      Environment: 'Production'
-      Department: 'IT'
-      offering: 'DevBox-as-a-Service'
-      project: 'eShop'
     }
   }
   {
@@ -37,59 +20,15 @@ var contosoProjectsInfo = [
     networkConnection: {
       domainJoinType: 'AzureADJoin'
     }
-    catalog: {
-      projectName: 'Contoso-Traders'
-      catalogName: 'ContosoTraders'
-      uri: 'https://github.com/Evilazaro/ContosoTraders.git'
-      branch: 'main'
-      path: '/customizations/tasks'
-    }
-    tags: {
-      workload: workloadName
-      landingZone: 'DevEx'
-      resourceType: 'DevCenter'
-      ProductTeam: 'Platform Engineering'
-      Environment: 'Production'
-      Department: 'IT'
-      offering: 'DevBox-as-a-Service'
-      project: 'Contoso-Traders'
-    }
   }
 ]
-
-var contosoProjectCatalogsInfo = [
-  {
-    projectName: 'eShop'
-    catalogName: 'eShop'
-    uri: 'https://github.com/Evilazaro/eShop.git'
-    branch: 'main'
-    path: '/customizations/tasks'
-  }
-  {
-    projectName: 'Contoso-Traders'
-    catalogName: 'ContosoTraders'
-    uri: 'https://github.com/Evilazaro/ContosoTraders.git'
-    branch: 'main'
-    path: '/customizations/tasks'
-  }
-]
-
-@description('Contoso Dev Center Catalog')
-var contosoDevCenterCatalog = {
-  name: 'Contoso-DevCenter'
-  syncType: 'Scheduled'
-  type: 'GitHub'
-  uri: 'https://github.com/Evilazaro/DevExp-DevBox.git'
-  branch: 'main'
-  path: '/customizations/tasks'
-}
 
 @description('Deploy Connectivity Resources')
 module connectivityResources 'connectivity/connectivityWorkload.bicep' = {
   name: 'connectivity'
   scope: resourceGroup(devBoxResourceGroupName)
   params: {
-    contosoProjectsInfo: contosoProjectsInfo
+    contosoProjectsInfo: contosoConnectivityInfo
     workloadName: workloadName
     connectivityResourceGroupName: connectivityResourceGroupName
   }
@@ -101,9 +40,7 @@ module devExResources 'DevEx/devExWorkload.bicep' = {
   scope: resourceGroup(devBoxResourceGroupName)
   params: {
     workloadName: workloadName
-    contosoProjectsInfo: contosoProjectsInfo
     networkConnections: connectivityResources.outputs.networkConnections
     connectivityResourceGroupName: connectivityResourceGroupName
-    devCenterCatalog: contosoDevCenterCatalog
   }
 }
