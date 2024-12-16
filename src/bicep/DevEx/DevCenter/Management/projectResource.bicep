@@ -16,10 +16,6 @@ param devBoxDefinitions array
 @description('Network Connection Name')
 param networkConnectionName string
 
-
-// @description('Projects Environment Types Info')
-// param projectsEnvironmentTypesInfo array
-
 @description('Dev Center')
 resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' existing = {
   name: devCenterName
@@ -55,7 +51,7 @@ output devCenterProjectName string = devCenterProject.name
 output devCenterProjectTags object = devCenterProject.tags
 
 @description('Project Catalog Resource')
-resource projectCatalog 'Microsoft.DevCenter/projects/catalogs@2024-10-01-preview'= {
+resource projectCatalog 'Microsoft.DevCenter/projects/catalogs@2024-10-01-preview' = {
   name: '${name}-catalog'
   parent: devCenterProject
   properties: {
@@ -64,7 +60,7 @@ resource projectCatalog 'Microsoft.DevCenter/projects/catalogs@2024-10-01-previe
       branch: projectCatalogInfo.branch
       path: projectCatalogInfo.path
     }
-}
+  }
 }
 
 @description('Project Catalog Resource ID')
@@ -83,26 +79,29 @@ output projectCatalogBranch string = projectCatalog.properties.gitHub.branch
 output projectCatalogPath string = projectCatalog.properties.gitHub.path
 
 @description('Dev Center Project Pools')
-resource devCenterProjectPools 'Microsoft.DevCenter/projects/pools@2024-10-01-preview' = [for pool in devBoxDefinitions: {
-  name: '${name}-${pool.name}-pool'
-  parent: devCenterProject
-  location: resourceGroup().location
-  properties: {
-    displayName: '${name}-${pool.name}-pool'
-    devBoxDefinitionName: pool.name
-    licenseType: 'Windows_Client'
-    localAdministrator: 'Enabled'
-    networkConnectionName: networkConnectionName
+resource devCenterProjectPools 'Microsoft.DevCenter/projects/pools@2024-10-01-preview' = [
+  for pool in devBoxDefinitions: {
+    name: '${name}-${pool.name}-pool'
+    parent: devCenterProject
+    location: resourceGroup().location
+    properties: {
+      displayName: '${name}-${pool.name}-pool'
+      devBoxDefinitionName: pool.name
+      licenseType: 'Windows_Client'
+      localAdministrator: 'Enabled'
+      networkConnectionName: networkConnectionName
+    }
   }
-}
 ]
 
 @description('Dev Center Project Pools')
-output devCenterProjectPools array = [for (pool, i) in devBoxDefinitions: {
-  name: devCenterProjectPools[i].name
-  id: devCenterProjectPools[i].id
-  devBoxDefinitionName: devCenterProjectPools[i].properties.devBoxDefinitionName
-  licenseType: devCenterProjectPools[i].properties.licenseType
-  localAdministrator: devCenterProjectPools[i].properties.localAdministrator
-  networkConnectionName: devCenterProjectPools[i].properties.networkConnectionName
-}]
+output devCenterProjectPools array = [
+  for (pool, i) in devBoxDefinitions: {
+    name: devCenterProjectPools[i].name
+    id: devCenterProjectPools[i].id
+    devBoxDefinitionName: devCenterProjectPools[i].properties.devBoxDefinitionName
+    licenseType: devCenterProjectPools[i].properties.licenseType
+    localAdministrator: devCenterProjectPools[i].properties.localAdministrator
+    networkConnectionName: devCenterProjectPools[i].properties.networkConnectionName
+  }
+]

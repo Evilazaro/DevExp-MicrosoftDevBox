@@ -5,7 +5,7 @@ param workloadName string
 param connectivityResourceGroupName string
 
 @description('Network Connections')
-param networkConnections array
+param networkConnectionsCreated array
 
 @description('Contoso Dev Center Catalog')
 var contosoDevCenterCatalogInfo = {
@@ -175,25 +175,21 @@ module environmentTypes 'DevCenter/EnvironmentConfiguration/environmentTypesReso
   }
 ]
 
-
 @description('Network Connection Attachment Resource')
-module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectionAttachmentResource.bicep' = [
-  for (networkConnection, i) in networkConnections: {
-    name: 'vnetCon-${networkConnection.name}'
-    scope: resourceGroup()
-    params: {
-      devCenterName: devCenter.outputs.devCenterName
-      networkConnectionResourceGroupName: connectivityResourceGroupName
-      name: networkConnection.name
-    }
+module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectionAttachmentResource.bicep' = {
+  name: 'NetworkConnectionAttachment'
+  scope: resourceGroup()
+  params: {
+    devCenterName: devCenter.outputs.devCenterName
+    networkConnectionsCreated: networkConnectionsCreated
   }
-]
+}
 
 @description('Projects')
 var contosoProjectsInfo = [
   {
     name: 'eShop'
-    networkConnectionName: networkConnectionAttachment[0].name
+    networkConnectionName: networkConnectionsCreated[0].name
     catalog: {
       projectName: 'eShop'
       catalogName: 'eShop'
@@ -214,7 +210,7 @@ var contosoProjectsInfo = [
   }
   {
     name: 'Contoso-Traders'
-    networkConnectionName: networkConnectionAttachment[1].name
+    networkConnectionName: networkConnectionsCreated[0].name
     catalog: {
       projectName: 'Contoso-Traders'
       catalogName: 'ContosoTraders'
@@ -252,14 +248,14 @@ module contosoDevCenterCatalog 'DevCenter/EnvironmentConfiguration/devCentercata
 }
 
 @description('Dev Center Dev Box Definitions')
-module devCenterDevBoxDefinitions 'DevCenter/EnvironmentConfiguration/devBoxDefinitionResource.bicep' = { 
-    name: 'DevBoxDefinitions'
-    scope: resourceGroup()
-    params: {
-      devCenterName: devCenter.outputs.devCenterName
-      devBoxDefinitionsInfo: contosoDevCenterDevBoxDefinitionsInfo
-    }
+module devCenterDevBoxDefinitions 'DevCenter/EnvironmentConfiguration/devBoxDefinitionResource.bicep' = {
+  name: 'DevBoxDefinitions'
+  scope: resourceGroup()
+  params: {
+    devCenterName: devCenter.outputs.devCenterName
+    devBoxDefinitionsInfo: contosoDevCenterDevBoxDefinitionsInfo
   }
+}
 
 @description('Contoso Dev Center Projects')
 module contosoDevCenterProjects 'DevCenter/Management/projectResource.bicep' = [

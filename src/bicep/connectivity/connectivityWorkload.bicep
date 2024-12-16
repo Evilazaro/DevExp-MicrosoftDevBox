@@ -62,7 +62,7 @@ module networkConnection 'networkConnection/networkConnectionResource.bicep' = [
 ]
 
 @description('Network Connections')
-output networkConnections array = [
+output networkConnectionsCreated array = [
   for (netConnection, i) in contosoProjectsInfo: {
     name: networkConnection[i].outputs.networkConnectionName
     id: networkConnection[i].outputs.networkConnectionId

@@ -40,7 +40,7 @@ module devExResources '../src/bicep/DevEx/devExWorkload.bicep' = {
   scope: resourceGroup(devBoxResourceGroupName)
   params: {
     workloadName: workloadName
-    networkConnections: connectivityResources.outputs.networkConnections
+    networkConnectionsCreated: connectivityResources.outputs.networkConnectionsCreated
     connectivityResourceGroupName: connectivityResourceGroupName
   }
 }

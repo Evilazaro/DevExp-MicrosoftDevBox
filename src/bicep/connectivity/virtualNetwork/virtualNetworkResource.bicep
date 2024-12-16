@@ -21,7 +21,7 @@ param tags object
 
 @description('Virtual Network Resource')
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-03-01' = {
-  name: 'Vnet-${uniqueString(resourceGroup().id, name)}'
+  name: 'Vnet-${name}-${uniqueString(resourceGroup().id, name)}'
   location: location
   tags: tags
   properties: {
