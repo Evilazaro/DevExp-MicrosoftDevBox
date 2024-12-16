@@ -71,7 +71,7 @@ jobs:
         run: |
           az deployment group what-if \
             --resource-group ${{ env.connectivityResourceGroupName }} \
-            --template-file ./src/bicep/deploy.bicep \
+            --template-file ./deploy/deploy.bicep \
             --parameters workloadName=${{ env.workloadName }} \
                 devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
                 connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
@@ -84,7 +84,7 @@ jobs:
         run: |
           az deployment group what-if \
             --resource-group ${{ env.devBoxResourceGroupName }} \
-            --template-file ./src/bicep/deploy.bicep \
+            --template-file ./deploy/deploy.bicep \
             --parameters workloadName=${{ env.workloadName }} \
                 devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
                 connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
@@ -96,7 +96,7 @@ jobs:
         run: |
           az deployment group create \
             --resource-group ${{ env.devBoxResourceGroupName }} \
-            --template-file ./src/bicep/deploy.bicep \
+            --template-file ./deploy/deploy.bicep \
             --parameters workloadName=${{ env.workloadName }} \
                 devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
                 connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
