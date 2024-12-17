@@ -5,3 +5,6 @@ resource identity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-07-31-p
   name: workloadName
   location: resourceGroup().location
 }
+
+@description('Managed Identity Principal Id')
+output principalId string = identity.properties.principalId

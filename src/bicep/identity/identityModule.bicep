@@ -21,7 +21,7 @@ module roleAssignment 'roleAssignmentResource.bicep' = {
   name: 'roleAssignment'
   scope: subscription()
   params: {
-    principalId: managedIdentity.name
+    principalId: managedIdentity.outputs.principalId
     roleDefinitionIds: [
       customRole.name
       '8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
