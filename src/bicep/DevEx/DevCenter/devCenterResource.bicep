@@ -4,6 +4,9 @@ param name string
 @description('Location')
 param location string
 
+@description('Identity Name')
+param identityName string
+
 @description('Catalog Item Sync Enable Status')
 @allowed([
   'Enabled'
@@ -34,7 +37,9 @@ resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' = {
   tags: tags
   identity: {
     type: 'UserAssigned'
-    userAssignedIdentities: {}
+    userAssignedIdentities: {
+      '${resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', resourceGroup().name, identityName)}': {}     
+    }
   }
   properties: {
     projectCatalogSettings: {

@@ -19,7 +19,6 @@ output resourceGroupName string = devBoxResourceGroupName
 output connect string = connectivityResourceGroupName
 
 
-
 // @description('Deploy Connectivity Resources')
 // module connectivityResources '../src/bicep/connectivity/connectivityWorkload.bicep' = {
 //   name: 'connectivity'
