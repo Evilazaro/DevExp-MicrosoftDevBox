@@ -55,6 +55,18 @@ function Create-UserAssignments {
         return 1
     }
 
+    Assign-Role -userIdentityId $currentUser -roleName "Deployment Environments Reader" -idType "User"
+    if ($LASTEXITCODE -ne 0) {
+        Write-Output "Error: Failed to assign role 'Deployment Environments Reader' to current user with object ID: $currentUser"
+        return 1
+    }
+
+    Assign-Role -userIdentityId $currentUser -roleName "Deployment Environments User" -idType "User"
+    if ($LASTEXITCODE -ne 0) {
+        Write-Output "Error: Failed to assign role 'Deployment Environments User' to current user with object ID: $currentUser"
+        return 1
+    }
+
     Write-Output "User assignments and role assignments completed successfully for currentUser: $currentUser"
 }
 
