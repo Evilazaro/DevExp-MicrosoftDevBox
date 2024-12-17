@@ -7,35 +7,31 @@ param devBoxResourceGroupName string = ''
 @description('Connectivity Resource Group Name')
 param connectivityResourceGroupName string = ''
 
-
 module identityResources '../src/bicep/identity/identityModule.bicep' = {
   name: 'identity'
+  scope: resourceGroup()
   params: {
     workloadName: workloadName
   }
 }
 
-output resourceGroupName string = devBoxResourceGroupName
-output connect string = connectivityResourceGroupName
+@description('Deploy Connectivity Resources')
+module connectivityResources '../src/bicep/connectivity/connectivityWorkload.bicep' = {
+  name: 'connectivity'
+  scope: resourceGroup(connectivityResourceGroupName)
+  params: {
+    workloadName: workloadName
+    connectivityResourceGroupName: connectivityResourceGroupName
+  }
+}
 
-
-// @description('Deploy Connectivity Resources')
-// module connectivityResources '../src/bicep/connectivity/connectivityWorkload.bicep' = {
-//   name: 'connectivity'
-//   scope: resourceGroup(devBoxResourceGroupName)
-//   params: {
-//     workloadName: workloadName
-//     connectivityResourceGroupName: connectivityResourceGroupName
-//   }
-// // }
-
-// @description('Deploy DevEx Resources')
-// module devExResources '../src/bicep/DevEx/devExWorkload.bicep' = {
-//   name: 'devBox'
-//   scope: resourceGroup(devBoxResourceGroupName)
-//   params: {
-//     workloadName: workloadName
-//     networkConnectionsCreated: connectivityResources.outputs.networkConnectionsCreated
-//     customRoleInfo: customRole.outputs.customRoleInfo    
-//   }
-// }
+@description('Deploy DevEx Resources')
+module devExResources '../src/bicep/DevEx/devExWorkload.bicep' = {
+  name: 'devBox'
+  scope: resourceGroup(devBoxResourceGroupName)
+  params: {
+    workloadName: workloadName
+    networkConnectionsCreated: connectivityResources.outputs.networkConnectionsCreated
+    identityName: identityResources.name    
+  }
+}
