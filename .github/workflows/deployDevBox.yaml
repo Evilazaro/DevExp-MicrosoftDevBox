@@ -73,7 +73,7 @@ jobs:
             --template-file ./src/bicep/connectivity/connectivityWorkload.bicep \
             --parameters workloadName=${{ env.workloadName }} \
                 connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
-            --mode Complete
+            --mode Incremental
 
       # Deploy the Landing Zone Resources using the deployment script
       - name: Checking all changes for ${{ env.workloadName }} in the DevEX Landing Zone environment before deploying
@@ -84,7 +84,7 @@ jobs:
             --resource-group ${{ env.devBoxResourceGroupName }} \
             --template-file ./src/bicep/DevEx/devExWorkload.bicep \
             --parameters workloadName=${{ env.workloadName }} \
-            --mode Complete
+            --mode Incremental
 
       # Deploy the Landing Zone Resources using the deployment script
       - name: Checking all changes for ${{ env.workloadName }} in the Identity resources before deploying
@@ -95,7 +95,7 @@ jobs:
             --resource-group ${{ env.devBoxResourceGroupName }} \
             --template-file ./src/bicep/identity/identityModule.bicep \
             --parameters workloadName=${{ env.workloadName }} \
-            --mode Complete
+            --mode Incremental
 
       - name: Deploy Dev Box DevCenter Resources for ${{ env.workloadName }} to Azure
         shell: bash
@@ -106,7 +106,7 @@ jobs:
             --template-file ./deploy/deploy.bicep \
             --parameters workloadName=${{ env.workloadName }} \
                 connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
-            --mode Complete    
+            --mode Incremental    
 
   publish-bicep-artifacts:
     runs-on: ubuntu-latest
