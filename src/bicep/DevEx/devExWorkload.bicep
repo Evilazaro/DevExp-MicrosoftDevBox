@@ -143,16 +143,6 @@ module devCenter 'DevCenter/devCenterResource.bicep' = {
   }
 }
 
-@description('Deploy Compute Gallery')
-module computeGallery '../compute/gallery/computeGalleryModule.bicep' = {
-  name: 'computeGallery'
-  scope: resourceGroup()
-  params: {
-    devCenterName: devCenter.outputs.devCenterName
-    workloadName: workloadName
-  }
-}
-
 @description('Role Assignment Resource')
 module roleAssignment '../identity/roleAssignmentResource.bicep' = {
   name: 'roleAssignment'
@@ -163,6 +153,16 @@ module roleAssignment '../identity/roleAssignmentResource.bicep' = {
   }
 }
 
+@description('Deploy Compute Gallery')
+module computeGallery '../compute/gallery/computeGalleryModule.bicep' = {
+  name: 'computeGallery'
+  scope: resourceGroup()
+  params: {
+    devCenterName: devCenter.outputs.devCenterName
+    workloadName: workloadName
+    roleDefinitionIds: roleDefinitionIds
+  }
+}
 @description('Environment Type Resource')
 module environmentTypes 'DevCenter/EnvironmentConfiguration/environmentTypesResource.bicep' = [
   for environmentType in environmentTypesInfo: {
