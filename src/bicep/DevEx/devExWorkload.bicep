@@ -263,6 +263,9 @@ module devCenterDevBoxDefinitions 'DevCenter/EnvironmentConfiguration/devBoxDefi
     devCenterName: devCenter.outputs.devCenterName
     devBoxDefinitionsInfo: contosoDevCenterDevBoxDefinitionsInfo
   }
+  dependsOn:[
+    roleAssignment
+  ]
 }
 
 @description('Contoso Dev Center Projects')
