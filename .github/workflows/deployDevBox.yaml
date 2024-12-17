@@ -117,7 +117,6 @@ jobs:
             --resource-group ${{ env.devBoxResourceGroupName }} \
             --template-file ./deploy/deploy.bicep \
             --parameters workloadName=${{ env.workloadName }} \
-                devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
                 connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
             --mode Complete    
 
