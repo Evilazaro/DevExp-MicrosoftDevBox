@@ -29,7 +29,7 @@ param installAzureMonitorAgentEnableStatus string
 param tags object
 
 resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' = {
-  name: 'DevEx-${uniqueString(resourceGroup().id, name)}'
+  name: '${uniqueString(resourceGroup().id, name)}-devcenter'
   location: location
   tags: tags
   identity: {
