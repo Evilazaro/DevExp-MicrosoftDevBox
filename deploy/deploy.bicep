@@ -1,11 +1,11 @@
 @description('Workload Name')
 param workloadName string
 
-// @description('DevBox Workload Resource Group Name')
-// param devBoxResourceGroupName string
+@description('DevBox Workload Resource Group Name')
+param devBoxResourceGroupName string = ''
 
-// @description('Connectivity Resource Group Name')
-// param connectivityResourceGroupName string
+@description('Connectivity Resource Group Name')
+param connectivityResourceGroupName string = ''
 
 
 module identityResources '../src/bicep/identity/identityModule.bicep' = {
@@ -14,6 +14,9 @@ module identityResources '../src/bicep/identity/identityModule.bicep' = {
     workloadName: workloadName
   }
 }
+
+output resourceGroupName string = devBoxResourceGroupName
+output connect string = connectivityResourceGroupName
 
 // @description('Deploy Connectivity Resources')
 // module connectivityResources '../src/bicep/connectivity/connectivityWorkload.bicep' = {

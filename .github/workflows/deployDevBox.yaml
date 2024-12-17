@@ -86,6 +86,17 @@ jobs:
             --parameters workloadName=${{ env.workloadName }} \
             --mode Incremental
 
+      # Deploy the Landing Zone Resources using the deployment script
+      - name: Checking all changes for ${{ env.workloadName }} in the Identity resources before deploying
+        shell: bash
+        id: check-changes-identity
+        run: |
+          az deployment group what-if \
+            --resource-group ${{ env.devBoxResourceGroupName }} \
+            --template-file ./src/bicep/identity/identityModule.bicep \
+            --parameters workloadName=${{ env.workloadName }} \
+            --mode Incremental
+
       - name: Deploy Dev Box DevCenter Resources for ${{ env.workloadName }} to Azure
         shell: bash
         id: deploy-dev-center
