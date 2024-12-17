@@ -6,8 +6,7 @@ $WarningPreference = "Stop"
 
 # Azure Resource Group Names Constants
 $solutionName = "ContosoDevEx"
-$devBoxResourceGroupName = "$solutionName-rg"
-$networkResourceGroupName = "$solutionName-Management-rg"
+$networkResourceGroupName = "$solutionName-Network-rg"
 
 
 # Identity Parameters Constants

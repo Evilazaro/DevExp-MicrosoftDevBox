@@ -16,8 +16,11 @@ param devBoxDefinitions array
 @description('Network Connection Name')
 param networkConnectionName string
 
-@description('Project Environment Types Info')
-param projectEnvironmentTypesInfo array
+@description('Role Definition Ids')
+param roleDefinitionIds array
+
+// @description('Project Environment Types Info')
+// param projectEnvironmentTypesInfo array
 
 @description('Dev Center')
 resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' existing = {
@@ -45,6 +48,15 @@ resource devCenterProject 'Microsoft.DevCenter/projects@2024-10-01-preview' = {
     description: 'Dev Center Project - ${name}'
   }
   tags: tags
+}
+@description('Role Assignment Resource')
+module roleAssignment '../../../identity/roleAssignmentResource.bicep' = {
+  name: 'roleAssignment'
+  scope: subscription()
+  params: {
+    principalId: devCenterProject.identity.principalId
+    roleDefinitionIds: roleDefinitionIds
+  }
 }
 
 @description('Project Catalog Resource')
@@ -77,17 +89,17 @@ resource devCenterProjectPools 'Microsoft.DevCenter/projects/pools@2024-10-01-pr
   }
 ]
 
-@description('Project Environment Types Resources')
-resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@2024-10-01-preview' = [for environmentType in projectEnvironmentTypesInfo: {
-  name: '${environmentType.name}-environmentType'
-  parent: devCenterProject
-  identity: {
-    type: 'SystemAssigned'
-  }
-  properties: {
-    displayName: environmentType.name
-    deploymentTargetId: resourceId('Microsoft.Resources/subscriptions', subscription().subscriptionId)
-    status: 'Enabled'
-  }  
-}]
+// @description('Project Environment Types Resources')
+// resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@2024-10-01-preview' = [for environmentType in projectEnvironmentTypesInfo: {
+//   name: '${environmentType.name}-environmentType'
+//   parent: devCenterProject
+//   identity: {
+//     type: 'SystemAssigned'
+//   }
+//   properties: {
+//     displayName: environmentType.name
+//     deploymentTargetId: resourceId('Microsoft.Resources/subscriptions', subscription().subscriptionId)
+//     status: 'Enabled'
+//   }  
+// }]
 

@@ -1,9 +1,6 @@
 @description('Workload Name')
 param workloadName string
 
-@description('DevBox Workload Resource Group Name')
-param devBoxResourceGroupName string = ''
-
 @description('Connectivity Resource Group Name')
 param connectivityResourceGroupName string = ''
 
@@ -19,7 +16,7 @@ module identityResources '../src/bicep/identity/identityModule.bicep' = {
 @description('Deploy Connectivity Resources')
 module connectivityResources '../src/bicep/connectivity/connectivityWorkload.bicep' = {
   name: 'connectivity'
-  scope: resourceGroup(connectivityResourceGroupName)
+  scope: resourceGroup()
   params: {
     workloadName: workloadName
     connectivityResourceGroupName: connectivityResourceGroupName
@@ -29,10 +26,10 @@ module connectivityResources '../src/bicep/connectivity/connectivityWorkload.bic
 @description('Deploy DevEx Resources')
 module devExResources '../src/bicep/DevEx/devExWorkload.bicep' = {
   name: 'devBox'
-  scope: resourceGroup(devBoxResourceGroupName)
+  scope: resourceGroup()
   params: {
     workloadName: workloadName
     networkConnectionsCreated: connectivityResources.outputs.networkConnectionsCreated
-    identityName: identityResources.name    
+    roleDefinitionIds: identityResources.outputs.roleDefinitionIds
   }
 }

@@ -2,7 +2,7 @@
 param workloadName string
 
 @description('Identity Name')
-param identityName string = 'myIdentity'
+param roleDefinitionIds array
 
 @description('Network Connections')
 param networkConnectionsCreated array = [
@@ -94,7 +94,7 @@ param environmentTypesInfo array = [
 @description('Contoso Dev Center Dev Box Definitions')
 param contosoDevCenterDevBoxDefinitionsInfo array = [
   {
-    name: 'BackEnd-Engineer'
+    name: 'Contoso-BackEnd-Engineer'
     imageName: 'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2'
     sku: 'general_i_32c128gb512ssd_v2'
     hibernateSupport: 'Disabled'
@@ -110,7 +110,7 @@ param contosoDevCenterDevBoxDefinitionsInfo array = [
     }
   }
   {
-    name: 'FrontEnd-Engineer'
+    name: 'Contoso-FrontEnd-Engineer'
     imageName: 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
     sku: 'general_i_16c64gb256ssd_v2'
     hibernateSupport: 'Enabled'
@@ -138,7 +138,16 @@ module devCenter 'DevCenter/devCenterResource.bicep' = {
     microsoftHostedNetworkEnableStatus: 'Enabled'
     installAzureMonitorAgentEnableStatus: 'Enabled'
     tags: tags
-    identityName: identityName
+  }
+}
+
+@description('Role Assignment Resource')
+module roleAssignment '../identity/roleAssignmentResource.bicep' = {
+  name: 'roleAssignment'
+  scope: subscription()
+  params: {
+    principalId: devCenter.outputs.devCenterPrincipalId
+    roleDefinitionIds: roleDefinitionIds
   }
 }
 
@@ -249,6 +258,9 @@ module devCenterDevBoxDefinitions 'DevCenter/EnvironmentConfiguration/devBoxDefi
     devCenterName: devCenter.outputs.devCenterName
     devBoxDefinitionsInfo: contosoDevCenterDevBoxDefinitionsInfo
   }
+  dependsOn:[
+    roleAssignment
+  ]
 }
 
 @description('Contoso Dev Center Projects')
@@ -263,7 +275,8 @@ module contosoDevCenterProjects 'DevCenter/Management/projectResource.bicep' = [
       projectCatalogsInfo: project.catalogs
       devBoxDefinitions: devCenterDevBoxDefinitions.outputs.devBoxDefinitions
       networkConnectionName: project.networkConnectionName
-      projectEnvironmentTypesInfo: environmentTypesInfo
+      roleDefinitionIds: roleDefinitionIds
+      //projectEnvironmentTypesInfo: environmentTypesInfo
     }
   }
 ]
