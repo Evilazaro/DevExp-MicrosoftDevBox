@@ -30,7 +30,7 @@ resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' existing 
 
 @description('Dev Center Project Resource')
 resource devCenterProject 'Microsoft.DevCenter/projects@2024-10-01-preview' = {
-  name: name
+  name: '${name}-App'
   location: resourceGroup().location
   identity: {
     type:  'SystemAssigned'
