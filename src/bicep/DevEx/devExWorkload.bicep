@@ -2,7 +2,9 @@
 param workloadName string
 
 @description('Identity Name')
-param roleDefinitionIds array
+param roleDefinitionIds array = [
+  
+]
 
 @description('Network Connections')
 param networkConnectionsCreated array = [
