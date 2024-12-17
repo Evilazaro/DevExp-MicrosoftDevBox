@@ -94,7 +94,7 @@ param environmentTypesInfo array = [
 @description('Contoso Dev Center Dev Box Definitions')
 param contosoDevCenterDevBoxDefinitionsInfo array = [
   {
-    name: 'BackEnd-Engineer'
+    name: 'Contoso-BackEnd-Engineer'
     imageName: 'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2'
     sku: 'general_i_32c128gb512ssd_v2'
     hibernateSupport: 'Disabled'
@@ -110,7 +110,7 @@ param contosoDevCenterDevBoxDefinitionsInfo array = [
     }
   }
   {
-    name: 'FrontEnd-Engineer'
+    name: 'Contoso-FrontEnd-Engineer'
     imageName: 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
     sku: 'general_i_16c64gb256ssd_v2'
     hibernateSupport: 'Enabled'
