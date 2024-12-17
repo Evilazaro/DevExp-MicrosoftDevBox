@@ -1,20 +1,22 @@
 @description('Workload Name')
 param workloadName string
 
-// @description('DevBox Workload Resource Group Name')
-// param devBoxResourceGroupName string = ''
+@description('DevBox Workload Resource Group Name')
+param devBoxResourceGroupName string = ''
 
-// @description('Connectivity Resource Group Name')
-// param connectivityResourceGroupName string = ''
+@description('Connectivity Resource Group Name')
+param connectivityResourceGroupName string = ''
 
 @description('Deploy Identity Resources')
 module identityResources '../src/bicep/identity/identityModule.bicep' = {
   name: 'identity'
-  scope: resourceGroup()
+  scope: resourceGroup(devBoxResourceGroupName)
   params: {
     workloadName: workloadName
   }
 }
+
+output customRoleName string = connectivityResourceGroupName
 
 // @description('Deploy Connectivity Resources')
 // module connectivityResources '../src/bicep/connectivity/connectivityWorkload.bicep' = {

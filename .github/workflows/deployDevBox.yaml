@@ -33,21 +33,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
   
-      # Build the Bicep files for Dev Box Resources
-      - name: Build Dev Box Bicep files
-        run: az bicep build --file ./deploy/deploy.bicep --outfile ./bicepArtifacts/deploy.json
+      # # Build the Bicep files for Dev Box Resources
+      # - name: Build Dev Box Bicep files
+      #   run: az bicep build --file ./deploy/deploy.bicep --outfile ./bicepArtifacts/deploy.json
 
-      # Compress the built Bicep artifacts into a zip file
-      - name: Compress Bicep Artifacts
-        run: |
-          zip -r bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip ./bicepArtifacts
+      # # Compress the built Bicep artifacts into a zip file
+      # - name: Compress Bicep Artifacts
+      #   run: |
+      #     zip -r bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip ./bicepArtifacts
 
-      # Upload the compressed Bicep artifacts
-      - name: Upload Bicep Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
-          path: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
+      # # Upload the compressed Bicep artifacts
+      # - name: Upload Bicep Artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
+      #     path: bicepArtifacts_v1.0.0-deploy-${{ github.run_number }}.zip
 
       # Log in to Azure using credentials stored in GitHub Secrets
       - name: Log in to Azure
