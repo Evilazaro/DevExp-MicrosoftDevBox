@@ -1,6 +1,7 @@
 @description('Workload Name')
 param workloadName string
 
+@description('Custom Role Resource')
 resource customRole 'Microsoft.Authorization/roleDefinitions@2022-05-01-preview' = {
   name: guid('ContosoDevCenterDevBoxRole',workloadName)
   properties: {
@@ -35,14 +36,8 @@ resource customRole 'Microsoft.Authorization/roleDefinitions@2022-05-01-preview'
   }
 }
 
-@description('Custom Role Info')
-output customRoleInfo object = {
-  name: customRole.name
-  id: customRole.id
-}
+@description('Custom Role Resource ID')
+output customRoleId string = customRole.id
 
-@description('Custom Role Actions')
-output customRoleActions array = customRole.properties.permissions
-
-
-
+@description('Custom Role Resource Name')
+output customRoleName string = customRole.name
