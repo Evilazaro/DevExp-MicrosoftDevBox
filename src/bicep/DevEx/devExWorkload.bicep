@@ -1,6 +1,9 @@
 @description('Workload Name')
 param workloadName string
 
+@description('Identity Name')
+param identityName string
+
 @description('Network Connections')
 param networkConnectionsCreated array = [
   {
@@ -135,6 +138,7 @@ module devCenter 'DevCenter/devCenterResource.bicep' = {
     microsoftHostedNetworkEnableStatus: 'Enabled'
     installAzureMonitorAgentEnableStatus: 'Enabled'
     tags: tags
+    identityName: identityName
   }
 }
 
