@@ -6,11 +6,12 @@ $WarningPreference = "Stop"
 
 # Azure Resource Group Names Constants
 $solutionName = "ContosoDevEx"
+$devBoxResourceGroupName = "$solutionName-rg"
 $networkResourceGroupName = "$solutionName-Network-rg"
 
 
 # Identity Parameters Constants
-$customRoleName = "eShopPetBuilderRole"
+$customRoleName = "ContosoDevCenterDevBoxRole"
 
 $subscriptionId = (az account show --query id --output tsv)
 
@@ -90,7 +91,7 @@ function Delete-CustomRole {
 # Function to delete role assignments
 function Delete-RoleAssignments {
     # Deleting role assignments and role definitions
-    $roles = @('Owner', 'Managed Identity Operator', $customRoleName, 'ContosoDevCenterDevBoxRole', 'ContosoDx-identity-customRole', 'ContosoIpeDx-identity-customRole')
+    $roles = @('Owner', 'Managed Identity Operator', $customRoleName,  'ContosoDx-identity-customRole', 'ContosoIpeDx-identity-customRole')
     foreach ($roleName in $roles) {
         Write-Output "Getting the role ID for '$roleName'..."
         $roleId = az role definition list --name $roleName --query [].name --output tsv
@@ -115,7 +116,6 @@ function CleanUp-Resources {
     Delete-ResourceGroup -resourceGroupName "Default-ActivityLogAlerts"
     Delete-ResourceGroup -resourceGroupName "DefaultResourceGroup-WUS2"
     Delete-CustomRole -roleName $customRoleName
-    Delete-CustomRole -roleName 'ContosoDevCenterDevBoxRole'
     Delete-CustomRole -roleName 'ContosoDx-identity-customRole'
     Delete-CustomRole -roleName 'ContosoIpeDx-identity-customRole'
 }
