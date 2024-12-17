@@ -19,20 +19,20 @@ module identityResources '../src/bicep/identity/identityModule.bicep' = {
 @description('Deploy Connectivity Resources')
 module connectivityResources '../src/bicep/connectivity/connectivityWorkload.bicep' = {
   name: 'connectivity'
-  scope: resourceGroup(connectivityResourceGroupName)
+  scope: resourceGroup()
   params: {
     workloadName: workloadName
     connectivityResourceGroupName: connectivityResourceGroupName
   }
 }
 
-// @description('Deploy DevEx Resources')
-// module devExResources '../src/bicep/DevEx/devExWorkload.bicep' = {
-//   name: 'devBox'
-//   scope: resourceGroup(devBoxResourceGroupName)
-//   params: {
-//     workloadName: workloadName
-//     networkConnectionsCreated: connectivityResources.outputs.networkConnectionsCreated
-//     customRoleName: identityResources.outputs.customRoleName
-//   }
-// }
+@description('Deploy DevEx Resources')
+module devExResources '../src/bicep/DevEx/devExWorkload.bicep' = {
+  name: 'devBox'
+  scope: resourceGroup(devBoxResourceGroupName)
+  params: {
+    workloadName: workloadName
+    networkConnectionsCreated: connectivityResources.outputs.networkConnectionsCreated
+    customRoleName: identityResources.outputs.customRoleName
+  }
+}
