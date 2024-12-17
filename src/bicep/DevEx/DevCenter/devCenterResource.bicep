@@ -28,15 +28,13 @@ param installAzureMonitorAgentEnableStatus string
 @description('Tags')
 param tags object
 
-@description('Custom Role Info')
-param customRoleInfo object
-
 resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' = {
   name: '${uniqueString(resourceGroup().id, name)}-devcenter'
   location: location
   tags: tags
   identity: {
-    type: 'SystemAssigned'
+    type: 'UserAssigned'
+    userAssignedIdentities: {}
   }
   properties: {
     projectCatalogSettings: {
@@ -71,17 +69,3 @@ output devCenterInstallAzureMonitorAgentEnableStatus string = devCenter.properti
 
 @description('DevCenter Resource Tags')
 output devCenterTags object = devCenter.tags
-
-module roleAssignment '../../identity/roleAssignmentResource.bicep' = {
-  name: 'roleAssignment'
-  scope: subscription()
-  params: {
-    principalId: devCenter.identity.principalId
-    roleDefinitionIds: [
-      customRoleInfo.name
-      '8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
-      '331c37c6-af14-46d9-b9f4-e1909e1b95a0'
-      '45d50f46-0b78-4001-a660-4198cbe8cd05'
-    ]
-  }
-}

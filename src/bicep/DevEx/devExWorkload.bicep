@@ -14,9 +14,6 @@ param networkConnectionsCreated array = [
     id: 'Contoso-Traders'
   }
 ]
-
-@description('Custom Role Info')
-param customRoleInfo object = {}
   
 @description('Contoso Dev Center Catalog')
 param contosoDevCenterCatalogInfo object = {
@@ -138,7 +135,6 @@ module devCenter 'DevCenter/devCenterResource.bicep' = {
     microsoftHostedNetworkEnableStatus: 'Enabled'
     installAzureMonitorAgentEnableStatus: 'Enabled'
     tags: tags
-    customRoleInfo: customRoleInfo
   }
 }
 
