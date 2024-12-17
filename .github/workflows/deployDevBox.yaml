@@ -100,7 +100,7 @@ jobs:
       # # Deploy the Landing Zone Resources using the deployment script
       - name: Checking all changes for ${{ env.workloadName }} environment before deploying
         shell: bash
-        id: check-changes-connectivity
+        id: check-changes-AllChanges
         run: |
           az deployment group what-if \
             --resource-group ${{ env.devBoxResourceGroupName }} \
