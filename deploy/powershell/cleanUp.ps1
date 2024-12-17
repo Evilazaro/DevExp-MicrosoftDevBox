@@ -72,6 +72,7 @@ function Delete-CustomRole {
 
     Write-Output "Deleting the '$roleName' role..."
     $roleExists = az role definition list --name $roleName
+     
 
     if ([string]::IsNullOrEmpty($roleExists) -or $roleExists -eq "[]") {
         Write-Output "'$roleName' role does not exist. Skipping deletion."
@@ -122,3 +123,4 @@ function CleanUp-Resources {
 
 # Main script execution
 CleanUp-Resources
+
