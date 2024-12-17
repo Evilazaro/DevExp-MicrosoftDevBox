@@ -26,26 +26,15 @@ function Clean-SetUp {
     # Delete users and assigned roles
     Write-Output "Deleting users and assigned roles..."
     .\Azure\deleteUsersAndAssignedRoles.ps1 $appDisplayName
-    if ($LASTEXITCODE -ne 0) {
-        Write-Output "Error: Failed to delete users and assigned roles for appDisplayName: $appDisplayName"
-        return 1
-    }
-
+    
     # Delete deployment credentials
     Write-Output "Deleting deployment credentials..."
     .\Azure\deleteDeploymentCredentials.ps1 $appDisplayName
-    if ($LASTEXITCODE -ne 0) {
-        Write-Output "Error: Failed to delete deployment credentials for appDisplayName: $appDisplayName"
-        return 1
-    }
-
+   
     # Delete GitHub secret for Azure credentials
     Write-Output "Deleting GitHub secret for Azure credentials..."
     .\GitHub\deleteGitHubSecretAzureCredentials.ps1 $ghSecretName
-    if ($LASTEXITCODE -ne 0) {
-        Write-Output "Error: Failed to delete GitHub secret for Azure credentials: $ghSecretName"
-        return 1
-    }
+    
 
     Write-Output "Cleanup process completed successfully for appDisplayName: $appDisplayName and ghSecretName: $ghSecretName"
 }
