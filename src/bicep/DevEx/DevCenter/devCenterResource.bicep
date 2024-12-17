@@ -38,7 +38,7 @@ resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' = {
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: {
-      '${resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', resourceGroup().name, identityName)}': {}     
+      '${resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',identityName)}': {}     
     }
   }
   properties: {
