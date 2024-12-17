@@ -280,7 +280,7 @@ module contosoDevCenterProjects 'DevCenter/Management/projectResource.bicep' = [
       projectCatalogsInfo: project.catalogs
       devBoxDefinitions: devCenterDevBoxDefinitions.outputs.devBoxDefinitions
       networkConnectionName: project.networkConnectionName
-      projectEnvironmentTypesInfo: environmentTypesInfo
+      //projectEnvironmentTypesInfo: environmentTypesInfo
     }
   }
 ]

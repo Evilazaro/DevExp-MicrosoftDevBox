@@ -36,7 +36,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2024-03-01' = {
       : null
     subnets: [
       for (subnet, i) in subnets: {
-        name: '${subnet.name}-App'
+        name: '${subnet.name}'
         properties: {
           addressPrefixes: [
             '10.0.${i}.0/24'

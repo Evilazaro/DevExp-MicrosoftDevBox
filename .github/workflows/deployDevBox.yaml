@@ -97,6 +97,18 @@ jobs:
       #       --parameters workloadName=${{ env.workloadName }} \
       #       --mode Incremental
 
+      # # Deploy the Landing Zone Resources using the deployment script
+      - name: Checking all changes for ${{ env.workloadName }} environment before deploying
+        shell: bash
+        id: check-changes-connectivity
+        run: |
+          az deployment group what-if \
+            --resource-group ${{ env.connectivityResourceGroupName }} \
+            --template-file ./deploy/deploy.bicep \
+            --parameters workloadName=${{ env.workloadName }} \
+                connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
+            --mode Incremental
+
       - name: Deploy Dev Box DevCenter Resources for ${{ env.workloadName }} to Azure
         shell: bash
         id: deploy-dev-center
@@ -107,7 +119,7 @@ jobs:
             --parameters workloadName=${{ env.workloadName }} \
                 devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
                 connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
-            --mode Incremental    
+            --mode Complete    
 
   publish-bicep-artifacts:
     runs-on: ubuntu-latest

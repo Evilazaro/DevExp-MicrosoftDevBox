@@ -18,6 +18,12 @@ param contosoConnectivityInfo array = [
       domainJoinType: 'AzureADJoin'
     }
   }
+  {
+    name: 'AzureFirewallManagementSubnet'
+    networkConnection: {
+      domainJoinType: 'AzureADJoin'
+    }
+  }
 ]
 
 @description('Address Prefixes')
