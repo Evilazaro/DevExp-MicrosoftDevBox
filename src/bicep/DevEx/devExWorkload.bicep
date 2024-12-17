@@ -141,6 +141,16 @@ module devCenter 'DevCenter/devCenterResource.bicep' = {
   }
 }
 
+@description('Deploy Compute Gallery')
+module computeGallery '../compute/gallery/computeGalleryModule.bicep' = {
+  name: 'computeGallery'
+  scope: resourceGroup()
+  params: {
+    devCenterName: devCenter.outputs.devCenterName
+    workloadName: workloadName
+  }
+}
+
 @description('Role Assignment Resource')
 module roleAssignment '../identity/roleAssignmentResource.bicep' = {
   name: 'roleAssignment'
