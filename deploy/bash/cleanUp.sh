@@ -111,3 +111,5 @@ cleanUpResources() {
 
 # Main script execution
 cleanUpResources
+
+
