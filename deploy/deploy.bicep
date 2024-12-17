@@ -7,6 +7,7 @@ param devBoxResourceGroupName string = ''
 @description('Connectivity Resource Group Name')
 param connectivityResourceGroupName string = ''
 
+@description('Deploy Identity Resources')
 module identityResources '../src/bicep/identity/identityModule.bicep' = {
   name: 'identity'
   scope: resourceGroup()

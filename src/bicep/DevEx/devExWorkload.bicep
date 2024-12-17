@@ -2,7 +2,7 @@
 param workloadName string
 
 @description('Identity Name')
-param identityName string
+param identityName string = 'myIdentity'
 
 @description('Network Connections')
 param networkConnectionsCreated array = [
