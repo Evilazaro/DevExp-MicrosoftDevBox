@@ -26,8 +26,7 @@ jobs:
       - name: Update Packages and Upgrade Bicep
         run: |
           sudo apt-get update && \
-          sudo apt-get upgrade -y && \
-          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash && \
+          # sudo apt-get upgrade -y && \
           sudo az bicep upgrade
       
       # Checkout the repository to get the source code
@@ -71,11 +70,10 @@ jobs:
         run: |
           az deployment group what-if \
             --resource-group ${{ env.connectivityResourceGroupName }} \
-            --template-file ./deploy/deploy.bicep \
+            --template-file ./src/bicep/connectivity/connectivityWorkload.bicep \
             --parameters workloadName=${{ env.workloadName }} \
-                devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
                 connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
-            --mode Complete
+            --mode Incremental
 
       # Deploy the Landing Zone Resources using the deployment script
       - name: Checking all changes for ${{ env.workloadName }} in the DevEX Landing Zone environment before deploying
@@ -84,11 +82,20 @@ jobs:
         run: |
           az deployment group what-if \
             --resource-group ${{ env.devBoxResourceGroupName }} \
-            --template-file ./deploy/deploy.bicep \
+            --template-file ./src/bicep/DevEx/devExWorkload.bicep \
             --parameters workloadName=${{ env.workloadName }} \
-                devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
-                connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
-            --mode Complete
+            --mode Incremental
+
+      # Deploy the Landing Zone Resources using the deployment script
+      - name: Checking all changes for ${{ env.workloadName }} in the Identity resources before deploying
+        shell: bash
+        id: check-changes-identity
+        run: |
+          az deployment group what-if \
+            --resource-group ${{ env.devBoxResourceGroupName }} \
+            --template-file ./src/bicep/identity/identityModule.bicep \
+            --parameters workloadName=${{ env.workloadName }} \
+            --mode Incremental
 
       - name: Deploy Dev Box DevCenter Resources for ${{ env.workloadName }} to Azure
         shell: bash
@@ -100,7 +107,7 @@ jobs:
             --parameters workloadName=${{ env.workloadName }} \
                 devBoxResourceGroupName=${{ env.devBoxResourceGroupName }} \
                 connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
-            --mode Complete    
+            --mode Incremental    
 
   publish-bicep-artifacts:
     runs-on: ubuntu-latest

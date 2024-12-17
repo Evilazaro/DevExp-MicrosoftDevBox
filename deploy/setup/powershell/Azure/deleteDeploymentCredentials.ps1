@@ -53,3 +53,4 @@ function Validate-Input {
 # Main script execution
 Validate-Input -appDisplayName $appDisplayName
 Delete-DeploymentCredentials -appDisplayName $appDisplayName
+

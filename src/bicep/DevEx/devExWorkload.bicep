@@ -1,12 +1,26 @@
 @description('Workload Name')
 param workloadName string
 
-@description('Network Connections')
-param networkConnectionsCreated array
+@description('Identity Name')
+param identityName string = 'myIdentity'
 
+@description('Network Connections')
+param networkConnectionsCreated array = [
+  {
+    name: 'eShop'
+    domainJoinType: 'AzureADJoin'
+    id: 'eShop'
+  }
+  {
+    name: 'Contoso-Traders'
+    domainJoinType: 'AzureADJoin'
+    id: 'Contoso-Traders'
+  }
+]
+  
 @description('Contoso Dev Center Catalog')
 param contosoDevCenterCatalogInfo object = {
-  name: 'Contoso-DevCenter'
+  name: 'Contoso-Custom-Tasks'
   syncType: 'Scheduled'
   type: 'GitHub'
   uri: 'https://github.com/Evilazaro/DevExp-DevBox.git'
@@ -111,38 +125,6 @@ param contosoDevCenterDevBoxDefinitionsInfo array = [
       roleName: 'FrontEnd-Engineer'
     }
   }
-  {
-    name: 'Web-Designer'
-    imageName: 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
-    sku: 'general_i_16c64gb256ssd_v2'
-    hibernateSupport: 'Enabled'
-    tags: {
-      workload: workloadName
-      landingZone: 'DevEx'
-      resourceType: 'DevCenter'
-      ProductTeam: 'Platform Engineering'
-      Environment: 'Production'
-      Department: 'IT'
-      offering: 'DevBox-as-a-Service'
-      roleName: 'Web-Designer-Engineer'
-    }
-  }
-  {
-    name: 'DevOps-Engineer'
-    imageName: 'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2'
-    sku: 'general_i_32c128gb512ssd_v2'
-    hibernateSupport: 'Disabled'
-    tags: {
-      workload: workloadName
-      landingZone: 'DevEx'
-      resourceType: 'DevCenter'
-      ProductTeam: 'Platform Engineering'
-      Environment: 'Production'
-      Department: 'IT'
-      offering: 'DevBox-as-a-Service'
-      roleName: 'DevOps-Engineer'
-    }
-  }
 ]
 
 @description('Dev Center Resource')
@@ -156,13 +138,14 @@ module devCenter 'DevCenter/devCenterResource.bicep' = {
     microsoftHostedNetworkEnableStatus: 'Enabled'
     installAzureMonitorAgentEnableStatus: 'Enabled'
     tags: tags
+    identityName: identityName
   }
 }
 
 @description('Environment Type Resource')
 module environmentTypes 'DevCenter/EnvironmentConfiguration/environmentTypesResource.bicep' = [
   for environmentType in environmentTypesInfo: {
-    name: 'EnvironmentTypes-${environmentType.name}'
+    name: '${environmentType.name}-environmentType'
     scope: resourceGroup()
     params: {
       devCenterName: devCenter.outputs.devCenterName
@@ -174,7 +157,7 @@ module environmentTypes 'DevCenter/EnvironmentConfiguration/environmentTypesReso
 
 @description('Network Connection Attachment Resource')
 module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectionAttachmentResource.bicep' = {
-  name: 'NetworkConnectionAttachment'
+  name: 'networkAttachments'
   scope: resourceGroup()
   params: {
     devCenterName: devCenter.outputs.devCenterName
@@ -187,13 +170,20 @@ param contosoProjectsInfo array = [
   {
     name: 'eShop'
     networkConnectionName: networkConnectionsCreated[0].name
-    catalog: {
-      projectName: 'eShop'
-      catalogName: 'eShop'
-      uri: 'https://github.com/Evilazaro/eShop.git'
-      branch: 'main'
-      path: '/customizations/tasks'
-    }
+    catalogs: [
+      {
+        catalogName: 'imageDefinitions'
+        uri: 'https://github.com/Evilazaro/eShop.git'
+        branch: 'main'
+        path: '/devEx/customizations'
+      }
+      {
+        catalogName: 'environments'
+        uri: 'https://github.com/Evilazaro/eShop.git'
+        branch: 'main'
+        path: '/devEx/environments'
+      }
+    ]
     tags: {
       workload: workloadName
       landingZone: 'DevEx'
@@ -208,13 +198,20 @@ param contosoProjectsInfo array = [
   {
     name: 'Contoso-Traders'
     networkConnectionName: networkConnectionsCreated[1].name
-    catalog: {
-      projectName: 'Contoso-Traders'
-      catalogName: 'ContosoTraders'
-      uri: 'https://github.com/Evilazaro/ContosoTraders.git'
-      branch: 'main'
-      path: '/customizations/tasks'
-    }
+    catalogs: [
+      {
+        catalogName: 'imageDefinitions'
+        uri: 'https://github.com/Evilazaro/contosotraders.git'
+        branch: 'main'
+        path: '/devEx/customizations'
+      }
+      {
+        catalogName: 'environments'
+        uri: 'https://github.com/Evilazaro/contosotraders.git'
+        branch: 'main'
+        path: '/devEx/environments'
+      }
+    ]
     tags: {
       workload: workloadName
       landingZone: 'DevEx'
@@ -230,7 +227,7 @@ param contosoProjectsInfo array = [
 
 @description('Contoso Dev Center Catalog')
 module contosoDevCenterCatalog 'DevCenter/EnvironmentConfiguration/devCentercatalogsResource.bicep' = {
-  name: 'DevCenterCatalog'
+  name: 'devCenterCatalog'
   scope: resourceGroup()
   params: {
     name: contosoDevCenterCatalogInfo.name
@@ -246,7 +243,7 @@ module contosoDevCenterCatalog 'DevCenter/EnvironmentConfiguration/devCentercata
 
 @description('Dev Center Dev Box Definitions')
 module devCenterDevBoxDefinitions 'DevCenter/EnvironmentConfiguration/devBoxDefinitionResource.bicep' = {
-  name: 'DevBoxDefinitions'
+  name: 'devBoxDefinitions'
   scope: resourceGroup()
   params: {
     devCenterName: devCenter.outputs.devCenterName
@@ -257,13 +254,13 @@ module devCenterDevBoxDefinitions 'DevCenter/EnvironmentConfiguration/devBoxDefi
 @description('Contoso Dev Center Projects')
 module contosoDevCenterProjects 'DevCenter/Management/projectResource.bicep' = [
   for project in contosoProjectsInfo: {
-    name: 'Project-${project.name}'
+    name: '${project.name}-project'
     scope: resourceGroup()
     params: {
       devCenterName: devCenter.outputs.devCenterName
       name: project.name
       tags: project.tags
-      projectCatalogInfo: project.catalog
+      projectCatalogsInfo: project.catalogs
       devBoxDefinitions: devCenterDevBoxDefinitions.outputs.devBoxDefinitions
       networkConnectionName: project.networkConnectionName
       projectEnvironmentTypesInfo: environmentTypesInfo

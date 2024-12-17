@@ -90,7 +90,7 @@ function Delete-CustomRole {
 # Function to delete role assignments
 function Delete-RoleAssignments {
     # Deleting role assignments and role definitions
-    $roles = @('Owner', 'Managed Identity Operator', $customRoleName)
+    $roles = @('Owner', 'Managed Identity Operator', $customRoleName, 'ContosoDevCenterDevBoxRole', 'ContosoDx-identity-customRole', 'ContosoIpeDx-identity-customRole')
     foreach ($roleName in $roles) {
         Write-Output "Getting the role ID for '$roleName'..."
         $roleId = az role definition list --name $roleName --query [].name --output tsv
@@ -115,6 +115,9 @@ function CleanUp-Resources {
     Delete-ResourceGroup -resourceGroupName "Default-ActivityLogAlerts"
     Delete-ResourceGroup -resourceGroupName "DefaultResourceGroup-WUS2"
     Delete-CustomRole -roleName $customRoleName
+    Delete-CustomRole -roleName 'ContosoDevCenterDevBoxRole'
+    Delete-CustomRole -roleName 'ContosoDx-identity-customRole'
+    Delete-CustomRole -roleName 'ContosoIpeDx-identity-customRole'
 }
 
 # Main script execution
