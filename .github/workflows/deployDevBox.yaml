@@ -63,39 +63,39 @@ jobs:
       - name: Deploy Landing Zone Resources for ${{ env.workloadName }}
         run: ./deploy/bash/deployResourcesOrganization.sh ${{ env.devBoxResourceGroupName }} ${{ env.connectivityResourceGroupName }} ${{ env.location }}
 
-      # Deploy the Landing Zone Resources using the deployment script
-      - name: Checking all changes for ${{ env.workloadName }} in the Connectivity Landing Zone environment before deploying
-        shell: bash
-        id: check-changes-connectivity
-        run: |
-          az deployment group what-if \
-            --resource-group ${{ env.connectivityResourceGroupName }} \
-            --template-file ./src/bicep/connectivity/connectivityWorkload.bicep \
-            --parameters workloadName=${{ env.workloadName }} \
-                connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
-            --mode Incremental
+      # # Deploy the Landing Zone Resources using the deployment script
+      # - name: Checking all changes for ${{ env.workloadName }} in the Connectivity Landing Zone environment before deploying
+      #   shell: bash
+      #   id: check-changes-connectivity
+      #   run: |
+      #     az deployment group what-if \
+      #       --resource-group ${{ env.connectivityResourceGroupName }} \
+      #       --template-file ./src/bicep/connectivity/connectivityWorkload.bicep \
+      #       --parameters workloadName=${{ env.workloadName }} \
+      #           connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
+      #       --mode Incremental
 
-      # Deploy the Landing Zone Resources using the deployment script
-      - name: Checking all changes for ${{ env.workloadName }} in the DevEX Landing Zone environment before deploying
-        shell: bash
-        id: check-changes-dev-box
-        run: |
-          az deployment group what-if \
-            --resource-group ${{ env.devBoxResourceGroupName }} \
-            --template-file ./src/bicep/DevEx/devExWorkload.bicep \
-            --parameters workloadName=${{ env.workloadName }} \
-            --mode Incremental
+      # # Deploy the Landing Zone Resources using the deployment script
+      # - name: Checking all changes for ${{ env.workloadName }} in the DevEX Landing Zone environment before deploying
+      #   shell: bash
+      #   id: check-changes-dev-box
+      #   run: |
+      #     az deployment group what-if \
+      #       --resource-group ${{ env.devBoxResourceGroupName }} \
+      #       --template-file ./src/bicep/DevEx/devExWorkload.bicep \
+      #       --parameters workloadName=${{ env.workloadName }} \
+      #       --mode Incremental
 
-      # Deploy the Landing Zone Resources using the deployment script
-      - name: Checking all changes for ${{ env.workloadName }} in the Identity resources before deploying
-        shell: bash
-        id: check-changes-identity
-        run: |
-          az deployment group what-if \
-            --resource-group ${{ env.devBoxResourceGroupName }} \
-            --template-file ./src/bicep/identity/identityModule.bicep \
-            --parameters workloadName=${{ env.workloadName }} \
-            --mode Incremental
+      # # Deploy the Landing Zone Resources using the deployment script
+      # - name: Checking all changes for ${{ env.workloadName }} in the Identity resources before deploying
+      #   shell: bash
+      #   id: check-changes-identity
+      #   run: |
+      #     az deployment group what-if \
+      #       --resource-group ${{ env.devBoxResourceGroupName }} \
+      #       --template-file ./src/bicep/identity/identityModule.bicep \
+      #       --parameters workloadName=${{ env.workloadName }} \
+      #       --mode Incremental
 
       - name: Deploy Dev Box DevCenter Resources for ${{ env.workloadName }} to Azure
         shell: bash

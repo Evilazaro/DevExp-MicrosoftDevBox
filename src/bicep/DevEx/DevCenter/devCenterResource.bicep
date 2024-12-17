@@ -4,9 +4,6 @@ param name string
 @description('Location')
 param location string
 
-@description('Identity Name')
-param identityName string
-
 @description('Catalog Item Sync Enable Status')
 @allowed([
   'Enabled'
@@ -36,10 +33,7 @@ resource devCenter 'Microsoft.DevCenter/devcenters@2024-10-01-preview' = {
   location: location
   tags: tags
   identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',identityName)}': {}     
-    }
+    type: 'SystemAssigned'
   }
   properties: {
     projectCatalogSettings: {
@@ -74,3 +68,6 @@ output devCenterInstallAzureMonitorAgentEnableStatus string = devCenter.properti
 
 @description('DevCenter Resource Tags')
 output devCenterTags object = devCenter.tags
+
+@description('DevCenter Resource Principal ID')
+output devCenterPrincipalId string = devCenter.identity.principalId
