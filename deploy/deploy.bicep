@@ -16,17 +16,15 @@ module identityResources '../src/bicep/identity/identityModule.bicep' = {
   }
 }
 
-output customRoleName string = connectivityResourceGroupName
-
-// @description('Deploy Connectivity Resources')
-// module connectivityResources '../src/bicep/connectivity/connectivityWorkload.bicep' = {
-//   name: 'connectivity'
-//   scope: resourceGroup(connectivityResourceGroupName)
-//   params: {
-//     workloadName: workloadName
-//     connectivityResourceGroupName: connectivityResourceGroupName
-//   }
-// }
+@description('Deploy Connectivity Resources')
+module connectivityResources '../src/bicep/connectivity/connectivityWorkload.bicep' = {
+  name: 'connectivity'
+  scope: resourceGroup(connectivityResourceGroupName)
+  params: {
+    workloadName: workloadName
+    connectivityResourceGroupName: connectivityResourceGroupName
+  }
+}
 
 // @description('Deploy DevEx Resources')
 // module devExResources '../src/bicep/DevEx/devExWorkload.bicep' = {
