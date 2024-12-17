@@ -16,6 +16,9 @@ param devBoxDefinitions array
 @description('Network Connection Name')
 param networkConnectionName string
 
+@description('Role Definition Ids')
+param roleDefinitionIds array
+
 // @description('Project Environment Types Info')
 // param projectEnvironmentTypesInfo array
 
@@ -45,6 +48,15 @@ resource devCenterProject 'Microsoft.DevCenter/projects@2024-10-01-preview' = {
     description: 'Dev Center Project - ${name}'
   }
   tags: tags
+}
+@description('Role Assignment Resource')
+module roleAssignment '../../../identity/roleAssignmentResource.bicep' = {
+  name: 'roleAssignment'
+  scope: subscription()
+  params: {
+    principalId: devCenterProject.identity.principalId
+    roleDefinitionIds: roleDefinitionIds
+  }
 }
 
 @description('Project Catalog Resource')

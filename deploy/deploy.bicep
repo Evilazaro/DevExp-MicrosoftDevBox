@@ -30,6 +30,6 @@ module devExResources '../src/bicep/DevEx/devExWorkload.bicep' = {
   params: {
     workloadName: workloadName
     networkConnectionsCreated: connectivityResources.outputs.networkConnectionsCreated
-    customRoleName: identityResources.outputs.customRoleName
+    roleDefinitionIds: identityResources.outputs.roleDefinitionIds
   }
 }

@@ -2,7 +2,7 @@
 param workloadName string
 
 @description('Identity Name')
-param customRoleName string = 'myCustomRole'
+param roleDefinitionIds array
 
 @description('Network Connections')
 param networkConnectionsCreated array = [
@@ -141,18 +141,13 @@ module devCenter 'DevCenter/devCenterResource.bicep' = {
   }
 }
 
+@description('Role Assignment Resource')
 module roleAssignment '../identity/roleAssignmentResource.bicep' = {
   name: 'roleAssignment'
   scope: subscription()
   params: {
     principalId: devCenter.outputs.devCenterPrincipalId
-    roleDefinitionIds: [
-      '${customRoleName}'
-      '8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
-      '331c37c6-af14-46d9-b9f4-e1909e1b95a0'
-      '45d50f46-0b78-4001-a660-4198cbe8cd05'
-      '18d7d88d-d35e-4fb5-a5c3-7773c20a72d9'
-    ]
+    roleDefinitionIds: roleDefinitionIds
   }
 }
 
@@ -280,6 +275,7 @@ module contosoDevCenterProjects 'DevCenter/Management/projectResource.bicep' = [
       projectCatalogsInfo: project.catalogs
       devBoxDefinitions: devCenterDevBoxDefinitions.outputs.devBoxDefinitions
       networkConnectionName: project.networkConnectionName
+      roleDefinitionIds: roleDefinitionIds
       //projectEnvironmentTypesInfo: environmentTypesInfo
     }
   }
