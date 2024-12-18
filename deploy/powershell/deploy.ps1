@@ -4,7 +4,7 @@ $ErrorActionPreference = "Stop"
 
 # Define variables
 $location = "northuscentral"
-$solutionName = "ContosoDevEx"
+$solutionName = "ContosoDevExp"
 $devBoxResourceGroupName = "ContosoDevEx-rg"
 $networkResourceGroupName = "ContosoDevEx-Network-rg"
 $managementResourceGroupName = "ContosoDevEx-Management-rg"

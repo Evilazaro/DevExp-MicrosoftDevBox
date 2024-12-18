@@ -1,8 +1,6 @@
 @description('Workload Name')
 param workloadName string
 
-
-
 module customRole 'customRoleResource.bicep' = {
   name: 'customRole'
   scope: resourceGroup()
@@ -29,6 +27,16 @@ module managedIdentity 'managedIdentityResource.bicep' = {
   scope: resourceGroup()
   params: {
     workloadName: workloadName
+  }
+}
+
+@description('Managed Identity Role Assignment')
+module roleAssignment 'roleAssignmentResource.bicep' = {
+  scope: subscription()
+  name: 'managedIdentityRoleAssignment'
+  params: {
+    principalId: managedIdentity.outputs.principalId
+    roleDefinitionIds: roleDefinitionIds
   }
 }
 
