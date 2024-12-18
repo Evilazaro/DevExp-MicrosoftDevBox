@@ -1,0 +1,9 @@
+$schema: "1.0"
+name: ''
+description: ''
+tasks:
+  - name: winget
+    parameters:
+      downloadUrl: 'baseline.dsc.yaml'
+      configurationFile: 'baseline.dsc.yaml'
+      runAsUser: true
