@@ -261,6 +261,7 @@ module devCenterDevBoxDefinitions 'DevCenter/EnvironmentConfiguration/devBoxDefi
     devBoxDefinitionsInfo: contosoDevCenterDevBoxDefinitionsInfo
   }
   dependsOn:[
+    networkConnectionAttachment
     roleAssignment
   ]
 }
