@@ -3,6 +3,7 @@ name: ''
 description: ''
 tasks:
   - name: winget
+    description: Install workload prerequisites
     parameters:
       downloadUrl: 'baseline.dsc.yaml'
       configurationFile: 'baseline.dsc.yaml'

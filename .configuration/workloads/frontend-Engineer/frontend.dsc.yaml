@@ -1,3 +1,11 @@
 properties:
   configurationVersion: 0.2.0
   resources:
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Postman.Postman
+      directives:
+        description: Install Postman
+        allowPrerelease: true
+        module: Microsoft.WinGet.DSC
+      settings:
+        id: Postman.Postman
