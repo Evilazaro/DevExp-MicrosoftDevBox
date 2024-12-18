@@ -2,6 +2,9 @@ $schema: "1.0"
 name: ''
 description: ''
 tasks:
-  - name: 
-    description: 
+  - name: winget
+    description: Install workload prerequisites
     parameters:
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/baseline.dsc.yaml'
+      configurationFile: 'C:\WinGetConfig\baseline.dsc.yaml'
+      runAsUser: true
