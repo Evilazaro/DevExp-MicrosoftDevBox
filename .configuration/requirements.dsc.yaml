@@ -1,0 +1,107 @@
+properties:
+  configurationVersion: 0.2.0
+  ########################################
+  ### RESOURCES: System Configuration
+  ########################################
+  resources:
+      ########################################################
+      ### Updates required before apply configurations
+      ########################################################
+      ### Enable: PowerShell
+      ### Install PSDscResources
+      ### Enable: WinGet
+      ### Enable: AppInstaller
+      ### Enable: AppInstallerFileBuilder
+      ### Enable: DevHome
+      ### Enable: DevHome Azure Extension
+      ### Enable: DevHome GitHub Extension
+      ########################################################
+      ### -----------------------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Microsoft.PowerShell
+      directives:
+        description: Install Microsoft.PowerShell
+        allowPrerelease: true
+        module: Microsoft.WinGet.DSC
+      settings:
+        id: Microsoft.PowerShell
+      ### Install PSDscResources
+      ### -------------------------------------
+    - resource: PSDscResources/Script
+      id: PSDscResources
+      directives:
+        description: Install PSDscResources
+        allowPrerelease: true
+        module: PSDscResources
+      settings:
+        SetScript: |
+          Install-Module -Name PSDscResources -Force -AllowClobber
+        GetScript: return $false
+        TestScript: return $false
+      dependsOn:
+        - Microsoft.PowerShell
+      ### Enable WinGet
+      ### -------------------------------------
+    - resource: PSDscResources/Script
+      id: Microsoft.AppInstaller
+      directives:
+        description: Install Microsoft.AppInstaller
+      settings:
+        SetScript: |
+          winget install Microsoft.AppInstaller --accept-package-agreements --force
+        GetScript: return $false
+        TestScript: return $false
+      dependsOn:
+        - Microsoft.PowerShell
+      ### Enable AppInstaller
+      ### -------------------------------------
+    - resource: PSDscResources/Script
+      id: Microsoft.AppInstallerFileBuilder
+      directives:
+        description: Install Microsoft.AppInstallerFileBuilder
+      settings:
+        SetScript: |
+          winget install Microsoft.AppInstallerFileBuilder --accept-package-agreements --force
+        GetScript: return $false
+        TestScript: return $false
+      dependsOn:
+        - Microsoft.AppInstaller
+      ### Enable DevHome
+      ### -------------------------------------
+    - resource: PSDscResources/Script
+      id: Microsoft.DevHome
+      directives:
+        description: Install Microsoft.DevHome
+      settings:
+        SetScript: |
+          winget install Microsoft.DevHome --accept-package-agreements --force
+        GetScript: return $false
+        TestScript: return $false
+      dependsOn:
+        - Microsoft.AppInstallerFileBuilder
+      ### Enable DevHome Azure Extension
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Installing Microsoft.DevHome Azure Extension
+        allowPrerelease: true
+        securityContext: current
+      settings:
+        id: "9MV8F79FGXTR"
+        source: msstore
+      dependsOn:
+        - Microsoft.DevHome
+      id: 9MV8F79FGXTR
+      ### Enable DevHome GitHub Extension
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Installing Microsoft.DevHome GitHub Extension
+        allowPrerelease: true
+        securityContext: current
+      settings:
+        id: "9NZCC27PR6N6"
+        source: msstore
+      dependsOn:
+        - Microsoft.DevHome
+      id: 9NZCC27PR6N6

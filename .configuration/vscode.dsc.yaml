@@ -9,6 +9,7 @@ properties:
       ### Updates required before apply configurations
       ########################################################
       ### Enable: PowerShell
+      ### Install PSDscResources
       ### Enable: WinGet
       ### Enable: AppInstaller
       ### Enable: AppInstallerFileBuilder
@@ -22,41 +23,65 @@ properties:
       directives:
         description: Install Microsoft.PowerShell
         allowPrerelease: true
+        module: Microsoft.WinGet.DSC
       settings:
         id: Microsoft.PowerShell
+      ### Install PSDscResources
+      ### -------------------------------------
+    - resource: PSDscResources/Script
+      id: PSDscResources
+      directives:
+        description: Install PSDscResources
+        allowPrerelease: true
+        module: PSDscResources
+      settings:
+        SetScript: |
+          Install-Module -Name PSDscResources -Force -AllowClobber
+        GetScript: return $false
+        TestScript: return $false
+      dependsOn:
+        - Microsoft.PowerShell
+      ### Enable WinGet
+      ### -------------------------------------
     - resource: PSDscResources/Script
       id: Microsoft.AppInstaller
       directives:
         description: Install Microsoft.AppInstaller
       settings:
         SetScript: |
-          winget install Microsoft.AppInstaller --silent --accept-package-agreements --force
+          winget install Microsoft.AppInstaller --accept-package-agreements --force
         GetScript: return $false
         TestScript: return $false
       dependsOn:
         - Microsoft.PowerShell
+      ### Enable AppInstaller
+      ### -------------------------------------
     - resource: PSDscResources/Script
       id: Microsoft.AppInstallerFileBuilder
       directives:
         description: Install Microsoft.AppInstallerFileBuilder
       settings:
         SetScript: |
-          winget install Microsoft.AppInstallerFileBuilder --silent --accept-package-agreements --force
+          winget install Microsoft.AppInstallerFileBuilder --accept-package-agreements --force
         GetScript: return $false
         TestScript: return $false
       dependsOn:
         - Microsoft.AppInstaller
+      ### Enable DevHome
+      ### -------------------------------------
     - resource: PSDscResources/Script
       id: Microsoft.DevHome
       directives:
         description: Install Microsoft.DevHome
       settings:
         SetScript: |
-          winget install Microsoft.DevHome --silent --accept-package-agreements --force
+          winget install Microsoft.DevHome --accept-package-agreements --force
         GetScript: return $false
         TestScript: return $false
       dependsOn:
         - Microsoft.AppInstallerFileBuilder
+      ### Enable DevHome Azure Extension
+      ### -------------------------------------
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Installing Microsoft.DevHome Azure Extension
@@ -68,6 +93,8 @@ properties:
       dependsOn:
         - Microsoft.DevHome
       id: 9MV8F79FGXTR
+      ### Enable DevHome GitHub Extension
+      ### -------------------------------------
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Installing Microsoft.DevHome GitHub Extension
@@ -80,106 +107,141 @@ properties:
         - Microsoft.DevHome
       id: 9NZCC27PR6N6
       ########################################################
-      ### OS Configurations
-      ########################################################
-      ### Enable: Developer Mode
-      ### Install: VirtualMachinePlatform
-      ### Install: WSL
-      ### Install: Ubuntu for WSL
-      ### Install: HyperV
-      ### Install: HyperV Management Tools
-      ########################################################
-      ### -----------------------------------------------------
-    - resource: Microsoft.Windows.Developer/DeveloperMode
-      id: DeveloperMode
-      directives:
-        description: Enable Developer Mode
-        allowPrerelease: true
-      settings:
-        Ensure: Present
-      dependsOn:
-        - Microsoft.DevHome
-      ### Install Windows VirtualMachinePlatform
-      ### -------------------------------------
-    - resource: PSDscResources/Script
-      id: VirtualMachinePlatform
-      directives:
-        description: Install VirtualMachinePlatform
-      settings:
-        SetScript: |
-          Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -All -NoRestart
-        GetScript: return $false
-        TestScript: return $false
-      dependsOn:
-        - DeveloperMode
-      ### Install Windows Subsystem for Linux
-      ### -------------------------------------
-    - resource: PSDscResources/WindowsOptionalFeature
-      id: Microsoft-Windows-Subsystem-Linux
-      directives:
-        description: Install WSL
-      settings:
-        name: Microsoft-Windows-Subsystem-Linux
-        ensure: Present
-      dependsOn:
-        - VirtualMachinePlatform
-      ### Install Ubuntu for WSL
-      ### -------------------------------------
-    - resource: PSDscResources/Script
-      id: ubuntuwsl
-      directives:
-        description: Install Ubuntu for WSL
-      settings:
-        SetScript: |
-          $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
-          wsl --install -d Ubuntu
-        GetScript: return $false
-        TestScript: return $false
-      dependsOn:
-        - Microsoft-Windows-Subsystem-Linux
-      ### Install HyperV
-      ### -------------------------------------
-    - resource: PSDscResources/WindowsOptionalFeature
-      id: Microsoft-Hyper-V-All
-      directives:
-        description: Install HyperV
-      settings:
-        name: Microsoft-Hyper-V-All
-        ensure: Present
-      dependsOn:
-        - Microsoft-Windows-Subsystem-Linux
-      ### Install HyperV Management Tools
-      ### -------------------------------------
-    - resource: PSDscResources/WindowsOptionalFeature
-      id: Microsoft-Hyper-V-Tools-All
-      directives:
-        description: Install HyperV Management Tools
-      settings:
-        name: Microsoft-Hyper-V-Tools-All
-        ensure: Present
-      dependsOn:
-        - Microsoft-Hyper-V-All
-      ########################################################
       ### Install SDks, CLIs, and Tools
       ########################################################
       ### Install: DotNET SDK 9.0
+      ### Install: DotNET Runtime 9.0
+      ### Install: Git
+      ### Install: GitHub CLI
+      ### Install: GitHub Desktop
+      ### Install: Azure CLI
+      ### Install: Azure Developer CLI
+      ### Install: Bicep
+      ### Install: Microsoft.VisualStudioCode
+      ### Install: Microsoft.VisualStudioCode Extensions
+      ### Install: Postman
       ########################################################
       ### -----------------------------------------------------
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       id: Microsoft.DotNet.SDK.9
       directives:
-        description: Install DotNET SDK Preview
+        description: Install DotNET SDK 9.0
         allowPrerelease: true
       settings:
         id: Microsoft.DotNet.SDK.9
       dependsOn:
-        - Microsoft-Hyper-V-Tools-All
+        - Microsoft.DevHome
+      ### Install DotNET Runtime 9.0
+      ### -------------------------------------
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       id: Microsoft.DotNet.Runtime.9
       directives:
-        description: Install DotNET SDK Preview
+        description: Install DotNET Runtime 9.0
         allowPrerelease: true
       settings:
         id: Microsoft.DotNet.Runtime.9
       dependsOn:
         - Microsoft.DotNet.SDK.9
+      ### Install Git
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Git.Git
+      directives:
+        description: Install Git
+        allowPrerelease: true
+      settings:
+        id: Git.Git
+      dependsOn:
+        - Microsoft.DevHome
+      ### Install GitHub CLI
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: GitHub.cli
+      directives:
+        description: Install GitHub.cli
+        allowPrerelease: true
+      settings:
+        id: GitHub.cli
+      dependsOn:
+        - Git.Git
+      ### Install GitHub Desktop
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: GitHub.GitHubDesktop
+      directives:
+        description: Install GitHub.GitHubDesktop
+        allowPrerelease: true
+      settings:
+        id: GitHub.GitHubDesktop
+      dependsOn:
+        - Git.Git
+        - GitHub.cli  
+      ### Install Azure CLI
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Microsoft.AzureCLI
+      directives:
+        description: Install Azure CLI
+        allowPrerelease: true
+      settings:
+        id: Microsoft.AzureCLI
+      dependsOn:
+        - Microsoft.DotNet.SDK.9
+      ### Install Azure Developer CLI
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Microsoft.Azd
+      directives:
+        description: Install Azure Developer CLI
+        allowPrerelease: true
+      settings:
+        id: Microsoft.Azd
+      dependsOn:
+        - Microsoft.AzureCLI
+      ### Install Bicep
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Microsoft.Bicep
+      directives:
+        description: Install Bicep
+        allowPrerelease: true
+      settings:
+        id: Microsoft.Bicep
+      dependsOn:
+        - Microsoft.Azd
+      ### Install Microsoft.VisualStudioCode
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Microsoft.VisualStudioCode
+      directives:
+        description: Install Microsoft.VisualStudioCode
+        allowPrerelease: true
+      settings:
+        id: Microsoft.VisualStudioCode
+      dependsOn:
+        - Microsoft.DevHome
+      ### Install Microsoft.VisualStudioCode Extensions
+      ### -------------------------------------
+    - resource: PSDscResources/Script
+      id: Microsoft.VisualStudioCode.Extensions
+      directives:
+        description: Install Microsoft.VisualStudioCode Extensions
+        allowPrerelease: true
+      settings:
+        SetScript: |
+          code -- install-extension ms-vscode.vscode-node-azure-pack
+        GetScript: return $false
+        TestScript: return $false
+      dependsOn:
+        - Microsoft.VisualStudioCode
+      ### Install Postman
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Postman.Postman
+      directives:
+        description: Install Postman.Postman
+        allowPrerelease: true
+      settings:
+        id: Postman.Postman
+      dependsOn:
+        - Microsoft.DevHome
