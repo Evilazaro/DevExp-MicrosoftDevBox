@@ -2,9 +2,7 @@
 param workloadName string
 
 @description('Identity Name')
-param roleDefinitionIds array = [
-  
-]
+param roleDefinitionIds array = []
 
 @description('Network Connections')
 param networkConnectionsCreated array = [
@@ -19,7 +17,7 @@ param networkConnectionsCreated array = [
     id: 'Contoso-Traders'
   }
 ]
-  
+
 @description('Contoso Dev Center Catalog')
 param contosoDevCenterCatalogInfo object = {
   name: 'Contoso-Custom-Tasks'
@@ -153,6 +151,16 @@ module roleAssignment '../identity/roleAssignmentResource.bicep' = {
   }
 }
 
+@description('Network Connection Attachment Resource')
+module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectionAttachmentResource.bicep' = {
+  name: 'networkAttachments'
+  scope: resourceGroup()
+  params: {
+    devCenterName: devCenter.outputs.devCenterName
+    networkConnectionsCreated: networkConnectionsCreated
+  }
+}
+
 @description('Environment Type Resource')
 module environmentTypes 'DevCenter/EnvironmentConfiguration/environmentTypesResource.bicep' = [
   for environmentType in environmentTypesInfo: {
@@ -163,18 +171,12 @@ module environmentTypes 'DevCenter/EnvironmentConfiguration/environmentTypesReso
       name: environmentType.name
       tags: tags
     }
+    dependsOn: [
+      networkConnectionAttachment
+      roleAssignment
+    ]
   }
 ]
-
-@description('Network Connection Attachment Resource')
-module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectionAttachmentResource.bicep' = {
-  name: 'networkAttachments'
-  scope: resourceGroup()
-  params: {
-    devCenterName: devCenter.outputs.devCenterName
-    networkConnectionsCreated: networkConnectionsCreated
-  }
-}
 
 @description('Projects')
 param contosoProjectsInfo array = [
@@ -250,6 +252,10 @@ module contosoDevCenterCatalog 'DevCenter/EnvironmentConfiguration/devCentercata
     type: contosoDevCenterCatalogInfo.type
     uri: contosoDevCenterCatalogInfo.uri
   }
+  dependsOn: [
+    networkConnectionAttachment
+    roleAssignment
+  ]
 }
 
 @description('Dev Center Dev Box Definitions')
@@ -260,7 +266,7 @@ module devCenterDevBoxDefinitions 'DevCenter/EnvironmentConfiguration/devBoxDefi
     devCenterName: devCenter.outputs.devCenterName
     devBoxDefinitionsInfo: contosoDevCenterDevBoxDefinitionsInfo
   }
-  dependsOn:[
+  dependsOn: [
     networkConnectionAttachment
     roleAssignment
   ]
@@ -281,5 +287,9 @@ module contosoDevCenterProjects 'DevCenter/Management/projectResource.bicep' = [
       roleDefinitionIds: roleDefinitionIds
       //projectEnvironmentTypesInfo: environmentTypesInfo
     }
+    dependsOn: [
+      networkConnectionAttachment
+      roleAssignment
+    ]
   }
 ]
