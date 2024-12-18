@@ -15,6 +15,11 @@ properties:
       ### Enable: DevHome
       ### Enable: DevHome Azure Extension
       ### Enable: DevHome GitHub Extension
+      ### Install: Git
+      ### Install: GitHub.CLI
+      ### Install: GitHub.GitHubDesktop
+      ### Enable: Developer Mode
+      ### Install: Windows Terminal
       ########################################################
       ### -----------------------------------------------------
     - resource: Microsoft.WinGet.DSC/WinGetPackage
@@ -22,9 +27,9 @@ properties:
       directives:
         description: Install Microsoft.PowerShell
         allowPrerelease: true
-        module: Microsoft.WinGet.DSC
       settings:
         id: Microsoft.PowerShell
+        source: winget
       ### Install PSDscResources
       ### -------------------------------------
     - resource: PSDscResources/Script
@@ -42,50 +47,46 @@ properties:
         - Microsoft.PowerShell
       ### Enable WinGet
       ### -------------------------------------
-    - resource: PSDscResources/Script
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
       id: Microsoft.AppInstaller
       directives:
         description: Install Microsoft.AppInstaller
+        allowPrerelease: true
       settings:
-        SetScript: |
-          winget install Microsoft.AppInstaller --accept-package-agreements --force
-        GetScript: return $false
-        TestScript: return $false
+        id: Microsoft.AppInstaller
+        source: winget
       dependsOn:
         - Microsoft.PowerShell
       ### Enable AppInstaller
       ### -------------------------------------
-    - resource: PSDscResources/Script
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
       id: Microsoft.AppInstallerFileBuilder
       directives:
         description: Install Microsoft.AppInstallerFileBuilder
+        allowPrerelease: true
       settings:
-        SetScript: |
-          winget install Microsoft.AppInstallerFileBuilder --accept-package-agreements --force
-        GetScript: return $false
-        TestScript: return $false
+        id: Microsoft.AppInstallerFileBuilder
+        source: winget
       dependsOn:
         - Microsoft.AppInstaller
       ### Enable DevHome
       ### -------------------------------------
-    - resource: PSDscResources/Script
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
       id: Microsoft.DevHome
       directives:
-        description: Install Microsoft.DevHome
+        description: Installing Microsoft.DevHome
+        allowPrerelease: true
       settings:
-        SetScript: |
-          winget install Microsoft.DevHome --accept-package-agreements --force
-        GetScript: return $false
-        TestScript: return $false
+        id: Microsoft.DevHome
+        source: winget                        
       dependsOn:
-        - Microsoft.AppInstallerFileBuilder
+        - Microsoft.AppInstaller
       ### Enable DevHome Azure Extension
       ### -------------------------------------
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       directives:
         description: Installing Microsoft.DevHome Azure Extension
         allowPrerelease: true
-        securityContext: current
       settings:
         id: "9MV8F79FGXTR"
         source: msstore
@@ -98,10 +99,70 @@ properties:
       directives:
         description: Installing Microsoft.DevHome GitHub Extension
         allowPrerelease: true
-        securityContext: current
       settings:
         id: "9NZCC27PR6N6"
         source: msstore
       dependsOn:
         - Microsoft.DevHome
       id: 9NZCC27PR6N6
+      ### Install Git
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Git.Git
+      directives:
+        description: Installing Git
+        allowPrerelease: true
+      settings:
+        id: Git.Git
+        source: winget
+      ### Install GitHub.CLI
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: GitHub.cli
+      directives:
+        description: Installing GitHub.cli
+        allowPrerelease: true
+      settings:
+        id: GitHub.cli
+        source: winget
+      dependsOn:
+        - Git.Git
+      ### Install GitHub.GitHubDesktop
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Installing GitHub.GitHubDesktop
+        allowPrerelease: true
+      settings:
+        id: GitHub.GitHubDesktop
+        source: winget
+      dependsOn:
+        - Git.Git
+      ### Enable Developer Mode
+      ### -------------------------------------
+    - resource: Microsoft.Windows.Developer/DeveloperMode
+      directives:
+        description: Enable Developer Mode
+        allowPrerelease: true
+      settings:
+        Ensure: Present
+      ### Install Windows Terminal
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Installing Microsoft.WindowsTerminal
+        allowPrerelease: true
+      settings:
+        id: Microsoft.WindowsTerminal
+        source: winget
+      ### Install Microsoft.Office
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: Installing Microsoft.Office
+        allowPrerelease: true
+      settings:
+        id: Microsoft.Office
+        source: winget
+      dependsOn:
+        - Microsoft.AppInstaller

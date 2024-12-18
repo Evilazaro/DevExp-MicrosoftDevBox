@@ -13,7 +13,7 @@ tasks:
       configurationFile: 'C:\WinGetConfig\baseline.dsc.yaml'
       runAsUser: true
   - name: winget
-    description: Install Postman
+    description: Install Front End Engineer workload
     parameters:
       downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/frontend-Engineer/frontend.dsc.yaml'
       configurationFile: 'C:\WinGetConfig\frontend.dsc.yaml'

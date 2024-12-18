@@ -9,3 +9,19 @@ properties:
         module: Microsoft.WinGet.DSC
       settings:
         id: Postman.Postman
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Docker.DockerDesktop
+      directives:
+        description: Install Docker.DockerDesktop
+        allowPrerelease: true
+        module: Microsoft.WinGet.DSC
+      settings:
+        id: Docker.DockerDesktop
+    ### Install Windows VirtualMachinePlatform
+    ### -------------------------------------
+    - resource: PSDscResources/WindowsOptionalFeature
+      directives:
+        description: Install VirtualMachinePlatform
+      settings:
+        name: VirtualMachinePlatform
+        ensure: Present
