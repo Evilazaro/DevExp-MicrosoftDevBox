@@ -2,39 +2,9 @@ properties:
   configurationVersion: 0.2.0
   ########################################
   ### RESOURCES: System Configuration
-  ### Install: Windows VirtualMachinePlatform
-  ### Install: WSL
-  ### Install: Ubuntu
+  ### Install: WSL and Ubuntu
   ########################################
   resources:
-    ### Install Windows VirtualMachinePlatform
-    ### -------------------------------------
-    - resource: PSDscResources/Script
-      id: VirtualMachinePlatform
-      directives:
-        description: Enable VirtualMachinePlatform on Windows
-      settings: 
-        SetScript: |
-          $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
-          Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -NoRestart
-          dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
-        GetScript: return $false
-        TestScript: return $false
-
-    ### Install WSL
-    ### -------------------------------------
-    - resource: PSDscResources/Script
-      id: wslinstall
-      directives:
-        description: Install WSL
-      settings: 
-        SetScript: |
-          $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
-          dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
-        GetScript: return $false
-        TestScript: return $false
-      dependsOn:
-        - VirtualMachinePlatform
     ### Configure Install Ubuntu
     ### -------------------------------------
     - resource: PSDscResources/Script
@@ -47,5 +17,3 @@ properties:
           wsl --install -d Ubuntu
         GetScript: return $false
         TestScript: return $false
-      dependsOn:
-        - wslinstall

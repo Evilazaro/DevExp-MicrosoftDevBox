@@ -7,7 +7,7 @@ properties:
     ### Install Microsoft Visual Studio Code
     ### -------------------------------------
     - resource: Microsoft.WinGet.DSC/WinGetPackage
-      id: vscode
+      id: Microsoft.VisualStudioCode
       directives:
         description: Install Microsoft Visual Studio Code
         allowPrerelease: true
@@ -17,15 +17,72 @@ properties:
     ### Install VS Code Extension
     ### -------------------------------------
     - resource: PSDscResources/Script
-      id: vscodeextensions
-      dependsOn:
-        - vscode
+      id: Microsoft.VisualStudioCode.Extensions
       directives:
         description: Install VS Code Extensions
       settings:
         SetScript: |
           $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
-          code --install-extension ms-vscode.vscode-node-azure-pack
-          code --install-extension ms-vscode.azure-account	
+          $extensions = @(
+              "azps-tools.azps-tools",
+              "azurite.azurite",
+              "devcenter.ms-devbox",
+              "eamodio.gitlens",
+              "github.copilot",
+              "github.copilot-chat",
+              "github.remotehub",
+              "github.vscode-github-actions",
+              "github.vscode-pull-request-github",
+              "humao.rest-client",
+              "ionide.ionide-fsharp",
+              "ms-azure-devops.azure-pipelines",
+              "ms-azuretools.azure-dev",
+              "ms-azuretools.vscode-apimanagement",
+              "ms-azuretools.vscode-azure-github-copilot",
+              "ms-azuretools.vscode-azureappservice",
+              "ms-azuretools.vscode-azurecontainerapps",
+              "ms-azuretools.vscode-azurefunctions",
+              "ms-azuretools.vscode-azureresourcegroups",
+              "ms-azuretools.vscode-azurestaticwebapps",
+              "ms-azuretools.vscode-azurestorage",
+              "ms-azuretools.vscode-azurevirtualmachines",
+              "ms-azuretools.vscode-bicep",
+              "ms-azuretools.vscode-cosmosdb",
+              "ms-azuretools.vscode-docker",
+              "ms-dotnettools.csdevkit",
+              "ms-dotnettools.csharp",
+              "ms-dotnettools.dotnet-interactive-vscode",
+              "ms-dotnettools.vscode-dotnet-pack",
+              "ms-dotnettools.vscode-dotnet-runtime",
+              "ms-dotnettools.vscodeintellicode-csharp",
+              "ms-edgedevtools.vscode-edge-devtools",
+              "ms-kubernetes-tools.vscode-aks-tools",
+              "ms-kubernetes-tools.vscode-kubernetes-tools",
+              "ms-toolsai.jupyter",
+              "ms-toolsai.jupyter-keymap",
+              "ms-toolsai.jupyter-renderers",
+              "ms-toolsai.vscode-jupyter-cell-tags",
+              "ms-toolsai.vscode-jupyter-slideshow",
+              "ms-vscode-remote.remote-containers",
+              "ms-vscode-remote.remote-wsl",
+              "ms-vscode.azure-account",
+              "ms-vscode.azure-repos",
+              "ms-vscode.azurecli",
+              "ms-vscode.powershell",
+              "ms-vscode.remote-repositories",
+              "ms-vscode.vscode-github-issue-notebooks",
+              "ms-vscode.vscode-node-azure-pack",
+              "ms-vscode.vscode-typescript-next",
+              "msazurermtools.azurerm-vscode-tools",
+              "redhat.vscode-yaml",
+              "visualstudioonlineapplicationinsights.application-insights"
+          )
+
+          foreach ($extension in $extensions) {
+              code --install-extension $extension
+              Write-Host "Installed: $extension"
+          }
         GetScript: return $false
         TestScript: return $false
+      dependsOn:  
+        - Microsoft.VisualStudioCode

@@ -34,6 +34,41 @@ properties:
       ### Install PSDscResources
       ### -------------------------------------
     - resource: PSDscResources/Script
+      id: Microsoft.AppInstaller.Updates
+      directives:
+        description: Updates all Microsoft Apps installed in the system
+      settings:
+        SetScript: |
+          $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+          # Ensure the script runs as Administrator
+          if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+              Write-Host "Please run this script as Administrator." -ForegroundColor Red
+              exit
+          }
+
+          # Check if Winget is installed
+          if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+              Write-Host "winget is not installed on this system. Please install it first." -ForegroundColor Red
+              exit
+          }
+
+          Write-Host "Checking for updates for Microsoft Store apps and other Winget-managed apps..." -ForegroundColor Green
+
+          # List all available updates
+          $updates = winget upgrade --source msstore --accept-source-agreements --accept-package-agreements --force
+
+          if ($updates) {
+              # Install all updates silently
+              winget upgrade --all --source msstore --accept-source-agreements --accept-package-agreements
+              Write-Host "All updates have been installed successfully." -ForegroundColor Green
+          } else {
+              Write-Host "No updates available." -ForegroundColor Yellow
+          }	
+        GetScript: return $false
+        TestScript: return $false
+      dependsOn:
+        - Microsoft.PowerShell
+    - resource: PSDscResources/Script
       id: PSDscResources
       directives:
         description: Install PSDscResources
@@ -48,38 +83,44 @@ properties:
         - Microsoft.PowerShell
       ### Enable WinGet
       ### -------------------------------------
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
+    - resource: PSDscResources/Script
       id: Microsoft.AppInstaller
       directives:
         description: Install Microsoft.AppInstaller
-        allowPrerelease: true
       settings:
-        id: Microsoft.AppInstaller
-        source: winget
+        SetScript: |
+          $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+          winget install Microsoft.AppInstaller --accept-package-agreements --force	
+        GetScript: return $false
+        TestScript: return $false
       dependsOn:
-        - Microsoft.PowerShell
+        - Microsoft.AppInstaller.Updates
       ### Enable AppInstaller
       ### -------------------------------------
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
+    - resource: PSDscResources/Script
       id: Microsoft.AppInstallerFileBuilder
       directives:
         description: Install Microsoft.AppInstallerFileBuilder
-        allowPrerelease: true
       settings:
-        id: Microsoft.AppInstallerFileBuilder
-        source: winget
+        SetScript: |
+          $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+          winget install Microsoft.AppInstallerFileBuilder --accept-package-agreements --force	
+        GetScript: return $false
+        TestScript: return $false
       dependsOn:
         - Microsoft.AppInstaller
       ### Enable DevHome
       ### -------------------------------------
-    - resource: Microsoft.WinGet.DSC/WinGetPackage
+    - resource: PSDscResources/Script
       id: Microsoft.DevHome
       directives:
-        description: Installing Microsoft.DevHome
-        allowPrerelease: true
+        description: Install Microsoft.DevHome
       settings:
-        id: Microsoft.DevHome
-        source: winget                        
+        SetScript: |
+          $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+          winget install Microsoft.DevHome --accept-package-agreements --force	
+        GetScript: return $false
+        TestScript: return $false
       dependsOn:
         - Microsoft.AppInstaller
       ### Enable DevHome Azure Extension

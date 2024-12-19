@@ -22,31 +22,37 @@ tasks:
   - name: winget
     description: Install Dotnet SDK and Runtime
     parameters:
-      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/dotnet/dotnet.dsc.yaml'
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/devcenter/workloads/customizations/dotnet/dotnet.dsc.yaml'
       configurationFile: 'C:\WinGetConfig\dotnet.dsc.yaml'
       runAsUser: true
   - name: winget
     description: Install Azure CLI, Azure Developer CLI and Components
     parameters:
-      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/azure/azure.dsc.yaml'
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/devcenter/workloads/customizations/azure/azure.dsc.yaml'
       configurationFile: 'C:\WinGetConfig\azure.dsc.yaml'
+      runAsUser: true
+  - name: winget
+    description: Install Visual Studio Code and its Extensions
+    parameters:
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/devcenter/workloads/customizations/ides/vscode.dsc.yaml'
+      configurationFile: 'C:\WinGetConfig\vscode.dsc.yaml'
       runAsUser: true
   - name: winget
     description: Install Visual Studio Code, Extensions and Microsoft Visual Studio Enterprise
     parameters:
-      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/ides/vscode.dsc.yaml'
-      configurationFile: 'C:\WinGetConfig\vscode.dsc.yaml'
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/devcenter/workloads/customizations/ides/vstudio.dsc.yaml'
+      configurationFile: 'C:\WinGetConfig\vstudio.dsc.yaml'
       runAsUser: true
   - name: winget
     description: Install Containers Resources
     parameters:
-      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/containers/containers.dsc.yaml'
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/devcenter/workloads/customizations/containers/containers.dsc.yaml'
       configurationFile: 'C:\WinGetConfig\containers.dsc.yaml'
       runAsUser: true
   - name: winget
     description: Install APIs Resources
     parameters:
-      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/apis/apis.dsc.yaml'
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/devcenter/workloads/apis/apis.dsc.yaml'
       configurationFile: 'C:\WinGetConfig\apis.dsc.yaml'
       runAsUser: true
   
