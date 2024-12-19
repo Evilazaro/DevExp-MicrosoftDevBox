@@ -27,7 +27,7 @@ tasks:
   - name: winget
     description: Install Visual Studio Code and Extensions
     parameters:
-      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/ides/frontend.dsc.yaml'
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/ides/vscode.dsc.yaml'
       configurationFile: 'C:\WinGetConfig\vscode.dsc.yaml'
       runAsUser: true
   
