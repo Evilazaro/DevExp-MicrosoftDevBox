@@ -6,6 +6,7 @@ tasks:
     description: Install PowerShell
     parameters:
       package: 'Microsoft.PowerShell'
+      runAsUser: true
   - name: winget
     description: Install workload baseline prerequisites
     parameters:
@@ -15,11 +16,11 @@ tasks:
   - name: winget
     description: Install Dotnet SDK and Runtime
     parameters:
-      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/front/dotnet.dsc.yaml'
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/frontend-Engineer/dotnet.dsc.yaml'
       configurationFile: 'C:\WinGetConfig\dotnet.dsc.yaml'
       runAsUser: true
   - name: winget
-    description: Install Azure CLI and Azure Developer CLI
+    description: Install Azure CLI, Azure Developer CLI and Components
     parameters:
       downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/azure/azure.dsc.yaml'
       configurationFile: 'C:\WinGetConfig\azure.dsc.yaml'

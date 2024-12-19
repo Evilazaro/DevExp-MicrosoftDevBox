@@ -1,10 +1,52 @@
 $schema: "1.0"
-name: ''
-description: ''
+name: 'backend-engineer-workload'
+description: 'Back End Engineer Workload'
 tasks:
   - name: winget
-    description: Install workload prerequisites
+    description: Install PowerShell
     parameters:
-      downloadUrl: 'baseline.dsc.yaml'
-      configurationFile: 'baseline.dsc.yaml'
+      package: 'Microsoft.PowerShell'
       runAsUser: true
+  - name: winget
+    description: Install workload baseline prerequisites
+    parameters:
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/baseline.dsc.yaml'
+      configurationFile: 'C:\WinGetConfig\baseline.dsc.yaml'
+      runAsUser: true
+  - name: winget
+    description: Install WSL and Ubuntu
+    parameters:
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/windows/virtualization.dsc.yaml'
+      configurationFile: 'C:\WinGetConfig\virtualization.dsc.yaml'
+      runAsUser: true
+  - name: winget
+    description: Install Dotnet SDK and Runtime
+    parameters:
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/dotnet/dotnet.dsc.yaml'
+      configurationFile: 'C:\WinGetConfig\dotnet.dsc.yaml'
+      runAsUser: true
+  - name: winget
+    description: Install Azure CLI, Azure Developer CLI and Components
+    parameters:
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/azure/azure.dsc.yaml'
+      configurationFile: 'C:\WinGetConfig\azure.dsc.yaml'
+      runAsUser: true
+  - name: winget
+    description: Install Visual Studio Code, Extensions and Microsoft Visual Studio Enterprise
+    parameters:
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/ides/vscode.dsc.yaml'
+      configurationFile: 'C:\WinGetConfig\vscode.dsc.yaml'
+      runAsUser: true
+  - name: winget
+    description: Install Containers Resources
+    parameters:
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/containers/containers.dsc.yaml'
+      configurationFile: 'C:\WinGetConfig\containers.dsc.yaml'
+      runAsUser: true
+  - name: winget
+    description: Install APIs Resources
+    parameters:
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/apis/apis.dsc.yaml'
+      configurationFile: 'C:\WinGetConfig\apis.dsc.yaml'
+      runAsUser: true
+  

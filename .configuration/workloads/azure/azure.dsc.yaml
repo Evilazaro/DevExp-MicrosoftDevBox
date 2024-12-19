@@ -1,6 +1,18 @@
 properties:
   configurationVersion: 0.2.0
+  ########################################
+  ### RESOURCES: System Configuration
+  ### Install: Microsoft Azure CLI
+  ### Install: Microsoft Azure Developer CLI
+  ### Install: Microsoft Azure Storage Emulator
+  ### Install: Microsoft Azure Storage Explorer
+  ### Install: Microsoft Azure Functions Core Tools
+  ### Install: Microsoft Azure Cosmos Emulator
+  ### Install: Microsoft Bicep
+  ########################################
   resources:
+      ### Install Microsoft Azure CLI
+      ### -------------------------------------
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       id: Microsoft.AzureCLI
       directives:
@@ -8,6 +20,8 @@ properties:
         allowPrerelease: true
       settings:
         id: Microsoft.AzureCLI
+      ### Install Microsoft Azure Developer CLI
+      ### -------------------------------------
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       id: Microsoft.Azd
       directives:
@@ -15,3 +29,43 @@ properties:
         allowPrerelease: true
       settings:
         id: Microsoft.Azd
+      ### Install Microsoft Azure Storage Emulator
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Microsoft.Azure.StorageEmulator
+      directives:
+        description: Install Microsoft Microsoft.Azure.StorageEmulator
+      settings:
+        id: Microsoft.Azure.StorageEmulator
+      ### Install Microsoft Azure Storage Explorer
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Microsoft.Azure.StorageExplorer
+      directives:
+        description: Install Microsoft MMicrosoft.Azure.StorageExplorer
+      settings:
+        id: Microsoft.Azure.StorageExplorer
+      ### Install Microsoft Azure Functions Core Tools
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Microsoft.Azure.FunctionsCoreTools
+      directives:
+        description: Install Microsoft.Azure.FunctionsCoreTools
+      settings:
+        id: Microsoft.Azure.FunctionsCoreTools
+      ### Install Microsoft Azure Cosmos Emulator
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Microsoft.Azure.CosmosEmulator
+      directives:
+        description: Install Microsoft.Azure.CosmosEmulator
+      settings:
+        id: Microsoft.Azure.CosmosEmulator
+      ### Install Microsoft Bicep
+      ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Microsoft.Bicep
+      directives:
+        description: Install Microsoft.Bicep
+      settings:
+        id: Microsoft.Bicep

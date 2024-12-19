@@ -5,178 +5,10 @@ param workloadName string
 param roleDefinitionIds array = []
 
 @description('Network Connections')
-param networkConnectionsCreated array = [
-  {
-    name: 'eShop'
-    domainJoinType: 'AzureADJoin'
-    id: 'eShop'
-  }
-  {
-    name: 'Contoso-Traders'
-    domainJoinType: 'AzureADJoin'
-    id: 'Contoso-Traders'
-  }
-]
+param networkConnectionsCreated array = []
 
 @description('Contoso Dev Center Catalog')
-param contosoDevCenterCatalogInfo object = {
-  name: 'Contoso-Custom-Tasks'
-  syncType: 'Scheduled'
-  type: 'GitHub'
-  uri: 'https://github.com/Evilazaro/DevExp-DevBox.git'
-  branch: 'main'
-  path: '/customizations/tasks'
-}
-
-@description('Tags')
-param tags object = {
-  workload: workloadName
-  landingZone: 'DevEx'
-  resourceType: 'DevCenter'
-  ProductTeam: 'Platform Engineering'
-  Environment: 'Production'
-  Department: 'IT'
-  offering: 'DevBox-as-a-Service'
-}
-
-@description('Environment Types Info')
-param environmentTypesInfo array = [
-  {
-    name: 'DEV'
-    tags: {
-      workload: workloadName
-      landingZone: 'DevEx'
-      resourceType: 'DevCenter'
-      ProductTeam: 'Platform Engineering'
-      Environment: 'Dev'
-      Department: 'IT'
-      offering: 'DevBox-as-a-Service'
-    }
-  }
-  {
-    name: 'PROD'
-    tags: {
-      workload: workloadName
-      landingZone: 'DevEx'
-      resourceType: 'DevCenter'
-      ProductTeam: 'Platform Engineering'
-      Environment: 'Production'
-      Department: 'IT'
-      offering: 'DevBox-as-a-Service'
-    }
-  }
-  {
-    name: 'STAGING'
-    tags: {
-      workload: workloadName
-      landingZone: 'DevEx'
-      resourceType: 'DevCenter'
-      ProductTeam: 'Platform Engineering'
-      Environment: 'Staging'
-      Department: 'IT'
-      offering: 'DevBox-as-a-Service'
-    }
-  }
-  {
-    name: 'UAT'
-    tags: {
-      workload: workloadName
-      landingZone: 'DevEx'
-      resourceType: 'DevCenter'
-      ProductTeam: 'Platform Engineering'
-      Environment: 'Uat'
-      Department: 'IT'
-      offering: 'DevBox-as-a-Service'
-    }
-  }
-]
-
-@description('Contoso Dev Center Dev Box Definitions')
-param contosoDevCenterDevBoxDefinitionsInfo array = [
-  {
-    name: 'Contoso-BackEnd-Engineer'
-    imageName: 'microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2'
-    sku: 'general_i_32c128gb512ssd_v2'
-    hibernateSupport: 'Disabled'
-    tags: {
-      workload: workloadName
-      landingZone: 'DevEx'
-      resourceType: 'DevCenter'
-      ProductTeam: 'Platform Engineering'
-      Environment: 'Production'
-      Department: 'IT'
-      offering: 'DevBox-as-a-Service'
-      roleName: 'BackEnd-Engineer'
-    }
-  }
-  {
-    name: 'Contoso-FrontEnd-Engineer'
-    imageName: 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365'
-    sku: 'general_i_16c64gb256ssd_v2'
-    hibernateSupport: 'Enabled'
-    tags: {
-      workload: workloadName
-      landingZone: 'DevEx'
-      resourceType: 'DevCenter'
-      ProductTeam: 'Platform Engineering'
-      Environment: 'Production'
-      Department: 'IT'
-      offering: 'DevBox-as-a-Service'
-      roleName: 'FrontEnd-Engineer'
-    }
-  }
-]
-
-@description('Dev Center Resource')
-module devCenter 'DevCenter/devCenterResource.bicep' = {
-  name: 'devCenter'
-  scope: resourceGroup()
-  params: {
-    name: workloadName
-    location: resourceGroup().location
-    catalogItemSyncEnableStatus: 'Enabled'
-    microsoftHostedNetworkEnableStatus: 'Enabled'
-    installAzureMonitorAgentEnableStatus: 'Enabled'
-    tags: tags
-  }
-}
-
-@description('Role Assignment Resource')
-module roleAssignment '../identity/roleAssignmentResource.bicep' = {
-  name: 'roleAssignment'
-  scope: subscription()
-  params: {
-    principalId: devCenter.outputs.devCenterPrincipalId
-    roleDefinitionIds: roleDefinitionIds
-  }
-}
-
-@description('Network Connection Attachment Resource')
-module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectionAttachmentResource.bicep' = {
-  name: 'networkAttachments'
-  scope: resourceGroup()
-  params: {
-    devCenterName: devCenter.outputs.devCenterName
-    networkConnectionsCreated: networkConnectionsCreated
-  }
-}
-
-@description('Environment Type Resource')
-module environmentTypes 'DevCenter/EnvironmentConfiguration/environmentTypesResource.bicep' = [
-  for environmentType in environmentTypesInfo: {
-    name: '${environmentType.name}-environmentType'
-    scope: resourceGroup()
-    params: {
-      devCenterName: devCenter.outputs.devCenterName
-      name: environmentType.name
-      tags: tags
-    }
-    dependsOn: [
-      networkConnectionAttachment
-      roleAssignment
-    ]
-  }
-]
+param contosoDevCenterCatalogInfo object = {}
 
 @description('Projects')
 param contosoProjectsInfo array = [
@@ -237,6 +69,76 @@ param contosoProjectsInfo array = [
     }
   }
 ]
+
+
+@description('Tags')
+param tags object = {
+  workload: workloadName
+  landingZone: 'DevEx'
+  resourceType: 'DevCenter'
+  ProductTeam: 'Platform Engineering'
+  Environment: 'Production'
+  Department: 'IT'
+  offering: 'DevBox-as-a-Service'
+}
+
+@description('Environment Types Info')
+param environmentTypesInfo array = []
+
+@description('Contoso Dev Center Dev Box Definitions')
+param contosoDevCenterDevBoxDefinitionsInfo array = []
+
+@description('Dev Center Resource')
+module devCenter 'DevCenter/devCenterResource.bicep' = {
+  name: 'devCenter'
+  scope: resourceGroup()
+  params: {
+    name: workloadName
+    location: resourceGroup().location
+    catalogItemSyncEnableStatus: 'Enabled'
+    microsoftHostedNetworkEnableStatus: 'Enabled'
+    installAzureMonitorAgentEnableStatus: 'Enabled'
+    tags: tags
+  }
+}
+
+@description('Role Assignment Resource')
+module roleAssignment '../identity/roleAssignmentResource.bicep' = {
+  name: 'roleAssignment'
+  scope: subscription()
+  params: {
+    principalId: devCenter.outputs.devCenterPrincipalId
+    roleDefinitionIds: roleDefinitionIds
+  }
+}
+
+@description('Network Connection Attachment Resource')
+module networkConnectionAttachment 'DevCenter/NetworkConnection/networkConnectionAttachmentResource.bicep' = {
+  name: 'networkAttachments'
+  scope: resourceGroup()
+  params: {
+    devCenterName: devCenter.outputs.devCenterName
+    networkConnectionsCreated: networkConnectionsCreated
+  }
+}
+
+@description('Environment Type Resource')
+module environmentTypes 'DevCenter/EnvironmentConfiguration/environmentTypesResource.bicep' = [
+  for environmentType in environmentTypesInfo: {
+    name: '${environmentType.name}-environmentType'
+    scope: resourceGroup()
+    params: {
+      devCenterName: devCenter.outputs.devCenterName
+      name: environmentType.name
+      tags: tags
+    }
+    dependsOn: [
+      networkConnectionAttachment
+      roleAssignment
+    ]
+  }
+]
+
 
 @description('Contoso Dev Center Catalog')
 module contosoDevCenterCatalog 'DevCenter/EnvironmentConfiguration/devCentercatalogsResource.bicep' = {

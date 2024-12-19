@@ -6,6 +6,7 @@ tasks:
     description: Install PowerShell
     parameters:
       package: 'Microsoft.PowerShell'
+      runAsUser: true
   - name: winget
     description: Install workload prerequisites
     parameters:
