@@ -35,7 +35,9 @@ jobs:
   
       # Build the Bicep files for Dev Box Resources
       - name: Build Dev Box Bicep files
-        run: az bicep build --file ./deploy/deploy.bicep --outfile ./bicepArtifacts/deploy.json
+        run: |
+          az bicep build --file ./deploy/deploy.bicep --outfile ./bicepArtifacts/deploy.json
+          az bicep build-params --file ./deploy/params.bicepparam --outfile ./bicepArtifacts/deploy-params.json
 
       # Compress the built Bicep artifacts into a zip file
       - name: Compress Bicep Artifacts
@@ -71,6 +73,7 @@ jobs:
           az deployment group what-if \
             --resource-group ${{ env.connectivityResourceGroupName }} \
             --template-file ./src/bicep/connectivity/connectivityWorkload.bicep \
+            --parameters ./src/bicep/connectivity/params.bicepparam \
             --parameters workloadName=${{ env.workloadName }} \
                 connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
             --mode Incremental
@@ -83,6 +86,7 @@ jobs:
           az deployment group what-if \
             --resource-group ${{ env.devBoxResourceGroupName }} \
             --template-file ./src/bicep/DevEx/devExWorkload.bicep \
+            --parameters ./src/bicep/DevEx/params.bicepparam \
             --parameters workloadName=${{ env.workloadName }} \
             --mode Incremental
 
@@ -94,6 +98,7 @@ jobs:
           az deployment group what-if \
             --resource-group ${{ env.devBoxResourceGroupName }} \
             --template-file ./src/bicep/identity/identityModule.bicep \
+            --parameters ./src/bicep/identity/params.bicepparam \
             --parameters workloadName=${{ env.workloadName }} \
             --mode Incremental
 
@@ -104,6 +109,7 @@ jobs:
           az deployment group create \
             --resource-group ${{ env.devBoxResourceGroupName }} \
             --template-file ./deploy/deploy.bicep \
+            --parameters ./deploy/params.bicepparam \
             --parameters workloadName=${{ env.workloadName }} \
                 connectivityResourceGroupName=${{ env.connectivityResourceGroupName }} \
             --mode Incremental    

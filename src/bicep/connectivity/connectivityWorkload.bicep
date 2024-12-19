@@ -5,25 +5,10 @@ param workloadName string
 param connectivityResourceGroupName string
 
 @description('Connectivity Info')
-param contosoConnectivityInfo array = [
-  {
-    name: 'eShop'
-    networkConnection: {
-      domainJoinType: 'AzureADJoin'
-    }
-  }
-  {
-    name: 'Contoso-Traders'
-    networkConnection: {
-      domainJoinType: 'AzureADJoin'
-    }
-  }
-]
+param contosoConnectivityInfo array 
 
 @description('Address Prefixes')
-param addressPrefixes array = [
-  '10.0.0.0/16'
-]
+param addressPrefixes array 
 
 @description('Tags')
 param tags object = {

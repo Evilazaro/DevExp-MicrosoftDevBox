@@ -10,13 +10,13 @@ tasks:
   - name: winget
     description: Install workload baseline prerequisites
     parameters:
-      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/baseline.dsc.yaml'
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/devcenter/workloads/baseline.dsc.yaml'
       configurationFile: 'C:\WinGetConfig\baseline.dsc.yaml'
       runAsUser: true
   - name: winget
     description: Install WSL and Ubuntu
     parameters:
-      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/windows/virtualization.dsc.yaml'
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/devcenter/workloads/customizations/windows/virtualization.dsc.yaml'
       configurationFile: 'C:\WinGetConfig\virtualization.dsc.yaml'
       runAsUser: true
   - name: winget
