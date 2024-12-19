@@ -19,9 +19,13 @@ createResourceGroup() {
 
     if az group create --name "$resourceGroupName" --location "$location" \
         --tags \
-        "division=PlatformEngineeringTeam-DevEx" \
+        "workload=workloadName" \
+        "landingZone=DevEx" \
+        "resourceType=Resource Group" \
+        "ProductTeam=Platform Engineering" \
         "Environment=Production" \
-        "offering=DevBox-as-a-Service"; then
+        "Department=IT" \
+        "workload=DevBox-as-a-Service"; then
         
         echo "Resource group '$resourceGroupName' created successfully."
     else

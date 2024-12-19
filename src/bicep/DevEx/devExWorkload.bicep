@@ -2,74 +2,16 @@
 param workloadName string
 
 @description('Identity Name')
-param roleDefinitionIds array = []
+param workloadRoleDefinitionIds array 
 
 @description('Network Connections')
-param networkConnectionsCreated array = []
+param networkConnectionsCreated array 
 
 @description('Contoso Dev Center Catalog')
-param contosoDevCenterCatalogInfo object = {}
+param contosoDevCenterCatalogInfo object 
 
 @description('Projects')
-param contosoProjectsInfo array = [
-  {
-    name: 'eShop'
-    networkConnectionName: networkConnectionsCreated[0].name
-    catalogs: [
-      {
-        catalogName: 'imageDefinitions'
-        uri: 'https://github.com/Evilazaro/eShop.git'
-        branch: 'main'
-        path: '/devEx/customizations'
-      }
-      {
-        catalogName: 'environments'
-        uri: 'https://github.com/Evilazaro/eShop.git'
-        branch: 'main'
-        path: '/devEx/environments'
-      }
-    ]
-    tags: {
-      workload: workloadName
-      landingZone: 'DevEx'
-      resourceType: 'DevCenter'
-      ProductTeam: 'Platform Engineering'
-      Environment: 'Production'
-      Department: 'IT'
-      offering: 'DevBox-as-a-Service'
-      project: 'eShop'
-    }
-  }
-  {
-    name: 'Contoso-Traders'
-    networkConnectionName: networkConnectionsCreated[1].name
-    catalogs: [
-      {
-        catalogName: 'imageDefinitions'
-        uri: 'https://github.com/Evilazaro/contosotraders.git'
-        branch: 'main'
-        path: '/devEx/customizations'
-      }
-      {
-        catalogName: 'environments'
-        uri: 'https://github.com/Evilazaro/contosotraders.git'
-        branch: 'main'
-        path: '/devEx/environments'
-      }
-    ]
-    tags: {
-      workload: workloadName
-      landingZone: 'DevEx'
-      resourceType: 'DevCenter'
-      ProductTeam: 'Platform Engineering'
-      Environment: 'Production'
-      Department: 'IT'
-      offering: 'DevBox-as-a-Service'
-      project: 'Contoso-Traders'
-    }
-  }
-]
-
+param contosoProjectsInfo array
 
 @description('Tags')
 param tags object = {
@@ -83,10 +25,10 @@ param tags object = {
 }
 
 @description('Environment Types Info')
-param environmentTypesInfo array = []
+param environmentTypesInfo array 
 
 @description('Contoso Dev Center Dev Box Definitions')
-param contosoDevCenterDevBoxDefinitionsInfo array = []
+param contosoDevCenterDevBoxDefinitionsInfo array 
 
 @description('Dev Center Resource')
 module devCenter 'DevCenter/devCenterResource.bicep' = {
@@ -108,7 +50,7 @@ module roleAssignment '../identity/roleAssignmentResource.bicep' = {
   scope: subscription()
   params: {
     principalId: devCenter.outputs.devCenterPrincipalId
-    roleDefinitionIds: roleDefinitionIds
+    roleDefinitionIds: workloadRoleDefinitionIds
   }
 }
 
@@ -186,7 +128,7 @@ module contosoDevCenterProjects 'DevCenter/Management/projectResource.bicep' = [
       projectCatalogsInfo: project.catalogs
       devBoxDefinitions: devCenterDevBoxDefinitions.outputs.devBoxDefinitions
       networkConnectionName: project.networkConnectionName
-      roleDefinitionIds: roleDefinitionIds
+      roleDefinitionIds: workloadRoleDefinitionIds
       //projectEnvironmentTypesInfo: environmentTypesInfo
     }
     dependsOn: [
