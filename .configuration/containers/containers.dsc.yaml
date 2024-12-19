@@ -1,0 +1,54 @@
+properties:
+  configurationVersion: 0.2.0
+  ########################################
+  ### RESOURCES: System Configuration
+  ########################################
+  resources:
+      ########################################################
+      ### Updates required before apply configurations
+      ########################################################
+      ### Install: Docker Desktop
+      ### Install: Kubernetes kubectl
+      ### Install: Microsoft Azure Kubelogin
+      ########################################################
+      ### -----------------------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Docker.DockerDesktop
+      directives:
+        description: Install Docker Desktop
+        allowPrerelease: true
+      settings:
+        id: Docker.DockerDesktop
+        source: winget
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Kubernetes.kubectl
+      directives:
+        description: Install Kubernetes.kubectl
+        allowPrerelease: true
+      settings:
+        id: Kubernetes.kubectl
+        source: winget
+      dependsOn:
+        - Docker.DockerDesktop
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Microsoft.Azure.Kubelogin
+      directives:
+        description: Install Microsoft.Azure.Kubelogin
+        allowPrerelease: true
+      settings:
+        id: Microsoft.Azure.Kubelogin
+        source: winget
+      dependsOn:
+        - Docker.DockerDesktop
+        - Kubernetes.kubectl
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Helm.Helm
+      directives:
+        description: Install Helm.Helm
+        allowPrerelease: true
+      settings:
+        id: Helm.Helm
+        source: winget
+      dependsOn:
+        - Docker.DockerDesktop
+        - Kubernetes.kubectl

@@ -1,0 +1,21 @@
+properties:
+  configurationVersion: 0.2.0
+  ########################################
+  ### RESOURCES: System Configuration
+  ########################################
+  resources:
+      ########################################################
+      ### Updates required before apply configurations
+      ########################################################
+      ### Install: Postman
+      ########################################################
+      ### -----------------------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Postman.Postman
+      directives:
+        description: Install Postman.Postman
+        allowPrerelease: true
+      settings:
+        id: Postman.Postman
+        source: winget
+    
