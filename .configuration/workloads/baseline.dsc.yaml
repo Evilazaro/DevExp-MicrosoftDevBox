@@ -21,7 +21,6 @@ properties:
       ### Enable: Developer Mode
       ### Install: Windows Terminal
       ### Install: Microsoft.Office
-      ### Install: Windows VirtualMachinePlatform
       ########################################################
       ### -----------------------------------------------------
     - resource: Microsoft.WinGet.DSC/WinGetPackage
@@ -168,11 +167,3 @@ properties:
         source: winget
       dependsOn:
         - Microsoft.AppInstaller
-    ### Install Windows VirtualMachinePlatform
-    ### -------------------------------------
-    - resource: PSDscResources/WindowsOptionalFeature
-      directives:
-        description: Install VirtualMachinePlatform
-      settings:
-        name: VirtualMachinePlatform
-        ensure: Present
