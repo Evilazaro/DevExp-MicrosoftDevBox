@@ -1,2 +1,14 @@
 # ignore all json files
 *.json
+
+# Azure Resource Manager deployment files
+*.azcli
+*.arm
+*.arm.json
+
+# Local environment files
+.env
+.local
+
+# Logs
+*.log
