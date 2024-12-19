@@ -1,0 +1,17 @@
+properties:
+  configurationVersion: 0.2.0
+  resources:
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Microsoft.AzureCLI
+      directives:
+        description: Install Microsoft Azure CLI
+        allowPrerelease: true
+      settings:
+        id: Microsoft.AzureCLI
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Microsoft.Azd
+      directives:
+        description: Install Microsoft Azure Developer CLI
+        allowPrerelease: true
+      settings:
+        id: Microsoft.Azd

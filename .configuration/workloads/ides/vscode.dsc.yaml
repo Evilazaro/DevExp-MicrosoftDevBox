@@ -1,0 +1,31 @@
+properties:
+  configurationVersion: 0.2.0
+  ########################################
+  ### RESOURCES: System Configuration
+  ########################################
+  resources:
+    ### Install Microsoft Visual Studio Code
+    ### -------------------------------------
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: vscode
+      directives:
+        description: Install Microsoft Visual Studio Code
+        allowPrerelease: true
+      settings:
+        id: Microsoft.VisualStudioCode
+        ensure: Present
+    ### Install VS Code Extension
+    ### -------------------------------------
+    - resource: PSDscResources/Script
+      id: vscodeextensions
+      dependsOn:
+        - vscode
+      directives:
+        description: Install VS Code Extensions
+      settings:
+        SetScript: |
+          $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+          code --install-extension ms-vscode.vscode-node-azure-pack
+          code --install-extension ms-vscode.azure-account	
+        GetScript: return $false
+        TestScript: return $false

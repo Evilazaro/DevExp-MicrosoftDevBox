@@ -7,14 +7,27 @@ tasks:
     parameters:
       package: 'Microsoft.PowerShell'
   - name: winget
-    description: Install workload prerequisites
+    description: Install workload baseline prerequisites
     parameters:
       downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/baseline.dsc.yaml'
       configurationFile: 'C:\WinGetConfig\baseline.dsc.yaml'
       runAsUser: true
   - name: winget
-    description: Install Front End Engineer workload
+    description: Install Dotnet SDK and Runtime
     parameters:
-      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/frontend-Engineer/frontend.dsc.yaml'
-      configurationFile: 'C:\WinGetConfig\frontend.dsc.yaml'
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/front/dotnet.dsc.yaml'
+      configurationFile: 'C:\WinGetConfig\dotnet.dsc.yaml'
       runAsUser: true
+  - name: winget
+    description: Install Azure CLI and Azure Developer CLI
+    parameters:
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/azure/azure.dsc.yaml'
+      configurationFile: 'C:\WinGetConfig\azure.dsc.yaml'
+      runAsUser: true
+  - name: winget
+    description: Install Visual Studio Code and Extensions
+    parameters:
+      downloadUrl: 'https://raw.githubusercontent.com/Evilazaro/DevExp-DevBox/refs/heads/main/.configuration/workloads/ides/frontend.dsc.yaml'
+      configurationFile: 'C:\WinGetConfig\vscode.dsc.yaml'
+      runAsUser: true
+  
