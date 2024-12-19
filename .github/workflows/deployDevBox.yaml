@@ -37,7 +37,7 @@ jobs:
       - name: Build Dev Box Bicep files
         run: |
           az bicep build --file ./deploy/deploy.bicep --outfile ./bicepArtifacts/deploy.json
-          az bicep build-params ./deploy/params.bicepparam --outfile ./bicepArtifacts/deploy-params.json
+          az bicep build-params --file ./deploy/params.bicepparam --outfile ./bicepArtifacts/deploy-params.json
 
       # Compress the built Bicep artifacts into a zip file
       - name: Compress Bicep Artifacts
