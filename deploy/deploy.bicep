@@ -1,8 +1,8 @@
 @description('Workload Name')
-param workloadName string
+param workloadName string 
 
 @description('Connectivity Resource Group Name')
-param connectivityResourceGroupName string = ''
+param connectivityResourceGroupName string 
 
 @description('Deploy Identity Resources')
 module identityResources '../src/bicep/identity/identityModule.bicep' = {
