@@ -22,6 +22,11 @@ param contosoConnectivityInfo = [
   }
 ]
 
+@description('Address Prefixes')
+param addressPrefixes = [
+  '10.0.0.0/16'
+]
+
 @description('Contoso Dev Center Catalog')
 param contosoDevCenterCatalogInfo = {
   name: 'Contoso-Custom-Tasks'

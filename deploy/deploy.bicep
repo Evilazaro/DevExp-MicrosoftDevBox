@@ -7,6 +7,9 @@ param connectivityResourceGroupName string
 @description('Connectivity Info')
 param contosoConnectivityInfo array
 
+@description('Address Prefixes')
+param addressPrefixes array
+
 @description('Contoso Dev Center Catalog')
 param contosoDevCenterCatalogInfo object
 
@@ -37,6 +40,7 @@ module connectivityResources '../src/bicep/connectivity/connectivityWorkload.bic
     workloadName: workloadName
     connectivityResourceGroupName: connectivityResourceGroupName
     contosoConnectivityInfo: contosoConnectivityInfo
+    addressPrefixes: addressPrefixes
   }
 }
 
