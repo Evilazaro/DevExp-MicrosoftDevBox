@@ -1,0 +1,27 @@
+properties:
+  configurationVersion: 0.2.0
+  ########################################
+  ### RESOURCES: System Configuration
+  ########################################
+  resources:
+      ########################################################
+      ### Installs Dotnet SDK and Runtime
+      ########################################################
+      ### Install: Microsoft.DotNet.SDK.9
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Microsoft.DotNet.SDK.9
+      directives:
+        description: Install Microsoft.DotNet.SDK.9
+        allowPrerelease: true
+      settings:
+        id: Microsoft.DotNet.SDK.9
+        source: winget
+      ### Install: Microsoft.DotNet.Runtime.9
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Microsoft.DotNet.Runtime.9
+      directives:
+        description: Install Microsoft.DotNet.Runtime.9
+        allowPrerelease: true
+      settings:
+        id: Microsoft.DotNet.Runtime.9
+        source: winget

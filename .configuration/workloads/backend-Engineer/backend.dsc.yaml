@@ -1,3 +1,11 @@
 properties:
   configurationVersion: 0.2.0
   resources:
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: Microsoft.VisualStudioCode
+      directives:
+        description: Install Microsoft.VisualStudioCode
+        allowPrerelease: true
+      settings:
+        id: Microsoft.VisualStudioCode
+        source: winget
